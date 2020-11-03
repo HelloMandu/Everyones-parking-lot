@@ -1,0 +1,47 @@
+// responsive size
+$breakpoint-mobile: 0px;
+$breakpoint-tablet: 768px;
+$breakpoint-notebook: 1024px;
+$breakpoint-desktop: 1280px;
+
+// display
+$max-width: 1280px;
+$min-width: 320px;
+$content-width: 420px;
+$standard-border: solid 1px;
+
+// font
+$root-font-size-desktop: 12px;
+$root-font-size-tablet: 11px;
+$root-font-size-mobile: 10px;
+
+$desktop12px: 1rem;
+$desktop14px: 1.167rem;
+$desktop16px: 1.333rem;
+$desktop18px: 1.5rem;
+$desktop20px: 1.667rem;
+$desktop22px: 1.833rem;
+$desktop24px: 2rem;
+$desktop26px: 2.167rem;
+$desktop28px: 2.333rem;
+$desktop30px: 2.5rem;
+$desktop32px: 2.667rem;
+$desktop34px: 2.833rem;
+
+$color-000: #000;
+$color-222: #222;
+$color-333: #333;
+$color-555: #555;
+$color-777: #777;
+$color-999: #999;
+
+// color
+$mobile-main-color: #007246;
+$desktop-main-color: #008762;
+
+
+// border
+$color-ebebeb: #ebebeb;
+$color-f9f9f9: #f9f9f9;
+$color-dbdbdb: #dbdbdb;
+$color-aaa: #aaa;
