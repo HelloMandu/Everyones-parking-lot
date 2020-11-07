@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default ({ open }) => {
+const Loading =  ({ open }) => {
     const classes = useStyles();
     return (
         <Backdrop className={classes.backdrop} open={open}>
@@ -20,3 +20,5 @@ export default ({ open }) => {
         </Backdrop>
     );
 };
+
+export default Loading;

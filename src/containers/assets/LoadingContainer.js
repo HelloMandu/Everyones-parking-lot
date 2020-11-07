@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux';
 import Loading from '../../components/assets/Loading';
 /* Components */
 
-export default () => {
+const LoadingContainer =  () => {
     const state = useSelector(state => state.loading);
     return <Loading open={Object.values(state).reduce((prev, cur) => prev || cur, false)} />
 };
+
+export default LoadingContainer;

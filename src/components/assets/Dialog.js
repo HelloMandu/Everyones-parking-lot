@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const cn = classnames.bind(styles);
 
-export default ({ confirm, title, text, handleClick = () => {}, open }) => {
+const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -31,39 +31,47 @@ export default ({ confirm, title, text, handleClick = () => {}, open }) => {
         onClose();
     }, [handleClick, onClose]);
 
-    const onKeyDown = useCallback(e => {
-        if (open) {
-            if (e.key === 'Enter') {
-                onClick();
-            } else if (e.key === 'Escape') {
-                onClose();
+    const onKeyDown = useCallback(
+        (e) => {
+            if (open) {
+                if (e.key === 'Enter') {
+                    onClick();
+                } else if (e.key === 'Escape') {
+                    onClose();
+                }
+                e.stopPropagation();
             }
-            e.stopPropagation();
-        }
-    }, [onClick, onClose, open]);
+        },
+        [onClick, onClose, open],
+    );
 
     useEffect(() => {
         document.addEventListener('keydown', onKeyDown, true);
         return () => document.removeEventListener('keydown', onKeyDown, true);
     }, [onKeyDown]);
 
-
     return (
         <>
-            <div className={cn('dialog', { confirm,  open })}>
+            <div className={cn('dialog', { confirm, open })}>
                 <div className={styles['area']}>
                     <div className={cn('content')}>
                         <h3 className={styles['title']}>{title}</h3>
                         {text && <p className={styles['text']}>{text}</p>}
                     </div>
                     <div className={styles['bottom']}>
-                        {confirm &&
-                            <ButtonBase className={cn('button')} onClick={onClose}>
+                        {confirm && (
+                            <ButtonBase
+                                className={cn('button')}
+                                onClick={onClose}
+                            >
                                 아니오
                             </ButtonBase>
-                        }
-                        <ButtonBase className={cn('button', 'active')} onClick={onClick}>
-                            {confirm ? "예" : "확인"}
+                        )}
+                        <ButtonBase
+                            className={cn('button', 'active')}
+                            onClick={onClick}
+                        >
+                            {confirm ? '예' : '확인'}
                         </ButtonBase>
                     </div>
                 </div>
@@ -76,3 +84,5 @@ export default ({ confirm, title, text, handleClick = () => {}, open }) => {
         </>
     );
 };
+
+export default Dialog;

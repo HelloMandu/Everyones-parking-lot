@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux';
 import Dialog from '../../components/assets/Dialog';
 /* Components */
 
-export default () => {
+const DialogContainer =  () => {
     const state = useSelector(state => state.dialog);
     const { title, text, handleClick, open, confirm } = state;
     return <Dialog confirm={confirm} title={title} text={text} handleClick={handleClick} open={open} />;
 };
+
+export default DialogContainer;
