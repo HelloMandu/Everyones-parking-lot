@@ -1,47 +1,24 @@
-@import './lib/variables';
-@import './lib/mixin';
+$max-width: 768px;
+$min-width: 320px;
+$min-height: 100vh;
+$font-size: 12px;
+$mg-top: 80px;
+$mg-top40: 40px;
+$pd-top: 96px;
+$pd-top40: 48px;
+$padding-all: 24px;
+$padding-side: 0 24px;
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    outline: none;
-    border: none;
-    border-radius: 0;
-    font-family: '애플 SD 산돌고딕 Neo', 'Apple SD Gothic Neo', 나눔고딕,
-        'NanumGothic', '맑은 고딕', 'Malgun Gothic', Ngothic, sans-serif;
+@mixin padding-side {
+    padding: 0 24px;
 }
-
-html,
-body {
-    font-size: $root-font-size-desktop;
-    letter-spacing: -0.05rem;
-    @include tablet {
-        font-size: $root-font-size-tablet;
-    }
-    @include mobile {
-        font-size: $root-font-size-mobile;
-    }
+// 모바일 컨테이너 믹스인
+@mixin container($padding) {
+    max-width: 768px;
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding-top: $padding;
+    padding-bottom: 60px;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
-ul {
-    list-style: none;
-}
-select {
-    /*ios대응*/
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-    /*화살표 배경 넣기*/
-    background: url('../../components/svg/select_arrow.svg') no-repeat
-        calc(100% - 8px) 50% #fff;
-    /*화살표 select박스 오른쪽 중앙 배치,배경 흰색*/
-}
-select::-ms-expand {
-    display: none; /* 화살표 없애기 for IE10, 11*/
-}
