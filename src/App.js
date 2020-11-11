@@ -14,7 +14,7 @@ const App = () => {
     return (
         <>
             <Switch>
-                <Route path={Paths.main.index} component={MainPage} />
+                <Route exact path={Paths.main.index} component={MainPage} />
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route component={ErrorPage} />
             </Switch>
