@@ -2,23 +2,21 @@ $max-width: 768px;
 $min-width: 320px;
 $min-height: 100vh;
 $font-size: 12px;
-$mg-top: 80px;
-$mg-top40: 40px;
-$pd-top: 96px;
-$pd-top40: 48px;
-$padding-all: 24px;
+$mg-top: 60px;
+$pd-top: 60px;
+$padding: 24px;
 $padding-side: 0 24px;
 
 @mixin padding-side {
     padding: 0 24px;
 }
+
 // 모바일 컨테이너 믹스인
-@mixin container($padding) {
-    max-width: 768px;
-    min-width: 320px;
-    min-height: 100vh;
+@mixin container($pd-top) {
+    max-width: $max-width;
+    min-width: $min-width
+    min-height: $min-height
     margin: 0 auto;
-    padding-top: $padding;
-    padding-bottom: 60px;
+    padding-top: $pd-top;
 }
 
