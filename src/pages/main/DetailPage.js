@@ -1,5 +1,5 @@
+import react from 'react';
 const DetailPage = () => {
-
 
     return (
         <div>
