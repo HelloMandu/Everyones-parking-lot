@@ -6,6 +6,7 @@ import { Map, Detail, Payment, PaymentComplete ,Use,Review,Mypage,Parking ,Coupo
 const { Paths } = require('../paths');
 
 const MainPage = () => {
+    
     const history = useHistory();
     return (
         <div>
@@ -16,7 +17,7 @@ const MainPage = () => {
                 <Route path={Paths.main.payment_complete} component={PaymentComplete}/>
                 <Route path={Paths.main.use.index  + '/:type'} component={Use}/>
                 <Route path={Paths.main.review.index  + '/:type'} component={Review}/>
-                <Route path={Paths.main.mypage.index  + '/:type'} component={Mypage}/>
+                <Route path={Paths.main.mypage.index  + '/:type?'} component={Mypage}/>
                 <Route path={Paths.main.parking.index  + '/:type'} component={Parking}/>
                 <Route path={Paths.main.event.index  + '/:type'} component={Event}/>
                 <Route path={Paths.main.notice} component={Notice}/>
