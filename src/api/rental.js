@@ -1,10 +1,8 @@
-import axios from 'axios'
+import axios from 'axios';
 
-import makeFormData from '../lib/makeFormData'
+import { Paths } from '../paths';
 
-import { Paths } from '../paths'
-
-export const requestPostRental = async (JWT_TOKEN, {
+export const requestPostRental = async (JWT_TOKEN,
     place_id,
     coupon_id,
     start_time,
@@ -15,7 +13,7 @@ export const requestPostRental = async (JWT_TOKEN, {
     point_price,
     coupon_price,
     phone_number
-}) => {
+) => {
 
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // place_id: 결제할 주차공간 id
@@ -31,24 +29,11 @@ export const requestPostRental = async (JWT_TOKEN, {
 
     // * 응답: rental_id: 대여 주문 번호
 
-    const formData = makeFormData({
-        place_id,
-        coupon_id,
-        start_time,
-        end_time,
-        payment_time,
-        rental_price,
-        deposite,
-        point_price,
-        coupon_price,
-        phone_number
-    })
+    const URL = Paths.api + "api/rental";
+    const response = await axios.post(URL);
 
-    const URL = Paths.api + "api/rental"
-    const response = await axios.post(URL, formData)
-
-    return response
-}
+    return response;
+};
 
 export const requestGetConfirmRental = async (JWT_TOKEN, rental_id) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -56,17 +41,11 @@ export const requestGetConfirmRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: order: 주문 정보
 
-    const config = {
-        params: {
-            rental_id: rental_id
-        }
-    }
+    const URL = Paths.api + "api/rental/:rental_id";
+    const response = await axios.get(URL);
 
-    const URL = Paths.api + "api/rental/rental_id"
-    const response = await axios.get(URL, config)
-
-    return response
-}
+    return response;
+};
 
 export const requestGetUseRental = async (JWT_TOKEN, filter) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -74,11 +53,11 @@ export const requestGetUseRental = async (JWT_TOKEN, filter) => {
 
     // * orders:  [주문 정보 Array…]
 
-    const URL = Paths.api + "api/rental"
-    const response = await axios.get(URL)
+    const URL = Paths.api + "api/rental";
+    const response = await axios.get(URL);
 
-    return response
-}
+    return response;
+};
 
 export const requestGetDetailUseRental = async (JWT_TOKEN, rental_id) => {
     // 이용 내역 상세 정보 요청 API(GET): /api/rental/:rental_id
@@ -87,30 +66,21 @@ export const requestGetDetailUseRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: order: 주문 정보
 
-    const config = {
-        params: {
-            rental_id: rental_id
-        }
-    }
+    const URL = Paths.api + "api/rental/:rental_id";
+    const response = await axios.get(URL);
 
-    const URL = Paths.api + "api/rental/rental_id"
-    const response = await axios.get(URL, config)
+    return response;
+};
 
-    return response
-}
-
-export const requestPutCancelRental = async (JWT_TOKEN, { rental_id }) => {
+export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {
     // 대여 취소 신청 API(PUT): /api/rental/:rental_id
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // { params: rental_id }: 대여 주문 번호
 
     // * 응답: success / failure
 
-    let params = new URLSearchParams()
-    params.append(rental_id)
+    const URL = Paths.api + 'api/rental/:rental_id';
+    const response = await axios.put(URL);
 
-    const URL = Paths.api + `api/rental/`
-    const response = await axios.put(URL, params)
-
-    return response
-}
+    return response;
+};

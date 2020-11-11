@@ -1,30 +1,26 @@
-import axios from 'axios'
+import axios from 'axios';
 
-import makeFormData from '../lib/makeFormData'
-
-import { Paths } from '../paths'
+import { Paths } from '../paths';
 
 export const requestGetMyPoint = async (JWT_TOKEN) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
 
     // * 응답: point_logs: [포인트 사용 기록 Array…]
 
-    const URL = Paths.api + "api/point_log"
-    const response = await axios.get(URL)
+    const URL = Paths.api + "api/point_log";
+    const response = await axios.get(URL);
 
-    return response
-}
+    return response;
+};
 
-export const requestPostWithdraw = async (JWT_TOKEN, { price }) => {
+export const requestPostWithdraw = async (JWT_TOKEN, price) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // price: 출금할 액수
 
     // * 응답: point_logs: [새로운 포인트 사용 기록 Array…]
 
-    const formData = makeFormData({ price })
+    const URL = Paths.api + "api/point_log";
+    const response = await axios.post(URL);
 
-    const URL = Paths.api + "api/point_log"
-    const response = await axios.post(URL, formData)
-
-    return response
-}
+    return response;
+};
