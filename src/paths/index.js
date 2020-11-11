@@ -6,5 +6,5 @@ export const Paths = {
     auth: {
         index: '/auth'
     },
-    api: 'https://www.naver.com'
+    api: 'https://www.naver.com/'
 };
