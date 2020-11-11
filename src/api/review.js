@@ -42,7 +42,7 @@ export const requestPutModifyReview = async(JWT_TOKEN, {review_id, review_body, 
     }
     
     const URL = Paths.api + "api/review/:review_id"
-    const response = await axios.get(URL, {review_body, review_rating}, config)
+    const response = await axios.put(URL, {review_body, review_rating}, config)
 
     return response
 }
@@ -61,23 +61,31 @@ export const requestGetReviewList = async(JWT_TOKEN) => {
 export const requestGetDetailReview = async(review_id) => {
     // { params: review_id }: 리뷰 id
 
-	// * 응답: review: 리뷰 상세 정보
+    // * 응답: review: 리뷰 상세 정보
     
-    const URL = Paths.api + "api/review/:review_id"
-    const response = await axios.get(URL)
+    const config = {
+        params: {
+            review_id: review_id
+        }
+    }
+    
+    const URL = Paths.api + "api/review/"
+    const response = await axios.get(URL, config)
 
     return response
 }
 
-export const requestPostWriteComment = async(JWT_TOKEN, review_id, comment_body) => {
+export const requestPostWriteComment = async(JWT_TOKEN, { review_id, comment_body }) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
 	// review_id: 댓글을 작성할 리뷰 id
 	// comment_body: 댓글 내용
 
-	// * 응답: comment: 댓글 정보
+    // * 응답: comment: 댓글 정보
+    
+    const formData = makeFormData({ review_id, comment_body })
     
     const URL = Paths.api + "api/comment"
-    const response = await axios.get(URL)
+    const response = await axios.post(URL, formData)
 
     return response
 }
