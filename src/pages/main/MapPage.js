@@ -1,9 +1,14 @@
 import React from 'react';
+/* Library */
+
+import MapContainer from '../../containers/main/MapContainer';
+/* Containers */
 
 const MapPage = () => {
+
     return (
         <div>
-            메인 화면 (맵페이지)
+            <MapContainer />
         </div>
     );
 }

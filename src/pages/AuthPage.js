@@ -1,21 +1,31 @@
 import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
+/* Library */
+
 import FindPage from './auth/find/FindPage';
+/* Pages */
+
+import LoginContainer from '../containers/auth/LoginContainer';
+import SignInContainer from '../containers/auth/SignInContainer';
+import SignUpContainer from '../containers/auth/SignUpContainer';
+import EnrollCarContainer from '../containers/auth/EnrollCarContainer';
+/* Containers */
+
+import Complete from '../components/auth/signin/Complete';
+/* Components */
 
 const { Paths } = require('../paths');
 
 const AuthPage = () => {
-    const history = useHistory();
     return (
         <div>
             <Switch>
-                <Route path={Paths.auth.login}  render={() => <h1>로그인 렌딩페이지</h1>}  />
-                <Route path={Paths.auth.signin}  render={() => <h1>로그인 페이지</h1>}  />
-                <Route path={Paths.auth.signup}  render={() => <h1>회원가입 페이지</h1>}  />
-                <Route path={Paths.auth.enrollment}  render={() => <h1>차량등록 페이지</h1>}  />
-                <Route path={Paths.auth.sign_complete}  render={() => <h1>회원가입 완료 페이지</h1>}  />
-                <Route path={Paths.auth.find.index + '/:type'}  component={FindPage}  />
+                <Route path={Paths.auth.login} component={LoginContainer} />
+                <Route path={Paths.auth.signin} component={SignInContainer} />
+                <Route path={Paths.auth.signup} component={SignUpContainer} />
+                <Route path={Paths.auth.enrollment} component={EnrollCarContainer} />
+                <Route path={Paths.auth.sign_complete} component={Complete} />
+                <Route path={Paths.auth.find.index + '/:type'} component={FindPage} />
                 <Route render={({ history }) => history.push(Paths.auth.login)} />
             </Switch>
         </div>

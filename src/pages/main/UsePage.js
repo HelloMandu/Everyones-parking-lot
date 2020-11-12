@@ -1,5 +1,4 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
 import { Paths } from '../../paths';
 import { Switch, Route } from 'react-router-dom';
 const UsePage = () => {

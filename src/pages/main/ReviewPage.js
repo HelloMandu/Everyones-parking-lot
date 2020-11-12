@@ -1,16 +1,23 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
-import { Paths } from '../../paths';
 import { Switch, Route } from 'react-router-dom';
+/* Library */
+
+import ReviewListContainer from '../../containers/main/review/ReviewListContainer';
+import ReviewWriteContainer from '../../containers/main/review/ReviewWriteContainer';
+import ReviewDetailContainer from '../../containers/main/review/ReviewDetailContainer';
+/* Containers */
+
+import { Paths } from '../../paths';
+/* Paths */
 
 const ReviewPage = () => {
 
     return (
         <div>
             <Switch>
-                <Route path={Paths.main.review.list} render={() => <h1>리뷰 리스트</h1>} />
-                <Route path={Paths.main.review.write} render={() => <h1>리뷰 쓰기</h1>} />
-                <Route path={Paths.main.review.detail} render={() => <h1>리뷰 상세보기</h1>} />
+                <Route path={Paths.main.review.list} component={ReviewListContainer} />
+                <Route path={Paths.main.review.write} component={ReviewWriteContainer} />
+                <Route path={Paths.main.review.detail} component={ReviewDetailContainer} />
                 <Route render={() => <h1>리뷰 페이지 404</h1>} />
             </Switch>
         </div>
