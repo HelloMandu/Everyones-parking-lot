@@ -14,6 +14,7 @@ html,
 body {
     font-size: 12px;
     letter-spacing: -0.05rem;
+
 }
 // 기본 체크박스 숨기기
 input[type='checkbox'] {
@@ -39,4 +40,9 @@ select {
 }
 select::-ms-expand {
     display: none;  /* 화살표 없애기 for IE10, 11*/
+}
+
+#parking{
+    max-width: 768px;
+    margin: 0 auto;
 }
