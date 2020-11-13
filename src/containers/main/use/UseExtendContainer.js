@@ -1,12 +1,14 @@
-import React from 'react';
+import React from 'react'
+import qs from 'qs'
 
-const UseExtendContainer = () => {
+const UseExtendContainer = ({location}) => {
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true
+    })
 
-    return (
-        <div>
-            이용 연장
-        </div>
-    );
-};
+    const {id} = query
 
-export default UseExtendContainer;
+    return <>연장신청_{id}</>
+}
+
+export default UseExtendContainer

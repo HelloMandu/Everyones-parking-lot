@@ -5,7 +5,6 @@ import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Co
 const { Paths } = require('../paths');
 
 const MainPage = () => {
-
     return (
         <div>
             <Switch>
