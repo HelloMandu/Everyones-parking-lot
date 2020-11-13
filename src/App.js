@@ -7,7 +7,6 @@ import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
-import BasicButton from './components/button/BasicButton';
 
 import { Paths } from './paths';
 
@@ -21,7 +20,6 @@ const App = () => {
             </Switch>
             <DialogContainer />
             <LoadingContainer />
-            <BasicButton/>
         </>
     );
 };

@@ -36,7 +36,7 @@ export const Paths = {
             enrollment: '/parking/enrollment',
             preview :'/parking/preview',
         },
-        notice : '/notice',
+        notification : '/notification',
         coupon : '/coupon',
         event:{
             index:'/event',

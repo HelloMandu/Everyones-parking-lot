@@ -22,7 +22,7 @@ const LikeButton =({button_name ,disable})=>{
     )
 }
 
-export default FixedButton;
+export default LikeButton;
 
 LikeButton.defaultProps={
     button_name :'button',

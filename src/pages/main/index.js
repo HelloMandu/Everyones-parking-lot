@@ -6,7 +6,7 @@ export {default as Use} from './UsePage';
 export {default as Review} from './ReviewPage';
 export {default as Mypage} from './mypage/MypagePage';
 export {default as Parking} from './ParkingPage';
-export {default as Notice} from './NoticePage';
+export {default as Notification} from './Notification';
 export {default as Coupon} from './CouponPage';
 export {default as Event} from './EvntPage';
 export {default as Support} from './SupportPage';

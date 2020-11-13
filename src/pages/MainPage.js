@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notice, Event, Support } from './main';
+import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support } from './main';
 
 const { Paths } = require('../paths');
 
@@ -18,7 +18,7 @@ const MainPage = () => {
                 <Route path={Paths.main.mypage.index} component={Mypage} />
                 <Route path={Paths.main.parking.index} component={Parking} />
                 <Route path={Paths.main.event.index} component={Event} />
-                <Route path={Paths.main.notice} component={Notice} />
+                <Route path={Paths.main.notification} component={Notification} />
                 <Route path={Paths.main.coupon} component={Coupon} />
                 <Route path={Paths.main.support + '/:mode?/:modal?'} component={Support} />
                 <Route render={() => <h1>없음</h1>} />
