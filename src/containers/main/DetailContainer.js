@@ -25,7 +25,7 @@ const DetailContainer = () => {
 
     return (
         <div>
-
+            주차공간 상세보기
         </div>
     );
 };
