@@ -2,14 +2,13 @@ $max-width: 768px;
 $min-width: 320px;
 $min-height: 100vh;
 $font-size: 12px;
-$mg-top: 60px;
-$pd-top: 60px;
+$mg-top: 48px;
+$pd-top: 48px;
 $padding: 24px;
 $padding-side: 0 24px;
+$main-color:#222222;
+$disable-color: #DBDBDB;
 
-@mixin padding-side {
-    padding: 0 24px;
-}
 
 // 모바일 컨테이너 믹스인
 @mixin container($pd-top) {

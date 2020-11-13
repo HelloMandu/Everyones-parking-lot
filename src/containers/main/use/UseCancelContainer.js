@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UseCancleContainer = () => {
+const UseCancelContainer = () => {
 
     return (
         <div>
@@ -9,4 +9,4 @@ const UseCancleContainer = () => {
     );
 };
 
-export default UseCancleContainer;
+export default UseCancelContainer;

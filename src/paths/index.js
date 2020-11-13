@@ -8,7 +8,7 @@ export const Paths = {
             index : '/use',
             list : '/use/list',
             detail :'/use/detail',
-            cancle :'/use/cancle',
+            cancel :'/use/cancel',
             extend :'/use/extend',
         },
         review:{
