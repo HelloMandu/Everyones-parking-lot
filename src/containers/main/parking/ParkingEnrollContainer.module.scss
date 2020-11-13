@@ -1,5 +1,19 @@
 @import '../../../static/stylesheets/Root.scss';
 
-.parking-enroll{
+.parking-container{
     @include container(0px);
+    padding: 24px 20px;
+    .verify-phone{
+        position: relative;
+        .phone-button{
+            position: absolute;
+            width: 96px;
+            top: 0;
+            right: 0;
+            .confirm-button{
+                border-radius: 0px;
+            }
+        }
+    }
+
 }

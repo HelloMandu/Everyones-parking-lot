@@ -1,0 +1,16 @@
+@import '../../static/stylesheets/Root.scss';
+html{
+    body{
+        .confirm-button{
+            width: 96px;
+            height: 44px;
+            background-color: $main-color;
+            color:#fff;
+            font-size: 13px;
+            transition: all .3s ease-in;
+            &.disable{
+                background-color: $disable-color;
+            }
+        }
+    }
+}
