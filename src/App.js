@@ -15,7 +15,7 @@ import { Paths } from './paths';
 const App = () => {
     return (
         <>
-            {/* <Header>{"쉽지않네"}</Header> */}
+            <Header>{"쉽지않네"}</Header>
             <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BasicButton.module.scss';
+import styles from './ConfirmButton.module.scss';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
@@ -12,17 +12,17 @@ const cx = cn.bind(styles);
 */
 
 
-const BasicButton =({button_name ,disable})=>{
+const ConfirmButton =({button_name ,disable})=>{
     return(
-        <ButtonBase className={cx('basic-button',{disable})}  disableRipple={disable}>
+        <ButtonBase className={cx('confirm-button',{disable})}  disableRipple={disable}>
             {button_name}
         </ButtonBase>
     )
 }
 
-export default BasicButton;
+export default ConfirmButton;
 
-BasicButton.defaultProps={
+ConfirmButton.defaultProps={
     button_name :'button',
     disable :true,
 }

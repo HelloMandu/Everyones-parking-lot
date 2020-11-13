@@ -3,8 +3,9 @@
 .header{
     display: flex;
     align-items: center;
-    width: 100%;
-    top: $iphone-head;
+    max-width: 768px;
+    margin: 0 auto;
+    height: 48px;
     padding: 15px 24px;
     .title{
         margin-left: 20px;
