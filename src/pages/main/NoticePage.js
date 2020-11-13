@@ -1,11 +1,12 @@
 import React from 'react';
+/* Library */
+
+import NoticeContainer from '../../containers/main/NoticeContainer';
+/* Containers */
 
 const NoticePage = () => {
-    return (
-        <div>
-            알림 페이지
-        </div>
-    );
-}
+
+    return <NoticeContainer />;
+};
 
 export default NoticePage;

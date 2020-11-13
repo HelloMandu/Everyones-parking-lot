@@ -1,10 +1,12 @@
 import React from 'react';
+/* Library */
+
+import PaymentContainer from '../../containers/main/PaymentContainer';
+/* Containers */
 
 const PaymentPage = () => {
-    return (
-        <div>
-            결제
-        </div>
-    );
-}
+
+    return <PaymentContainer />;
+};
+
 export default PaymentPage;

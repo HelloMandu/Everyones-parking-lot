@@ -1,15 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+/* Library */
 
-import { Paths } from '../../paths'
+import MapContainer from '../../containers/main/MapContainer';
+/* Containers */
 
 const MapPage = () => {
 
     return (
         <div>
-            메인 화면 (맵페이지)
-
-            <div><Link to={Paths.main.use.list} >이용내역</Link></div>
+            <MapContainer />
         </div>
     );
 }
