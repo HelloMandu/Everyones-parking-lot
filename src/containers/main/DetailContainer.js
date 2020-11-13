@@ -1,22 +1,22 @@
 import React from 'react';
 
-const DetailInfo = () => {
+// const DetailInfo = () => {
 
-    return (
-        <div>
-            주차공간 상세보기 - 정보
-        </div>
-    );
-};
+//     return (
+//         <div>
+//             주차공간 상세보기 - 정보
+//         </div>
+//     );
+// };
 
-const DetailReview = () => {
+// const DetailReview = () => {
 
-    return (
-        <div>
-            주차공간 상세보기 - 리뷰
-        </div>
-    );
-};
+//     return (
+//         <div>
+//             주차공간 상세보기 - 리뷰
+//         </div>
+//     );
+// };
 
 const DetailContainer = () => {
 

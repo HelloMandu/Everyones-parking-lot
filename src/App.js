@@ -8,11 +8,14 @@ import ErrorPage from './pages/ErrorPage';
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
 
+import Header from './components/header/Header';
+
 import { Paths } from './paths';
 
 const App = () => {
     return (
         <>
+            {/* <Header>{"쉽지않네"}</Header> */}
             <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />

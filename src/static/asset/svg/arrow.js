@@ -9,14 +9,14 @@ const Arrow = () => (
     >
         <path
             id="패스_142"
-            data-name="패스 142"
+            dataname="패스 142"
             d="M-1211.826-2860.78l-8,8.014,8,7.986"
             transform="translate(1220.826 2862.194)"
             fill="none"
             stroke="#333"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
         />
     </svg>
 );

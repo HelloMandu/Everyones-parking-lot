@@ -1,13 +1,3 @@
-$max-width: 768px;
-$min-width: 320px;
-$min-height: 100vh;
-$font-size: 12px;
-$mg-top: 48px;
-$pd-top: 48px;
-$padding: 24px;
-$padding-side: 0 24px;
-$main-color:#222222;
-$disable-color: #DBDBDB;
 
 * {
     box-sizing: border-box;
@@ -20,14 +10,10 @@ $disable-color: #DBDBDB;
         'NanumGothic', '맑은 고딕', 'Malgun Gothic', Ngothic, sans-serif;
 }
 
+html,
 body {
+    font-size: 12px;
     letter-spacing: -0.05rem;
-    font-size: $font-size;
-    max-width: $max-width;
-    min-width: $min-width;
-    min-height: $min-height;
-    margin: 0 auto;
-    padding-top: $pd-top;
 }
 // 기본 체크박스 숨기기
 input[type='checkbox'] {
@@ -54,13 +40,3 @@ select {
 select::-ms-expand {
     display: none;  /* 화살표 없애기 for IE10, 11*/
 }
-
-// 모바일 컨테이너 믹스인
-// @mixin container($pd-top) {
-//     max-width: $max-width;
-//     min-width: $min-width;
-//     min-height: $min-height;
-//     margin: 0 auto;
-//     padding-top: $pd-top;
-// }
-
