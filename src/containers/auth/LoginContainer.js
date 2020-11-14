@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import { ButtonBase } from '@material-ui/core'
 /* Library */
+
+import { Paths } from '../../paths'
 
 import styles from './LoginContainer.module.scss'
 import logo from '../../static/asset/png/logo.png'
@@ -36,7 +39,7 @@ const LoginContainer = () => {
                 <Button name={"네이버로 주차하기"} color={"#EBEBEB"} backgroundColor={"#00BF19"}><Naver /></Button>
                 <Button name={"카카오로 주차하기"} color={"#381E1F"} backgroundColor={"#FCE000"}><Kakao /></Button>
                 <Button name={"페이스북으로 주차하기"} color={"#EBEBEB"} backgroundColor={"#4267B2"}><Facebook /></Button>
-                <Button name={"이메일로 주차하기"} color={"#EBEBEB"} backgroundColor={"#333333"}><Email /></Button>
+                <Link to={Paths.auth.signin} ><Button name={"이메일로 주차하기"} color={"#EBEBEB"} backgroundColor={"#333333"}><Email /></Button></Link>
             </div>
         </div>
     );

@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import { ButtonBase } from '@material-ui/core'
 /* Library */
+
+import { Paths } from '../../paths'
 
 import styles from './SignInContainer.module.scss';
 import logo from '../../static/asset/png/logo.png';
@@ -37,7 +40,7 @@ const SignInContainer = () => {
 
             <div className={styles['button-wrapper']}>
                 <ButtonBase className={styles['button']} style={{color:"#FFFFFF", background:"#222222", fontWeight:"bold", fontSize:"16px"}} >로그인</ButtonBase>
-                <ButtonBase className={styles['button']} >회원가입</ButtonBase>
+                <Link to={Paths.auth.signup} ><ButtonBase className={styles['button']} >회원가입</ButtonBase></Link>
             </div>
 
             <div className={styles['social-text']}>소셜 간편 로그인</div>
