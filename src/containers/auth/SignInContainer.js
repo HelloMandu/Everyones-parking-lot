@@ -5,6 +5,9 @@ import { ButtonBase } from '@material-ui/core'
 
 import { Paths } from '../../paths'
 
+import useInput from '../../hooks/useInput'
+import InputBox from '../../components/inputbox/InputBox'
+
 import styles from './SignInContainer.module.scss';
 import logo from '../../static/asset/png/logo.png';
 
@@ -13,29 +16,43 @@ import Kakao from '../../static/asset/svg/kakao'
 import Facebook from '../../static/asset/svg/facebook'
 
 const SignInContainer = () => {
+    const [email, onChangeEmail] = useInput("")
+    const [password, onChangePassword] = useInput("")
+
+    const onClickLogin = () => {
+        console.log("login")
+    }
+
     return (
         <div className={styles['container']}>
             <div className={styles['logo']}>
                 <img src={logo} alt="" />
             </div>
 
-            <input
-                type="email"
-                className={styles['input']}
-                name="email"
-                placeholder="이메일을 입력해주세요."
+            <InputBox
+                className={"input-radius"}
+                type={"text"}
+                value={email}
+                placeholder={"이메일을 입력해주세요."}
+                onChange={onChangeEmail}
+                onKeyDown={e => {
+                    if(e.key === 'Enter') onClickLogin()
+                }}
             />
-            <input
-                type="password"
-                className={styles['input']}
-                name="password"
-                placeholder="비밀번호을 입력해주세요."
+            
+            <InputBox
+                className={"input-radius"}
+                type={"password"}
+                value={password}
+                placeholder={"비밀번호를 입력해주세요."}
+                onChange={onChangePassword}
+                onKeyDown={e => {
+                    if(e.key === 'Enter') onClickLogin()
+                }}
             />
 
             <div className={styles['right']}>
-                <ButtonBase className={styles['find']}>아이디</ButtonBase>
-                <span>|</span>
-                <ButtonBase className={styles['find']}>비밀번호</ButtonBase>
+                <Link to={Paths.auth.find.index} ><ButtonBase className={styles['find']}>아이디/비밀번호 찾기</ButtonBase></Link>
             </div>
 
             <div className={styles['button-wrapper']}>

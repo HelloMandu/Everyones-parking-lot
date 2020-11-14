@@ -8,8 +8,6 @@ const Arrow = () => (
         viewBox="0 0 10.414 18.829"
     >
         <path
-            id="패스_142"
-            dataname="패스 142"
             d="M-1211.826-2860.78l-8,8.014,8,7.986"
             transform="translate(1220.826 2862.194)"
             fill="none"

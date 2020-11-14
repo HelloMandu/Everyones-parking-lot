@@ -11,8 +11,6 @@ const ArrowSmall = ({ rotate = 0 }) => (
         style={{ transform: `rotate(${getDirectionAngle(rotate)}deg)` }}
     >
         <path
-            id="패스_228"
-            data-name="패스 228"
             d="M-857.63,603.173l4-4,4,4"
             transform="translate(-848.923 603.88) rotate(180)"
             fill="none"
