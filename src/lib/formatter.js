@@ -1,4 +1,3 @@
-import Paths from "../paths";
 
 export function stringNumberToInt(strNumber) {
     // 구분자가 들어간 수치 데이터를 숫자로 변경
@@ -128,21 +127,21 @@ export const telToString = tel => tel ? tel.replace('-', '') : '';
 // 전화번호 표현을 string으로 변경
 
 
-export const DBImageFormat = (url) => {
-    if (typeof url === 'string') {
-        const URL_FORMAT = url
-            .replace(/\\/g, '')
-            .replace(/\[/g, '')
-            .replace(/\]/g, '')
-            .replace(/"/g, '')
-            .replace(/ /g, '');
-        const IMAGES = URL_FORMAT.split(',');
-        return IMAGES.map(IMAGE => Paths.storage + IMAGE);
-    }
-    return '';
-};
+// export const DBImageFormat = (url) => {
+//     if (typeof url === 'string') {
+//         const URL_FORMAT = url
+//             .replace(/\\/g, '')
+//             .replace(/\[/g, '')
+//             .replace(/\]/g, '')
+//             .replace(/"/g, '')
+//             .replace(/ /g, '');
+//         const IMAGES = URL_FORMAT.split(',');
+//         return IMAGES.map(IMAGE => Paths.storage + IMAGE);
+//     }
+//     return '';
+// };
 
-export const hideEmail = (email) => {
-    const s = email.indexOf('@');
-    return email.substr(0, s - 2) + '**';
-};
+// export const hideEmail = (email) => {
+//     const s = email.indexOf('@');
+//     return email.substr(0, s - 2) + '**';
+// };

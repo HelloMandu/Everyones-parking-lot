@@ -1,0 +1,21 @@
+.send-verify {
+    position: relative;
+    margin-bottom: 10px;
+    .confirm-button {
+        width: 96px;
+        height: 48px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+.verify-phone {
+    position: relative;
+    .confirm-button {
+        width: 96px;
+        height: 48px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
