@@ -11,18 +11,21 @@ const cx = cn.bind(styles);
     disable :활성여부
 */
 
-
-const ConfirmButton =({button_name ,disable})=>{
-    return(
-        <ButtonBase className={cx('confirm-button',{disable})}  disableRipple={disable}>
+const ConfirmButton = ({ button_name, disable, focus }) => {
+    return (
+        <ButtonBase
+            className={cx('confirm-button', { disable })}
+            disableRipple={disable}
+            ref={focus}
+        >
             {button_name}
         </ButtonBase>
-    )
-}
+    );
+};
 
 export default ConfirmButton;
 
-ConfirmButton.defaultProps={
-    button_name :'button',
-    disable :true,
-}
+ConfirmButton.defaultProps = {
+    button_name: 'button',
+    disable: true,
+};

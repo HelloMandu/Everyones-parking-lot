@@ -9,7 +9,7 @@ const useInput = (initialValue, callback) =>{
             setCheck(callback(state));
         }
     }, [state, setState, callback]);
-    return [state, onChange, check];
+    return [state, onChange, check, setCheck];
 }
 
 export default useInput;
