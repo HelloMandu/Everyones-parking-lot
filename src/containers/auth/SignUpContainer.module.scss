@@ -3,4 +3,14 @@
 .container{
     width: 100%;
     padding: $iphone-head $padding;
+
+    .input-wrapper{
+        margin-bottom: 20px;
+        .input-title{
+            font-size: 14px;
+            font-weight: bold;
+            color: #999999;
+            margin-bottom: 9px;
+        }
+    }
 }

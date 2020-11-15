@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom'
 import { ButtonBase } from '@material-ui/core'
 /* Library */
@@ -7,6 +8,8 @@ import { Paths } from '../../paths'
 
 import useInput from '../../hooks/useInput'
 import InputBox from '../../components/inputbox/InputBox'
+
+import { useDialog } from '../../hooks/useDialog'
 
 import styles from './SignInContainer.module.scss';
 import logo from '../../static/asset/png/logo.png';
@@ -19,9 +22,31 @@ const SignInContainer = () => {
     const [email, onChangeEmail] = useInput("")
     const [password, onChangePassword] = useInput("")
 
-    const onClickLogin = () => {
-        console.log("login")
+    const emailRef = useRef(null)
+    const passwordRef = useRef(null)
+
+    const openDialog = useDialog()
+    const onClickLogin = async () => {
+        console.log(email, password)
+        if(email === '') openDialog("이메일을 입력해 주세요", "", () => emailRef.current.focus())
+        else if(password === '') openDialog("비밀번호를 입력해 주세요", "", () => passwordRef.current.focus())
+        else{
+            try {
+                const res = await axios.post('http://221.152.146.60:8080/api/user/signin', {
+                    email: 'test@test.com'
+                });
+                console.log(res);
+
+                //res(api 결과)의 메세지에 따라 처리
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
+
+    useEffect(() => {
+        emailRef.current.focus()
+    }, [])
 
     return (
         <div className={styles['container']}>
@@ -38,6 +63,7 @@ const SignInContainer = () => {
                 onKeyDown={e => {
                     if(e.key === 'Enter') onClickLogin()
                 }}
+                reference={emailRef}
             />
             
             <InputBox
@@ -49,6 +75,7 @@ const SignInContainer = () => {
                 onKeyDown={e => {
                     if(e.key === 'Enter') onClickLogin()
                 }}
+                reference={passwordRef}
             />
 
             <div className={styles['right']}>
@@ -56,7 +83,7 @@ const SignInContainer = () => {
             </div>
 
             <div className={styles['button-wrapper']}>
-                <ButtonBase className={styles['button']} style={{color:"#FFFFFF", background:"#222222", fontWeight:"bold", fontSize:"16px"}} >로그인</ButtonBase>
+                <ButtonBase className={styles['button']} style={{color:"#FFFFFF", background:"#222222", fontWeight:"bold", fontSize:"16px"}} onClick={onClickLogin} >로그인</ButtonBase>
                 <Link to={Paths.auth.signup} ><ButtonBase className={styles['button']} >회원가입</ButtonBase></Link>
             </div>
 
