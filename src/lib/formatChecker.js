@@ -3,10 +3,10 @@ export const isEmailForm = (asValue) => {
     return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
 };
 
-export const isCellPhoneForm = (asValue, hyphen = false) => {
-    const regExp = hyphen ? /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
-        : /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-	return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+export const isCellPhoneForm = (asValue) => {
+    const regExp =  /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
+    const hyphenRegExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/
+    return regExp.test(asValue) || hyphenRegExp.test(asValue); // 형식에 맞는 경우 true 리턴
 };
 
 export const isPasswordForm = (asValue) => {
