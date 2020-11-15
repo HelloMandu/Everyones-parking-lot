@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Coupon from '../../components/coupon/Coupon';
+import EnrollCouponContainer from '../../containers/main/parking/EnrollCouponContainer'
 
 const CouponContainer = () => {
-    return <Coupon></Coupon>;
+    return <EnrollCouponContainer></EnrollCouponContainer>;
 };
 
 export default CouponContainer;

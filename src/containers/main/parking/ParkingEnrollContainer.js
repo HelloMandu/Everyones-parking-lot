@@ -1,13 +1,12 @@
-import React, { /*forwardRef,*/ useCallback, useState } from 'react';
-import {Link} from 'react-router-dom'
+import React, { forwardRef, useCallback, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { Dialog, Slide } from '@material-ui/core';
 
-// import { Dialog,Slide } from '@material-ui/core';
-
-import {Paths} from '../../../paths';
+import {Paths} from '../../../paths/index';
 
 import useInput from '../../../hooks/useInput';
 
-// import CouponPage from '../../../pages/main/CouponPage';
+import EnrollCouponContainer from './EnrollCouponContainer';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -21,16 +20,18 @@ import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
-// const Transition = forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-//   });
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const ParkingEnrollContainer = () => {
+const ParkingEnrollContainer = ({match}) => {
     const [point, handleChangePoint] = useInput(0);
     const [openCoupon, setOpenCoupon] = useState(false);
     const onToggleCoupon = useCallback(() => {
         setOpenCoupon(!openCoupon);
     }, [openCoupon]);
+    const history = useHistory();
+    console.log(match.url);
     return (
         <>
             <div className={styles['parkingpayment-container']}>
@@ -41,25 +42,26 @@ const ParkingEnrollContainer = () => {
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
                     <div className={styles['title']}>{'쿠폰 할인'}</div>
-                    <div className={styles['verify-coupon']}>
-                        <div
-                            className={styles['coupon']}
-                            name="coupon"
-                            onClick={onToggleCoupon}
-                        >
-                            오픈 이벤트 10% 할인 이벤트 쿠폰
-                        </div>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
-                    <Link to={Paths.main.coupon}>시발</Link>
-                    {/* <Dialog
+                    <Link className={styles['verify-coupon']} to={Paths.main.parking.enrollment.coupon}>
+                        {/* <div className={styles['verify-coupon']} onClick={()=>{history.push(Paths.main.parking.enrollment.coupon)}}> */}
+                            <div
+                                className={styles['coupon']}
+                                name="coupon"
+                                onClick={onToggleCoupon}
+                            >
+                                오픈 이벤트 10% 할인 이벤트 쿠폰
+                            </div>
+                            <ArrowSmall rotate={180}></ArrowSmall>
+                        {/* </div> */}
+                    </Link>
+                    <Dialog
                         fullScreen
-                        open={openCoupon}
+                        open={match.url !== Paths.main.parking.enrollment.index}
                         onClose={onToggleCoupon}
                         TransitionComponent={Transition}
                     >
-                        <CouponPage></CouponPage>
-                    </Dialog> */}
+                        <EnrollCouponContainer onToggle={onToggleCoupon}></EnrollCouponContainer>
+                    </Dialog>
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
                     <div className={styles['title']}>{'포인트 할인'}</div>
