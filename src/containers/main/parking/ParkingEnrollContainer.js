@@ -1,19 +1,17 @@
 import React, { forwardRef, useCallback, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
-import {Paths} from '../../../paths/index';
-
-import useInput from '../../../hooks/useInput';
+import { Paths } from '../../../paths/index';
 
 import EnrollCouponContainer from './EnrollCouponContainer';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
-import VerifyPhone from '../../../components/verifyphone2/VerifyPhone';
+import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import CheckBox from '../../../components/checkbox/CheckBox';
-import InputBox from '../../../components/inputbox/InputBox';
-import ConfirmButton from '../../../components/button/ConfirmButton';
 import FixedButton from '../../../components/button/FixedButton';
+
+import Point from './Point';
 import Price from './Price';
 
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
@@ -24,14 +22,15 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ParkingEnrollContainer = ({match}) => {
-    const [point, handleChangePoint] = useInput(0);
+const ParkingEnrollContainer = () => {
     const [openCoupon, setOpenCoupon] = useState(false);
-    const onToggleCoupon = useCallback(() => {
-        setOpenCoupon(!openCoupon);
-    }, [openCoupon]);
+    const onOpenCoupon = useCallback(() => {
+        setOpenCoupon(true);
+    }, [setOpenCoupon]);
+    const offOpenCoupon = useCallback(() => {
+        setOpenCoupon(false);
+    }, [setOpenCoupon]);
     const history = useHistory();
-    console.log(match.url);
     return (
         <>
             <div className={styles['parkingpayment-container']}>
@@ -42,47 +41,35 @@ const ParkingEnrollContainer = ({match}) => {
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
                     <div className={styles['title']}>{'쿠폰 할인'}</div>
-                    <Link className={styles['verify-coupon']} to={Paths.main.parking.enrollment.coupon}>
-                        {/* <div className={styles['verify-coupon']} onClick={()=>{history.push(Paths.main.parking.enrollment.coupon)}}> */}
-                            <div
-                                className={styles['coupon']}
-                                name="coupon"
-                                onClick={onToggleCoupon}
-                            >
-                                오픈 이벤트 10% 할인 이벤트 쿠폰
-                            </div>
-                            <ArrowSmall rotate={180}></ArrowSmall>
-                        {/* </div> */}
-                    </Link>
+                    <div
+                        className={styles['verify-coupon']}
+                        onClick={() => {
+                            history.push(Paths.main.parking.enrollment.coupon);
+                        }}
+                    >
+                        <div
+                            className={styles['coupon']}
+                            name="coupon"
+                            onClick={onOpenCoupon}
+                        >
+                            오픈 이벤트 10% 할인 이벤트 쿠폰
+                        </div>
+                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
                     <Dialog
                         fullScreen
-                        open={match.url !== Paths.main.parking.enrollment.index}
-                        onClose={onToggleCoupon}
+                        open={openCoupon}
+                        onClose={offOpenCoupon}
                         TransitionComponent={Transition}
                     >
-                        <EnrollCouponContainer onToggle={onToggleCoupon}></EnrollCouponContainer>
+                        <EnrollCouponContainer
+                            offCoupon={offOpenCoupon}
+                        ></EnrollCouponContainer>
                     </Dialog>
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
                     <div className={styles['title']}>{'포인트 할인'}</div>
-                    <InputBox
-                        className={'input-box'}
-                        type={'text'}
-                        value={point}
-                        placeholder={'사용하실 포인트를 입력해주세요'}
-                        onChange={handleChangePoint}
-                    ></InputBox>
-                    <div className={styles['use-point']}>
-                        <div className={styles['point']}>
-                            내 보유 포인트 <span>35,000P</span>
-                        </div>
-                        <div className={styles['confirm-button']}>
-                            <ConfirmButton
-                                button_name={'전체사용'}
-                                disable={false}
-                            ></ConfirmButton>
-                        </div>
-                    </div>
+                    <Point></Point>
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
                     <div className={styles['title']}>결제수단</div>

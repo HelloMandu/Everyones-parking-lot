@@ -1,14 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import {  useHistory } from 'react-router-dom';
-
+import { useHistory } from 'react-router-dom';
 
 import Coupon from '../../../components/coupon/Coupon';
 import FixedButton from '../../../components/button/FixedButton';
 
-
 import styles from './EnrollCouponContainer.module.scss';
 
-const EnrollCouponContainer = ({onToggle}) => {
+const EnrollCouponContainer = ({ offCoupon }) => {
     const history = useHistory();
     const [useCoupon, setUseCoupon] = useState(false);
     const [couponList, setCouponList] = useState([
@@ -55,7 +53,13 @@ const EnrollCouponContainer = ({onToggle}) => {
     );
 
     return (
-        <div className={styles['enroll-coupon']} onClick={()=>{history.goBack();}}>
+        <div
+            className={styles['enroll-coupon']}
+            onClick={() => {
+                offCoupon();
+                history.goBack();
+            }}
+        >
             <Coupon list={couponList} onClick={onClickCoupon}></Coupon>
             <FixedButton disable={!useCoupon}></FixedButton>
         </div>
