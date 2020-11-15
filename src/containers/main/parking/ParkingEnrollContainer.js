@@ -9,7 +9,7 @@ import useInput from '../../../hooks/useInput';
 import EnrollCouponContainer from './EnrollCouponContainer';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
-import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
+import VerifyPhone from '../../../components/verifyphone2/VerifyPhone';
 import CheckBox from '../../../components/checkbox/CheckBox';
 import InputBox from '../../../components/inputbox/InputBox';
 import ConfirmButton from '../../../components/button/ConfirmButton';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Arrow from '../../static/asset/svg/Arrow';
+import Arrow from '../../static/asset/svg/Arrow2';
 import { IconButton } from '@material-ui/core';
 
 import styles from './Header.module.scss'
