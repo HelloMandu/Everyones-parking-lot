@@ -11,12 +11,13 @@ const cx = cn.bind(styles);
     disable :활성여부
 */
 
-const ConfirmButton = ({ button_name, disable, focus }) => {
+const ConfirmButton = ({ button_name, disable, focus, onClick }) => {
     return (
         <ButtonBase
             className={cx('confirm-button', { disable })}
             disableRipple={disable}
             ref={focus}
+            onClick={onClick}
         >
             {button_name}
         </ButtonBase>

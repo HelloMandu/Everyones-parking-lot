@@ -1,29 +1,34 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
 
 import { isCellPhoneForm } from '../../lib/formatChecker';
 
 import InputBox from '../inputbox/InputBox';
-import ConfirmButton from '../../components/button/ConfirmButton';
+import ConfirmButton from '../button/ConfirmButton';
 
 import styles from './VerifyPhone.module.scss';
 import useKeyDown from '../../hooks/useKeyDown';
 
+const cx = cn.bind(styles);
+
 const VerifyPhone = () => {
-    const [phone, handleChangePhone, phoneCheck, setPhoneCheck] = useInput(
+    const [sent, setSent] = useState(false);
+    const [phone, handleChangePhone, sendEffect, sendCheck, setSendCheck] = useInput(
         '',
         isCellPhoneForm,
     );
     const onClickSendVerify = useCallback(() => {
-        if (phoneCheck) {
+        if (sendCheck) {
             console.log('onClickSendVerify');
-            setPhoneCheck(!phoneCheck);
+            setSendCheck(!sendCheck);
+            setSent(true);
         }
-    }, [phoneCheck, setPhoneCheck]);
+    }, [sendCheck, setSendCheck]);
     const [sendFocus, sendKeyDown] = useKeyDown(onClickSendVerify);
 
-    const [verify, handleChangeVerify, verifyCheck] = useInput(
+    const [verify, handleChangeVerify, verifyEffect, verifyCheck] = useInput(
         '',
         (state) => state.length === 6,
     );
@@ -33,6 +38,9 @@ const VerifyPhone = () => {
         }
     }, [verifyCheck]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
+
+    useEffect(sendEffect, [sendEffect]);
+    useEffect(verifyEffect, [verifyEffect]);
     return (
         <>
             <div className={styles['send-verify']}>
@@ -47,12 +55,13 @@ const VerifyPhone = () => {
                 <div className={styles['confirm-button']}>
                     <ConfirmButton
                         button_name={'인증번호 발송'}
-                        disable={!phoneCheck}
+                        disable={!sendCheck}
                         focus={sendFocus}
+                        onClick={onClickSendVerify}
                     ></ConfirmButton>
                 </div>
             </div>
-            <div className={styles['verify-phone']}>
+            <div className={cx('verify-phone', { sent })}>
                 <InputBox
                     className={'input-box'}
                     type={'text'}

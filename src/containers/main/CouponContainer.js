@@ -1,12 +1,9 @@
 import React from 'react';
 
-const CouponContainer = () => {
+import Coupon from '../../components/coupon/Coupon';
 
-    return (
-        <div>
-            쿠폰 페이지
-        </div>
-    );
+const CouponContainer = () => {
+    return <Coupon></Coupon>;
 };
 
 export default CouponContainer;

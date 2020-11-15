@@ -11,6 +11,10 @@
 }
 .verify-phone {
     position: relative;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    transition: all .3s ease-in;
     .confirm-button {
         width: 96px;
         height: 48px;
@@ -18,4 +22,10 @@
         top: 0;
         right: 0;
     }
+}
+
+.sent{
+    opacity: 1;
+    pointer-events: auto;
+    height: auto;
 }
