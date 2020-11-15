@@ -11,18 +11,22 @@ const cx = cn.bind(styles);
     disable :활성여부
 */
 
+const FixedButton = ({ button_name, disable }) => {
+    return (
+        <div className={styles["fixed-button-container"]}>
+            <ButtonBase
+                className={cx('fixed-button', { disable })}
+                disableRipple={disable}
+            >
+                {button_name}
+            </ButtonBase>
+        </div>
+    );
+};
 
-const BasicButton =({button_name ,disable})=>{
-    return(
-        <ButtonBase className={cx('basic-button',{disable})}  disableRipple={disable}>
-            {button_name}
-        </ButtonBase>
-    )
-}
+export default FixedButton;
 
-export default BasicButton;
-
-BasicButton.defaultProps={
-    button_name :'button',
-    disable :true,
-}
+FixedButton.defaultProps = {
+    button_name: 'button',
+    disable: true,
+};
