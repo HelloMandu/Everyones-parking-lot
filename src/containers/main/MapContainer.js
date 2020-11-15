@@ -5,16 +5,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import styles from './MapContainer.module.scss';
 import cn from 'classnames/bind';
 import { ButtonBase, IconButton } from '@material-ui/core';
-import search_icon from '../../static/asset/svg/search.svg'
-import zoom_in from '../../static/asset/svg/plus.svg'
-import zoom_out from '../../static/asset/svg/minus.svg'
-import filter_img from '../../static/asset/svg/filter.svg';
-import time_img from '../../static/asset/svg/time.svg'
-import like_img from '../../static/asset/svg/like.svg';
-import MarkerImg from '../../static/asset/svg/marker2.svg';
+import search_icon from '../../static/asset/svg/main/search.svg'
+import zoom_in from '../../static/asset/svg/main/plus.svg'
+import zoom_out from '../../static/asset/svg/main/minus.svg'
+import filter_img from '../../static/asset/svg/main/filter.svg';
+import time_img from '../../static/asset/svg/main/time.svg'
+import like_img from '../../static/asset/svg/main/like.svg';
+import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 
-
-
+//componenst
+import Aside from '../../components/aside/Aside';
 //lib
 import { Paths } from '../../paths';
 
@@ -22,7 +22,7 @@ const cx = cn.bind(styles);
 
 const MapContainer = () => {
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const kakao_map = useRef(null);
     useEffect(() => {
         mapScript();
@@ -59,8 +59,7 @@ const MapContainer = () => {
 
      
         markerdata.forEach((el) => {
-            // 마커를 생성합니다
-            var content = `<span class="custom-overlay">${el.title}</span>`;
+            let content = `<span class="custom-overlay">${el.title}</span>`;
 
             let marker = new kakao.maps.Marker({
                 image: markerImage, 
@@ -74,9 +73,7 @@ const MapContainer = () => {
                 content: content,
                 yAnchor: 1
             });
-            // 마커에 클릭이벤트를 등록합니다
             kakao.maps.event.addListener(marker, 'click', function () {
-                // 마커 위에 인포윈도우를 표시합니다
                 console.log(el.title);
             });
 
@@ -116,9 +113,8 @@ const MapContainer = () => {
                     <CircleButton src={filter_img} />
                     <CircleButton src={time_img} />
                     <CircleButton src={like_img} />
-                </div>
-                <div className={cx('slide-menu', { open })} />
-                <div className={cx('dim', { open })} onClick={() => setOpen(false)} />
+                </div>      
+                <Aside open={open} handleClose ={()=> setOpen(false)}/>
             </div>
         </>
     );
