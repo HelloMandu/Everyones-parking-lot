@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import cn from 'classnames/bind';
 
+import CouponCheckBox from './CouponCheckBox';
+
 import { numberFormat } from '../../lib/formatter';
 
 import styles from './Coupon.module.scss';
@@ -18,7 +20,9 @@ const CouponItem = ({ subject, endDate, price, checked }) => {
                     {numberFormat(price)}원
                 </div>
             </div>
-            <div className={cx({ checked })}></div>
+            <div className={styles['state-box']}>
+                <div className={cx({ checked })}></div>
+            </div>
         </>
     );
 };
@@ -65,8 +69,12 @@ const Coupon = () => {
     return (
         <ul className={styles['coupon-list']}>
             {couponList.map(
-                ({cp_id, cp_subject, cp_end_date, cp_price, checked}) => (
-                    <li key={cp_id} onClick={() => onClickCoupon(cp_id)}>
+                ({ cp_id, cp_subject, cp_end_date, cp_price, checked }) => (
+                    <li
+                        className={styles['coupon-item']}
+                        key={cp_id}
+                        onClick={() => onClickCoupon(cp_id)}
+                    >
                         <CouponItem
                             subject={cp_subject}
                             endDate={cp_end_date}

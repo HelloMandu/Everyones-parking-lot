@@ -1,13 +1,13 @@
-import React, { forwardRef, useCallback, useState } from 'react';
+import React, { /*forwardRef,*/ useCallback, useState } from 'react';
 import {Link} from 'react-router-dom'
 
-import { Dialog,Slide } from '@material-ui/core';
+// import { Dialog,Slide } from '@material-ui/core';
 
 import {Paths} from '../../../paths';
 
 import useInput from '../../../hooks/useInput';
 
-import CouponPage from '../../../pages/main/CouponPage';
+// import CouponPage from '../../../pages/main/CouponPage';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -21,9 +21,9 @@ import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
-const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+// const Transition = forwardRef(function Transition(props, ref) {
+//     return <Slide direction="up" ref={ref} {...props} />;
+//   });
 
 const ParkingEnrollContainer = () => {
     const [point, handleChangePoint] = useInput(0);

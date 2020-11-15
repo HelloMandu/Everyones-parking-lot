@@ -1,0 +1,16 @@
+.coupon-list{
+    width: 100%;
+    padding: 0px 40px;
+    .coupon-item{
+        display: flex;
+        align-items: center;
+        max-width: 295px;
+        height: 160px;
+        border: 1px solid #E9EBED;
+        border-left: 4px solid #222222;
+        margin: 32px auto;
+        .default{
+            transform: rotate(-90deg);
+        }
+    }
+}
