@@ -65,7 +65,7 @@ const Coupon = () => {
     return (
         <ul className={styles['coupon-list']}>
             {couponList.map(
-                (cp_id, cp_subject, cp_end_date, cp_price, checked) => (
+                ({cp_id, cp_subject, cp_end_date, cp_price, checked}) => (
                     <li key={cp_id} onClick={() => onClickCoupon(cp_id)}>
                         <CouponItem
                             subject={cp_subject}
