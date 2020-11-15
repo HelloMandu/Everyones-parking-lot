@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -8,6 +8,11 @@ import { ButtonBase, IconButton } from '@material-ui/core';
 import search_icon from '../../static/asset/svg/search.svg'
 import zoom_in from '../../static/asset/svg/plus.svg'
 import zoom_out from '../../static/asset/svg/minus.svg'
+import filter_img from '../../static/asset/svg/filter.svg';
+import time_img from '../../static/asset/svg/time.svg'
+import like_img from '../../static/asset/svg/like.svg';
+import MarkerImg from '../../static/asset/svg/marker2.svg';
+
 
 
 //lib
@@ -23,10 +28,10 @@ const MapContainer = () => {
         mapScript();
     }, []);
 
-    const zoomMap = (type)=>{
+    const zoomMap = (type) => {
 
         let level = kakao_map.current.getLevel();
-        level = type==='zoomin' ? level-1 : level +1; 
+        level = type === 'zoomin' ? level - 1 : level + 1;
         kakao_map.current.setLevel(level, {
             animate: {
                 duration: 300
@@ -38,79 +43,48 @@ const MapContainer = () => {
     const mapScript = () => {
         let container = document.getElementById("map");
         let options = {
-            center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
+            center: new kakao.maps.LatLng(37.62197524055062,  127.16017523675508),
             level: 5,
         };
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
+        var imageSrc = MarkerImg, // 마커이미지의 주소입니다    
+            imageSize = new kakao.maps.Size(120, 70), // 마커이미지의 크기입니다
+            imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
-        const marker = new kakao.maps.Marker({
-            position: map.getCenter()
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+
+
+     
+        markerdata.forEach((el) => {
+            // 마커를 생성합니다
+            var content = `<span class="custom-overlay">${el.title}</span>`;
+
+            let marker = new kakao.maps.Marker({
+                image: markerImage, 
+                map: map,
+                position: new kakao.maps.LatLng(el.lat, el.lng),
+                title: el.title,
+            });
+            new kakao.maps.CustomOverlay({
+                map: map,
+                position: new kakao.maps.LatLng(el.lat, el.lng),
+                content: content,
+                yAnchor: 1
+            });
+            // 마커에 클릭이벤트를 등록합니다
+            kakao.maps.event.addListener(marker, 'click', function () {
+                // 마커 위에 인포윈도우를 표시합니다
+                console.log(el.title);
+            });
+
         });
-        marker.setMap(map);
-
-        kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-
-            // 클릭한 위도, 경도 정보를 가져옵니다 
-            var latlng = mouseEvent.latLng;
-
-            // 마커 위치를 클릭한 위치로 옮깁니다
-            marker.setPosition(latlng);
-
-            var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-            message += '경도는 ' + latlng.getLng() + ' 입니다';
-            console.log(message);
-            var resultDiv = document.getElementById('clickLatlng');
-            var level = kakao_map.current.getLevel();
-            console.log(level);
-            //resultDiv.innerHTML = message;
-
-        });
-
-        // markerdata.forEach((el) => {
-        //     const marker = new kakao.maps.Marker({
-        //         map: map,
-        //         position: new kakao.maps.LatLng(el.lat, el.lng),
-        //         title: el.title,
-        //         clickable: true
-        //     })
-
-        //     var iwContent = '<div style="padding:5px;">Hello Wozzzrld!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        //         iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-        //     // 인포윈도우를 생성합니다
-        //     var infowindow = new kakao.maps.InfoWindow({
-        //         content: iwContent,
-        //         removable: iwRemoveable
-        //     });
-
-        //     // 마커에 클릭이벤트를 등록합니다
-        //     kakao.maps.event.addListener(marker, 'click', function () {
-        //         // 마커 위에 인포윈도우를 표시합니다
-        //         infowindow.open(map, marker);
-        //     });
-
-        // });
 
 
+        
 
-
-
-        /* 단일 마커 표시 */
-
-        // //마커가 표시될 위치
-        // let markerPosition = new kakao.maps.LatLng(
-        //     37.62197524055062,
-        //     127.16017523675508
-        // );
-
-        // //마커 생성
-        // let marker = new kakao.maps.Marker({
-        //     position : markerPosition,
-        // });
-        // //마커를 지도위에 표시
-        // marker.setMap(map);
     };
 
     return (
@@ -139,9 +113,9 @@ const MapContainer = () => {
 
                 </div>
                 <div className={cx('side-bar', 'right')}>
-                    <CircleButton src={search_icon} />
-                    <CircleButton src={search_icon} />
-                    <CircleButton src={search_icon} />
+                    <CircleButton src={filter_img} />
+                    <CircleButton src={time_img} />
+                    <CircleButton src={like_img} />
                 </div>
                 <div className={cx('slide-menu', { open })} />
                 <div className={cx('dim', { open })} onClick={() => setOpen(false)} />
@@ -158,5 +132,28 @@ const CircleButton = ({ src, onClick }) => {
     )
 }
 
+
+const markerdata = [
+    {
+      title: "콜드스퀘어",
+      lat: 37.62197524055062,
+      lng: 127.16017523675508,
+    },
+    {
+      title: "하남돼지집",
+      lat: 37.620842424005616,
+      lng: 127.1583774403176,
+    },
+    {
+      title: "수유리우동",
+      lat: 37.624915253753194,
+      lng: 127.15122688059974,
+    },
+    {
+      title: "맛닭꼬",
+      lat: 37.62456273069659,
+      lng: 127.15211256646381,
+    },
+  ];
 
 export default MapContainer;
