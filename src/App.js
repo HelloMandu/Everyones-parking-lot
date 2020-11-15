@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch,useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
@@ -13,9 +13,19 @@ import Header from './components/header/Header';
 import { Paths } from './paths';
 
 const App = () => {
+
+    const location = useLocation();
+
+    const renderHeader =()=>{
+
+    }
+    const getHeaderTitle =()=>{
+ 
+    }
+
     return (
         <>
-            <Header>{"쉽지않네"}</Header>
+            <Header title={"주차장"}></Header>
             <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />
