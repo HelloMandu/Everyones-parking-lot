@@ -15,6 +15,10 @@ body {
     font-size: 12px;
     letter-spacing: -0.05rem;
 }
+input{
+    box-sizing: border-box;
+    outline: none;
+}
 // 기본 체크박스 숨기기
 input[type='checkbox'] {
     display: none;
