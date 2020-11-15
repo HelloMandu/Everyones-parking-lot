@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" viewBox="0 0 22 22">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_1837" data-name="사각형 1837" width="22" height="22" transform="translate(-1930 -1744)" fill="#555"/>
+    </clipPath>
+  </defs>
+  <g id="마스크_그룹_3" data-name="마스크 그룹 3" transform="translate(1930 1744)" clip-path="url(#clip-path)">
+    <g id="future" transform="translate(-1930 -1744)">
+      <g id="그룹_3837" data-name="그룹 3837">
+        <g id="그룹_3836" data-name="그룹 3836">
+          <path id="패스_155" data-name="패스 155" d="M21.355,10.355a.645.645,0,0,0-.645.645,9.707,9.707,0,1,1-5.072-8.533l-.806.806a.645.645,0,0,0,.456,1.1h3.084a.645.645,0,0,0,.645-.645V.645a.645.645,0,0,0-1.1-.456L16.584,1.522A11,11,0,0,0,3.222,18.778,11,11,0,0,0,22,11,.644.644,0,0,0,21.355,10.355Z" fill="#555"/>
+        </g>
+      </g>
+      <g id="그룹_3839" data-name="그룹 3839">
+        <g id="그룹_3838" data-name="그룹 3838">
+          <path id="패스_156" data-name="패스 156" d="M15.142,10.355h-3.5v-3.5a.645.645,0,0,0-1.289,0V11a.645.645,0,0,0,.645.645h4.142a.645.645,0,0,0,0-1.289Z" fill="#555"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

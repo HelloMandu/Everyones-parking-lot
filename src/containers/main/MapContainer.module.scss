@@ -1,0 +1,5 @@
+@import '../../static/stylesheets/Root.scss';
+.container{
+    @include container(0px);
+    overflow: hidden;
+}
