@@ -3,6 +3,7 @@
 .parkingpayment-container {
     @include container(0px);
     padding: 24px 20px;
+    margin-bottom: 140px;
     .parkingpayment-wrapper {
         position: relative;
         width: 100%;
