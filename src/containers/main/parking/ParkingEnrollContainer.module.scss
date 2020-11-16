@@ -1,5 +1,55 @@
 @import '../../../static/stylesheets/Root.scss';
 
-.parking-enroll{
-    @include container(0px);
+.parkingpayment-container {
+    padding: 24px 20px;
+    @include container($pd-top);
+    margin-bottom: 140px;
+    .parkingpayment-wrapper {
+        position: relative;
+        width: 100%;
+        margin-top: 41px;
+        margin-bottom: 14px;
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 13px;
+        }
+        .verify-coupon {
+            position: relative;
+            .coupon {
+                width: 100%;
+                height: 48px;
+                border: 1px solid #ebebeb;
+                padding-left: 10px;
+                font-size: 15px;
+                line-height: 48px;
+            }
+            svg {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+            }
+        }
+
+        .verify-payment {
+            position: relative;
+            .payment {
+                padding-left: 10px;
+                width: 100%;
+                height: 48px;
+                border: 1px solid #ebebeb;
+                font-size: 15px;
+                line-height: 48px;
+            }
+            svg {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+            }
+        }
+    }
 }

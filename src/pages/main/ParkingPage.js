@@ -16,7 +16,7 @@ const ParkingPage = () => {
         <div>
             <Switch>
                 <Route path={Paths.main.parking.manage} component={ParkingManageContainer} />
-                <Route path={Paths.main.parking.enrollment} component={ParkingEnrollContainer} />
+                <Route path={Paths.main.parking.enrollment.index} component={ParkingEnrollContainer} />
                 <Route path={Paths.main.parking.preview} component={ParkingPreviewContainer} />
                 <Route render={() => <h1>주차관리 404</h1>} />
             </Switch>

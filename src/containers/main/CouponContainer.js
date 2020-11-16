@@ -1,12 +1,9 @@
 import React from 'react';
 
-const CouponContainer = () => {
+import EnrollCouponContainer from '../../containers/main/parking/EnrollCouponContainer'
 
-    return (
-        <div>
-            쿠폰 페이지
-        </div>
-    );
+const CouponContainer = () => {
+    return <EnrollCouponContainer></EnrollCouponContainer>;
 };
 
 export default CouponContainer;
