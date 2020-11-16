@@ -2,7 +2,8 @@
 
 .container{
     width: 100%;
-    padding-top: $iphone-head;
+
+    @include container($pd-top);
 
     .logo{
         height: 275px;
