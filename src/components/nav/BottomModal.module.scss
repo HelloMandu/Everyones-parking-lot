@@ -1,0 +1,109 @@
+@import '../../static/stylesheets/Root.scss';
+
+.bottom-modal {
+    display: block;
+    position: fixed;
+    max-width: $max-width;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 2600;
+    width: 100%;
+    padding: 30px 24px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    box-sizing: border-box;
+    background-color: white;
+    transition: all 0.3s ease-in-out;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    .box{
+        height: 500px;
+        .modal-title{
+            font-size: 18px;
+            font-weight: bold;
+            color:#222;
+        }
+    }
+    &.on {
+        -webkit-transform: translateY(-100%);
+        transform: translateY(-100%);
+    }
+
+}
+
+.selector {
+    background-color: #F7F8F9;
+    border-radius: 10px;
+    padding:15px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .name {
+        color: #333;
+        font-size: 14px;
+    }
+    .toggle {
+        .box {
+            position: relative;
+            width: 48px; height: 28px;
+            border-radius: 14px;
+            border: solid 1px #DBDBDB;
+            background-color: #F0F0F0;
+            transition: all .3s cubic-bezier(0.39, 0.575, 0.565, 1);
+            cursor: pointer;
+            .switch {
+                position: absolute;
+                padding:2px;
+                width: 24px; height: 24px;
+                left: 1px; top: 1px;
+                transition: all .3s cubic-bezier(0.39, 0.575, 0.565, 1);
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%; height: 100%;
+                    top: 50%; left: 50%;
+                    transform: translate(-50%, -50%);
+                    border-radius: 50%;
+                    background-color: #fff;
+                    box-shadow: rgba($color: #fff, $alpha: 0.16) 0px 3px 3px;
+                    transition: all .3s cubic-bezier(0.39, 0.575, 0.565, 1);
+                }
+            }
+            // &:hover {
+            //     .switch::before {
+            //         content: '';
+            //         position: absolute;
+            //         width: 150%; height: 150%;
+            //         top: 50%; left: 50%;
+            //         transform: translate(-50%, -50%);
+            //         border-radius: 50%;
+            //         background-color: rgba($color: #000000, $alpha: 0.1);
+            //     }
+            // }
+        }
+        &.checked {
+            .box {
+                background-color: $main-color;
+                .switch {
+                    left: 45%;
+                    &::before {
+                        background: rgba($color: $main-color, $alpha: 0.2)
+                    }
+                    &::after {
+                        background-color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
+
+html {
+    body {
+        .dim {
+            z-index: 2500;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState,useReducer, useRef } from 'react';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -15,6 +15,7 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 
 //componenst
 import Aside from '../../components/aside/Aside';
+import BottomModal from '../../components/nav/BottomModal';
 //lib
 import { Paths } from '../../paths';
 
@@ -22,8 +23,18 @@ const cx = cn.bind(styles);
 
 const MapContainer = () => {
 
-    const [open, setOpen] = useState(true);
+    const [modalState, dispatchHandle] = useReducer(
+        (state, action) => {
+            return {
+                ...state,
+                [action.type]: action.payload,
+            };
+        },
+        { aside_: false, filter_: false },
+    );
+
     const kakao_map = useRef(null);
+    
     useEffect(() => {
         mapScript();
     }, []);
@@ -38,7 +49,6 @@ const MapContainer = () => {
             }
         });
     }
-
 
     const mapScript = () => {
         let container = document.getElementById("map");
@@ -56,8 +66,6 @@ const MapContainer = () => {
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
 
-
-     
         markerdata.forEach((el) => {
             let content = `<span class="custom-overlay">${el.title}</span>`;
 
@@ -79,9 +87,6 @@ const MapContainer = () => {
 
         });
 
-
-        
-
     };
 
     return (
@@ -91,7 +96,7 @@ const MapContainer = () => {
                     <div id="map" style={{ width: "100vw", height: "100vh", zIndex: 1 }} />
                 </div>
 
-                <ButtonBase className={styles['menu']} onClick={() => { setOpen(true) }}>
+                <ButtonBase className={styles['menu']} onClick={() => { dispatchHandle({ type: 'aside_', payload: true }) }}>
                     <div className={styles['line-box']}>
                         <div className={styles['line']} />
                         <div className={styles['line']} />
@@ -110,12 +115,13 @@ const MapContainer = () => {
 
                 </div>
                 <div className={cx('side-bar', 'right')}>
-                    <CircleButton src={filter_img} />
+                    <CircleButton src={filter_img}  onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }}/>
                     <CircleButton src={time_img} />
                     <CircleButton src={like_img} />
                 </div>      
-                <Aside open={open} handleClose ={()=> setOpen(false)}/>
+                <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
             </div>
+            <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }}/>
         </>
     );
 };
