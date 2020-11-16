@@ -16,7 +16,7 @@ const CheckBoxItem = memo(({ checked, description, onToggle }) => {
     );
 });
 
-const CheckBox = ({ allCheckTitle, checkListProps }) => {
+const CheckBox = ({ allCheckTitle, checkListProps, box }) => {
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
     const onToggleAll = useCallback(() => {
@@ -50,7 +50,7 @@ const CheckBox = ({ allCheckTitle, checkListProps }) => {
     }, [checkList, checkListProps]);
     return (
         <div>
-            <div className={cx('checkitem', 'allcheck')}>
+            <div className={cx('checkitem', 'allcheck', {box})}>
                 <CheckBoxItem
                     checked={allCheck}
                     description={allCheckTitle}

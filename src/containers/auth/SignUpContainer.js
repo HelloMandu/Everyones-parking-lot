@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 /* Library */
 
 import useInput from '../../hooks/useInput';
@@ -10,6 +10,8 @@ import {
 } from '../../lib/formatChecker';
 
 import CheckBox from '../../components/checkbox/CheckBox';
+
+import FixedButton from '../../components/button/FixedButton';
 
 import styles from './SignUpContainer.module.scss';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
@@ -89,114 +91,121 @@ const SignUpContainer = () => {
         console.log('sign up');
     };
 
+    const [signUp, setSignUp] = useState(false);
+
     return (
-        <div className={styles['container']}>
-            <div className={styles['input-wrapper']}>
-                <div className={styles['input-title']}>이메일</div>
-                <InputBox
-                    className={'input-bar'}
-                    type={'text'}
-                    value={email}
-                    placeholder={'이메일을 입력해주세요.'}
-                    onChange={onChangeEmail}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') onClickSignUp();
-                    }}
-                />
-            </div>
+        <>
+            <div className={styles['container']}>
+                <div className={styles['input-wrapper']}>
+                    <div className={styles['input-title']}>이메일</div>
+                    <InputBox
+                        className={'input-bar'}
+                        type={'text'}
+                        value={email}
+                        placeholder={'이메일을 입력해주세요.'}
+                        onChange={onChangeEmail}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') onClickSignUp();
+                        }}
+                    />
+                </div>
 
-            <div className={styles['input-wrapper']}>
-                <div className={styles['input-title']}>이름</div>
-                <InputBox
-                    className={'input-bar'}
-                    type={'text'}
-                    value={name}
-                    placeholder={'이름을 입력해주세요.'}
-                    onChange={onChangeName}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') onClickSignUp();
-                    }}
-                />
-            </div>
+                <div className={styles['input-wrapper']}>
+                    <div className={styles['input-title']}>이름</div>
+                    <InputBox
+                        className={'input-bar'}
+                        type={'text'}
+                        value={name}
+                        placeholder={'이름을 입력해주세요.'}
+                        onChange={onChangeName}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') onClickSignUp();
+                        }}
+                    />
+                </div>
 
-            <div className={styles['input-wrapper']}>
-                <div className={styles['input-title']}>비밀번호</div>
-                <InputBox
-                    className={'input-bar'}
-                    type={'password'}
-                    value={password}
-                    placeholder={'비밀번호를 입력해주세요.'}
-                    onChange={onChangePassword}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') onClickSignUp();
-                    }}
-                />
-                <InputBox
-                    className={'input-bar'}
-                    type={'password'}
-                    value={passwordCheck}
-                    placeholder={'비밀번호를 재입력해주세요.'}
-                    onChange={onChangePasswordCheck}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') onClickSignUp();
-                    }}
-                />
-            </div>
+                <div className={styles['input-wrapper']}>
+                    <div className={styles['input-title']}>비밀번호</div>
+                    <InputBox
+                        className={'input-bar'}
+                        type={'password'}
+                        value={password}
+                        placeholder={'비밀번호를 입력해주세요.'}
+                        onChange={onChangePassword}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') onClickSignUp();
+                        }}
+                    />
+                    <InputBox
+                        className={'input-bar'}
+                        type={'password'}
+                        value={passwordCheck}
+                        placeholder={'비밀번호를 재입력해주세요.'}
+                        onChange={onChangePasswordCheck}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') onClickSignUp();
+                        }}
+                    />
+                </div>
 
-            <div className={styles['input-wrapper']}>
-                <div className={styles['input-title']}>생년월일</div>
+                <div className={styles['input-wrapper']}>
+                    <div className={styles['input-title']}>생년월일</div>
 
-                <div className={styles['select-wrapper']}>
-                    <div className={styles['select-item']}>
-                        <select className={styles['select']}>
-                            {YEAR.map((y) => (
-                                <option key={y}>{y}년</option>
-                            ))}
-                        </select>
-                        <ArrowSmall rotate={180} />
-                    </div>
+                    <div className={styles['select-wrapper']}>
+                        <div className={styles['select-item']}>
+                            <select className={styles['select']}>
+                                {YEAR.map((y) => (
+                                    <option key={y}>{y}년</option>
+                                ))}
+                            </select>
+                            <ArrowSmall rotate={180} />
+                        </div>
 
-                    <div className={styles['select-item']}>
-                        <select className={styles['select']}>
-                            {MONTH.map((m) => (
-                                <option key={m}>{m}월</option>
-                            ))}
-                        </select>
-                        <ArrowSmall rotate={180} />
-                    </div>
+                        <div className={styles['select-item']}>
+                            <select className={styles['select']}>
+                                {MONTH.map((m) => (
+                                    <option key={m}>{m}월</option>
+                                ))}
+                            </select>
+                            <ArrowSmall rotate={180} />
+                        </div>
 
-                    <div className={styles['select-item']}>
-                        <select className={styles['select']}>
-                            {DAY.map((d) => (
-                                <option key={d}>{d}일</option>
-                            ))}
-                        </select>
-                        <ArrowSmall rotate={180} />
+                        <div className={styles['select-item']}>
+                            <select className={styles['select']}>
+                                {DAY.map((d) => (
+                                    <option key={d}>{d}일</option>
+                                ))}
+                            </select>
+                            <ArrowSmall rotate={180} />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className={styles['input-wrapper']}>
-                <div className={styles['input-title']}>휴대폰 번호</div>
-                <InputBox
-                    className={'input-bar'}
-                    type={'text'}
-                    value={phone}
-                    placeholder={'이름을 입력해주세요.'}
-                    onChange={onChangePhone}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') onClickSignUp();
-                    }}
-                />
-            </div>
+                <div className={styles['input-wrapper']}>
+                    <div className={styles['input-title']}>휴대폰 번호</div>
+                    <InputBox
+                        className={'input-bar'}
+                        type={'text'}
+                        value={phone}
+                        placeholder={'이름을 입력해주세요.'}
+                        onChange={onChangePhone}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') onClickSignUp();
+                        }}
+                    />
+                </div>
 
-            <div className={styles['check-box-wrapper']}>
-                <CheckBox
-                    allCheckTitle={'모두 동의합니다.'}
-                    checkListProps={checkList}
-                />
+                <div className={styles['check-box-wrapper']}>
+                    <CheckBox
+                        allCheckTitle={'모두 동의합니다.'}
+                        checkListProps={checkList}
+                        box={true}
+                    />
+                </div>
             </div>
-        </div>
+            
+            <FixedButton button_name={'회원가입하기'} disable={signUp} />
+        </>
     );
 };
 

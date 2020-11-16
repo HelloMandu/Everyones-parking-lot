@@ -2,7 +2,7 @@
 
 .container{
     width: 100%;
-    padding: $padding;
+    padding: 0 $padding 120px;
 
     @include container($pd-top);
 

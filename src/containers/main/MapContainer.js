@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useState,useReducer, useRef } from 'react';
+import React, { useEffect,useReducer, useRef } from 'react';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -17,7 +17,6 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
 //lib
-import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 
