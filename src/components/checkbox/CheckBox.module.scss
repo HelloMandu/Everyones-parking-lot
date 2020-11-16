@@ -27,6 +27,16 @@
             opacity: 1;
         }
     }
+
+    .sub-description{
+        font-size: 12px;
+        position: absolute;
+        z-index: 10;
+        bottom: -30px;
+        width: 80%;
+        left: 35px;
+        color: #AAAAAA;
+    }
 }
 .allcheck {
     margin-top: 38px;
