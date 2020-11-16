@@ -17,6 +17,7 @@ SwiperCore.use([Controller, Scrollbar]);
 const CouponContainer = () => {
     const [firstSwiper, setFirstSwiper] = useState(null);
     const [secondSwiper, setSecondSwiper] = useState(null);
+    
     const [couponList, setCouponList] = useState([
         {
             cp_id: 1,
