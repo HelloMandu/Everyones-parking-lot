@@ -16,21 +16,6 @@ const CheckBoxItem = memo(({ checked, description, onToggle }) => {
     );
 });
 
-// const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
-
-// const enroll = [
-//     {
-//         id: 1,
-//         checked: false,
-//         description: '개인정보취급방침',
-//     },
-//     {
-//         id: 2,
-//         checked: false,
-//         description: '이용약관',
-//     },
-// ];
-
 const CheckBox = ({ allCheckTitle, checkListProps }) => {
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
