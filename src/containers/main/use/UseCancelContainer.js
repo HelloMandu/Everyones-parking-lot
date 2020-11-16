@@ -1,12 +1,14 @@
 import React from 'react';
+import qs from 'qs'
 
-const UseCancelContainer = () => {
+const UseCancelContainer = ({location}) => {
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true
+    })
 
-    return (
-        <div>
-            이용취소
-        </div>
-    );
+    const {id} = query
+
+    return <>취소_{id}</>
 };
 
 export default UseCancelContainer;

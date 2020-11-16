@@ -1,0 +1,50 @@
+@import '../../static/stylesheets/Root.scss';
+
+.container{
+    width: 100%;
+    padding-top: $iphone-head;
+
+    .logo{
+        height: 275px;
+        
+        & > img{
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .background{
+        & > img{
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            vertical-align: bottom;
+        }
+    }
+
+    .area{
+        height: 323px;
+        position: relative;
+        background-color: $main-color;
+        padding: 41px $padding 0;
+        border: none;
+
+        .button{
+            width: 100%;
+            border: none;
+            border-radius: 100px;
+            height: 48px;
+            text-align: center;
+            line-height: 48px;
+            font-size: 15px;
+            margin-bottom: 12px;
+
+            & > svg{
+                vertical-align: baseline;
+                margin-right: 12px;
+            }
+        }
+    }
+}
