@@ -1,13 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Coupon from '../../../components/coupon/Coupon';
 import FixedButton from '../../../components/button/FixedButton';
 
 import styles from './EnrollCouponContainer.module.scss';
 
-const EnrollCouponContainer = ({ offCoupon }) => {
-    const history = useHistory();
+const EnrollCouponContainer = () => {
     const [useCoupon, setUseCoupon] = useState(false);
     const [couponList, setCouponList] = useState([
         {
@@ -53,15 +51,12 @@ const EnrollCouponContainer = ({ offCoupon }) => {
     );
 
     return (
-        <div
-            className={styles['enroll-coupon']}
-            onClick={() => {
-                offCoupon();
-                history.goBack();
-            }}
-        >
+        <div className={styles['enroll-coupon']}>
             <Coupon list={couponList} onClick={onClickCoupon}></Coupon>
-            <FixedButton disable={!useCoupon}></FixedButton>
+            <FixedButton
+                button_name={'쿠폰적용'}
+                disable={!useCoupon}
+            ></FixedButton>
         </div>
     );
 };

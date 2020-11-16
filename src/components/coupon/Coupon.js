@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import cn from 'classnames/bind';
 
 import CouponCheckBox from './CouponCheckBox';
@@ -11,13 +11,16 @@ import { ButtonBase } from '@material-ui/core';
 
 const cx = cn.bind(styles);
 
-const CouponItem = ({ subject, endDate, price, checked }) => {
+const CouponItem = memo(({ subject, endDate, price, checked }) => {
     return (
         <>
             <div className={styles['default']}>coupon</div>
             <div className={styles['description']}>
                 <div className={styles['subject']}>{subject}</div>
-                <div className={styles['price']}>{numberFormat(price)}<span>원</span></div>
+                <div className={styles['price']}>
+                    {numberFormat(price)}
+                    <span>원</span>
+                </div>
                 <div className={styles['end-date']}>{endDate}까지</div>
             </div>
             <div className={styles['state-box']}>
@@ -28,7 +31,7 @@ const CouponItem = ({ subject, endDate, price, checked }) => {
             </div>
         </>
     );
-};
+});
 
 const Coupon = ({ list, onClick }) => {
     return (
@@ -39,7 +42,11 @@ const Coupon = ({ list, onClick }) => {
                         className={styles['coupon-item']}
                         component="li"
                         key={cp_id}
-                        onClick={() => onClick(cp_id)}
+                        onClick={() => {
+                            if (onClick !== undefined) {
+                                onClick(cp_id);
+                            }
+                        }}
                     >
                         <CouponItem
                             subject={cp_subject}
