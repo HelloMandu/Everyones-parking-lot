@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 /* Library */
 
+import FindContainer from '../../../containers/auth/find/FindContainer'
 import FindEmailContainer from '../../../containers/auth/find/FindEmailContainer';
 import FindPasswordContainer from '../../../containers/auth/find/FindPasswordContainer';
 import FindEmailCompleteContainer from '../../../containers/auth/find/FindEmailCompleteContainer';
@@ -18,6 +19,7 @@ const FindPage = () => {
     return (
         <div>
             <Switch>
+                <Route path={Paths.auth.find.index} component={FindContainer} />
                 <Route path={Paths.auth.find.email} component={FindEmailContainer} />
                 <Route path={Paths.auth.find.password} component={FindPasswordContainer} />
                 <Route path={Paths.auth.find.email_complete} component={FindEmailCompleteContainer} />

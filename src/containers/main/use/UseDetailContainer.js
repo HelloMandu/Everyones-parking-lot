@@ -14,7 +14,7 @@ const UseDetailContainer = ({location}) => {
     return (
         <>
             이용내역서_{id}
-            <div><Link to={Paths.main.use.cancle + `?id=${id}`}>대여 취소하기</Link></div>
+            <div><Link to={Paths.main.use.cancel + `?id=${id}`}>대여 취소하기</Link></div>
             <div><Link to={Paths.main.use.extend + `?id=${id}`}>연장하기</Link></div>
         </>
     )
