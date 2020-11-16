@@ -76,14 +76,14 @@ const DAY = [
 for (let i = DATE.getFullYear(); i <= CURRENT.getFullYear(); i++) YEAR.push(i);
 
 const SignUpContainer = () => {
-    const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
+    const [email, onChangeEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
-    const [password, onChangePassword, isPassword] = useInput(
+    const [password, onChangePassword] = useInput(
         '',
         isPasswordForm,
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
-    const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
+    const [phone, onChangePhone] = useInput('', isCellPhoneForm);
 
     const onClickSignUp = () => {
         console.log('sign up');

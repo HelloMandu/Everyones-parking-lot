@@ -1,23 +1,34 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import SwiperCore, { Controller, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-import 'swiper/swiper.scss';
+import SwiperCore, { Pagination } from 'swiper';
 
 import Coupon from '../../components/coupon/Coupon';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
-import styles from './CouponContainer.module.scss';
 import 'swiper/swiper.scss';
-import 'swiper/components/scrollbar/scrollbar.scss';
+import 'swiper/components/pagination/pagination.scss';
 
-SwiperCore.use([Controller, Scrollbar]);
+import styles from './CouponContainer.module.scss';
+
+SwiperCore.use([Pagination]);
+
+const category = [
+    {
+        id: 1,
+        title: '내 쿠폰',
+    },
+    {
+        id: 2,
+        title: '쿠폰북',
+    },
+    {
+        id: 3,
+        title: '사용내역',
+    },
+];
 
 const CouponContainer = () => {
-    const [firstSwiper, setFirstSwiper] = useState(null);
-    const [secondSwiper, setSecondSwiper] = useState(null);
-    
     const [couponList, setCouponList] = useState([
         {
             cp_id: 1,
@@ -46,6 +57,24 @@ const CouponContainer = () => {
             checked: false,
             use_status: 0,
         },
+        {
+            cp_id: 4,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+            use_status: 0,
+        },
+        {
+            cp_id: 5,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+            use_status: 0,
+        },
     ]);
     const onClickCoupon = useCallback(
         (id) => {
@@ -58,18 +87,25 @@ const CouponContainer = () => {
         },
         [couponList],
     );
-
+    const swiperRef = useRef(null);
+    useEffect(() => {
+        const paginationBullet = document.querySelector('.swiper-pagination');
+        paginationBullet.classList += styles['swiper-pagination'];
+        paginationBullet.style.position = 'fixed';
+        paginationBullet.style.top = '55px';
+        paginationBullet.style.marginLeft = '20px';
+        for (let i = 0; i < category.length; i++) {
+            paginationBullet.children[i].innerHTML = category[i].title;
+            paginationBullet.children[i].style.display = 'inline-block';
+            paginationBullet.children[i].style.width = '65px';
+            paginationBullet.children[i].style.height = '21px';
+            paginationBullet.children[i].style.background = 'inherit';
+            paginationBullet.children[i].style.fontSize = '16px';
+            paginationBullet.children[i].style.fontWeight = 'bold';
+        }
+    }, []);
     return (
         <>
-            <Swiper
-                onSwiper={setFirstSwiper}
-                controller={{ control: secondSwiper }}
-                slidesPerView={3}
-            >
-                <SwiperSlide>test1</SwiperSlide>
-                <SwiperSlide>test1</SwiperSlide>
-                <SwiperSlide>test1</SwiperSlide>
-            </Swiper>
             <div className={styles['order']}>
                 <div className={styles['order-select']}>
                     <select>
@@ -81,11 +117,18 @@ const CouponContainer = () => {
                 </div>
             </div>
             <Swiper
-                onSwiper={setSecondSwiper}
-                controller={{ control: firstSwiper }}
+                id="category-swiper"
+                className={styles['coupon-swiper']}
                 spaceBetween={50}
                 slidesPerView={1}
-                scrollbar={{ draggable: true }}
+                onSlideChange={() => console.log(swiperRef.current.activeIndex)}
+                onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                    console.log(swiperRef.current);
+                }}
+                pagination={{
+                    clickable: true,
+                }}
             >
                 <SwiperSlide>
                     <Coupon list={couponList}></Coupon>
