@@ -6,15 +6,13 @@ const useInput = (initialValue, callback) => {
     const onChange = useCallback(
         (e) => {
             setState(e.target.value);
+            if (callback !== undefined) {
+                setCheck(callback(e.target.value));
+            }
         },
-        [setState],
+        [setState, callback],
     );
-    const effect = useCallback(() => {
-        if (callback !== undefined) {
-            setCheck(callback(state));
-        }
-    }, [state, callback]);
-    return [state, onChange, effect, check, setCheck];
+    return [state, onChange, check, setCheck];
 };
 
 export default useInput;

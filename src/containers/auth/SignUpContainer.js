@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 /* Library */
 
 import useInput from '../../hooks/useInput';
@@ -13,28 +13,30 @@ import CheckBox from '../../components/checkbox/CheckBox';
 
 import FixedButton from '../../components/button/FixedButton';
 
+import { useDialog } from '../../hooks/useDialog';
+
 import styles from './SignUpContainer.module.scss';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
-const checkList = [
-    {
-        id: 1,
-        checked: false,
-        description: '이용약관 필수 동의',
-    },
-    {
-        id: 2,
-        checked: false,
-        description: '개인정보 처리방침 필수 동의',
-    },
-    {
-        id: 3,
-        checked: false,
-        description: '쿠폰 / 이벤트 알림 선택 동의',
-        subDescription:
-            'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
-    },
-];
+// const checkList = [
+//     {
+//         id: 1,
+//         checked: false,
+//         description: '이용약관 필수 동의',
+//     },
+//     {
+//         id: 2,
+//         checked: false,
+//         description: '개인정보 처리방침 필수 동의',
+//     },
+//     {
+//         id: 3,
+//         checked: false,
+//         description: '쿠폰 / 이벤트 알림 선택 동의',
+//         subDescription:
+//             'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
+//     },
+// ];
 
 const DATE = new Date(1970, 1, 1);
 const CURRENT = new Date();
@@ -78,6 +80,8 @@ const DAY = [
 for (let i = DATE.getFullYear(); i <= CURRENT.getFullYear(); i++) YEAR.push(i);
 
 const SignUpContainer = () => {
+    const openDialog = useDialog();
+
     const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
     const [password, onChangePassword, isPassword] = useInput(
@@ -87,11 +91,81 @@ const SignUpContainer = () => {
     const [passwordCheck, onChangePasswordCheck] = useInput('');
     const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
 
+    const [checkList, setCheckList] = useState([
+        {
+            id: 1,
+            checked: false,
+            description: '이용약관 필수 동의',
+        },
+        {
+            id: 2,
+            checked: false,
+            description: '개인정보 처리방침 필수 동의',
+        },
+        {
+            id: 3,
+            checked: false,
+            description: '쿠폰 / 이벤트 알림 선택 동의',
+            subDescription:
+                'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
+        },
+    ]);
+
+    const [signUp, setSignUp] = useState(true);
+
     const onClickSignUp = () => {
         console.log('sign up');
+
+        if (signUp) {
+            if (isEmail) {
+                if (isPassword) {
+                    if (isPhone) {
+                        try {
+                            //api에 따라 처리
+                        } catch (e) {
+                            openDialog(
+                                '서버에 오류가 발생하였습니다',
+                                '잠시 후 다시 시도해 주세요.',
+                            );
+                        }
+                    } else {
+                        openDialog('휴대폰 번호 형식에 맞지 않습니다!', '');
+                    }
+                } else {
+                    openDialog(
+                        '비밀번호 형식에 맞지 않습니다!',
+                        '8자 이상으로 문자, 숫자 및 특수문자가 모두 포함되어야 합니다.',
+                    );
+                }
+            } else {
+                openDialog('이메일 형식에 맞지 않습니다!', '');
+            }
+        } else {
+            openDialog(
+                '정보를 모두 입력해야 합니다.',
+                '이메일과 비밀번호를 확인해 주세요.',
+            );
+        }
     };
 
-    const [signUp, setSignUp] = useState(false);
+    useEffect(() => {
+        if (
+            email !== '' &&
+            name !== '' &&
+            password !== '' &&
+            phone !== '' &&
+            isEmail &&
+            isPassword &&
+            isPhone &&
+            checkList[0].checked &&
+            checkList[1].checked
+        ) 
+            setSignUp(false);
+
+        else setSignUp(true)
+
+        console.log(email, name, password, isEmail, isPassword, isPhone, checkList[0].checked, checkList[1].checked)
+    }, [email, name, password, phone, isEmail, isPassword, isPhone, checkList]);
 
     return (
         <>
@@ -200,11 +274,16 @@ const SignUpContainer = () => {
                         allCheckTitle={'모두 동의합니다.'}
                         checkListProps={checkList}
                         box={true}
+                        setterFunc={setCheckList}
                     />
                 </div>
             </div>
-            
-            <FixedButton button_name={'회원가입하기'} disable={signUp} />
+
+            <FixedButton
+                button_name={'회원가입하기'}
+                disable={signUp}
+                onClick={onClickSignUp}
+            />
         </>
     );
 };

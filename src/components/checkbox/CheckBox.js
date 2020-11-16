@@ -16,7 +16,7 @@ const CheckBoxItem = memo(({ checked, description, onToggle }) => {
     );
 });
 
-const CheckBox = ({ allCheckTitle, checkListProps, box }) => {
+const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc }) => {
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
     const onToggleAll = useCallback(() => {
@@ -26,8 +26,18 @@ const CheckBox = ({ allCheckTitle, checkListProps, box }) => {
                 checked: !allCheck,
             })),
         );
+
+        if(setterFunc !== undefined){
+            setterFunc(
+                checkListProps.map((checkBox) => ({
+                    ...checkBox,
+                    checked: !allCheck,
+                }))
+            )
+        }
+
         setAllCheck(!allCheck);
-    }, [allCheck, checkList]);
+    }, [allCheck, checkList, setterFunc, checkListProps]);
 
     const onToggle = useCallback(
         (id) => {
@@ -38,8 +48,18 @@ const CheckBox = ({ allCheckTitle, checkListProps, box }) => {
                         : checkBox,
                 ),
             );
+
+            if(setterFunc !== undefined){
+                setterFunc(
+                    checkListProps.map((checkBox) => 
+                        checkBox.id === id
+                        ? { ...checkBox, checked: !checkBox.checked }
+                        : checkBox,
+                    )
+                )
+            }
         },
-        [checkList],
+        [checkList, checkListProps, setterFunc],
     );
     useEffect(() => {
         const result = checkList.reduce(
