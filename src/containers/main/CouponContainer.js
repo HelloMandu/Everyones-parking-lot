@@ -3,14 +3,12 @@ import React, { useCallback, useState } from 'react';
 import SwiperCore, { Controller, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import 'swiper/swiper.scss';
 
 import Coupon from '../../components/coupon/Coupon';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
 import styles from './CouponContainer.module.scss';
-import 'swiper/swiper.scss';
-import 'swiper/components/scrollbar/scrollbar.scss';
+
 
 SwiperCore.use([Controller, Scrollbar]);
 

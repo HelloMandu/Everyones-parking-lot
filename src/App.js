@@ -90,6 +90,9 @@ const App = () => {
         else if(pathname===Paths.main.event.detail){
             return <Header title={HeaderTitle.main.event.detail}/>
         }
+        else if(pathname===Paths.main.mypage.index){
+            return <Header title={HeaderTitle.main.mypage.index}/>
+        }
     }
 
     return (

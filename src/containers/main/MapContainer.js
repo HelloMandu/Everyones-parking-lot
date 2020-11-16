@@ -16,6 +16,7 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 //componenst
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
+import ParkingItem from '../../components/items/ParkingItem';
 //lib
 import { Paths } from '../../paths';
 
@@ -120,6 +121,7 @@ const MapContainer = () => {
                     <CircleButton src={like_img} />
                 </div>      
                 <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
+                <ParkingItem/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }}/>
         </>

@@ -1,0 +1,10 @@
+export {default as ReviewIcon} from './review.svg';
+export {default as UseListIcon} from './uselist.svg';
+export {default as CouponIcon} from './coupon.svg';
+export {default as QnAIcon} from './qna.svg';
+export {default as FaQIcon} from './faq.svg';
+export {default as EventIcon} from './event.svg';
+export {default as EnrollIcon} from './enrollment.svg';
+export {default as SettingIcon} from './setting.svg';
+export {default as SupportIcon} from './support.svg'
+export {default as NotificationIcon} from './notification.svg';

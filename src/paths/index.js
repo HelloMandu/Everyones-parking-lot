@@ -87,7 +87,7 @@ export const HeaderTitle={
             detail :'리뷰 상세보기',
         },
         mypage:{
-            index: '/내 정보 수정',
+            index: '내 정보 수정',
             point: '',
             update:{
                 index : '',
