@@ -12,6 +12,8 @@ import Header from './components/header/Header';
 
 import { Paths } from './paths';
 
+
+//  develop 브런치 (테스트 브런치);
 const App = () => {
 
     // const location = useLocation();
