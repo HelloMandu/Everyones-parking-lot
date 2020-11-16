@@ -34,7 +34,7 @@ const App = () => {
                 <Route path={Paths.main.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
-        </div>
+        </>
     );
 };
 
