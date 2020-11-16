@@ -11,11 +11,12 @@ $main-color:#222222;
 $disable-color: #DBDBDB;
 
 // 모바일 컨테이너 믹스인
-@mixin container($pd-top) {
+@mixin container($pd-top :48px) {
     max-width: $max-width;
     min-width: $min-width;
     min-height: $min-height;
     margin: 0 auto;
     padding-top: $pd-top;
+    width: 100%;
 }
 
