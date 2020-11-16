@@ -26,6 +26,7 @@ const App = () => {
     return (
         <>
             <Header title={"주차장"}></Header>
+            
             <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />
