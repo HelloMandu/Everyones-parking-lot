@@ -13,6 +13,23 @@
             color: #999999;
             margin-bottom: 9px;
         }
+
+        .password-check{
+            color: #953120;
+            display: none;
+        }
+
+        .apear{
+            display: block;
+        }
+
+        .same{
+            color: #2966B4;
+
+            & > span{
+                display: none;
+            }
+        }
     }
 
     .input-wrapper:first-child{

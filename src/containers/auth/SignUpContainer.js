@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames/bind'
 /* Library */
 
 import useInput from '../../hooks/useInput';
@@ -78,6 +79,8 @@ const DAY = [
 ];
 
 for (let i = DATE.getFullYear(); i <= CURRENT.getFullYear(); i++) YEAR.push(i);
+
+const cx = classNames.bind(styles)
 
 const SignUpContainer = () => {
     const openDialog = useDialog();
@@ -164,14 +167,14 @@ const SignUpContainer = () => {
 
         else setSignUp(true)
 
-        console.log(email, name, password, isEmail, isPassword, isPhone, checkList[0].checked, checkList[1].checked)
+        // console.log(email, name, password, isEmail, isPassword, isPhone, checkList[0].checked, checkList[1].checked)
     }, [email, name, password, phone, isEmail, isPassword, isPhone, checkList]);
 
     return (
         <>
-            <div className={styles['container']}>
-                <div className={styles['input-wrapper']}>
-                    <div className={styles['input-title']}>이메일</div>
+            <div className={cx('container')}>
+                <div className={cx('input-wrapper')}>
+                    <div className={cx('input-title')}>이메일</div>
                     <InputBox
                         className={'input-bar'}
                         type={'text'}
@@ -184,8 +187,8 @@ const SignUpContainer = () => {
                     />
                 </div>
 
-                <div className={styles['input-wrapper']}>
-                    <div className={styles['input-title']}>이름</div>
+                <div className={cx('input-wrapper')}>
+                    <div className={cx('input-title')}>이름</div>
                     <InputBox
                         className={'input-bar'}
                         type={'text'}
@@ -198,8 +201,8 @@ const SignUpContainer = () => {
                     />
                 </div>
 
-                <div className={styles['input-wrapper']}>
-                    <div className={styles['input-title']}>비밀번호</div>
+                <div className={cx('input-wrapper')}>
+                    <div className={cx('input-title')}>비밀번호</div>
                     <InputBox
                         className={'input-bar'}
                         type={'password'}
@@ -220,14 +223,15 @@ const SignUpContainer = () => {
                             if (e.key === 'Enter') onClickSignUp();
                         }}
                     />
+                    <div className={cx('password-check', {'apear': password !== '' || passwordCheck !== ''}, {'same': password !== '' && password === passwordCheck })}>비밀번호가 <span>불</span>일치합니다.</div>
                 </div>
 
-                <div className={styles['input-wrapper']}>
-                    <div className={styles['input-title']}>생년월일</div>
+                <div className={cx('input-wrapper')}>
+                    <div className={cx('input-title')}>생년월일</div>
 
-                    <div className={styles['select-wrapper']}>
-                        <div className={styles['select-item']}>
-                            <select className={styles['select']}>
+                    <div className={cx('select-wrapper')}>
+                        <div className={cx('select-item')}>
+                            <select className={cx('select')}>
                                 {YEAR.map((y) => (
                                     <option key={y}>{y}년</option>
                                 ))}
@@ -235,8 +239,8 @@ const SignUpContainer = () => {
                             <ArrowSmall rotate={180} />
                         </div>
 
-                        <div className={styles['select-item']}>
-                            <select className={styles['select']}>
+                        <div className={cx('select-item')}>
+                            <select className={cx('select')}>
                                 {MONTH.map((m) => (
                                     <option key={m}>{m}월</option>
                                 ))}
@@ -244,8 +248,8 @@ const SignUpContainer = () => {
                             <ArrowSmall rotate={180} />
                         </div>
 
-                        <div className={styles['select-item']}>
-                            <select className={styles['select']}>
+                        <div className={cx('select-item')}>
+                            <select className={cx('select')}>
                                 {DAY.map((d) => (
                                     <option key={d}>{d}일</option>
                                 ))}
@@ -255,8 +259,8 @@ const SignUpContainer = () => {
                     </div>
                 </div>
 
-                <div className={styles['input-wrapper']}>
-                    <div className={styles['input-title']}>휴대폰 번호</div>
+                <div className={cx('input-wrapper')}>
+                    <div className={cx('input-title')}>휴대폰 번호</div>
                     <InputBox
                         className={'input-bar'}
                         type={'text'}
@@ -269,7 +273,7 @@ const SignUpContainer = () => {
                     />
                 </div>
 
-                <div className={styles['check-box-wrapper']}>
+                <div className={cx('check-box-wrapper')}>
                     <CheckBox
                         allCheckTitle={'모두 동의합니다.'}
                         checkListProps={checkList}
