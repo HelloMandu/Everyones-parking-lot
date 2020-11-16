@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch,useLocation } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
@@ -14,26 +14,23 @@ import { Paths } from './paths';
 
 const App = () => {
 
-    const location = useLocation();
+    // const location = useLocation();
 
-    const renderHeader =()=>{
+    // const renderHeader =()=>{
 
-    }
-    const getHeaderTitle =()=>{
+    // }
+    // const getHeaderTitle =()=>{
  
-    }
+    // }
 
     return (
-        <>
-            <Header title={"주차장"}></Header>
-            <Switch>
+        <div className="App">
+            <Switch className="test">
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
-            <DialogContainer />
-            <LoadingContainer />
-        </>
+        </div>
     );
 };
 

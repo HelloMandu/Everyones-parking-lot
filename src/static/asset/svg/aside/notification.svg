@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_1935" data-name="사각형 1935" width="24" height="24" transform="translate(20 52)" fill="#222"/>
+    </clipPath>
+  </defs>
+  <g id="마스크_그룹_42" data-name="마스크 그룹 42" transform="translate(-20 -52)" clip-path="url(#clip-path)">
+    <g id="bell-2" transform="translate(20 52)">
+      <g id="그룹_4124" data-name="그룹 4124">
+        <g id="그룹_4123" data-name="그룹 4123">
+          <path id="패스_289" data-name="패스 289" d="M11.891,3.343a7.891,7.891,0,0,0-7.882,7.882V19.6H5.64V11.225a6.251,6.251,0,1,1,12.5,0V19.6h1.631V11.225A7.891,7.891,0,0,0,11.891,3.343Z" fill="#222"/>
+        </g>
+      </g>
+      <g id="그룹_4126" data-name="그룹 4126">
+        <g id="그룹_4125" data-name="그룹 4125">
+          <path id="패스_290" data-name="패스 290" d="M20.7,18.781H3.3a.815.815,0,1,0,0,1.631H20.7a.815.815,0,1,0,0-1.631Z" fill="#222"/>
+        </g>
+      </g>
+      <g id="그룹_4128" data-name="그룹 4128">
+        <g id="그룹_4127" data-name="그룹 4127">
+          <path id="패스_291" data-name="패스 291" d="M11.891,0a2.5,2.5,0,1,0,2.5,2.5A2.5,2.5,0,0,0,11.891,0Zm0,3.37a.87.87,0,1,1,.87-.87A.881.881,0,0,1,11.891,3.37Z" fill="#222"/>
+        </g>
+      </g>
+      <g id="그룹_4130" data-name="그룹 4130">
+        <g id="그룹_4129" data-name="그룹 4129">
+          <path id="패스_292" data-name="패스 292" d="M13.3,19.6V21.01a1.359,1.359,0,0,1-2.718,0V19.6H8.956V21.01a2.99,2.99,0,0,0,5.98,0V19.6H13.3Z" fill="#222"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
