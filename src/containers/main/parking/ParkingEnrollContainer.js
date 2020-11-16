@@ -23,6 +23,21 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
+
+const enroll = [
+    {
+        id: 1,
+        checked: false,
+        description: '개인정보취급방침',
+    },
+    {
+        id: 2,
+        checked: false,
+        description: '이용약관',
+    },
+];
+
 const ParkingEnrollContainer = () => {
     const history = useHistory();
     const [openCoupon, setOpenCoupon] = useState(false);
@@ -74,7 +89,7 @@ const ParkingEnrollContainer = () => {
                     </div>
                 </div>
                 <Price></Price>
-                <CheckBox></CheckBox>
+                <CheckBox allCheckTitle={enrollTitle} checkListProps={enroll}></CheckBox>
             </div>
             <FixedButton
                 button_name={'68,000원 결제'}
