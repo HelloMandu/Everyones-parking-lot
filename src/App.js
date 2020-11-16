@@ -26,8 +26,10 @@ const App = () => {
     // }
 
     return (
-        <div className="App">
-            <Switch className="test">
+        <>
+            <Header title={"주차장"}></Header>
+            
+            <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.main.index} component={MainPage} />
                 <Route component={ErrorPage} />
