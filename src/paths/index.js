@@ -33,7 +33,11 @@ export const Paths = {
         parking:{
             index :'/parking',
             manage: '/parking/manage',
-            enrollment: '/parking/enrollment',
+            enrollment: {
+                index : '/parking/enrollment',
+                coupon : '/parking/enrollment/coupon',
+                payment : '/parking/enrollment/payment'
+            },
             preview :'/parking/preview',
         },
         notification : '/notification',

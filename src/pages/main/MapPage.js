@@ -7,9 +7,7 @@ import MapContainer from '../../containers/main/MapContainer';
 const MapPage = () => {
 
     return (
-        <div>
             <MapContainer />
-        </div>
     );
 }
 

@@ -4,18 +4,19 @@ $min-height: 100vh;
 $font-size: 12px;
 $mg-top: 48px;
 $pd-top: 48px;
+$header: 48px;
 $padding: 24px;
 $padding-side: 0 24px;
 $main-color:#222222;
 $disable-color: #DBDBDB;
-$iphone-head: 34px;
 
 // 모바일 컨테이너 믹스인
-@mixin container($pd-top) {
+@mixin container($pd-top :48px) {
     max-width: $max-width;
     min-width: $min-width;
     min-height: $min-height;
     margin: 0 auto;
     padding-top: $pd-top;
+    width: 100%;
 }
 

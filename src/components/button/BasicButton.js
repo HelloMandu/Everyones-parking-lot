@@ -8,7 +8,7 @@ const cx = cn.bind(styles);
 /* 
     모든 페이지에서 동일하게 쓰는 기본 버튼
     button_name : 버튼 이름
-    disabler :활성여부
+    disable :활성여부
 */
 
 
