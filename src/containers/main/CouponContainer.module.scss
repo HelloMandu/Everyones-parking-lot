@@ -1,19 +1,10 @@
-html{
-    body{
-        .tabs{
-            font-size: 16px;
-            font-weight: bold;
-            .tab{
-                span{
-                    font-size: 16px;
-                }
-                
-            }
-        }
+.tabs {
+    .tab {
+        min-width: 50px;
+        font-size: 16px;
+        font-weight: bold;
     }
 }
-
-
 
 .order {
     width: 100%;
@@ -35,7 +26,7 @@ html{
 }
 
 .coupon-swiper {
-    max-height: 600px;
+    height: calc(100vh - 132px);
     overflow-y: scroll;
     &::-webkit-scrollbar {
         display: none;
