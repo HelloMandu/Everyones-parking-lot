@@ -2,6 +2,9 @@ import React, { forwardRef, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
+import useInput from '../../../hooks/useInput';
+import { numberFormat } from '../../../lib/formatter';
+
 import { Paths } from '../../../paths/index';
 
 import EnrollCouponModal from '../../../components/coupon/EnrollCouponModal';
@@ -10,13 +13,65 @@ import ParkingInfo from '../../../components/parking/ParkingInfo';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import CheckBox from '../../../components/checkbox/CheckBox';
 import FixedButton from '../../../components/button/FixedButton';
-
-import Point from './Point';
-import Price from './Price';
+import InputBox from '../../../components/inputbox/InputBox';
+import ConfirmButton from '../../../components/button/ConfirmButton';
 
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
+
+const Point = () => {
+    const [point, handleChangePoint] = useInput('');
+    return (
+        <>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={point}
+                placeholder={'사용하실 포인트를 입력해주세요'}
+                onChange={handleChangePoint}
+            ></InputBox>
+            <div className={styles['use-point']}>
+                <div className={styles['point']}>
+                    내 보유 포인트 <span>35,000P</span>
+                </div>
+                <div className={styles['confirm-button']}>
+                    <ConfirmButton
+                        button_name={'전체사용'}
+                        disable={false}
+                    ></ConfirmButton>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const Price = () => {
+    return (
+        <div className={styles['final-payment']}>
+            <div className={styles['total-payment']}>
+                <div className={styles['title']}>최종 결제금액</div>
+                <div className={styles['price']}>{numberFormat(60000)}원</div>
+            </div>
+            <div className={styles['payment']}>
+                <div className={styles['title']}>대여비</div>
+                <div className={styles['price']}>{numberFormat(60000)}원</div>
+            </div>
+            <div className={styles['payment']}>
+                <div className={styles['title']}>보증금</div>
+                <div className="price">{numberFormat(10000)}원</div>
+            </div>
+            <div className={styles['payment']}>
+                <div className={styles['title']}>쿠폰 할인</div>
+                <div className={styles['price']}>{numberFormat(-1000)}원</div>
+            </div>
+            <div className={styles['payment']}>
+                <div className={styles['title']}>포인트 할인</div>
+                <div className={styles['price']}>{numberFormat(-1000)}원</div>
+            </div>
+        </div>
+    );
+};
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
