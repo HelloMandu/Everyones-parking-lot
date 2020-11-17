@@ -3,6 +3,6 @@
 .container{
     @include container($pd-top);
     .input-area{
-        padding-left: 15px; padding-right: 15px;
+        padding: 24px 15px 0 15px;
     }
 }
