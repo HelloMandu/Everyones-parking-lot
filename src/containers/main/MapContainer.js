@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useState,useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -17,8 +17,6 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
 //lib
-import { Paths } from '../../paths';
-
 const cx = cn.bind(styles);
 
 const MapContainer = () => {
@@ -34,7 +32,7 @@ const MapContainer = () => {
     );
 
     const kakao_map = useRef(null);
-    
+
     useEffect(() => {
         mapScript();
     }, []);
@@ -53,15 +51,15 @@ const MapContainer = () => {
     const mapScript = () => {
         let container = document.getElementById("map");
         let options = {
-            center: new kakao.maps.LatLng(37.62197524055062,  127.16017523675508),
+            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
             level: 5,
         };
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
-        var imageSrc = MarkerImg, 
-            imageSize = new kakao.maps.Size(120, 70), 
-            imageOption = { offset: new kakao.maps.Point(27, 69) }; 
+        var imageSrc = MarkerImg,
+            imageSize = new kakao.maps.Size(120, 70),
+            imageOption = { offset: new kakao.maps.Point(27, 69) };
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
@@ -70,7 +68,7 @@ const MapContainer = () => {
             let content = `<span class="custom-overlay">${el.title}</span>`;
 
             let marker = new kakao.maps.Marker({
-                image: markerImage, 
+                image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
                 title: el.title,
@@ -115,13 +113,13 @@ const MapContainer = () => {
 
                 </div>
                 <div className={cx('side-bar', 'right')}>
-                    <CircleButton src={filter_img}  onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }}/>
+                    <CircleButton src={filter_img} onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }} />
                     <CircleButton src={time_img} />
                     <CircleButton src={like_img} />
-                </div>      
-                <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
+                </div>
+                <Aside open={modalState.aside_} handleClose={() => { dispatchHandle({ type: 'aside_', payload: false }) }} />
             </div>
-            <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }}/>
+            <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
         </>
     );
 };
@@ -136,25 +134,25 @@ const CircleButton = ({ src, onClick }) => {
 
 const markerdata = [
     {
-      title: "콜드스퀘어",
-      lat: 37.62197524055062,
-      lng: 127.16017523675508,
+        title: "콜드스퀘어",
+        lat: 37.62197524055062,
+        lng: 127.16017523675508,
     },
     {
-      title: "하남돼지집",
-      lat: 37.620842424005616,
-      lng: 127.1583774403176,
+        title: "하남돼지집",
+        lat: 37.620842424005616,
+        lng: 127.1583774403176,
     },
     {
-      title: "수유리우동",
-      lat: 37.624915253753194,
-      lng: 127.15122688059974,
+        title: "수유리우동",
+        lat: 37.624915253753194,
+        lng: 127.15122688059974,
     },
     {
-      title: "맛닭꼬",
-      lat: 37.62456273069659,
-      lng: 127.15211256646381,
+        title: "맛닭꼬",
+        lat: 37.62456273069659,
+        lng: 127.15211256646381,
     },
-  ];
+];
 
 export default MapContainer;

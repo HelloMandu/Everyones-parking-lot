@@ -3,6 +3,7 @@ import classnames from 'classnames/bind';
 /* Library */
 
 import styles from './MyPointContainer.module.scss';
+import XButton from '../../../static/asset/svg/X_button';
 /* stylesheets */
 
 const cn = classnames.bind(styles);
@@ -23,6 +24,7 @@ const MyPointContainer = () => {
     return (
         <div className={styles['container']}>
             <div className={styles['show-area']}>
+                <div className={styles['button']}><XButton /></div>
                 <div className={styles['content']}>
                     <div className={styles['mypoint']}>나의 수익금</div>
                     <div className={styles['total_point']}>35,000 P</div>

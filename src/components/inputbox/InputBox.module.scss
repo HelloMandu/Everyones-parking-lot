@@ -2,7 +2,9 @@
     width: 100%;
     height: 48px;
     background-color: #F9F9F9;
-    color: 14px;
+    padding: 0 10px;
+    font-size: 1.167rem; // 14px;
+    font-weight: 400; // Regular
 }
 
 .input-radius{
@@ -20,4 +22,13 @@
     margin-bottom: 12px;
     border-bottom: 1px solid #CCCCCC;
     padding: 0 12px;
+}
+
+.verify-box{
+    width: 85%;
+    height: 48px;
+    background-color: #F9F9F9;
+    padding: 0 10px;
+    font-size: 1.167rem; // 14px;
+    font-weight: 400; // Regular
 }

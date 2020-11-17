@@ -3,11 +3,6 @@ import React from 'react';
 
 import useInput from '../../hooks/useInput';
 import InputBox from '../../components/inputbox/InputBox';
-import {
-    isEmailForm,
-    isPasswordForm,
-    isCellPhoneForm,
-} from '../../lib/formatChecker';
 
 import CheckBox from '../../components/checkbox/CheckBox';
 
@@ -76,14 +71,13 @@ const DAY = [
 for (let i = DATE.getFullYear(); i <= CURRENT.getFullYear(); i++) YEAR.push(i);
 
 const SignUpContainer = () => {
-    const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
+    const [email, onChangeEmail] = useInput('');
     const [name, onChangeName] = useInput('');
-    const [password, onChangePassword, isPassword] = useInput(
-        '',
-        isPasswordForm,
+    const [password, onChangePassword] = useInput(
+        ''
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
-    const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
+    const [phone, onChangePhone] = useInput('');
 
     const onClickSignUp = () => {
         console.log('sign up');

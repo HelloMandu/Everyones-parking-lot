@@ -9,6 +9,22 @@
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
+        .button{
+            padding-top: $pd-top;
+            height: 96px;
+            position: relative;
+            svg{
+                position: absolute;
+                right: 24px;
+                width: 12px; height: 12px;
+                g{
+                    line{
+                        stroke: #fff;
+                        stroke-width: 2;
+                    }
+                }
+            }
+        }
         .content{
             position: absolute;
             bottom: 35px;
