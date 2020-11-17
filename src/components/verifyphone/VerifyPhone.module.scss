@@ -1,8 +1,8 @@
 .send-verify {
+    display: flex;
     position: relative;
     .confirm-button {
-        margin-left: 10px;
-        width: 96px;
+        min-width: 96px;
         height: 48px;
     }
 }
