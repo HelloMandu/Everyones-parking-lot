@@ -6,7 +6,10 @@ import { Dialog, Slide } from '@material-ui/core';
 import CouponContainer from '../../containers/main/CouponContainer';
 import CouponCodeModal from '../../components/coupon/CouponCodeModal';
 
+import XButton from '../../static/asset/svg/X_button';
+
 import styles from './CouponPage.module.scss';
+import { useCallback } from 'react';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -15,6 +18,13 @@ const Transition = forwardRef(function Transition(props, ref) {
 const CouponPage = () => {
     const history = useHistory();
     const [openCouponCode, setOpenCouponCode] = useState(false);
+    const onToggleConponCode = useCallback(()=>{
+        if(openCouponCode){ 
+            history.goBack();
+        } else{
+            history.push('/coupon/code')
+        }
+    }, [history, openCouponCode])
     useEffect(() => {
         setOpenCouponCode(history.location.pathname === '/coupon/code');
     }, [history.location.pathname]);
@@ -22,9 +32,9 @@ const CouponPage = () => {
         <div className={styles['coupon-page']}>
             <ButtonBase
                 className={styles['coupon-input']}
-                onClick={() => history.push('/coupon/code')}
+                onClick={()=>onToggleConponCode()}
             >
-                쿠폰입력
+                {!openCouponCode ? '쿠폰입력' : <XButton/>}
             </ButtonBase>
             <Dialog
                 fullScreen
