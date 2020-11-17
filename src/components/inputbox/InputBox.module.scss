@@ -5,6 +5,11 @@
     padding: 0 10px;
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
+    &::placeholder{
+        font-size: 1.167rem; // 14px;
+        font-weight: 400; // Regular
+        color: #CCC;
+    }
 }
 
 .input-radius{
