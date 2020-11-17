@@ -1,0 +1,6 @@
+@import '../../static//stylesheets//Root.scss';
+
+.payment-container{
+    padding: $padding-side;
+    @include container();
+}

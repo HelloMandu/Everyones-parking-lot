@@ -7,8 +7,8 @@ import { numberFormat } from '../../lib/formatter';
 
 import { Paths } from '../../paths/index';
 
-import PaymentTypeModal from '../../components/parking/PaymentTypeModal';
-import EnrollCouponModal from '../../components/coupon/EnrollCouponModal';
+import PaymentTypeModal from '../../components/payment/PaymentTypeModal';
+import EnrollCouponModal from '../../components/payment/EnrollCouponModal';
 
 import ParkingInfo from '../../components/parking/ParkingInfo';
 import VerifyPhone from '../../components/verifyphone/VerifyPhone';
