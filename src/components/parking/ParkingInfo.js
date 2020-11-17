@@ -2,7 +2,7 @@ import React from 'react';
 
 import parkingImage from '../../static/asset/png/parking.png';
 
-import Information from './Information';
+import Information from './../../static/asset/svg/Information';
 
 import styles from './ParkingInfo.module.scss';
 
