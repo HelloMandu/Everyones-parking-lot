@@ -1,4 +1,5 @@
 import React from 'react';
+// import {useSelector} from 'react-redux';
 // styles
 import styles from './Aside.module.scss';
 import cn from 'classnames/bind';
@@ -31,7 +32,7 @@ const Aside = ({ open,handleClose }) => {
                 </div>
                 <div className={styles['aside-profile']}>
                     <IconButton className={styles['user-img']}>
-                        <img src={profile_icon} alt="profile" />
+                        <img src={profile_icon} alt="profile"/>
                     </IconButton>
                     <div className={styles['user-profile']}>
                         <div className={styles['user-name']}>

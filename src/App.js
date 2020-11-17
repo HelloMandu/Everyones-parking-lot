@@ -5,6 +5,9 @@ import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
 import ErrorPage from './pages/ErrorPage';
 
+// import DialogContainer from './containers/assets/DialogContainer';
+// import LoadingContainer from './containers/assets/LoadingContainer';
+
 import Header from './components/header/Header';
 
 import { Paths,HeaderTitle } from './paths';
@@ -14,7 +17,6 @@ import { Paths,HeaderTitle } from './paths';
 const App = () => {
 
     const location = useLocation();
-    console.log(location);
 
     const renderHeader =()=>{
         const {pathname} = location;

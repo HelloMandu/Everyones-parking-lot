@@ -87,12 +87,12 @@ const SignUpContainer = () => {
 
     const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
-    const [password, onChangePassword, isPassword] = useInput(
+    const [password, onChangePassword] = useInput(
         '',
         isPasswordForm,
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
-    const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
+    const [phone, onChangePhone] = useInput('', isCellPhoneForm);
 
     const [checkList, setCheckList] = useState([
         {
