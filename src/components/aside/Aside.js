@@ -31,14 +31,11 @@ const Aside = ({ open, handleClose }) => {
                     </div>
                     <div className={styles['aside-profile']}>
                         <IconButton className={styles['user-img']}>
-                            <img src={profile_icon} alt="" />
+                            <img src={profile_icon} alt="profile" />
                         </IconButton>
                         <div className={styles['user-profile']}>
                             <div className={styles['user-name']}>
                                 홍길동
-                        </div>
-                            <div className={styles['user-email']}>
-                                cjtest@naver.com
                         </div>
                         </div>
                     </div>
