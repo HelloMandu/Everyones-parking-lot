@@ -76,7 +76,7 @@ const CouponContainer = () => {
                     : { ...coupon, checked: false },
             );
             setCouponList(newCouponList);
-        },
+        }, 
         [couponList],
     );
     const swiperRef = useRef(null);
@@ -97,10 +97,13 @@ const CouponContainer = () => {
                 value={tabValue}
                 onChange={handleTabIndex}
                 aria-label="simple tabs example"
+                styles={{
+                    fontWight: 'bold'
+                }}
             >
-                <Tab className={styles['tabs']} label="내 쿠폰" />
-                <Tab className={styles['tabs']} label="쿠폰북" />
-                <Tab className={styles['tabs']} label="사용내역" />
+                <Tab className={styles['tab']} label="내 쿠폰" />
+                <Tab className={styles['tab']} label="쿠폰북" />
+                <Tab className={styles['tab']} label="사용내역" />
             </Tabs>
             <div className={styles['order']}>
                 <div className={styles['order-select']}>

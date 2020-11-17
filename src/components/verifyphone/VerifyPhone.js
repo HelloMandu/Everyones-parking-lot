@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
@@ -15,7 +15,7 @@ const cx = cn.bind(styles);
 
 const VerifyPhone = () => {
     const [sent, setSent] = useState(false);
-    const [phone, handleChangePhone, sendEffect, sendCheck, setSendCheck] = useInput(
+    const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
         '',
         isCellPhoneForm,
     );
@@ -28,7 +28,7 @@ const VerifyPhone = () => {
     }, [sendCheck, setSendCheck]);
     const [sendFocus, sendKeyDown] = useKeyDown(onClickSendVerify);
 
-    const [verify, handleChangeVerify, verifyEffect, verifyCheck] = useInput(
+    const [verify, handleChangeVerify, verifyCheck] = useInput(
         '',
         (state) => state.length === 6,
     );
@@ -39,8 +39,6 @@ const VerifyPhone = () => {
     }, [verifyCheck]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
-    useEffect(sendEffect, [sendEffect]);
-    useEffect(verifyEffect, [verifyEffect]);
     return (
         <>
             <div className={styles['send-verify']}>
