@@ -2,7 +2,11 @@ export const Paths = {
     main: {
         index: '/',
         detail: '/detail',
-        payment: '/payment',
+        payment: {
+            index: '/payment',
+            coupon: '/payment/coupon',
+            type: '/payment/type',
+        },
         payment_complete: '/payment_complete',
         use: {
             index: '/use',
@@ -28,16 +32,12 @@ export const Paths = {
                 enrollment: '/mypage/update/enrollment',
                 birthday: '/mypage/update/birthday',
                 profile: '/mypage/update/profile',
-            }
+            },
         },
         parking: {
             index: '/parking',
             manage: '/parking/manage',
-            enrollment: {
-                index: '/parking/enrollment',
-                coupon: '/parking/enrollment/coupon',
-                payment: '/parking/enrollment/payment'
-            },
+            enrollment: '/parking/enrollment',
             preview: '/parking/preview',
         },
         notification: '/notification',
@@ -62,16 +62,20 @@ export const Paths = {
             password: '/auth/find/password',
             email_complete: '/auth/find/email_complete',
             password_complete: '/auth/find/password_complete',
-        }
+        },
     },
-    api: 'https://www.naver.com/'
+    api: 'https://www.naver.com/',
 };
 
 export const HeaderTitle = {
     main: {
         index: '/',
         detail: '/detail',
-        payment: '/payment',
+        payment: {
+            index: '결제정보 확인',
+            coupon: '적용 쿠폰 선택',
+            type: '결제수단 선택',
+        },
         payment_complete: '/payment_complete',
         use: {
             index: '',
@@ -97,16 +101,12 @@ export const HeaderTitle = {
                 enrollment: '차량정보 등록',
                 birthday: '생년월일 변경',
                 profile: '',
-            }
+            },
         },
         parking: {
             index: '',
             manage: '내 주차공간 관리',
-            enrollment: {
-                index: '주차공간 등록',
-                coupon: '적용 쿠폰 선택',
-                payment: '결제수단 선택'
-            },
+            enrollment: '주차공간 등록',
             preview: '/parking/preview',
         },
         notification: '알림함',
@@ -131,6 +131,6 @@ export const HeaderTitle = {
             password: '비밀번호 찾기',
             email_complete: '',
             password_complete: '비밀번호 재설정',
-        }
+        },
     },
-}
+};

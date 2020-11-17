@@ -6,7 +6,7 @@ import PaymentContainer from '../../containers/main/PaymentContainer';
 
 const PaymentPage = () => {
 
-    return <PaymentContainer />;
+    return <PaymentContainer/>
 };
 
 export default PaymentPage;
