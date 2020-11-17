@@ -10,7 +10,7 @@ html{
             border-radius: 5px;
             overflow: hidden;
             box-sizing: border-box;
-            z-index: 2300;
+            z-index: $level3;
             display: flex;
             background-color: #fff;
             flex-direction: column;
@@ -74,7 +74,7 @@ html{
             overflow: hidden;
             box-sizing: border-box;
             position: fixed;
-            z-index: 2300;
+            z-index: $level3;
              bottom:35px;
             // display: flex;
             width: 100%;

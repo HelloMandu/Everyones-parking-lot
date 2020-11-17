@@ -7,7 +7,7 @@ import styles from './Aside.module.scss';
 import cn from 'classnames/bind';
 
 //components
-import { ButtonBase, IconButton } from '@material-ui/core';
+import { ButtonBase, IconButton,Backdrop } from '@material-ui/core';
 
 //icon
 import banner from '../../static/asset/png/banner.png';
@@ -109,7 +109,7 @@ const Aside = ({ open, handleClose }) => {
                     />
                 </div>
             </div>
-            <div className={cx('dim', { open })} onClick={handleClose} />
+            <Backdrop open={open} className={cx('dim')} onClick={handleClose} />
         </>
     );
 };
