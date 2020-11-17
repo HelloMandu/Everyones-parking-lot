@@ -1,6 +1,5 @@
 .coupon-list{
     width: 100%;
-    max-height: 552px;
     padding: 0px 24px;
     .coupon-item{
         display: flex;
@@ -56,3 +55,14 @@
     }
 }
 
+.coupon-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    .explain{
+        font-size: 16px;
+        margin-top: 20px;
+    }
+}

@@ -2,7 +2,6 @@ import React, { useCallback, useRef, useState } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-// import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -12,13 +11,6 @@ import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 import 'swiper/swiper.scss';
 
 import styles from './CouponContainer.module.scss';
-
-// function a11yProps(index) {
-//     return {
-//         id: `simple-tab-${index}`,
-//         'aria-controls': `simple-tabpanel-${index}`,
-//     };
-// }
 
 const CouponContainer = () => {
     const [couponList, setCouponList] = useState([
@@ -96,12 +88,13 @@ const CouponContainer = () => {
                 className={styles['tabs']}
                 value={tabValue}
                 onChange={handleTabIndex}
-                aria-label="simple tabs example"
-                styles={{
-                    fontWight: 'bold'
+                TabIndicatorProps={{
+                    style: {
+                        backgroundColor: 'black',
+                    },
                 }}
             >
-                <Tab className={styles['tab']} label="내 쿠폰" />
+                <Tab className={styles['tab']} label="내 쿠폰"/>
                 <Tab className={styles['tab']} label="쿠폰북" />
                 <Tab className={styles['tab']} label="사용내역" />
             </Tabs>

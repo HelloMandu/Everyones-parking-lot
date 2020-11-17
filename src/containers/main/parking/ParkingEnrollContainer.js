@@ -1,10 +1,10 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
 import { Paths } from '../../../paths/index';
 
-import EnrollCouponContainer from './EnrollCouponContainer';
+import EnrollCouponModal from '../../../components/coupon/EnrollCouponModal';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -17,7 +17,6 @@ import Price from './Price';
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
-import { useEffect } from 'react';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -72,7 +71,7 @@ const ParkingEnrollContainer = () => {
                         open={openCoupon}
                         TransitionComponent={Transition}
                     >
-                        <EnrollCouponContainer></EnrollCouponContainer>
+                        <EnrollCouponModal></EnrollCouponModal>
                     </Dialog>
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
