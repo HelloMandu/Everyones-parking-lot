@@ -1,68 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import classNames from 'classnames/bind'
+import classNames from 'classnames/bind';
 /* Library */
 
 import useInput from '../../hooks/useInput';
+import useBirth from '../../hooks/useBirth';
 import InputBox from '../../components/inputbox/InputBox';
-import {
-    isEmailForm,
-    isPasswordForm,
-    isCellPhoneForm,
-} from '../../lib/formatChecker';
+import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
+
+import Birth from '../../components/birth/Birth';
 
 import CheckBox from '../../components/checkbox/CheckBox';
 
-import VerifyPhone from '../../components/verifyphone/VerifyPhone'
+import VerifyPhone from '../../components/verifyphone/VerifyPhone';
 
 import FixedButton from '../../components/button/FixedButton';
 
 import { useDialog } from '../../hooks/useDialog';
 
 import styles from './SignUpContainer.module.scss';
-import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
-const DATE = new Date(1970, 1, 1);
-const CURRENT = new Date();
-
-const YEAR = [];
-const MONTH = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const DAY = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
-    29,
-    30,
-    31,
-];
-
-for (let i = DATE.getFullYear(); i <= CURRENT.getFullYear(); i++) YEAR.push(i);
-
-const cx = classNames.bind(styles)
+const cx = classNames.bind(styles);
 
 const SignUpContainer = () => {
     const openDialog = useDialog();
@@ -74,7 +31,14 @@ const SignUpContainer = () => {
         isPasswordForm,
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
-    const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
+
+    const [onChangeBirth, getBirth] = useBirth({
+        year: '1970',
+        month: '1',
+        day: '1',
+    });
+
+    const [isPhone, setIsPhone] = useState(false);
 
     const [checkList, setCheckList] = useState([
         {
@@ -107,6 +71,8 @@ const SignUpContainer = () => {
                     if (isPhone) {
                         try {
                             //api에 따라 처리
+
+                            console.log(getBirth());
                         } catch (e) {
                             openDialog(
                                 '서버에 오류가 발생하였습니다',
@@ -138,19 +104,26 @@ const SignUpContainer = () => {
             email !== '' &&
             name !== '' &&
             password !== '' &&
-            phone !== '' &&
             isEmail &&
             isPassword &&
             isPhone &&
             checkList[0].checked &&
             checkList[1].checked
-        ) 
+        )
             setSignUp(false);
+        else setSignUp(true);
 
-        else setSignUp(true)
-
-        // console.log(email, name, password, isEmail, isPassword, isPhone, checkList[0].checked, checkList[1].checked)
-    }, [email, name, password, phone, isEmail, isPassword, isPhone, checkList]);
+        console.log(
+            email,
+            name,
+            password,
+            isEmail,
+            isPassword,
+            isPhone,
+            checkList[0].checked,
+            checkList[1].checked,
+        );
+    }, [email, name, password, isEmail, isPassword, isPhone, checkList]);
 
     return (
         <>
@@ -205,45 +178,31 @@ const SignUpContainer = () => {
                             if (e.key === 'Enter') onClickSignUp();
                         }}
                     />
-                    <div className={cx('password-check', {'apear': password !== '' || passwordCheck !== ''}, {'same': password !== '' && password === passwordCheck })}>비밀번호가 <span>불</span>일치합니다.</div>
+                    <div
+                        className={cx(
+                            'password-check',
+                            { apear: password !== '' || passwordCheck !== '' },
+                            {
+                                same:
+                                    password !== '' &&
+                                    password === passwordCheck,
+                            },
+                        )}
+                    >
+                        비밀번호가 <span>불</span>일치합니다.
+                    </div>
                 </div>
 
                 <div className={cx('input-wrapper')}>
                     <div className={cx('input-title')}>생년월일</div>
 
                     <div className={cx('select-wrapper')}>
-                        <div className={cx('select-item')}>
-                            <select className={cx('select')}>
-                                {YEAR.map((y) => (
-                                    <option key={y}>{y}년</option>
-                                ))}
-                            </select>
-                            <ArrowSmall rotate={180} />
-                        </div>
-
-                        <div className={cx('select-item')}>
-                            <select className={cx('select')}>
-                                {MONTH.map((m) => (
-                                    <option key={m}>{m}월</option>
-                                ))}
-                            </select>
-                            <ArrowSmall rotate={180} />
-                        </div>
-
-                        <div className={cx('select-item')}>
-                            <select className={cx('select')}>
-                                {DAY.map((d) => (
-                                    <option key={d}>{d}일</option>
-                                ))}
-                            </select>
-                            <ArrowSmall rotate={180} />
-                        </div>
+                        <Birth onChangeBirth={onChangeBirth} />
                     </div>
                 </div>
 
-
-                <div className={cx("input-title")}>휴대폰 번호 인증</div>
-                <VerifyPhone />
+                <div className={cx('input-title')}>휴대폰 번호 인증</div>
+                <VerifyPhone setIsPhone={setIsPhone} />
 
                 <div className={cx('check-box-wrapper')}>
                     <CheckBox
