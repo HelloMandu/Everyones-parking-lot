@@ -1,32 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Pagination } from 'swiper';
+
+// import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import Coupon from '../../components/coupon/Coupon';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
 import 'swiper/swiper.scss';
-import 'swiper/components/pagination/pagination.scss';
 
 import styles from './CouponContainer.module.scss';
 
-SwiperCore.use([Pagination]);
-
-const category = [
-    {
-        id: 1,
-        title: '내 쿠폰',
-    },
-    {
-        id: 2,
-        title: '쿠폰북',
-    },
-    {
-        id: 3,
-        title: '사용내역',
-    },
-];
+// function a11yProps(index) {
+//     return {
+//         id: `simple-tab-${index}`,
+//         'aria-controls': `simple-tabpanel-${index}`,
+//     };
+// }
 
 const CouponContainer = () => {
     const [couponList, setCouponList] = useState([
@@ -88,24 +80,28 @@ const CouponContainer = () => {
         [couponList],
     );
     const swiperRef = useRef(null);
-    useEffect(() => {
-        const paginationBullet = document.querySelector('.swiper-pagination');
-        paginationBullet.classList += styles['swiper-pagination'];
-        paginationBullet.style.position = 'fixed';
-        paginationBullet.style.top = '55px';
-        paginationBullet.style.marginLeft = '20px';
-        for (let i = 0; i < category.length; i++) {
-            paginationBullet.children[i].innerHTML = category[i].title;
-            paginationBullet.children[i].style.display = 'inline-block';
-            paginationBullet.children[i].style.width = '65px';
-            paginationBullet.children[i].style.height = '21px';
-            paginationBullet.children[i].style.background = 'inherit';
-            paginationBullet.children[i].style.fontSize = '16px';
-            paginationBullet.children[i].style.fontWeight = 'bold';
-        }
+    const [tabValue, setTabValue] = useState(0);
+
+    const handleTabIndex = useCallback((event, newValue) => {
+        setTabValue(newValue);
+        swiperRef.current.slideTo(newValue, 300);
+    }, []);
+    const handleSwiperIndex = useCallback((newValue) => {
+        setTabValue(newValue);
+        swiperRef.current.slideTo(newValue, 300);
     }, []);
     return (
         <>
+            <Tabs
+                className={styles['tabs']}
+                value={tabValue}
+                onChange={handleTabIndex}
+                aria-label="simple tabs example"
+            >
+                <Tab className={styles['tabs']} label="내 쿠폰" />
+                <Tab className={styles['tabs']} label="쿠폰북" />
+                <Tab className={styles['tabs']} label="사용내역" />
+            </Tabs>
             <div className={styles['order']}>
                 <div className={styles['order-select']}>
                     <select>
@@ -121,13 +117,11 @@ const CouponContainer = () => {
                 className={styles['coupon-swiper']}
                 spaceBetween={50}
                 slidesPerView={1}
-                onSlideChange={() => console.log(swiperRef.current.activeIndex)}
+                onSlideChange={(swiper) =>
+                    handleSwiperIndex(swiper.activeIndex)
+                }
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper;
-                    console.log(swiperRef.current);
-                }}
-                pagination={{
-                    clickable: true,
                 }}
             >
                 <SwiperSlide>
