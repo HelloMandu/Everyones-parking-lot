@@ -13,7 +13,7 @@ import useKeyDown from '../../hooks/useKeyDown';
 
 const cx = cn.bind(styles);
 
-const VerifyPhone = () => {
+const VerifyPhone = ({ setIsPhone }) => {
     const [sent, setSent] = useState(false);
     const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
         '',
@@ -35,8 +35,9 @@ const VerifyPhone = () => {
     const onClickVerify = useCallback(() => {
         if (verifyCheck) {
             console.log('onClickVerify');
+            setIsPhone(true)
         }
-    }, [verifyCheck]);
+    }, [verifyCheck, setIsPhone]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
     return (
@@ -73,6 +74,7 @@ const VerifyPhone = () => {
                         button_name={'인증완료'}
                         disable={!verifyCheck}
                         focus={verifyFocus}
+                        onClick={onClickVerify}
                     ></ConfirmButton>
                 </div>
             </div>

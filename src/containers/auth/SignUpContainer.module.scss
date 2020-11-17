@@ -1,23 +1,40 @@
 @import '../../static/stylesheets/Root.scss';
 
 .container{
-    width: 100%;
     padding: $padding;
 
     @include container($pd-top);
 
     .input-wrapper{
         margin-bottom: 20px;
-        .input-title{
-            font-size: 14px;
-            font-weight: bold;
-            color: #999999;
-            margin-bottom: 9px;
+
+        .password-check{
+            color: #953120;
+            display: none;
+        }
+
+        .apear{
+            display: block;
+        }
+
+        .same{
+            color: #2966B4;
+
+            & > span{
+                display: none;
+            }
         }
     }
 
-    .check-box-wrapper{
-        position: relative;
+    .input-wrapper:first-child{
+        margin-top: 20px;
+    }
+
+    .input-title{
+        font-size: 14px;
+        font-weight: bold;
+        color: #999999;
+        margin-bottom: 9px;
     }
 
     .select-wrapper{
@@ -50,10 +67,9 @@
             width: 40%;
         }
     }
-}
 
-.select-item {
-    & + & {
-        padding-left: 10px;
+    .check-box-wrapper{
+        position: relative;
+        padding-bottom: 120px;
     }
 }
