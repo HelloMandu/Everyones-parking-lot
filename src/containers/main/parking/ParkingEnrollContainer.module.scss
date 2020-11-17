@@ -1,7 +1,6 @@
 @import '../../../static/stylesheets/Root.scss';
 
 .parkingpayment-container {
-    padding: 24px 20px;
     @include container($pd-top);
     margin-bottom: 140px;
     .parkingpayment-wrapper {

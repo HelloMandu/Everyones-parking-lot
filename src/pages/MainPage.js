@@ -6,7 +6,6 @@ const { Paths } = require('../paths');
 
 const MainPage = () => {
     return (
-        <div>
             <Switch>
                 <Route exact path={Paths.main.index} component={Map} />
                 <Route path={Paths.main.detail} component={Detail} />
@@ -22,7 +21,6 @@ const MainPage = () => {
                 <Route path={Paths.main.support + '/:mode?/:modal?'} component={Support} />
                 <Route render={() => <h1>없음</h1>} />
             </Switch>
-        </div>
     );
 };
 

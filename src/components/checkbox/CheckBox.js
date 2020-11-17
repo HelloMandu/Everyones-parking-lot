@@ -16,22 +16,7 @@ const CheckBoxItem = memo(({ checked, description, onToggle }) => {
     );
 });
 
-// const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
-
-// const enroll = [
-//     {
-//         id: 1,
-//         checked: false,
-//         description: '개인정보취급방침',
-//     },
-//     {
-//         id: 2,
-//         checked: false,
-//         description: '이용약관',
-//     },
-// ];
-
-const CheckBox = ({ allCheckTitle, checkListProps }) => {
+const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc }) => {
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
     const onToggleAll = useCallback(() => {
@@ -41,8 +26,18 @@ const CheckBox = ({ allCheckTitle, checkListProps }) => {
                 checked: !allCheck,
             })),
         );
+
+        if(setterFunc !== undefined){
+            setterFunc(
+                checkListProps.map((checkBox) => ({
+                    ...checkBox,
+                    checked: !allCheck,
+                }))
+            )
+        }
+
         setAllCheck(!allCheck);
-    }, [allCheck, checkList]);
+    }, [allCheck, checkList, setterFunc, checkListProps]);
 
     const onToggle = useCallback(
         (id) => {
@@ -53,8 +48,18 @@ const CheckBox = ({ allCheckTitle, checkListProps }) => {
                         : checkBox,
                 ),
             );
+
+            if(setterFunc !== undefined){
+                setterFunc(
+                    checkListProps.map((checkBox) => 
+                        checkBox.id === id
+                        ? { ...checkBox, checked: !checkBox.checked }
+                        : checkBox,
+                    )
+                )
+            }
         },
-        [checkList],
+        [checkList, checkListProps, setterFunc],
     );
     useEffect(() => {
         const result = checkList.reduce(
@@ -65,7 +70,7 @@ const CheckBox = ({ allCheckTitle, checkListProps }) => {
     }, [checkList, checkListProps]);
     return (
         <div>
-            <div className={cx('checkitem', 'allcheck')}>
+            <div className={cx('checkitem', 'allcheck', {box})}>
                 <CheckBoxItem
                     checked={allCheck}
                     description={allCheckTitle}

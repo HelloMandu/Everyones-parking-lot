@@ -1,10 +1,10 @@
-import React, { forwardRef, useCallback, useState } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
 import { Paths } from '../../../paths/index';
 
-import EnrollCouponContainer from './EnrollCouponContainer';
+import EnrollCouponModal from '../../../components/coupon/EnrollCouponModal';
 
 import ParkingInfo from '../../../components/parking/ParkingInfo';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -22,15 +22,29 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
+
+const enroll = [
+    {
+        id: 1,
+        checked: false,
+        description: '개인정보취급방침',
+    },
+    {
+        id: 2,
+        checked: false,
+        description: '이용약관',
+    },
+];
+
 const ParkingEnrollContainer = () => {
-    const [openCoupon, setOpenCoupon] = useState(false);
-    const onOpenCoupon = useCallback(() => {
-        setOpenCoupon(true);
-    }, [setOpenCoupon]);
-    const offOpenCoupon = useCallback(() => {
-        setOpenCoupon(false);
-    }, [setOpenCoupon]);
     const history = useHistory();
+    const [openCoupon, setOpenCoupon] = useState(false);
+    useEffect(() => {
+        setOpenCoupon(
+            history.location.pathname === Paths.main.parking.enrollment.coupon,
+        );
+    }, [history.location.pathname]);
     return (
         <>
             <div className={styles['parkingpayment-container']}>
@@ -43,15 +57,11 @@ const ParkingEnrollContainer = () => {
                     <div className={styles['title']}>{'쿠폰 할인'}</div>
                     <div
                         className={styles['verify-coupon']}
-                        onClick={() => {
-                            history.push(Paths.main.parking.enrollment.coupon);
-                        }}
+                        onClick={() =>
+                            history.push(Paths.main.parking.enrollment.coupon)
+                        }
                     >
-                        <div
-                            className={styles['coupon']}
-                            name="coupon"
-                            onClick={onOpenCoupon}
-                        >
+                        <div className={styles['coupon']} name="coupon">
                             오픈 이벤트 10% 할인 이벤트 쿠폰
                         </div>
                         <ArrowSmall rotate={180}></ArrowSmall>
@@ -59,12 +69,9 @@ const ParkingEnrollContainer = () => {
                     <Dialog
                         fullScreen
                         open={openCoupon}
-                        onClose={offOpenCoupon}
                         TransitionComponent={Transition}
                     >
-                        <EnrollCouponContainer
-                            offCoupon={offOpenCoupon}
-                        ></EnrollCouponContainer>
+                        <EnrollCouponModal></EnrollCouponModal>
                     </Dialog>
                 </div>
                 <div className={styles['parkingpayment-wrapper']}>
@@ -81,7 +88,7 @@ const ParkingEnrollContainer = () => {
                     </div>
                 </div>
                 <Price></Price>
-                <CheckBox></CheckBox>
+                <CheckBox allCheckTitle={enrollTitle} checkListProps={enroll}></CheckBox>
             </div>
             <FixedButton
                 button_name={'68,000원 결제'}

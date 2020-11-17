@@ -55,3 +55,14 @@
     }
 }
 
+.coupon-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    .explain{
+        font-size: 16px;
+        margin-top: 20px;
+    }
+}

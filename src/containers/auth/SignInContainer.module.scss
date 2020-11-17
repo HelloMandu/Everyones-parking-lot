@@ -1,7 +1,6 @@
 @import '../../static/stylesheets/Root.scss';
 
 .container{
-    width: 100%;
     padding: $padding;
     
     @include container($pd-top);

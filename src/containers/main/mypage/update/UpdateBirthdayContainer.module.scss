@@ -1,0 +1,8 @@
+@import '../../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($pd-top);
+    .birth-area{
+        padding: 24px 15px 0 15px;
+    }
+}
