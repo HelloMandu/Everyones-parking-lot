@@ -1,9 +1,12 @@
 .send-verify {
     display: flex;
-    position: relative;
+    margin-bottom: 10px;
     .confirm-button {
         min-width: 96px;
         height: 48px;
+    }
+    .hasMargin{
+        margin-left: 10px;
     }
 }
 .verify-phone {

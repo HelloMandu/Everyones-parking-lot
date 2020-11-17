@@ -101,6 +101,14 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.hp) {
             return <Header title={HeaderTitle.main.mypage.update.hp} />
         }
+        //차량정보 등록
+        else if (pathname === Paths.main.mypage.update.enrollment) {
+            return <Header title={HeaderTitle.main.mypage.update.enrollment} />
+        }
+        //생년월일 변경
+        else if (pathname === Paths.main.mypage.update.birthday) {
+            return <Header title={HeaderTitle.main.mypage.update.birthday} />
+        }
     }
 
     return (

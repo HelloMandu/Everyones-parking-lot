@@ -1,13 +1,25 @@
 import React from 'react';
 /* Library */
 
-const UpdateBirthday = () => {
+import FixedButton from '../../../../components/button/FixedButton';
+/* Components */
+
+import styles from './UpdateHpContainer.module.scss';
+/* StyleSheets */
+
+const UpdateBirthdayContiner = () => {
+
+    const onClickButton = () => {
+        alert("생년월일 변경")
+    }
 
     return (
-        <div>
+        <div className={styles['container']}>
             생년월일 변경
+            
+            <FixedButton button_name="변경" disable={false} onClick={onClickButton} />
         </div>
     );
 };
 
-export default UpdateBirthday;
+export default UpdateBirthdayContiner;
