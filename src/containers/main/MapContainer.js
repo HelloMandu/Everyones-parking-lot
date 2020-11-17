@@ -17,6 +17,7 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
 import ParkingItem from '../../components/items/ParkingItem';
+import CircleButton from '../../components/button/CircleButton';
 //lib
 import { Paths } from '../../paths';
 
@@ -131,13 +132,7 @@ const MapContainer = () => {
     );
 };
 
-const CircleButton = ({ src, onClick }) => {
-    return (
-        <IconButton className={styles['circle-btn']} onClick={onClick}>
-            <img src={src} alt="alt" />
-        </IconButton>
-    )
-}
+
 
 const markerdata = [
     {
