@@ -1,1 +1,26 @@
 @import '../../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($pd-top);
+    .input-area{
+        padding: 24px 15px 0 15px;
+        .select-wrap{
+            position: relative;
+            .select{
+                width: 100%; height: 48px;
+                border: 1px solid #EBEBEB;
+                padding: 0 15px;
+                .select-text{
+                    color: #333;
+                    font-size: 1.25rem; // 15px;
+                    font-weight: 400; // Regular
+                }
+            }
+            & > svg{
+                position: absolute;
+                top: 50%;
+                right: 15px;
+            }
+        }
+    }
+}
