@@ -15,7 +15,7 @@
             position: relative;
             svg{
                 position: absolute;
-                right: 24px;
+                right: $padding;
                 width: 12px; height: 12px;
                 g{
                     line{
@@ -43,7 +43,7 @@
         .withdraw{
             width: 80px; height: 32px;
             position: absolute;
-            bottom: 38px; right: 24px;
+            bottom: 38px; right: $padding;
             color: #fff;
             background-color: inherit;
             font-size: 1.167rem; // 14px;
