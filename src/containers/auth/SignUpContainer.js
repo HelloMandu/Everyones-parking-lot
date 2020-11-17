@@ -12,32 +12,14 @@ import {
 
 import CheckBox from '../../components/checkbox/CheckBox';
 
+import VerifyPhone from '../../components/verifyphone/VerifyPhone'
+
 import FixedButton from '../../components/button/FixedButton';
 
 import { useDialog } from '../../hooks/useDialog';
 
 import styles from './SignUpContainer.module.scss';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
-
-// const checkList = [
-//     {
-//         id: 1,
-//         checked: false,
-//         description: '이용약관 필수 동의',
-//     },
-//     {
-//         id: 2,
-//         checked: false,
-//         description: '개인정보 처리방침 필수 동의',
-//     },
-//     {
-//         id: 3,
-//         checked: false,
-//         description: '쿠폰 / 이벤트 알림 선택 동의',
-//         subDescription:
-//             'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
-//     },
-// ];
 
 const DATE = new Date(1970, 1, 1);
 const CURRENT = new Date();
@@ -87,12 +69,12 @@ const SignUpContainer = () => {
 
     const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
-    const [password, onChangePassword] = useInput(
+    const [password, onChangePassword, isPassword] = useInput(
         '',
         isPasswordForm,
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
-    const [phone, onChangePhone] = useInput('', isCellPhoneForm);
+    const [phone, onChangePhone, isPhone] = useInput('', isCellPhoneForm);
 
     const [checkList, setCheckList] = useState([
         {
@@ -259,19 +241,9 @@ const SignUpContainer = () => {
                     </div>
                 </div>
 
-                <div className={cx('input-wrapper')}>
-                    <div className={cx('input-title')}>휴대폰 번호</div>
-                    <InputBox
-                        className={'input-bar'}
-                        type={'text'}
-                        value={phone}
-                        placeholder={'이름을 입력해주세요.'}
-                        onChange={onChangePhone}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') onClickSignUp();
-                        }}
-                    />
-                </div>
+
+                <div className={cx("input-title")}>휴대폰 번호 인증</div>
+                <VerifyPhone />
 
                 <div className={cx('check-box-wrapper')}>
                     <CheckBox

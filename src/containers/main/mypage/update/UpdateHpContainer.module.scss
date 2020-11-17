@@ -1,0 +1,8 @@
+@import '../../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($pd-top);
+    .input-area{
+        padding-left: 15px; padding-right: 15px;
+    }
+}
