@@ -1,7 +1,7 @@
 @import '../../../static/stylesheets/Root.scss';
 
 .parkingpayment-container {
-    padding: 24px 20px;
+    padding: $padding-side;
     @include container($pd-top);
     margin-bottom: 140px;
     .parkingpayment-wrapper {
@@ -33,6 +33,25 @@
             }
         }
 
+        .use-point {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            .point {
+                font-size: 14px;
+                color: #777777;
+                span {
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: #555555;
+                }
+            }
+            .confirm-button {
+                width: 80px;
+                height: 28px;
+            }
+        }
+
         .verify-payment {
             position: relative;
             .payment {
@@ -50,6 +69,28 @@
                 transform: translateY(-50%);
                 pointer-events: none;
             }
+        }
+    }
+    .final-payment {
+        height: 213px;
+        background-color: #f7f8f9;
+        padding: 28px 15px;
+        .total-payment {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            padding-bottom: 18px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #ebebeb;
+        }
+        .payment {
+            display: flex;
+            justify-content: space-between;
+            font-size: 17px;
+            font-weight: bold;
+            color: #555555;
+            margin-bottom: 6px;
         }
     }
 }

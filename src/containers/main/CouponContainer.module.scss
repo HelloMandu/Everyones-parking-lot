@@ -1,18 +1,34 @@
-.order{
+.tabs {
+    .tab {
+        min-width: 50px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+
+.order {
     width: 100%;
     height: 36px;
-    background-color: #F7F8F9;
-    .order-select{
+    background-color: #f7f8f9;
+    .order-select {
         height: 100%;
         line-height: 36px;
         float: right;
         margin-right: 24px;
-        select{
+        select {
             margin-right: 4px;
         }
-        svg{
+        svg {
             position: relative;
             top: -2px;
         }
+    }
+}
+
+.coupon-swiper {
+    height: calc(100vh - 132px);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
     }
 }

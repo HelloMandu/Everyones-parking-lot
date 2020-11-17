@@ -9,10 +9,8 @@ import UpdateCarContainer from '../../../containers/main/mypage/update/UpdateCar
 import UpdatePasswordContainer from '../../../containers/main/mypage/update/UpdatePasswordContainer';
 import UpdateProfileContainer from '../../../containers/main/mypage/update/UpdateProfileContainer';
 
-
-/* Paths */
 import { Paths } from '../../../paths';
-
+/* Paths */
 
 const UpdatePage = () => {
 

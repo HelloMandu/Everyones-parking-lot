@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './InputBox.module.scss';
 
-const InputBox = ({ className, type, value, placeholder, onChange, onKeyDown }) => {
+const InputBox = ({ className, type, value, placeholder, onChange, onKeyDown, reference }) => {
     return (
         <input
             className={styles[className]}
@@ -11,6 +11,7 @@ const InputBox = ({ className, type, value, placeholder, onChange, onKeyDown }) 
             placeholder={placeholder}
             onChange={onChange}
             onKeyDown={onKeyDown}
+            ref={reference}
         ></input>
     );
 };

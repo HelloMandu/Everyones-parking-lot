@@ -1,22 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
-import SwiperCore, { Controller, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import 'swiper/swiper.scss';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import Coupon from '../../components/coupon/Coupon';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
-import styles from './CouponContainer.module.scss';
 import 'swiper/swiper.scss';
-import 'swiper/components/scrollbar/scrollbar.scss';
 
-SwiperCore.use([Controller, Scrollbar]);
+import styles from './CouponContainer.module.scss';
 
 const CouponContainer = () => {
-    const [firstSwiper, setFirstSwiper] = useState(null);
-    const [secondSwiper, setSecondSwiper] = useState(null);
     const [couponList, setCouponList] = useState([
         {
             cp_id: 1,
@@ -45,6 +41,24 @@ const CouponContainer = () => {
             checked: false,
             use_status: 0,
         },
+        {
+            cp_id: 4,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+            use_status: 0,
+        },
+        {
+            cp_id: 5,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+            use_status: 0,
+        },
     ]);
     const onClickCoupon = useCallback(
         (id) => {
@@ -54,21 +68,36 @@ const CouponContainer = () => {
                     : { ...coupon, checked: false },
             );
             setCouponList(newCouponList);
-        },
+        }, 
         [couponList],
     );
+    const swiperRef = useRef(null);
+    const [tabValue, setTabValue] = useState(0);
 
+    const handleTabIndex = useCallback((event, newValue) => {
+        setTabValue(newValue);
+        swiperRef.current.slideTo(newValue, 300);
+    }, []);
+    const handleSwiperIndex = useCallback((newValue) => {
+        setTabValue(newValue);
+        swiperRef.current.slideTo(newValue, 300);
+    }, []);
     return (
         <>
-            <Swiper
-                onSwiper={setFirstSwiper}
-                controller={{ control: secondSwiper }}
-                slidesPerView={3}
+            <Tabs
+                className={styles['tabs']}
+                value={tabValue}
+                onChange={handleTabIndex}
+                TabIndicatorProps={{
+                    style: {
+                        backgroundColor: 'black',
+                    },
+                }}
             >
-                <SwiperSlide>test1</SwiperSlide>
-                <SwiperSlide>test1</SwiperSlide>
-                <SwiperSlide>test1</SwiperSlide>
-            </Swiper>
+                <Tab className={styles['tab']} label="내 쿠폰"/>
+                <Tab className={styles['tab']} label="쿠폰북" />
+                <Tab className={styles['tab']} label="사용내역" />
+            </Tabs>
             <div className={styles['order']}>
                 <div className={styles['order-select']}>
                     <select>
@@ -80,11 +109,16 @@ const CouponContainer = () => {
                 </div>
             </div>
             <Swiper
-                onSwiper={setSecondSwiper}
-                controller={{ control: firstSwiper }}
+                id="category-swiper"
+                className={styles['coupon-swiper']}
                 spaceBetween={50}
                 slidesPerView={1}
-                scrollbar={{ draggable: true }}
+                onSlideChange={(swiper) =>
+                    handleSwiperIndex(swiper.activeIndex)
+                }
+                onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                }}
             >
                 <SwiperSlide>
                     <Coupon list={couponList}></Coupon>

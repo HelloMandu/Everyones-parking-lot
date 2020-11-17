@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './BottomModal.module.scss';
 import classnames from 'classnames/bind';
-import { Backdrop, ButtonBase } from '@material-ui/core';
+import { Backdrop } from '@material-ui/core';
 
 const cn = classnames.bind(styles);
 
@@ -12,10 +12,10 @@ const BottomModal = ({ open, handleClose }) => {
                 <div className={styles['box']}>
                     <div className={styles['modal-title']}>
                         조건설정
-                        <AgreeToggle name={"gd"} checked={true}/>
-                        <AgreeToggle name={"gd"} checked={false}/>
-                        <AgreeToggle name={"gd"} checked={false}/>
-                        <AgreeToggle name={"gd"} checked={false}/>
+                        <AgreeToggle name={"gd"} checked={true} />
+                        <AgreeToggle name={"gd"} checked={false} />
+                        <AgreeToggle name={"gd"} checked={false} />
+                        <AgreeToggle name={"gd"} checked={false} />
                     </div>
                 </div>
             </div>

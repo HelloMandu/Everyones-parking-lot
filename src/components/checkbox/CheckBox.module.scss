@@ -4,7 +4,7 @@
     margin-bottom: 10px;
     .checkbox {
         position: relative;
-        width: 24px;
+        min-width: 24px;
         height: 24px;
         border: 1px solid #dbdbdb;
         border-radius: 50%;
@@ -27,6 +27,16 @@
             opacity: 1;
         }
     }
+
+    .sub-description{
+        font-size: 12px;
+        position: absolute;
+        z-index: 10;
+        bottom: -30px;
+        width: 80%;
+        left: 35px;
+        color: #AAAAAA;
+    }
 }
 .allcheck {
     margin-top: 38px;
@@ -35,4 +45,12 @@
         font-size: 16px;
         font-weight: bold;
     }
+}
+
+.box{
+    width: 100%;
+    height: 48px;
+    border: 1px solid #EBEBEB;
+    border-radius: 2px;
+    padding-left: 14px;
 }
