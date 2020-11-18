@@ -1,0 +1,19 @@
+
+html{
+    body{
+        .circle-btn{
+            border: 1px solid #EBEBEB;
+            width: 44px;
+            height: 44px;
+            border-radius: 50px;
+            background-color: #fff;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.16);
+            &:first-child{
+            }
+            &:hover{
+                background-color: #fff;
+            }
+        
+        }
+    }
+}

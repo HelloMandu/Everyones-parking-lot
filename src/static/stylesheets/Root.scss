@@ -9,6 +9,10 @@ $padding: 24px;
 $padding-side: 0 24px;
 $main-color:#222222;
 $disable-color: #DBDBDB;
+$level1 : 3000;
+$level2 : 2800;
+$level3 : 2500;
+$level4 : 2400;
 
 // 모바일 컨테이너 믹스인
 @mixin container($pd-top :48px) {
