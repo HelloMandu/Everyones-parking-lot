@@ -1,9 +1,14 @@
 import React from 'react';
+import classNames from 'classnames/bind'
+
+import styles from './SignCompleteContainer.module.scss'
+
+const cx = classNames.bind(styles)
 
 const SignCompleteContainer =()=>{
     return(
-        <div>
-            회원가입 완료
+        <div className={cx("container")}>
+            asd
         </div>
     )
 }
