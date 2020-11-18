@@ -1,6 +1,7 @@
 export const Paths = {
+    index :'/',
     main: {
-        index: '/',
+        index: '/main',
         detail: '/detail',
         payment: {
             index: '/payment',
@@ -82,7 +83,7 @@ export const HeaderTitle = {
             list: '이용 내역',
             detail: '',
             cancel: '',
-            extend: '',
+            extend: '연장 신청',
         },
         review: {
             index: '/review',
