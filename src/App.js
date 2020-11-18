@@ -12,7 +12,6 @@ import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
 
-//  develop 브런치 (테스트 브런치);
 const App = () => {
     const location = useLocation();
 
@@ -116,7 +115,10 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
-    };
+        else if(pathname===Paths.main.mypage.index){
+            return <Header title={HeaderTitle.main.mypage.index}/>
+        }
+    }
 
     return (
         <div className="App">

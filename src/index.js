@@ -7,6 +7,7 @@ import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'swiper/swiper.scss';
 
 import rootReducer, { rootSaga } from './store';
 

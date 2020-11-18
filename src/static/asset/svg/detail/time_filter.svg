@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" viewBox="0 0 14 14">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="자산_60_4x-8" data-name="자산 60@4x-8" width="14" height="14" transform="translate(324 460)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="마스크_그룹_2" data-name="마스크 그룹 2" transform="translate(-324 -460)" clip-path="url(#clip-path)">
+    <g id="controls" transform="translate(324.624 460.387)">
+      <path id="패스_139" data-name="패스 139" d="M2.07,3.283A1.643,1.643,0,0,0,3.693,1.876h9.164a.234.234,0,1,0,0-.469H3.693A1.64,1.64,0,1,0,2.07,3.283Zm0-2.814A1.172,1.172,0,1,1,.9,1.641,1.174,1.174,0,0,1,2.07.469Z" transform="translate(-0.429)" fill="#777" stroke="#707070" stroke-width="0.429"/>
+      <path id="패스_140" data-name="패스 140" d="M11.449,18a1.643,1.643,0,0,0-1.623,1.407H.663a.234.234,0,1,0,0,.469H9.827A1.64,1.64,0,1,0,11.449,18Zm0,2.814a1.172,1.172,0,1,1,1.172-1.172A1.174,1.174,0,0,1,11.449,20.814Z" transform="translate(-0.429 -8.152)" fill="#777" stroke="#707070" stroke-width="0.429"/>
+      <path id="패스_141" data-name="패스 141" d="M12.856,10.327H8.487a1.689,1.689,0,0,0-3.358,0H.663a.234.234,0,0,0,0,.469H5.144a1.688,1.688,0,0,0,3.328,0h4.384a.234.234,0,0,0,0-.469ZM6.808,11.733a1.221,1.221,0,1,1,1.221-1.221A1.222,1.222,0,0,1,6.808,11.733Z" transform="translate(-0.429 -3.996)" fill="#777" stroke="#707070" stroke-width="0.429"/>
+    </g>
+  </g>
+</svg>

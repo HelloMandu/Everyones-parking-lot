@@ -90,7 +90,7 @@ export const HeaderTitle = {
             write: '리뷰 쓰기',
             detail: '리뷰 상세보기',
         },
-        mypage: {
+        mypage:{
             index: '내 정보 수정',
             point: '',
             update: {
