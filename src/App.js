@@ -51,6 +51,12 @@ const App = () => {
         else if (pathname === Paths.auth.find.index) {
             return <Header title={HeaderTitle.auth.find.index} />;
         }
+        else if (pathname === Paths.auth.find.email) {
+            return <Header title={HeaderTitle.auth.find.email} />;
+        }
+        else if (pathname === Paths.auth.find.password) {
+            return <Header title={HeaderTitle.auth.find.password} />;
+        }
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;

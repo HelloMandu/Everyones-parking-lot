@@ -19,7 +19,7 @@ const FindPage = () => {
     return (
         <div>
             <Switch>
-                <Route path={Paths.auth.find.index} component={FindContainer} />
+                <Route path={Paths.auth.find.index} component={FindContainer} exact />
                 <Route path={Paths.auth.find.email} component={FindEmailContainer} />
                 <Route path={Paths.auth.find.password} component={FindPasswordContainer} />
                 <Route path={Paths.auth.find.email_complete} component={FindEmailCompleteContainer} />
