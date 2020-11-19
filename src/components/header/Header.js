@@ -12,7 +12,7 @@ const Header = ({ title }) => {
         <div className={styles['header']}>
             <IconButton
                 className={styles['back-btn']}
-                onClick={() => history.goBack()}
+                onClick={() => {console.log('test') ;history.goBack()}}
             >
                 <Arrow></Arrow>
             </IconButton>

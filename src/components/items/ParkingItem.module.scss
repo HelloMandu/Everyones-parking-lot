@@ -66,6 +66,8 @@ html{
     body{
         .swiper{
             max-width: $max-width;
+            min-height: 240px;
+            max-height: 240px;
             width: 100%;
             padding-left : 15px;
             // height: 265px;
@@ -83,7 +85,7 @@ html{
         .swiper-slide{
             border-radius: 5px;
             overflow: hidden;
-            max-width: 375px;
+            max-width: 315px;
             // margin-left: -30px;
             text-align: center;
             font-size: 18px;

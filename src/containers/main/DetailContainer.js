@@ -17,6 +17,7 @@ import roadview_icon from '../../static/asset/svg/detail/roadview.svg';
 import shared_icon from '../../static/asset/svg/detail/shared.svg';
 import datepicker_icon from '../../static/asset/svg/detail/time_filter.svg';
 import { ButtonBase } from '@material-ui/core';
+import { Paths } from '../../paths';
 const cx = cn.bind(styles);
 const categorys = [
     {
@@ -52,9 +53,9 @@ const DetailContainer = ({modal}) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} />
-                            <CircleButton src={guid_icon} />
-                            <CircleButton src={roadview_icon} />
+                            <CircleButton src={shared_icon} txt={"공유"}/>
+                            <CircleButton src={guid_icon} txt={"안내"}/>
+                            <CircleButton src={roadview_icon} txt={"로드뷰"}/>
                         </div>
                     </div>
                 </div>
@@ -72,7 +73,7 @@ const DetailContainer = ({modal}) => {
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
                             10/5(수)14:00 ~ 10/5(수)16:00
-                            <ButtonBase className={styles['date-picker']}>
+                            <ButtonBase className={styles['date-picker']} onClick={()=>history.push(Paths.main.detail+'/datepicker')}>
                             <img src={datepicker_icon} alt="date"/>
                         </ButtonBase>
                         </div>

@@ -2,7 +2,7 @@
 .like-button{
     display: flex;
     position: fixed;
-    z-index: 5000;
+    z-index: $level3;
     width: 100%;
     padding: 10px 20px;
     bottom: 0;
@@ -10,7 +10,7 @@
     .box{
         width: 100%;
         display: flex;
-    align-items: center;
+        align-items: center;
         justify-content: space-between;
     }
 }

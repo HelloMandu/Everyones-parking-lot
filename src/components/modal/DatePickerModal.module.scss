@@ -4,90 +4,90 @@ html {
     body {
         :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: 4500 !important;
+            z-index: $level2 !important;
         }
         .dim {
             z-index: $level2;
         }
     }
 }
-html {
-    body {
-        .distance-item {
-            box-sizing: border-box;
-            margin: 0 7.5px;
-            &:first-child {
-                margin-left: 0;
-            }
-            width: 104px;
-            height: 36px;
-            background-color: #ffffff;
-            border: 1px solid #e9ebed;
-            border-radius: 20px;
-            font-size: 14px;
-            color: #555555;
-            &.on {
-                border: solid #222;
-                background-color: #222;
-                color: #fff;
-            }
-        }
-    }
-}
 
-p {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: -1.5px;
-    color: #999999;
-    padding: 15px 0;
-}
 
 .container {
-    .item-list {
-        max-height: 200px;
-        overflow: hidden;
-        overflow-y: scroll;
+    .total-date{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        flex-direction: column;
+        h1{
+            font-size: 20px;
+            font-weight: bold;
+            color:#333;
+        }
+        p{
+            font-size: 16px;
+            color:#777;
+            padding: 15px 0;
+        }
     }
-    .event-zone {
-        border-radius: 15px;
-        box-shadow: 0 0px 8px rgba(0, 0, 0, 0.08);
+    .date-box{
+        width: 100%;
+        height: 64px;
+        border-radius: 2px;
+        background-color: #fff;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+        transition: height 0.3s ease-in-out;
         overflow: hidden;
-        margin-top: 30px;
-        .event-img {
-            width: 100%;
-            img {
-                width: 100%;
+        .txt-value{
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            .txt{
+                font-size: 14px;
+                font-weight:bold;
+                color:#999999;
+            }
+            .value{
+                font-size: 14px;
+                font-weight:bold;
+                color:#333;
             }
         }
-    }
-    .space-zone {
-        @extend .event-zone;
-        box-shadow: none;
-   
-        .event-img{
-            overflow: hidden;
+        &.open{
+            height: 200px;
         }
     }
-    .distance-list {
-        display: flex;
-        margin: 15px 0;
-        margin-bottom: 60px;
+}
+html{
+    body{
+        .date-swiper{
+            max-height: 121px;
+            padding: 0 15px;
+        }
     }
-    .search {
-        position: relative;
-        margin-top: 15px;
-        input {
-            width: 100%;
-            height: 50px;
-            font-size: 22px;
-            background-color: #fff;
-            border-bottom: 2px solid #e9ebed;
+}
+html{
+    body{
+        .swiper-slide{
+            border-radius: 100px;
+            color:#6f6f6f;
+            .date-item{
+                display: flex;
+                justify-content: space-between;
+                background-color: #6f6f6f;
+                border-radius: 10px;
+                width: 100%;
+                padding: 5px 15px;
+                letter-spacing: -0.5px;
+                font-size: 18px;
+                font-weight: bold;
+                color:#222222;
+              
+            }
         }
-        .search-icon {
-            position: absolute;
-            right: 0;
-        }
+     
     }
 }

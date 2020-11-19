@@ -4,10 +4,7 @@ html {
     body {
         :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: 4500 !important;
-        }
-        .dim {
-            z-index: $level2;
+            z-index: $level1 !important;
         }
     }
 }
@@ -35,20 +32,21 @@ html {
     }
 }
 
-p {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: -1.5px;
-    color: #999999;
-    padding: 15px 0;
-}
+
 
 .container {
     .item-list {
         max-height: 200px;
         overflow: hidden;
         overflow-y: scroll;
+    }
+    p {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+        letter-spacing: -1.5px;
+        color: #999999;
+        padding: 15px 0;
     }
     .event-zone {
         border-radius: 15px;

@@ -34,7 +34,7 @@ const ParkingList = () => {
     return (
         <Swiper 
         initialSlide={0} 
-        spaceBetween={10}
+        spaceBetween={15}
         slidesPerView={1}
         freeMode={true}
         centeredSlides={true}
