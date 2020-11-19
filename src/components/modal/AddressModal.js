@@ -94,6 +94,7 @@ const AddressModal = (props) => {
                         <DistanceItem on={false}></DistanceItem>
                         <DistanceItem on={false}></DistanceItem>
                     </div>
+                    <p>최근 이용 스페이스 존</p>
                     <div className={styles['item-list']}>
                         <AddressItem />
                         <AddressItem />

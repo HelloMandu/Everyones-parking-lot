@@ -82,6 +82,7 @@
           padding :5px 0;
           justify-content: space-between;
           .txt{
+              word-break: keep-all;
               font-size: 14px;
               color:#777;
               font-weight: 500;
@@ -89,11 +90,30 @@
               letter-spacing: -0.5px;
           }
           .value{
+            word-break: keep-all;
             color:#333;
             font-size: 14px;
         }
+          &.shared-time{
+              .value{
+                  display: flex;
+                  align-items: center;
+                  .date-picker{
+                      margin-left: 5px;
+                      width: 24px; height: 24px;
+                      background-color: #fff;
+                      border: 1px solid #DBDBDB;
+                      padding : 3px;
+                      img{
+                          width: 100%;
+                      }
+
+                  }
+              }
+          }
           &.price{
               .value{
+            word-break: keep-all;
                   display: flex;
                   align-items: center;
                 .item-price{
@@ -110,10 +130,10 @@
           }
       }
   }
-  .info-review{
-      background-color: #fff;
+  .tab-wrapper{
       margin-top: 15px;
-      .info{
+      .detail-info{
+          background-color: #fff;
           padding : 15px 24px;
           display: flex;
           flex-direction: column;
@@ -125,13 +145,19 @@
               .txt{
                   font-weight: bold;
                   color:#aaa;
-                  min-width: 120px;
+                  min-width: 100px;
               }
               .value{
+                  text-align: right;
+                word-break: keep-all;
+
                   color:#333
               }
 
           }
+      }
+      .review-list{
+
       }
   }
 }

@@ -7,7 +7,6 @@ html{
             text-align: left;
             width: 100%;
             // border:5px solid black;
-            border-radius: 5px;
             overflow: hidden;
             box-sizing: border-box;
             z-index: $level3;
@@ -82,6 +81,8 @@ html{
             // border: 2px solid red;
         }
         .swiper-slide{
+            border-radius: 5px;
+            overflow: hidden;
             max-width: 375px;
             // margin-left: -30px;
             text-align: center;
