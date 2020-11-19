@@ -9,7 +9,7 @@ const MainPage = () => {
     const history = useHistory();
     return (
             <Switch>
-                <Route path={Paths.main.index} component={Map} />
+                <Route path={Paths.main.index + '/:modal?'} component={Map} />
                 <Route path={Paths.main.detail} component={Detail} />
                 <Route path={Paths.main.payment.index} component={Payment} />
                 <Route path={Paths.main.payment_complete} component={PaymentComplete} />

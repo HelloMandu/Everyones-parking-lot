@@ -1,0 +1,21 @@
+@import '../../static/stylesheets/Root.scss';
+
+.container{
+    min-height: 100vh;
+    width: 100%;
+    z-index: 5000;
+}
+html {
+    body {
+        :global(.MuiDialog-root){
+            min-height: 100vh;
+            z-index: 5500 !important;
+            .container{
+                background-color: orange;
+            }
+        }
+        .dim {
+            z-index: $level2;
+        }
+    }
+}

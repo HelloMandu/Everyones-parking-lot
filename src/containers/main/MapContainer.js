@@ -1,5 +1,8 @@
 /*global kakao*/
 import React, { useEffect, useReducer, useRef } from 'react';
+import {useHistory} from 'react-router-dom';
+
+import {Paths} from '../../paths';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -18,10 +21,13 @@ import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
 import ParkingItem from '../../components/items/ParkingItem';
 import CircleButton from '../../components/button/CircleButton';
+import AddressModal from '../../components/modal/AddressModal';
 //lib
 const cx = cn.bind(styles);
 
-const MapContainer = () => {
+const MapContainer = ({modal}) => {
+
+    const history= useHistory();
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -103,11 +109,10 @@ const MapContainer = () => {
                         <div className={styles['line']} />
                     </div>
                 </ButtonBase>
-                <div className={styles['search']}>
+                <div className={styles['search']} onClick={()=>history.push(Paths.main.index+'/address')}>
                     <ButtonBase className={styles['search-box']}>
                         위치를 입력해주세요
                     </ButtonBase>
-                    {/* <input type="text" placeholder="위치를 입력해주세요" /> */}
                     <IconButton className={styles['search-btn']}>
                         <img src={search_icon} alt="search" />
                     </IconButton>
@@ -126,6 +131,7 @@ const MapContainer = () => {
                 <ParkingItem/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
+            <AddressModal open ={modal==='address'}/>
         </>
     );
 };

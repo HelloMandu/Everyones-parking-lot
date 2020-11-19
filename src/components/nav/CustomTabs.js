@@ -19,8 +19,6 @@ const CustomTabs = ({ idx, categories, onChange }) => {
         <Tabs
             value={idx}
             onChange={onChange}
-            variant="scrollable"
-            scrollButtons="auto"
             className={styles['tabs']}
         >
             {tabList}
