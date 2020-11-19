@@ -4,4 +4,33 @@
     padding: $padding;
     
     @include container($pd-top);
+
+    .area{
+        height: 260px;
+
+        .icon-area{
+            height: 80%;
+
+            & > svg{
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .ment{
+            text-align: center;
+
+            .title{
+                font-size: 26px;
+                font-weight: bold;
+            }
+
+            .content{
+                font-size: 16px;
+                color: #777777;
+            }
+        }
+    }
 }
