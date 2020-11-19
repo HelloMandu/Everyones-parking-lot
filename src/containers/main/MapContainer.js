@@ -131,7 +131,7 @@ const MapContainer = ({modal}) => {
                 <ParkingItem/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
-            <AddressModal open ={modal==='address'}/>
+            <AddressModal open ={modal==='address'} handleClose={() =>history.goBack()}/>
         </>
     );
 };

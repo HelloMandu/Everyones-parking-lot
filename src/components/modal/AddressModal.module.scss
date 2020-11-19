@@ -1,21 +1,89 @@
 @import '../../static/stylesheets/Root.scss';
 
-.container{
-    min-height: 100vh;
-    width: 100%;
-    z-index: 5000;
-}
 html {
     body {
-        :global(.MuiDialog-root){
+        :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: 5500 !important;
-            .container{
-                background-color: orange;
-            }
+            z-index: 4500 !important;
         }
         .dim {
             z-index: $level2;
+        }
+    }
+}
+html {
+    body {
+        .distance-item {
+            box-sizing: border-box;
+            margin: 0 7.5px;
+            &:first-child {
+                margin-left: 0;
+            }
+            width: 104px;
+            height: 36px;
+            background-color: #ffffff;
+            border: 1px solid #e9ebed;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #555555;
+            &.on {
+                border: solid #222;
+                background-color: #222;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.container {
+    .item-list {
+        max-height: 200px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+    .event-zone {
+        border-radius: 15px;
+        box-shadow: 0 0px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-top: 30px;
+        .event-img {
+            width: 100%;
+            img {
+                width: 100%;
+            }
+        }
+    }
+    .space-zone {
+        @extend .event-zone;
+        box-shadow: none;
+        p {
+            font-size: 14px;
+            font-weight: 500;
+            color: #999999;
+            padding: 15px 0;
+        }
+        .event-img{
+            overflow: hidden;
+        }
+    }
+    .distance-list {
+        display: flex;
+        margin: 15px 0;
+        margin-bottom: 60px;
+    }
+    .search {
+        position: relative;
+        margin-top: 15px;
+        input {
+            width: 100%;
+            height: 50px;
+            font-size: 22px;
+            background-color: #fff;
+            border-bottom: 2px solid #e9ebed;
+        }
+        .search-icon {
+            position: absolute;
+            right: 0;
         }
     }
 }
