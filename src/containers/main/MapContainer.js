@@ -22,6 +22,7 @@ import BottomModal from '../../components/nav/BottomModal';
 import ParkingItem from '../../components/items/ParkingItem';
 import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
+import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 const cx = cn.bind(styles);
 
@@ -125,12 +126,13 @@ const MapContainer = ({modal}) => {
                 <div className={cx('side-bar', 'right')}>
                     <CircleButton src={filter_img} onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }} />
                     <CircleButton src={time_img} />
-                    <CircleButton src={like_img} />
+                    <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
                 </div>      
                 <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
                 <ParkingItem/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
+            <BookmarkModal open ={modal ==='bookmark'} handleClose={() =>history.goBack()}/>
             <AddressModal open ={modal==='address'} handleClose={() =>history.goBack()}/>
         </>
     );
