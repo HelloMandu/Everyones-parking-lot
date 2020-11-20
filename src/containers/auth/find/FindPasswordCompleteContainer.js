@@ -1,7 +1,7 @@
 import React from 'react';
 /* Library */
 
-const FindPasswordComplete = () => {
+const FindPasswordCompleteContainer = () => {
 
     return (
         <div>
@@ -10,4 +10,4 @@ const FindPasswordComplete = () => {
     );
 };
 
-export default FindPasswordComplete;
+export default FindPasswordCompleteContainer;

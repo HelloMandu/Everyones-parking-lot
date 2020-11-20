@@ -15,7 +15,7 @@ import styles from './FindEmailContainer.module.scss'
 
 const cx = classNames.bind(styles)
 
-const FindEmail = () => {
+const FindEmailContainer = () => {
     const openDialog = useDialog()
     const [name, onChangeName] = useInput("")
     const [isPhone, setIsPhone] = useState(false)
@@ -46,4 +46,4 @@ const FindEmail = () => {
     );
 };
 
-export default FindEmail;
+export default FindEmailContainer;

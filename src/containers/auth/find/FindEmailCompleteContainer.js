@@ -13,7 +13,7 @@ import EmailComplete from '../../../static/asset/svg/auth/EmailComplete';
 
 const cx = classNames.bind(styles);
 
-const FindEmailComplete = () => {
+const FindEmailCompleteContainer = () => {
     const email = 'k557330@naver.com';
     const emailSplite = email.split('@');
     const userID = emailSplite[0].toString();
@@ -40,4 +40,4 @@ const FindEmailComplete = () => {
     );
 };
 
-export default FindEmailComplete;
+export default FindEmailCompleteContainer;
