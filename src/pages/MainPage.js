@@ -11,7 +11,7 @@ const MainPage = () => {
                 <Route path={Paths.main.detail} component={Detail} />
                 <Route path={Paths.main.payment.index} component={Payment} />
                 <Route path={Paths.main.payment_complete} component={PaymentComplete} />
-                <Route exact path={Paths.main.use.index} component={Use} />
+                <Route path={Paths.main.use.index} component={Use} />
                 <Route path={Paths.main.review.index} component={Review} />
                 <Route path={Paths.main.mypage.index} component={Mypage} />
                 <Route path={Paths.main.parking.index} component={Parking} />
