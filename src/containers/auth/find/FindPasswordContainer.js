@@ -23,8 +23,11 @@ const FindPasswordContainer = () => {
 
     const onClickSubmit = () => {
         console.log(name);
-        if (name === '') openDialog('이름을 입력해주세요', '');
-        else console.log('onClickSubmit');
+        if (userID === '') openDialog('아이디를 입력해주세요', '');
+        else {
+            if(name === '') openDialog('이름을 입력해주세요', '');
+            else console.log('onClickSubmit');
+        }
     };
 
     return (

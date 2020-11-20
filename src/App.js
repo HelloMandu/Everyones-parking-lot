@@ -64,7 +64,7 @@ const App = () => {
             return <Header title={HeaderTitle.auth.find.password} />;
         }
         // 비밀번호 찾기 완료
-        else if (pathname === Paths.auth.find.password) {
+        else if (pathname === Paths.auth.find.password_complete) {
             return <Header title={HeaderTitle.auth.find.password_complete} />;
         }
         // 이용 내역
