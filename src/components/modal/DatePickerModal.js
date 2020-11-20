@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         minHeight: '100vh',
+        position:'relative',
         zIndex: 3000,
         padding: 0,
         paddingTop: 76,
@@ -60,10 +61,11 @@ const useStyles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-const test=['00','10','20','30','40','50'];
+const test = ['00', '10', '20', '30', '40', '50'];
 const DatePickerModal = (props) => {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    const [start_open, setStartOpen] = useState(false);
+    const [end_open ,setEndOpen] = useState(false);
     const list = test.map((data) => (
         <SwiperSlide className={styles['swiper-slide']} key={data}>
             <DateItem minute={data} />
@@ -84,53 +86,135 @@ const DatePickerModal = (props) => {
                         <h1>총 1일 2시간 대여</h1>
                         <p>10/07(수) 15:00 ~ 10/08(목) 17:00</p>
                     </div>
-                    <div className={cx('date-box', { open })}>
+                    <div className={cx('date-box', { open: start_open })}>
                         <div className={styles['txt-value']}>
                             <div className={styles['txt']}>입차 시각</div>
                             <ButtonBase
                                 className={styles['value']}
-                                onClick={() => setOpen(!open)}
+                                onClick={() => setStartOpen(!start_open)}
                             >
                                 10/07(수) 15:00
                                 <Select />
                             </ButtonBase>
                         </div>
+                        <div className={styles['swiper']}>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['day-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['hour-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['minute-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                        </div>
 
-                        <Swiper
-                            direction={'vertical'}
-                            initialSlide={1}
-                            spaceBetween={5}
-                            slidesPerView={3}
-                            loop
-                            centeredSlides={true}
-                            className={styles['date-swiper']}
-                            onSlideChange={(swiper) => {
-                                console.log(swiper.activeIndex);
-                                console.log(swiper);
-                            }}
-                        >
-                            {list}
-                        </Swiper>
+                        <div className={styles['select-line']}>
+                            <div className={styles['line']}></div>
+                        </div>
+
                     </div>
+
+                    {/* <div className={cx('date-box', { open: end_open },'end-box')}>
+                        <div className={styles['txt-value']}>
+                            <div className={styles['txt']}>출차 시!각</div>
+                            <ButtonBase
+                                className={styles['value']}
+                                onClick={() => setEndOpen(!end_open)}
+                            >
+                                10/07(수) 15:00
+                                <Select />
+                            </ButtonBase>
+                        </div>
+                        <div className={styles['swiper']}>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['day-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['hour-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                            <Swiper
+                                direction={'vertical'}
+                                initialSlide={1}
+                                spaceBetween={5}
+                                slidesPerView={3}
+                                centeredSlides={true}
+                                className={styles['minute-swiper']}
+                                onSlideChange={(swiper) => {
+                                    console.log(swiper.activeIndex);
+                                    console.log(swiper);
+                                }}
+                            >
+                                {list}
+                            </Swiper>
+                        </div>
+
+                        <div className={styles['select-line']}>
+                            <div className={styles['line']}></div>
+                        </div>
+                    </div> */}
                 </div>
             </DialogContent>
         </Dialog>
     );
 };
-const DateItem = ({minute}) => {
-    return (
-    <div className={styles['date-item']}>
-        <div className={styles['day']}>
-        10/07 (수)
-        </div>
-        <div className={styles['hour']}>
-        15시
-        </div>
-        <div className={styles['minute']}>
-        {minute}분
-        </div>
-    </div>
-    )
+const DateItem = ({ minute }) => {
+    return <div className={styles['date-item']}>10/07 (수)</div>;
 };
 
 export default DatePickerModal;

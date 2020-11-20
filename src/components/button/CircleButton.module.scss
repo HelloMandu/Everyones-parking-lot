@@ -3,8 +3,12 @@ html{
     body{
         .btn{
             .circle-btn{
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 border: 1px solid #EBEBEB;
                 width: 44px;
+                padding:0;
                 height: 44px;
                 border-radius: 50px;
                 background-color: #fff;
