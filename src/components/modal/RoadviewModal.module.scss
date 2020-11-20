@@ -1,0 +1,30 @@
+@import '../../static/stylesheets/Root.scss';
+
+html {
+    body {
+        :global(.MuiDialog-root) {
+            min-height: 100vh;
+            z-index: $level1 !important;
+        }
+    }
+}
+
+.modal{
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: $max-width;
+    max-height: 100vh;
+    overflow: hidden;
+    margin: 0 auto;
+    z-index: $level1;
+    transition: all 0.3s ease-in-out;
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+    &.open{
+        -webkit-transform: translateY(0%);
+        transform: translateY(0%);
+    }
+}

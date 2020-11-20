@@ -4,6 +4,8 @@
     position: fixed;
     z-index: $level3;
     width: 100%;
+    max-width: $max-width;
+    margin: 0 auto;
     padding: 10px 20px;
     bottom: 0;
     background-color: white;
