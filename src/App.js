@@ -51,11 +51,21 @@ const App = () => {
         else if (pathname === Paths.auth.find.index) {
             return <Header title={HeaderTitle.auth.find.index} />;
         }
+        // 이메일 찾기
         else if (pathname === Paths.auth.find.email) {
             return <Header title={HeaderTitle.auth.find.email} />;
         }
+        // 이메일 찾기 완료
+        else if (pathname === Paths.auth.find.email_complete) {
+            return <Header title={HeaderTitle.auth.find.email_complete} />;
+        }
+        // 비밀번호 찾기
         else if (pathname === Paths.auth.find.password) {
             return <Header title={HeaderTitle.auth.find.password} />;
+        }
+        // 비밀번호 찾기 완료
+        else if (pathname === Paths.auth.find.password) {
+            return <Header title={HeaderTitle.auth.find.password_complete} />;
         }
         // 이용 내역
         else if (pathname === Paths.main.use.list) {

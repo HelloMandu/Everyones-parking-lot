@@ -15,9 +15,9 @@ import { useDialog } from '../../hooks/useDialog';
 import styles from './SignInContainer.module.scss';
 import logo from '../../static/asset/png/logo.png';
 
-import Naver from '../../static/asset/svg/naver';
-import Kakao from '../../static/asset/svg/kakao';
-import Facebook from '../../static/asset/svg/facebook';
+import Naver from '../../static/asset/svg/auth/naver';
+import Kakao from '../../static/asset/svg/auth/kakao';
+import Facebook from '../../static/asset/svg/auth/facebook';
 
 const cx = classNames.bind(styles);
 

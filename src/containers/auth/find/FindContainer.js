@@ -6,8 +6,8 @@ import { Paths } from '../../../paths';
 
 import styles from './FindContainer.module.scss';
 
-import FindId from '../../../static/asset/svg/FindId';
-import FindPassword from '../../../static/asset/svg/FindPassword';
+import FindId from '../../../static/asset/svg/auth/FindId';
+import FindPassword from '../../../static/asset/svg/auth/FindPassword';
 
 const cx = classNames.bind(styles);
 
@@ -30,8 +30,8 @@ const FindContainer = () => {
             <Link to={Paths.auth.find.email}>
                 <FindItem
                     title={'아이디 찾기'}
-                    content={'휴대폰 인증을'}
-                    content2={'통하여 아이디를 찾습니다.'}
+                    content={'휴대폰 인증을 통하여'}
+                    content2={'아이디를 찾습니다.'}
                 >
                     <FindId />
                 </FindItem>
@@ -39,8 +39,8 @@ const FindContainer = () => {
             <Link to={Paths.auth.find.password}>
                 <FindItem
                     title={'비밀번호 찾기'}
-                    content={'휴대폰 인증을'}
-                    content2={'통하여 비밀번호를 찾습니다.'}
+                    content={'휴대폰 인증을 통하여'}
+                    content2={'비밀번호를 찾습니다.'}
                 >
                     <FindPassword />
                 </FindItem>
