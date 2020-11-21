@@ -31,9 +31,9 @@ const cx = classNames.bind(styles);
 const SignUpContainer = () => {
     const history = useHistory();
 
-    const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
+    const [email, onChangeEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
-    const [password, onChangePassword, isPassword] = useInput(
+    const [password, onChangePassword] = useInput(
         '',
         isPasswordForm,
     );
@@ -87,13 +87,10 @@ const SignUpContainer = () => {
         }
     }, [
         email,
-        isEmail,
         name,
         password,
-        isPassword,
         getBirth,
         phone,
-        isPhone,
         signUp,
         history,
     ]);
@@ -104,14 +101,14 @@ const SignUpContainer = () => {
             name !== '' &&
             password !== '' &&
             phone !== '' &&
+            isPhone &&
             checkList[0].checked &&
             checkList[1].checked
         )
             setSignUp(true);
         else setSignUp(false);
 
-        console.log(signUp)
-    }, [email, name, password, phone, checkList]);
+    }, [email, name, password, phone, isPhone, checkList]);
 
     return (
         <>
