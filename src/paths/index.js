@@ -33,6 +33,7 @@ export const Paths = {
                 birthday: '/mypage/update/birthday',
                 profile: '/mypage/update/profile',
             },
+            withdraw: '/mypage/withdraw',
         },
         parking: {
             index: '/parking',
@@ -64,7 +65,7 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'https://www.naver.com/',
+    api: 'https://172.20.10.6:8080/',
 };
 
 export const HeaderTitle = {
@@ -102,6 +103,7 @@ export const HeaderTitle = {
                 birthday: '생년월일 변경',
                 profile: '',
             },
+            withdraw: '회원 탈퇴',
         },
         parking: {
             index: '',

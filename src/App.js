@@ -116,6 +116,10 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
+        //회원 탈퇴
+        else if (pathname === Paths.main.mypage.withdraw) {
+            return <Header title={HeaderTitle.main.mypage.withdraw} />
+        }
     };
 
     return (
