@@ -16,6 +16,7 @@
   @include container(0);
   min-height: calc(100vh - 260px);
   background-color: #F4F4F4;
+  padding-bottom: 120px;
   .pd-box{  
     padding : $padding;
       background-color: #fff;
@@ -39,10 +40,8 @@
                   color:#222;
               }
               .item-state{
-                  position: absolute;
-                  right: 0;
                   text-align: center;
-                  margin: 0 15px;
+                  margin: 0 5px;
                   width: 56px;
                   height: 20px;
                   background-color:#222;
@@ -65,7 +64,7 @@
       .function-box{
           margin:40px 0;
           display: flex;
-          justify-content: space-between;
+          justify-content: space-around;
           :global(.MuiButtonBase-root){
 
           }
@@ -108,6 +107,30 @@
                     color:#999;
                 }
               }
+          }
+      }
+  }
+  .info-review{
+      background-color: #fff;
+      margin-top: 15px;
+      .info{
+          padding : 15px 24px;
+          display: flex;
+          flex-direction: column;
+          .info-item{
+              display: flex;
+              justify-content: space-between;
+              font-size: 14px;
+              padding :2.5px 0;
+              .txt{
+                  font-weight: bold;
+                  color:#aaa;
+                  min-width: 120px;
+              }
+              .value{
+                  color:#333
+              }
+
           }
       }
   }

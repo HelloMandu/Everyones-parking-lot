@@ -58,6 +58,9 @@ const App = () => {
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
         }
+        else if (pathname === Paths.main.use.extend) {
+            return <Header title={HeaderTitle.main.use.extend} />;
+        }
         // 내가 작성한 리뷰
         else if (pathname === Paths.main.review.list) {
             return <Header title={HeaderTitle.main.review.list} />;
@@ -129,7 +132,7 @@ const App = () => {
             {renderHeader()}
             <Switch className="test">
                 <Route path={Paths.auth.index} component={AuthPage} />
-                <Route path={Paths.main.index} component={MainPage} />
+                <Route path={Paths.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
         </div>
