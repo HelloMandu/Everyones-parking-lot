@@ -6,6 +6,7 @@ export const Paths = {
             index: '/payment',
             coupon: '/payment/coupon',
             type: '/payment/type',
+            enrollment: '/payment/type/enrollment',
         },
         payment_complete: '/payment_complete',
         use: {
@@ -75,6 +76,7 @@ export const HeaderTitle = {
             index: '결제정보 확인',
             coupon: '적용 쿠폰 선택',
             type: '결제수단 선택',
+            enrollment: '결제수단 등록',
         },
         payment_complete: '/payment_complete',
         use: {

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Review.module.scss';
 import Star from '../../static/asset/svg/review/Star';
 
-export default ({ rating, textAlign }) => {
+const ReviewRating = ({ rating, textAlign }) => {
     const rate = parseInt(rating);
     return (
         <p className={styles['rating']} style={{ textAlign }}>
@@ -13,3 +13,5 @@ export default ({ rating, textAlign }) => {
         </p>
     );
 };
+
+export default ReviewRating;

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
@@ -20,6 +20,7 @@ import ConfirmButton from '../../components/button/ConfirmButton';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
 import styles from './PaymentContainer.module.scss';
+import useModal from '../../hooks/useModal';
 
 const Point = () => {
     const [point, handleChangePoint] = useInput('');
@@ -95,16 +96,11 @@ const enroll = [
 
 const ParkingEnrollContainer = () => {
     const history = useHistory();
-    const [openCoupon, setOpenCoupon] = useState(false);
-    const [openPayment, setOpenPayment] = useState(false);
-    useEffect(() => {
-        setOpenCoupon(
-            history.location.pathname === Paths.main.payment.coupon,
-        );
-        setOpenPayment(
-            history.location.pathname === Paths.main.payment.type,
-        );
-    }, [history.location.pathname]);
+    const [isOpenCoupon, openCouponModal] = useModal(Paths.main.payment.coupon);
+    const [isOpenPayment, OpenPayment] = useModal(Paths.main.payment.type, [
+        Paths.main.payment.type,
+        Paths.main.payment.enrollment,
+    ]);
     return (
         <>
             <div className={styles['parkingpayment-container']}>
@@ -117,9 +113,7 @@ const ParkingEnrollContainer = () => {
                     <div className={styles['title']}>{'쿠폰 할인'}</div>
                     <div
                         className={styles['verify-coupon']}
-                        onClick={() =>
-                            history.push(Paths.main.payment.coupon)
-                        }
+                        onClick={openCouponModal}
                     >
                         <div className={styles['coupon']} name="coupon">
                             오픈 이벤트 10% 할인 이벤트 쿠폰
@@ -137,11 +131,7 @@ const ParkingEnrollContainer = () => {
                         <div
                             className={styles['payment']}
                             name="payment"
-                            onClick={() =>
-                                history.push(
-                                    Paths.main.payment.type,
-                                )
-                            }
+                            onClick={OpenPayment}
                         >
                             카카오페이
                         </div>
@@ -157,17 +147,18 @@ const ParkingEnrollContainer = () => {
             <FixedButton
                 button_name={'68,000원 결제'}
                 disable={false}
+                onClick={()=>history.push(Paths.main.payment_complete)}
             ></FixedButton>
             <Dialog
                 fullScreen
-                open={openCoupon}
+                open={isOpenCoupon}
                 TransitionComponent={Transition}
             >
                 <EnrollCouponModal></EnrollCouponModal>
             </Dialog>
             <Dialog
                 fullScreen
-                open={openPayment}
+                open={isOpenPayment}
                 TransitionComponent={Transition}
             >
                 <PaymentTypeModal></PaymentTypeModal>

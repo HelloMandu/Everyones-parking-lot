@@ -8,29 +8,33 @@ const NaverPay = () => {
             height="80"
             viewBox="0 0 80 80"
         >
-            <defs>
-                <clipPath id="clip-path">
-                    <rect
-                        id="사각형_2100"
-                        data-name="사각형 2100"
-                        width="80"
-                        height="80"
-                        rx="10"
-                        transform="translate(148 112)"
-                        fill="#ebebeb"
-                    />
-                </clipPath>
-            </defs>
             <g
-                id="마스크_그룹_45"
-                data-name="마스크 그룹 45"
-                transform="translate(-148 -112)"
-                clip-path="url(#clip-path)"
+                id="그룹_5018"
+                data-name="그룹 5018"
+                transform="translate(-134 -583)"
             >
+                <g
+                    id="카카오ᄑ_이_로고_1200"
+                    data-name="카카오페이_로고_1200"
+                    transform="translate(134 583)"
+                    fill="none"
+                    stroke="#ebebeb"
+                    strokeWidth="1"
+                >
+                    <rect width="80" height="80" rx="10" stroke="none" />
+                    <rect
+                        x="0.5"
+                        y="0.5"
+                        width="79"
+                        height="79"
+                        rx="9.5"
+                        fill="none"
+                    />
+                </g>
                 <g
                     id="ᄂ_이버ᄑ_이_svg"
                     data-name="네이버페이_svg"
-                    transform="translate(137.927 95.774)"
+                    transform="translate(123.927 566.774)"
                 >
                     <g
                         id="그룹_4133"

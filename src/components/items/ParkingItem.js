@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ParkingItem.module.scss';
 import { ButtonBase } from '@material-ui/core';
-import { numberFormat } from '../../lib/formatter';
+// import { numberFormat } from '../../lib/formatter';
 import ParkingImg from '../../static/asset/png/parking.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -9,7 +9,7 @@ const ParkingItem = () => {
     return (
         <ButtonBase className={styles['parking-item']}>
             <div className={styles['item-img']}>
-                <img src={ParkingImg} />
+                <img src={ParkingImg} alt='parking-img'/>
             </div>
             <div className={styles['item-info']}>
                 <div className={styles['item-name']}>길동이 주차공간</div>
@@ -48,12 +48,12 @@ const ParkingList = () => {
     );
 };
 
-const Test=()=>{
-    return(
-        <div className={styles['test']}>
-                gd
-        </div>
-    )
-}
+// const Test=()=>{
+//     return(
+//         <div className={styles['test']}>
+//                 gd
+//         </div>
+//     )
+// }
 
 export default ParkingList;

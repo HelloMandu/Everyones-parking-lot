@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './BottomModal.module.scss';
 import classnames from 'classnames/bind';
 import BasicButton from '../button/BasicButton';
-import { Backdrop, ButtonBase } from '@material-ui/core';
+import { Backdrop/*, ButtonBase*/ } from '@material-ui/core';
 
 const cn = classnames.bind(styles);
 

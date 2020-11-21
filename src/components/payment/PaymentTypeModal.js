@@ -1,41 +1,90 @@
-import React from 'react';
-
+import React, { forwardRef } from 'react';
+import cn from 'classnames/bind';
+import { Dialog, Slide } from '@material-ui/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { ButtonBase } from '@material-ui/core';
+
+import useModal from '../../hooks/useModal';
+
+import {Paths} from '../../paths';
+
+import EnrollCardModal from './EnrollCardModal';
 
 import FixedButton from '../button/FixedButton';
 
-import HyundaiCard from '../../static/asset/png/hyundai_card.png';
-import SsgCard from '../../static/asset/png/ssg_card.png';
+import KakaoPay from '../../static/asset/svg/payment/KakaoPay.js';
+import NaverPay from '../../static/asset/svg/payment/NaverPay.js';
+import Payco from '../../static/asset/svg/payment/Payco.js';
+import RegisterIcon from './RegisterIcon';
 
-import KakaoPay from '../../static/asset/svg/payment/KakaoPay.js'
-import NaverPay from '../../static/asset/svg/payment/NaverPay.js'
-import Payco from '../../static/asset/svg/payment/Payco.js'
+import Card1 from '../../static/asset/png/card/06.png';
+import Card2 from '../../static/asset/png/card/02.png';
+import Card3 from '../../static/asset/png/card/03.png';
 
 import styles from './PaymentTypeModal.module.scss';
 
+const cx = cn.bind(styles);
+
+const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const PaymentContainer = () => {
+    const [isOpenCardRegister, openCardRegisterModal] = useModal(Paths.main.payment.enrollment);
     return (
         <>
             <div className={styles['payment-container']}>
-                <div className={styles['payment-title']}></div>
-                <Swiper className={styles['card-swiper']}>
+                <h2 className={styles['payment-title']}>등록카드 결제</h2>
+                <Swiper
+                    className={styles['card-swiper']}
+                    spaceBetween={20}
+                    onSlideChange={(swiper) => console.log(swiper)}
+                >
                     <SwiperSlide>
-                        <img src={HyundaiCard} alt="card"></img>
-                        {/* <img src="#" alt="card"></img> */}
-                    </SwiperSlide>  
-                    <SwiperSlide>
-                        <img src={SsgCard} alt="card"></img>
-                        {/* <img src="#" alt="card"></img> */}
+                        <div className={styles['card-wrapper']}>
+                            <img src={Card1} alt="card"></img>
+                            <div className={styles['card-info']}>
+                                <div className={styles['card-num']}>
+                                    현대카드(1234 **** **** ****)
+                                </div>
+                                <ButtonBase>삭제</ButtonBase>
+                            </div>
+                        </div>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <img src="#" alt="card"></img>
+                        <div className={styles['card-wrapper']}>
+                            <img src={Card2} alt="card"></img>
+                            <div className={styles['card-info']}>
+                                <div className={styles['card-num']}>
+                                    현대카드(1234 **** **** ****)
+                                </div>
+                                <ButtonBase>삭제</ButtonBase>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <div className={styles['card-wrapper']}>
+                            <img src={Card3} alt="card"></img>
+                            <div className={styles['card-info']}>
+                                <div className={styles['card-num']}>
+                                    현대카드(1234 **** **** ****)
+                                </div>
+                                <ButtonBase>삭제</ButtonBase>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <div className={styles['card-register']} onClick={openCardRegisterModal}>
+                                <RegisterIcon></RegisterIcon>
+                            <div>카드등록</div>
+                        </div>
                     </SwiperSlide>
                 </Swiper>
                 <div className={styles['card-info']}>
                     <div className={styles['card-name']}></div>
                     <div className={styles['card-delete']}></div>
                 </div>
-                <div className={styles['payment-title']}></div>
+                <h2 className={cx(['payment-title', 'type'])}>일반결제</h2>
                 <ul className={styles['pay-list']}>
                     <li>
                         <KakaoPay></KakaoPay>
@@ -43,15 +92,22 @@ const PaymentContainer = () => {
                     </li>
                     <li>
                         <NaverPay></NaverPay>
-                        <div className={styles['pay-name']}>카카오페이</div>
+                        <div className={styles['pay-name']}>네이버페이</div>
                     </li>
                     <li>
                         <Payco></Payco>
-                        <div className={styles['pay-name']}>카카오페이</div>
+                        <div className={styles['pay-name']}>페이코</div>
                     </li>
                 </ul>
             </div>
             <FixedButton button_name={'결제하기'}></FixedButton>
+            <Dialog
+                fullScreen
+                open={isOpenCardRegister}
+                TransitionComponent={Transition}
+            >
+                <EnrollCardModal></EnrollCardModal>
+            </Dialog>
         </>
     );
 };

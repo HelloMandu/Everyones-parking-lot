@@ -34,6 +34,10 @@ const App = () => {
         else if (pathname === Paths.main.payment.index) {
             return <Header title={HeaderTitle.main.payment.index} />;
         }
+        // 결제정보 확인
+        else if (pathname === Paths.main.payment.enrollment) {
+            return <Header title={HeaderTitle.main.payment.enrollment} />;
+        }
         // 적용 쿠폰 선택
         else if (pathname === Paths.main.payment.coupon) {
             return <Header title={HeaderTitle.main.payment.coupon} />;

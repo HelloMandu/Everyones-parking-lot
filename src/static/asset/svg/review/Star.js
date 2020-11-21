@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ clip, size = 16, onClick = () => {} }) => (
+const Star = ({ clip, size = 16, onClick = () => {} }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size} height={size}
@@ -30,3 +30,5 @@ export default ({ clip, size = 16, onClick = () => {} }) => (
         </g>
     </svg>
 );
+
+export default Star;

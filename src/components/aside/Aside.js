@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
 // styles
@@ -51,7 +51,7 @@ const Aside = ({ open, handleClose }) => {
                     </div>
                     <ButtonBase className={styles['aside-profile']} onClick ={()=>onClickItem(Paths.main.mypage.index)}>
                         <IconButton className={styles['user-img']}>
-                            <img src={profile_icon} />
+                            <img src={profile_icon} alt="notification" />
                         </IconButton>
                         <div className={styles['user-profile']}>
                             <div className={styles['user-name']}>홍길동</div>
