@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classNames from 'classnames/bind';
 /* Library */
 
+import { Paths } from '../../paths';
+
 import useInput from '../../hooks/useInput';
 import InputBox from '../../components/inputbox/InputBox';
-
-import { Paths } from '../../paths'
 
 import { requestPostSignIn } from '../../api/user'
 
@@ -21,44 +21,23 @@ import Facebook from '../../static/asset/svg/auth/facebook';
 const cx = classNames.bind(styles);
 
 const SignInContainer = () => {
+    const history = useHistory()
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
 
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
-    const onClickLogin = async () => {
-        console.log(email, password);
+    const onClickLogin = useCallback(async () => {
         const response = await requestPostSignIn(email, password)
-        console.log(response)
-        const { msg, token } = response.data;
-        if (msg === "success") {
-            localStorage.setItem("access_token", token);
+        
+        if(response.data.msg === 'success') {
+            localStorage.setItem("user_id", response.data.token)
+            history.push(Paths.main.index)
+        } else {
+            console.log(response.data.msg)
         }
-        // if (email === '')
-        //     openDialog('이메일을 입력해 주세요', '', () =>
-        //         emailRef.current.focus(),
-        //     );
-        // else if (password === '')
-        //     openDialog('비밀번호를 입력해 주세요', '', () =>
-        //         passwordRef.current.focus(),
-        //     );
-        // else {
-        //     try {
-        //         const res = await axios.post(
-        //             'http://221.152.146.60:8080/api/user/signin',
-        //             {
-        //                 email: 'test@test.com',
-        //             },
-        //         );
-        //         console.log(res);
-
-        //         //res(api 결과)의 메세지에 따라 처리
-        //     } catch (e) {
-        //         console.log(e);
-        //     }
-        // }
-    };
+    }, [email, password, history]);
 
     useEffect(() => {
         emailRef.current.focus();
