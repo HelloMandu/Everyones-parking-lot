@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 //styles
 
-import cn from 'classnames/bind';
+// import cn from 'classnames/bind';
 //components
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';

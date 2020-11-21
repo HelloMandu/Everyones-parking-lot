@@ -28,7 +28,7 @@ export const Paths = {
             point: '/mypage/point',
             update: {
                 index: '/mypage/update',
-                name: '/mypage/update/name',
+                name: '/mypage/update/name', 
                 password: '/mypage/update/password',
                 hp: '/mypage/update/hp',
                 enrollment: '/mypage/update/enrollment',

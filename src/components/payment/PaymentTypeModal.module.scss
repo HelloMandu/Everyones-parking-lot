@@ -7,7 +7,7 @@
     .card-swiper {
         overflow: visible;
         width: 80%;
-        :local .swiper-wrapper {
+        :global .swiper-wrapper {
             align-items: center;
         }
 

@@ -14,7 +14,7 @@ import search_icon from '../../static/asset/svg/main/search.svg';
 
 import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
-import { Backdrop } from '@material-ui/core';
+// import { Backdrop } from '@material-ui/core';
 
 //asset
 import banner_img from '../../static/asset/png/event.png';
@@ -86,7 +86,7 @@ const AddressModal = (props) => {
                             placeholder="도착지를 알려주세요"
                         />
                         <IconButton className={styles['search-icon']}>
-                            <img src={search_icon} />
+                            <img src={search_icon} alt=""/>
                         </IconButton>
                     </div>
                     <div className={styles['distance-list']}>

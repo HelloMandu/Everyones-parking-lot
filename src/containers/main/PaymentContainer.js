@@ -25,7 +25,7 @@ import useModal from '../../hooks/useModal';
 const Point = () => {
     const [point, handleChangePoint] = useInput('');
     return (
-        <>
+        <div className={styles['point-wrapper']}>
             <InputBox
                 className={'input-box'}
                 type={'text'}
@@ -44,7 +44,7 @@ const Point = () => {
                     ></ConfirmButton>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
@@ -103,51 +103,58 @@ const ParkingEnrollContainer = () => {
     ]);
     return (
         <>
-            <div className={styles['parkingpayment-container']}>
-                <ParkingInfo></ParkingInfo>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'대여자 연락처'}</div>
-                    <VerifyPhone></VerifyPhone>
-                </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'쿠폰 할인'}</div>
-                    <div
-                        className={styles['verify-coupon']}
-                        onClick={openCouponModal}
-                    >
-                        <div className={styles['coupon']} name="coupon">
-                            오픈 이벤트 10% 할인 이벤트 쿠폰
+            <div className={styles['parking-payment-container']}>
+                <div className={styles['parking-payment-area']}>
+                    <ParkingInfo></ParkingInfo>
+                    <div className={styles['parking-payment-wrapper']}>
+                        <div className={styles['title']}>{'대여자 연락처'}</div>
+                        <VerifyPhone></VerifyPhone>
+                    </div>
+                    <div className={styles['parking-payment-wrapper']}>
+                        <div className={styles['title']}>{'쿠폰 할인'}</div>
+                        <div
+                            className={styles['verify-coupon']}
+                            onClick={openCouponModal}
+                        >
+                            <div className={styles['coupon']} name="coupon">
+                                오픈 이벤트 10% 할인 이벤트 쿠폰
+                            </div>
+                            <ArrowSmall rotate={180}></ArrowSmall>
                         </div>
-                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
+                    <div className={styles['parking-payment-wrapper']}>
+                        <div className={styles['title']}>{'포인트 할인'}</div>
+                        <Point></Point>
                     </div>
                 </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'포인트 할인'}</div>
-                    <Point></Point>
-                </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>결제수단</div>
-                    <div className={styles['verify-payment']}>
-                        <div
-                            className={styles['payment']}
-                            name="payment"
-                            onClick={OpenPayment}
-                        >
-                            카카오페이
+                <div className={styles['bar']}></div>
+                <div className={styles['parking-payment-area']}>
+                    <div className={styles['parking-payment-wrapper']}>
+                        <div className={styles['title']}>결제수단</div>
+                        <div className={styles['verify-payment']}>
+                            <div
+                                className={styles['payment']}
+                                name="payment"
+                                onClick={OpenPayment}
+                            >
+                                카카오페이
+                            </div>
+                            <ArrowSmall rotate={90}></ArrowSmall>
                         </div>
-                        <ArrowSmall rotate={90}></ArrowSmall>
                     </div>
                 </div>
                 <Price></Price>
-                <CheckBox
-                    allCheckTitle={enrollTitle}
-                    checkListProps={enroll}
-                ></CheckBox>
+                <div className={styles['parking-payment-area']}>
+                    <CheckBox
+                        allCheckTitle={enrollTitle}
+                        checkListProps={enroll}
+                    ></CheckBox>
+                </div>
             </div>
             <FixedButton
                 button_name={'68,000원 결제'}
                 disable={false}
-                onClick={()=>history.push(Paths.main.payment_complete)}
+                onClick={() => history.push(Paths.main.payment_complete)}
             ></FixedButton>
             <Dialog
                 fullScreen
