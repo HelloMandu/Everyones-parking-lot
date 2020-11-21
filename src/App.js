@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
@@ -11,10 +11,23 @@ import ErrorPage from './pages/ErrorPage';
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
+import { requestGetUserInfo } from './api/user';
 
 //  develop 브런치 (테스트 브런치);
 const App = () => {
     const location = useLocation();
+
+    const getUserInfo = async (user_token) => {
+        const response = await requestGetUserInfo(user_token);
+        console.log(response);
+    }
+
+    useEffect(() => {
+        const user_token = localStorage.getItem('access_token');
+        if (user_token) {
+            getUserInfo(user_token);
+        }
+    }, []);
 
     const renderHeader = () => {
         const { pathname } = location;

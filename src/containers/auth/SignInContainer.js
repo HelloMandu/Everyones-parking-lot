@@ -1,16 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classNames from 'classnames/bind';
 /* Library */
 
-import { Paths } from '../../paths';
-
 import useInput from '../../hooks/useInput';
 import InputBox from '../../components/inputbox/InputBox';
 
-import { useDialog } from '../../hooks/useDialog';
+import { Paths } from '../../paths'
+
+import { requestPostSignIn } from '../../api/user'
 
 import styles from './SignInContainer.module.scss';
 import logo from '../../static/asset/png/logo.png';
@@ -28,32 +27,37 @@ const SignInContainer = () => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
-    const openDialog = useDialog();
     const onClickLogin = async () => {
         console.log(email, password);
-        if (email === '')
-            openDialog('이메일을 입력해 주세요', '', () =>
-                emailRef.current.focus(),
-            );
-        else if (password === '')
-            openDialog('비밀번호를 입력해 주세요', '', () =>
-                passwordRef.current.focus(),
-            );
-        else {
-            try {
-                const res = await axios.post(
-                    'http://221.152.146.60:8080/api/user/signin',
-                    {
-                        email: 'test@test.com',
-                    },
-                );
-                console.log(res);
-
-                //res(api 결과)의 메세지에 따라 처리
-            } catch (e) {
-                console.log(e);
-            }
+        const response = await requestPostSignIn(email, password)
+        console.log(response)
+        const { msg, token } = response.data;
+        if (msg === "success") {
+            localStorage.setItem("access_token", token);
         }
+        // if (email === '')
+        //     openDialog('이메일을 입력해 주세요', '', () =>
+        //         emailRef.current.focus(),
+        //     );
+        // else if (password === '')
+        //     openDialog('비밀번호를 입력해 주세요', '', () =>
+        //         passwordRef.current.focus(),
+        //     );
+        // else {
+        //     try {
+        //         const res = await axios.post(
+        //             'http://221.152.146.60:8080/api/user/signin',
+        //             {
+        //                 email: 'test@test.com',
+        //             },
+        //         );
+        //         console.log(res);
+
+        //         //res(api 결과)의 메세지에 따라 처리
+        //     } catch (e) {
+        //         console.log(e);
+        //     }
+        // }
     };
 
     useEffect(() => {

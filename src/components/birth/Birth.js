@@ -5,7 +5,7 @@ import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
 import styles from './Birth.module.scss';
 
-const DATE = new Date(1930, 1, 1);
+const DATE = new Date(1970, 1, 1);
 const CURRENT = new Date();
 
 const YEAR = [];

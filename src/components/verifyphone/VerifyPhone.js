@@ -3,8 +3,6 @@ import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
 
-import { isCellPhoneForm } from '../../lib/formatChecker';
-
 import InputBox from '../inputbox/InputBox';
 import ConfirmButton from '../button/ConfirmButton';
 
@@ -13,12 +11,8 @@ import useKeyDown from '../../hooks/useKeyDown';
 
 const cx = cn.bind(styles);
 
-const VerifyPhone = ({ setIsPhone }) => {
+const VerifyPhone = ({ phone, handleChangePhone, sendCheck, setSendCheck, setIsPhone }) => {
     const [sent, setSent] = useState(false);
-    const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
-        '',
-        isCellPhoneForm,
-    );
     const onClickSendVerify = useCallback(() => {
         if (sendCheck) {
             console.log('onClickSendVerify');

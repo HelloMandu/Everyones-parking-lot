@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
+import { useHistory } from 'react-router-dom'
 /* Library */
 
 import useInput from '../../hooks/useInput';
 import useBirth from '../../hooks/useBirth';
 import InputBox from '../../components/inputbox/InputBox';
-import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
+import { isEmailForm, isPasswordForm, isCellPhoneForm } from '../../lib/formatChecker';
 
 import Birth from '../../components/birth/Birth';
 
@@ -15,14 +16,16 @@ import VerifyPhone from '../../components/verifyphone/VerifyPhone';
 
 import FixedButton from '../../components/button/FixedButton';
 
-import { useDialog } from '../../hooks/useDialog';
+import { requestPostAuth } from '../../api/user'
+
+import { Paths} from '../../paths'
 
 import styles from './SignUpContainer.module.scss';
 
 const cx = classNames.bind(styles);
 
 const SignUpContainer = () => {
-    const openDialog = useDialog();
+    const history = useHistory()
 
     const [email, onChangeEmail, isEmail] = useInput('', isEmailForm);
     const [name, onChangeName] = useInput('');
@@ -38,6 +41,10 @@ const SignUpContainer = () => {
         day: '1',
     });
 
+    const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
+        '',
+        isCellPhoneForm,
+    );
     const [isPhone, setIsPhone] = useState(false);
 
     const [checkList, setCheckList] = useState([
@@ -60,44 +67,37 @@ const SignUpContainer = () => {
         },
     ]);
 
-    const [signUp, setSignUp] = useState(true);
+    const [signUp, setSignUp] = useState(false);
 
-    const onClickSignUp = () => {
-        console.log('sign up');
-
+    const onClickSignUp = useCallback(async() => {
+        // const response = await requestPostAuth(email, name, password, getBirth(), "010-7205-5570")
+        // console.log(response)
         if (signUp) {
+            console.log('sign up');
             if (isEmail) {
                 if (isPassword) {
                     if (isPhone) {
                         try {
-                            //api에 따라 처리
+                            const response = await requestPostAuth(email, name, password, getBirth(), phone)
+                            console.log(response)
 
-                            console.log(getBirth());
+                            if(response) history.push(Paths.auth.sign_complete)
                         } catch (e) {
-                            openDialog(
-                                '서버에 오류가 발생하였습니다',
-                                '잠시 후 다시 시도해 주세요.',
-                            );
+                            //서버 오류
                         }
                     } else {
-                        openDialog('휴대폰 번호 형식에 맞지 않습니다!', '');
+                        // 휴대폰 형식
                     }
                 } else {
-                    openDialog(
-                        '비밀번호 형식에 맞지 않습니다!',
-                        '8자 이상으로 문자, 숫자 및 특수문자가 모두 포함되어야 합니다.',
-                    );
+                    // 비밀번호 형식
                 }
             } else {
-                openDialog('이메일 형식에 맞지 않습니다!', '');
+                // 이메일 형식
             }
         } else {
-            openDialog(
-                '정보를 모두 입력해야 합니다.',
-                '이메일과 비밀번호를 확인해 주세요.',
-            );
+            //정보 입력 덜 됨
         }
-    };
+    }, [email, isEmail, name, password, isPassword, getBirth, phone, isPhone, signUp, history]);
 
     useEffect(() => {
         if (
@@ -110,20 +110,9 @@ const SignUpContainer = () => {
             checkList[0].checked &&
             checkList[1].checked
         )
-            setSignUp(false);
-        else setSignUp(true);
-
-        console.log(
-            email,
-            name,
-            password,
-            isEmail,
-            isPassword,
-            isPhone,
-            checkList[0].checked,
-            checkList[1].checked,
-        );
-    }, [email, name, password, isEmail, isPassword, isPhone, checkList]);
+            setSignUp(true);
+        else setSignUp(false);
+    }, [email, name, password, phone, isEmail, isPassword, isPhone, checkList]);
 
     return (
         <>
@@ -202,7 +191,7 @@ const SignUpContainer = () => {
                 </div>
 
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
-                <VerifyPhone setIsPhone={setIsPhone} />
+                <VerifyPhone phone={phone} handleChangePhone={handleChangePhone} sendCheck={sendCheck} setSendCheck={setSendCheck} setIsPhone={setIsPhone} />
 
                 <div className={cx('check-box-wrapper')}>
                     <CheckBox
@@ -216,7 +205,7 @@ const SignUpContainer = () => {
 
             <FixedButton
                 button_name={'회원가입하기'}
-                disable={signUp}
+                disable={!signUp}
                 onClick={onClickSignUp}
             />
         </>
