@@ -19,8 +19,9 @@ import guid_icon from '../../static/asset/svg/detail/guid.svg';
 import roadview_icon from '../../static/asset/svg/detail/roadview.svg';
 import shared_icon from '../../static/asset/svg/detail/shared.svg';
 import datepicker_icon from '../../static/asset/svg/detail/time_filter.svg';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase ,IconButton} from '@material-ui/core';
 import { Paths } from '../../paths';
+import Arrow from '../../static/asset/svg/Arrow';
 
 
 const cx = cn.bind(styles);
@@ -39,6 +40,7 @@ const DetailContainer = ({ modal }) => {
     const history = useHistory();
 
 
+<<<<<<< HEAD
     useEffect(() => {
         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
         //  createKakaoButton();
@@ -46,6 +48,10 @@ const DetailContainer = ({ modal }) => {
 
     const onClickKakaoNavi = () => {
         Kakao.Navi.start({
+=======
+     const onClickKakaoNavi =()=>{
+         Kakao.Navi.start({
+>>>>>>> master
             name: "현대백화점 판교점",
             x: 127.11205203011632,
             y: 37.39279717586919,
@@ -97,7 +103,14 @@ const DetailContainer = ({ modal }) => {
     // }
     return (
         <div className={styles['wrapper']}>
+<<<<<<< HEAD
             {/* <button id="kakao-link-btn">
+=======
+            <IconButton className={styles['back']} onClick={()=>history.goBack()}>
+                <Arrow white={true}></Arrow>
+            </IconButton>
+                  {/* <button id="kakao-link-btn">
+>>>>>>> master
         <img src={shared_icon} alt="kakao-share-icon" />
       </button> */}
             <div className={styles['parking-img']}>
