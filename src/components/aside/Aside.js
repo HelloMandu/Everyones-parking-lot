@@ -45,14 +45,14 @@ const Aside = ({ open, handleClose }) => {
                         <IconButton onClick={()=>{onClickItem(Paths.main.notification)}}>
                             <img src={NotificationIcon} alt="notification" />
                         </IconButton>
-                        <IconButton onClick={()=>{onClickItem(Paths.main.notification)}}>
-                            <img src={SettingIcon} alt="notification" />
+                        <IconButton onClick={()=>{onClickItem(Paths.main.setting)}}>
+                            <img src={SettingIcon} alt="setting" />
                         </IconButton>
                     </div>
                     <ButtonBase className={styles['aside-profile']} onClick ={()=>onClickItem(Paths.main.mypage.index)}>
-                        <IconButton className={styles['user-img']}>
+                        <div className={styles['user-img']}>
                             <img src={profile_icon} alt="notification" />
-                        </IconButton>
+                        </div>
                         <div className={styles['user-profile']}>
                             <div className={styles['user-name']}>홍길동</div>
                             <div className={styles['user-email']}>

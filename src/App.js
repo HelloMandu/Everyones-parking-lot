@@ -1,4 +1,6 @@
-import React from 'react';
+/*global Kakao*/
+
+import React ,{useEffect} from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
@@ -14,6 +16,10 @@ import { Paths, HeaderTitle } from './paths';
 
 const App = () => {
     const location = useLocation();
+
+    useEffect(()=>{
+        Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+    },[])
 
     const renderHeader = () => {
         const { pathname } = location;

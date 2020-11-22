@@ -4,7 +4,9 @@ import { ButtonBase } from '@material-ui/core';
 // import { numberFormat } from '../../lib/formatter';
 import ParkingImg from '../../static/asset/png/parking.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import cn from 'classnames/bind';
 
+const cx = cn.bind(styles);
 const ParkingItem = ({onClick}) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
@@ -30,7 +32,7 @@ const ParkingItem = ({onClick}) => {
     );
 };
 
-const ParkingList = ({onClick}) => {
+const ParkingList = ({onClick,view}) => {
     return (
         <Swiper 
         initialSlide={0} 
@@ -38,7 +40,7 @@ const ParkingList = ({onClick}) => {
         slidesPerView={1}
         freeMode={true}
         centeredSlides={true}
-        className={styles['swiper'] } 
+        className={cx('swiper',{view}) } 
         >
             <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
             <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
