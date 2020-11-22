@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { useHistory } from 'react-router-dom';
 /* Library */
@@ -38,6 +38,8 @@ const SignUpContainer = () => {
         isPasswordForm,
     );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
+    
+    const phoneRef = useRef(null)
 
     const [onChangeBirth, getBirth] = useBirth({
         year: '1970',
@@ -45,11 +47,11 @@ const SignUpContainer = () => {
         day: '1',
     });
 
-    const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
-        '',
-        isCellPhoneForm,
-    );
-    const [isPhone, setIsPhone] = useState(false);
+    // const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
+    //     '',
+    //     isCellPhoneForm,
+    // );
+    // const [isPhone, setIsPhone] = useState(false);
 
     const [checkList, setCheckList] = useState([
         {
@@ -80,7 +82,7 @@ const SignUpContainer = () => {
                 name,
                 password,
                 getBirth(),
-                phone,
+                phoneRef.current.phone,
             );
             if (response.data.msg === "success") history.push(Paths.auth.sign_complete);
             else console.log(response.data.msg)
@@ -90,25 +92,25 @@ const SignUpContainer = () => {
         name,
         password,
         getBirth,
-        phone,
         signUp,
         history,
     ]);
+
 
     useEffect(() => {
         if (
             email !== '' &&
             name !== '' &&
             password !== '' &&
-            phone !== '' &&
-            isPhone &&
+            phoneRef.current.phone !== '' &&
+            phoneRef.current.isConfirm &&
             checkList[0].checked &&
             checkList[1].checked
         )
             setSignUp(true);
         else setSignUp(false);
 
-    }, [email, name, password, phone, isPhone, checkList]);
+    }, [email, name, password, checkList]);
 
     return (
         <>
@@ -188,11 +190,7 @@ const SignUpContainer = () => {
 
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
                 <VerifyPhone
-                    phone={phone}
-                    handleChangePhone={handleChangePhone}
-                    sendCheck={sendCheck}
-                    setSendCheck={setSendCheck}
-                    setIsPhone={setIsPhone}
+                    ref={phoneRef}
                 />
 
                 <div className={cx('check-box-wrapper')}>
