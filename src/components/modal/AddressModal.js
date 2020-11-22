@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect,useState, useRef}from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 //styles
@@ -68,6 +68,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AddressModal = (props) => {
     const classes = useStyles();
+    const ref = useRef(null);
+
     return (
         <Dialog
             fullScreen
@@ -84,6 +86,8 @@ const AddressModal = (props) => {
                             type="text"
                             className={styles['search-input']}
                             placeholder="도착지를 알려주세요"
+                            ref={ref}
+                   
                         />
                         <IconButton className={styles['search-icon']}>
                             <img src={search_icon} alt=""/>
@@ -94,6 +98,7 @@ const AddressModal = (props) => {
                         <DistanceItem on={false}></DistanceItem>
                         <DistanceItem on={false}></DistanceItem>
                     </div>
+                    <p>최근 이용 스페이스 존</p>
                     <div className={styles['item-list']}>
                         <AddressItem />
                         <AddressItem />
