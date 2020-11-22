@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useState, useEffect } from 'react';
 import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
@@ -14,10 +14,14 @@ import useKeyDown from '../../hooks/useKeyDown';
 const cx = cn.bind(styles);
 
 const VerifyPhone = (props, ref) => {
+    const {setCheck} = props
     const [sent, setSent] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
     const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
         '',
         isCellPhoneForm,
+        undefined,
+        isConfirm
     );
     const onClickSendVerify = useCallback(() => {
         if (sendCheck) {
@@ -32,7 +36,6 @@ const VerifyPhone = (props, ref) => {
         '',
         (state) => state.length === 6,
     );
-    const [isConfirm, setIsConfirm] = useState(false);
     const onClickVerify = useCallback(() => {
         if (verifyCheck) {
             console.log('onClickVerify');
@@ -42,10 +45,9 @@ const VerifyPhone = (props, ref) => {
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
     useImperativeHandle(ref, ()=>({
-        phone: phone,
-        isConfirm: isConfirm,
+        phoneNumber: phone
     }));
-
+    useEffect(()=>setCheck(isConfirm), [setCheck, isConfirm])
     return (
         <>
             <div className={styles['send-verify']}>
