@@ -9,7 +9,7 @@ const ReviewRating = ({ rating, textAlign }) => {
             {[1, 2, 3, 4, 5].map(star => (
                 <Star key={star} clip={star > rate} />
             ))}
-            <span className={styles['rate']}>{ rating }</span>
+            <span className={styles['rate']}>{ rating }.0</span>
         </p>
     );
 };

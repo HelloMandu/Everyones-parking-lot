@@ -1,0 +1,47 @@
+.detail-review-item{
+    background-color: #ffffff;
+    width: 100%;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    padding:15px 24px;
+    margin: 5px 0;
+    &:first-child{
+        margin-top: 0;
+    }
+    .user-table{
+        display: flex;
+        .user-info{
+            display: flex;
+            flex-direction: column;
+            .user-name{
+                font-size: 15px;
+                color:#555555;
+                font-weight: 500;
+            }
+            .comment-date{
+                font-size: 12px;
+                color:#999999;
+            }
+        }
+    }
+    .profile{
+        margin-right: 5px;
+        width: 28px;
+        height: 28px;
+        img{
+            width: 100%;
+        }
+    }
+    .rating{
+        position: absolute;
+        top:15px;
+        right: 24px;
+    }
+    .comment{
+        padding  : 5px 0;
+        padding-left: 32px;
+        line-height: 1.5;
+        color:#333;
+    }
+}

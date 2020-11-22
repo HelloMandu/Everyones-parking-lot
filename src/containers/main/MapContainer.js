@@ -96,6 +96,7 @@ const MapContainer = ({modal}) => {
 
     };
 
+
     return (
         <>
             <div className={styles['container']}>
