@@ -29,7 +29,6 @@ const cx = cn.bind(styles);
 const MapContainer = ({modal}) => {
 
     const history= useHistory();
-    let map = null;
     const [count ,setCount] = useState(0);
     const [view,setView] = useState(false);
 
@@ -57,8 +56,15 @@ const MapContainer = ({modal}) => {
         });
     }
 
-    const mapScript = useCallback(() => {
+    const mapScript = () => {
   
+        let container = document.getElementById("map");
+        let options = {
+            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
+            level: 5,
+        };
+        const map = new kakao.maps.Map(container, options);
+        kakao_map.current = map;
 
         var imageSrc = MarkerImg,
             imageSize = new kakao.maps.Size(120, 70),
@@ -68,9 +74,10 @@ const MapContainer = ({modal}) => {
 
 
         markerdata.forEach((el) => {
-            let content = `<span class="custom-overlay">${el.distance}m</span>`;
-
-            let marker = new kakao.maps.Marker({
+            let content = `<span class="custom-overlay">${el.title}m</span>`;
+            var iwContent = `<div style="padding:5px;">${el.title}</div>`,
+                iwRemoveable = true;
+            const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
@@ -82,37 +89,30 @@ const MapContainer = ({modal}) => {
                 content: content,
                 yAnchor: 1
             });
+            const infowindow = new kakao.maps.InfoWindow({
+                content : iwContent,
+                removable : iwRemoveable,
+                position: new kakao.maps.LatLng(el.lat, el.lng),
+            });
             kakao.maps.event.addListener(marker, 'click', function () {
-                setView(!view);
-                setCount(count+1);
-                console.log(el.title);
+                infowindow.open(map, marker);  
             });
 
         });
 
-    },[view,count]);
+    };
 
     useEffect(()=>{
-        let container = document.getElementById("map");
-        let options = {
-            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
-            level: 5,
-        };
-        map = new kakao.maps.Map(container, options);
-        kakao_map.current = map;
-    })
-    useEffect(() => {
-        
         mapScript();
-    }, [mapScript]);
+    },[])
 
-    useEffect(()=>{
-        console.log(view);
-    },[view])
+    // useEffect(()=>{
+    //     console.log(view);
+    // },[view])
     
-    useEffect(()=>{
-        console.log(count);
-    },[count])
+    // useEffect(()=>{
+    //     console.log(count);
+    // },[count])
 
 
 
@@ -173,20 +173,20 @@ const markerdata = [
         lat: 37.620842424005616,
         lng: 127.1583774403176,
     },
-    {
-        title: "수유리우동",
-        distance : 300,
+    // {
+    //     title: "수유리우동",
+    //     distance : 300,
 
 
-        lat: 37.624915253753194,
-        lng: 127.15122688059974,
-    },
-    {
-        title: "맛닭꼬",
-        distance : 300,
-        lat: 37.62456273069659,
-        lng: 127.15211256646381,
-    },
+    //     lat: 37.624915253753194,
+    //     lng: 127.15122688059974,
+    // },
+    // {
+    //     title: "맛닭꼬",
+    //     distance : 300,
+    //     lat: 37.62456273069659,
+    //     lng: 127.15211256646381,
+    // },
 ];
 
 export default MapContainer;
