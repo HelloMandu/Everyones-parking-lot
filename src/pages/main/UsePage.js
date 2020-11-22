@@ -10,7 +10,6 @@ import { Paths } from '../../paths';
 const UsePage = () => {
     const history= useHistory();
     return (
-        <div>
             <Switch>
                 <Route path={Paths.main.use.list} component={UseListContainer} />
                 <Route path={Paths.main.use.detail} component={UseDetailContainer} />
@@ -18,7 +17,6 @@ const UsePage = () => {
                 <Route path={Paths.main.use.extend} component={UseExtendContainer} />
                 <Route render={() =>history.replace(Paths.main.use.list)} />
             </Switch>
-        </div>
     );
 }
 export default UsePage;

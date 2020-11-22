@@ -52,7 +52,8 @@ export const Paths = {
             detail: '/event/detail',
         },
         support:{
-            index: '/support/notice',
+            index:'/support',
+            notice: '/support/notice',
             notice_detail :'/support/notice/detail',
             faq :'/support/faq',
             qna:'/support/qna',
@@ -131,12 +132,13 @@ export const HeaderTitle = {
             detail: '이벤트',
         },
         support:{
-            index: '고객센터',
+            index:'',
+            notice: '고객센터',
             notice_detail :'고객센터' ,
             faq :'고객센터',
             qna:'고객센터 ',
             qna_detail:'고객센터',
-            qna_write:'1:1 문의 작성',
+            qna_write:'1 :1 문의 작성',
         }
     },
     auth: {
