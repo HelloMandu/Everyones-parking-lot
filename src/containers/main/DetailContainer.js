@@ -24,14 +24,14 @@ import { Paths } from '../../paths';
 
 
 const cx = cn.bind(styles);
-const categorys = [
-    {
-        ca_name: '정보',
-    },
-    {
-        ca_name: '리뷰',
-    },
-];
+// const categorys = [
+//     {
+//         ca_name: '정보',
+//     },
+//     {
+//         ca_name: '리뷰',
+//     },
+// ];
 
 const DetailContainer = ({modal}) => {
     
@@ -54,47 +54,47 @@ const DetailContainer = ({modal}) => {
      }
 
 
-     const createKakaoButton = () => {
-        // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
-        if (Kakao) {
+    //  const createKakaoButton = () => {
+    //     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
+    //     if (Kakao) {
 
-            Kakao.Link.createDefaultButton({
-            // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
-            container: '#kakao-link-btn',
-            objectType: 'feed',
-            content: {
-              title: '타이틀',
-              description: '#리액트 #카카오 #공유버튼',
-              imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
-              link: {
-                mobileWebUrl: 'https://www.naver.com',
-                webUrl: 'https://www.naver.com',
-              },
-            },
-            social: {
-              likeCount: 77,
-              commentCount: 55,
-              sharedCount: 333,
-            },
-            buttons: [
-              {
-                title: '웹으로 보기',
-                link: {
-                  mobileWebUrl: 'https://www.naver.com',
-                  webUrl: 'https://www.naver.com',
-                },
-              },
-              {
-                title: '앱으로 보기',
-                link: {
-                  mobileWebUrl:'https://www.naver.com',
-                  webUrl:'https://www.naver.com',
-                },
-              },
-            ],
-          })
-        }
-    }
+    //         Kakao.Link.createDefaultButton({
+    //         // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
+    //         container: '#kakao-link-btn',
+    //         objectType: 'feed',
+    //         content: {
+    //           title: '타이틀',
+    //           description: '#리액트 #카카오 #공유버튼',
+    //           imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
+    //           link: {
+    //             mobileWebUrl: 'https://www.naver.com',
+    //             webUrl: 'https://www.naver.com',
+    //           },
+    //         },
+    //         social: {
+    //           likeCount: 77,
+    //           commentCount: 55,
+    //           sharedCount: 333,
+    //         },
+    //         buttons: [
+    //           {
+    //             title: '웹으로 보기',
+    //             link: {
+    //               mobileWebUrl: 'https://www.naver.com',
+    //               webUrl: 'https://www.naver.com',
+    //             },
+    //           },
+    //           {
+    //             title: '앱으로 보기',
+    //             link: {
+    //               mobileWebUrl:'https://www.naver.com',
+    //               webUrl:'https://www.naver.com',
+    //             },
+    //           },
+    //         ],
+    //       })
+    //     }
+    // }
     return (
         <div className={styles['wrapper']}>
                   {/* <button id="kakao-link-btn">
