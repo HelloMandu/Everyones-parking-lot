@@ -9,17 +9,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
-<<<<<<< HEAD
-import { ButtonBase/*, IconButton*/ } from '@material-ui/core';
-
-import Slide from '@material-ui/core/Slide';
-import styles from './DatePickerModal.module.scss';
-// import FixedButton from '../button/FixedButton';
-=======
 import { ButtonBase, IconButton } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
->>>>>>> ac099712c1cecdf785ca53d4944ffbfb5fa948b7
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FixedButton from '../button/FixedButton';
 
@@ -94,12 +86,6 @@ const DatePickerModal = (props) => {
     for (var i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
     const classes = useStyles();
-<<<<<<< HEAD
-    const [day/*,setDay*/] = useState(new Date().getDate());
-    const [start_open, setStartOpen] = useState(false);
-    // const [end_open ,setEndOpen] = useState(false);
-    const list = test.map((data) => (
-=======
 
     const [date_index, dispatchDateIndex] = useReducer(dateReducer, initState);
     const [date_list, setDateList] = useState([]);
@@ -109,7 +95,6 @@ const DatePickerModal = (props) => {
     const [end_date , setEndDate] = useState(0);
 
     const day_list = date_list.map((data) => (
->>>>>>> ac099712c1cecdf785ca53d4944ffbfb5fa948b7
         <SwiperSlide className={styles['swiper-slide']} key={data}>
             <DateItem value={data} />
         </SwiperSlide>
