@@ -130,7 +130,7 @@ const MapContainer = ({modal}) => {
                     <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
                 </div>      
                 <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
-                <ParkingItem/>
+                <ParkingItem onClick={()=>history.push(Paths.main.detail +'?id=1')}/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
             <BookmarkModal open ={modal ==='bookmark'} handleClose={() =>history.goBack()}/>

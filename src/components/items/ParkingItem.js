@@ -5,9 +5,9 @@ import { ButtonBase } from '@material-ui/core';
 import ParkingImg from '../../static/asset/png/parking.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-const ParkingItem = () => {
+const ParkingItem = ({onClick}) => {
     return (
-        <ButtonBase className={styles['parking-item']}>
+        <ButtonBase className={styles['parking-item']} onClick={onClick}>
             <div className={styles['item-img']}>
                 <img src={ParkingImg} alt='parking-img'/>
             </div>
@@ -30,7 +30,7 @@ const ParkingItem = () => {
     );
 };
 
-const ParkingList = () => {
+const ParkingList = ({onClick}) => {
     return (
         <Swiper 
         initialSlide={0} 
@@ -40,9 +40,9 @@ const ParkingList = () => {
         centeredSlides={true}
         className={styles['swiper'] } 
         >
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem/></SwiperSlide>
+            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
+            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
+            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
 
         </Swiper>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route,useHistory } from 'react-router-dom';
 /* Library */
 
 import EventListContainer from '../../containers/main/event/EventListContainer';
@@ -10,13 +10,13 @@ import { Paths } from '../../paths';
 /* Paths */
 
 const EventPage = () => {
-
+    const history = useHistory();
     return (
         <div>
             <Switch>
                 <Route path={Paths.main.event.list} component={EventListContainer} />
                 <Route path={Paths.main.event.detail} component={EventDetailContainer} />
-                <Route render={() => <h1>이벤트 페이지 404</h1>} />
+                <Route render={() => history.replace(Paths.main.event.list)} />
             </Switch>
         </div>
     );

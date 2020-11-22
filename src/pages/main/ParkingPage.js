@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route,useHistory } from 'react-router-dom';
 /* Library */
 
 import ParkingManageContainer from '../../containers/main/parking/ParkingManageContainer';
@@ -11,14 +11,14 @@ import { Paths } from '../../paths';
 /* Paths */
 
 const ParkingPage = () => {
-
+    const history = useHistory();
     return (
         <div>
             <Switch>
                 <Route path={Paths.main.parking.manage} component={ParkingManageContainer} />
                 <Route path={Paths.main.parking.enrollment} component={ParkingEnrollContainer} />
                 <Route path={Paths.main.parking.preview} component={ParkingPreviewContainer} />
-                <Route render={() => <h1>주차관리 404</h1>} />
+                <Route render={() =>history.replace(Paths.main.parking.manage)} />
             </Switch>
         </div>
     );

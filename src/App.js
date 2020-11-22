@@ -26,9 +26,33 @@ const App = () => {
         else if (pathname === Paths.auth.signup) {
             return <Header title={HeaderTitle.auth.signup} />;
         }
+        // 차량번호 등록
+        else if (pathname === Paths.auth.enrollment) {
+            return <Header title={HeaderTitle.auth.enrollment} />;
+        }
         // 회원가입 완료
         else if (pathname === Paths.auth.sign_complete) {
             return <Header title={HeaderTitle.auth.sign_complete} />;
+        }
+        //아이디/비밀번호 찾기
+        else if (pathname === Paths.auth.find.index) {
+            return <Header title={HeaderTitle.auth.find.index} />;
+        }
+        //아이디 찾기
+        else if (pathname === Paths.auth.find.email) {
+            return <Header title={HeaderTitle.auth.find.email} />;
+        }
+        //비밀번호 찾기
+        else if (pathname === Paths.auth.find.password) {
+            return <Header title={HeaderTitle.auth.find.password} />;
+        }
+        //이메일 찾기 완료
+        else if (pathname === Paths.auth.find.email_complete) {
+            return <Header title={HeaderTitle.auth.find.email_complete} />;
+        }
+        //비밀번호 재설정
+        else if (pathname === Paths.auth.find.password_complete) {
+            return <Header title={HeaderTitle.auth.find.password_complete} />;
         }
         // 결제정보 확인
         else if (pathname === Paths.main.payment.index) {
@@ -46,14 +70,7 @@ const App = () => {
         else if (pathname === Paths.main.payment.type) {
             return <Header title={HeaderTitle.main.payment.type} />;
         }
-        // 차량번호 등록
-        else if (pathname === Paths.auth.enrollment) {
-            return <Header title={HeaderTitle.auth.enrollment} />;
-        }
-        // 아이디/비밀번호 찾기
-        else if (pathname === Paths.auth.find.index) {
-            return <Header title={HeaderTitle.auth.find.index} />;
-        }
+
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
@@ -80,7 +97,6 @@ const App = () => {
         else if (pathname === Paths.main.parking.enrollment) {
             return <Header title={HeaderTitle.main.parking.enrollment} />;
         }
-
         //알림함
         else if (pathname === Paths.main.notification) {
             return <Header title={HeaderTitle.main.notification} />;
