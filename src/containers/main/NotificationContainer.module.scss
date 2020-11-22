@@ -1,0 +1,5 @@
+@import '../../static/stylesheets/Root.scss';
+
+.notification-container{
+    @include container();
+}

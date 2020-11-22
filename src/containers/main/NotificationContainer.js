@@ -1,15 +1,13 @@
 import React from 'react';
-/* Library */
 
-const NoticeContainer = () => {
+import styles from './NotificationContainer';
 
-    // 메인에 알림 갯수 표현해야해서 전역상태 관리 필요
-
+const NotificationContainer = () => {
     return (
-        <div>
+        <div className={styles['notification-container']}>
             알림 페이지
         </div>
     );
 };
 
-export default NoticeContainer;
+export default NotificationContainer;

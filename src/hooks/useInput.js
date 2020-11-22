@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const useInput = (initialValue, callback, limit) => {
+const useInput = (initialValue = '', callback, limit) => {
     const [state, setState] = useState(initialValue);
     const [check, setCheck] = useState(false);
     const onChange = useCallback(
