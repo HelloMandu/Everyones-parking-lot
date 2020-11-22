@@ -26,7 +26,7 @@ import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
-
+import {getDistanceFromLatLonInKm} from '../../lib/distance';
 //action
 
 import {set_position,set_level} from '../../store/user_position';
@@ -55,8 +55,6 @@ const MapContainer = ({modal}) => {
         { aside_: false, filter_: false },
     );
 
-
-
     const zoomMap = (type) => {
 
         let level = kakao_map.current.getLevel();
@@ -78,7 +76,6 @@ const MapContainer = ({modal}) => {
             level: level !== 0 ? level : level_.current,
         };
 
-        console.log(options);
        
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
@@ -95,8 +92,6 @@ const MapContainer = ({modal}) => {
             level_.current=level;
             position_.current.lat = latlng.getLat();
             position_.current.lng = latlng.getLng();
-            console.log('level',level_.current);
-            console.log(position_.current);
         
         });
 
@@ -110,8 +105,6 @@ const MapContainer = ({modal}) => {
 
         markerdata.forEach((el) => {
             let content = `<span class="custom-overlay">${el.title}m</span>`;
-            var iwContent = `<div style="padding:5px;">${el.title}</div>`,
-                iwRemoveable = true;
             const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
@@ -124,33 +117,33 @@ const MapContainer = ({modal}) => {
                 content: content,
                 yAnchor: 1
             });
-            const infowindow = new kakao.maps.InfoWindow({
-                content : iwContent,
-                removable : iwRemoveable,
-                position: new kakao.maps.LatLng(el.lat, el.lng),
-            });
+        
             kakao.maps.event.addListener(marker, 'click', function () {
                 view_.current= !view_.current;
-                setView(view_.current);
+                // setView(view_.current);
+                history.push(Paths.main.detail +`/${el.title}`)
             });
         });
     }
 
     useEffect(()=>{
         mapRender();
-    
-
     },[])
 
     useEffect(()=>{
         return () => {
-            console.log(level_.current);
-            console.log(position_.current);
             dispatch(set_position(position_.current));
             dispatch(set_level(level_.current));
         }
     },[dispatch])
 
+    useEffect(()=>{
+        const lat1 = markerdata[0].lat;
+        const lng1 =markerdata[0].lng;
+        const lat2 = markerdata[2].lat;
+        const lng2= markerdata[2].lng;
+        getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
+    },)
 
     return (
         <>
@@ -209,20 +202,18 @@ const markerdata = [
         lat: 37.620842424005616,
         lng: 127.1583774403176,
     },
-    // {
-    //     title: "수유리우동",
-    //     distance : 300,
-
-
-    //     lat: 37.624915253753194,
-    //     lng: 127.15122688059974,
-    // },
-    // {
-    //     title: "맛닭꼬",
-    //     distance : 300,
-    //     lat: 37.62456273069659,
-    //     lng: 127.15211256646381,
-    // },
+    {
+        title: "수유리우동",
+        distance : 300,
+        lat: 37.624915253753194,
+        lng: 127.15122688059974,
+    },
+    {
+        title: "맛닭꼬",
+        distance : 300,
+        lat: 37.62456273069659,
+        lng: 127.15211256646381,
+    },
 ];
 
 export default MapContainer;

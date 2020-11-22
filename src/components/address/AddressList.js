@@ -1,6 +1,6 @@
 import React from 'react';
-import { ButtonBase/*, IconButton*/ } from '@material-ui/core';
-import styles from './AddressItem.module.scss';
+import { ButtonBase} from '@material-ui/core';
+import styles from './AddressList.module.scss';
 
 import location_icon from '../../static/asset/svg/main/location.svg';
 
@@ -18,15 +18,34 @@ const AddressItem = ({ jibunAddr, roadAddr, distance, onClick }) => {
             </div>
             <div className={styles['pd-box']}>
                 <div className={styles['item-info']}>
-                    <div className={styles['jibun-addr']}>마곡나루역</div>
+                    <div className={styles['jibun-addr']}>{jibunAddr}</div>
                     <div className={styles['road-addr']}>
-                        강서구 마곡중앙5로 2 9호선마곡나루역
+                        {roadAddr}
                     </div>
                 </div>
             </div>
-            <div className={styles['distance']}>12.24km</div>
+            {distance &&        <div className={styles['distance']}>12.24km</div>}
+     
         </ButtonBase>
     );
 };
 
-export default AddressItem;
+export default ({addr_list,onClick})=>{
+    const list = addr_list.map((addr,index)=>(
+        <AddressItem
+            key={index}
+            index={index}
+            jibunAddr={addr.jibunAddr}
+            roadAddr={addr.roadAddr}
+            post_num={addr.zipNo}
+            distance={addr.distance}
+            onClick={() => onClick(addr.jibunAddr, addr.zipNo, index)}
+        />
+    ))
+    return(
+        <>
+        {list}
+        </>
+    )
+}
+
