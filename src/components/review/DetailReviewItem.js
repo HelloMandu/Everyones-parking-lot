@@ -8,7 +8,7 @@ const DetailReviewItem = () => {
         <div className={styles['detail-review-item']}>
             <div className={styles['user-table']}>
                 <div className={styles['profile']}>
-                    <img src={profile_icon} />
+                    <img src={profile_icon} alt=""/>
                 </div>
                 <div className={styles['user-info']}>
                     <div className={styles['user-name']}>스페이스</div>

@@ -1,5 +1,14 @@
 @import '../../static/stylesheets/Root.scss';
 
+html{
+    body{
+        .back{
+            position: absolute;
+            top:0;
+            left:0;
+        }
+    }
+}
 .parking-img{
     max-width: $max-width;
     background-color: #fff;

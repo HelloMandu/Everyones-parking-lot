@@ -5,12 +5,14 @@ export const calculateDate = (date, term, type) => {
             return new Date(cal_date.setDate(cal_date.getDate() - term));
         case 'MONTH':
             return new Date(cal_date.setMonth(cal_date.getMonth() - term));
-        case 'YEAR' :
-            return new Date(cal_date.setFullYear(cal_date.getFullYear() - term));
+        case 'YEAR':
+            return new Date(
+                cal_date.setFullYear(cal_date.getFullYear() - term),
+            );
         default:
             return cal_date;
     }
-}
+};
 
 const week = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
 
@@ -25,22 +27,24 @@ export const calculateDay = (date) => {
     return str;
 };
 
-export const  getDateRange =(start, end) =>{
+export const getDateRange = (start, end) => {
+    let res_day = [];
+    let ss_day = new Date(start);
+    let ee_day = new Date(end);
 
-	var res_day = [];
- 	var ss_day = new Date(start);
-   	var ee_day = new Date(end);    	
-  		while(ss_day.getTime() <= ee_day.getTime()){
-  			var _mon_ = (ss_day.getMonth()+1);
-  			_mon_ = _mon_ < 10 ? '0'+_mon_ : _mon_;
-  			var _day_ = ss_day.getDate();
-  			_day_ = _day_ < 10 ? '0'+_day_ : _day_;
-   			res_day.push(ss_day.getFullYear() + '-' + _mon_ + '-' +  _day_);
-   			ss_day.setDate(ss_day.getDate() + 1);
-       }
-    console.log(res_day);
-   	return res_day;
-
+    //한달 주기 리스트 생성
+    while (ss_day.getTime() <= ee_day.getTime()) {
+        let month = ss_day.getMonth() + 1;
+        month = month < 10 ? '0' + month : month;
+        let date = ss_day.getDate();
+        date = date < 10 ? '0' + date : date;
+        let day = ss_day.getDay();
+        let obj ={
+            DAY : month + '/' + date +' '+week[day],
+            DATE : new Date(`${ss_day.getFullYear()}-${month}-${date }`),
+        }
+        res_day.push(month + '/' + date +' '+week[day]);
+        ss_day.setDate(ss_day.getDate() + 1);
+    }
+    return res_day;
 };
-
-
