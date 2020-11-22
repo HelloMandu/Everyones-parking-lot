@@ -1,5 +1,7 @@
 /*global kakao*/
 import React, { useEffect, useReducer, useRef, useState,useCallback } from 'react';
+
+import {useSelector , useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 
 import {Paths} from '../../paths';
@@ -24,12 +26,23 @@ import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
+
+//action
+
+import {set_position,set_level} from '../../store/user_position';
 const cx = cn.bind(styles);
 
 const MapContainer = ({modal}) => {
 
+
+    const {position,level} = useSelector((state) => state.user_position);
+
+    const dispatch = useDispatch();
+    let position_ = useRef({lat :37.6219752405506 , lng : 127.16017523675508  });
+    let level_ = useRef(5);
+    let view_= useRef(false);
+    const kakao_map = useRef(null);
     const history= useHistory();
-    const [count ,setCount] = useState(0);
     const [view,setView] = useState(false);
 
     const [modalState, dispatchHandle] = useReducer(
@@ -42,7 +55,6 @@ const MapContainer = ({modal}) => {
         { aside_: false, filter_: false },
     );
 
-    const kakao_map = useRef(null);
 
 
     const zoomMap = (type) => {
@@ -54,15 +66,20 @@ const MapContainer = ({modal}) => {
                 duration: 300
             }
         });
+        dispatch(set_level(level));
     }
 
-    const mapScript = () => {
-  
+    const mapRender =()=>{
         let container = document.getElementById("map");
+        let lat = position.lat !==0 ? position.lat : position_.current.lat;
+        let lng = position.lng !==0 ? position.lng : position_.current.lng;
         let options = {
-            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
-            level: 5,
+            center: new kakao.maps.LatLng(lat, lng),
+            level: level !== 0 ? level : level_.current,
         };
+
+        console.log(options);
+       
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
@@ -71,6 +88,24 @@ const MapContainer = ({modal}) => {
             imageOption = { offset: new kakao.maps.Point(27, 69) };
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+        kakao.maps.event.addListener(map, 'center_changed', function() {
+            let level = map.getLevel();
+            let latlng = map.getCenter();
+            level_.current=level;
+            position_.current.lat = latlng.getLat();
+            position_.current.lng = latlng.getLng();
+            console.log('level',level_.current);
+            console.log(position_.current);
+        
+        });
+
+        kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+            if(view_.current){
+                view_.current= !view_.current;
+                setView(view_.current);
+            }            
+        });
 
 
         markerdata.forEach((el) => {
@@ -84,7 +119,7 @@ const MapContainer = ({modal}) => {
                 title: el.distance,
             });
             new kakao.maps.CustomOverlay({
-                map: map,
+                map:  map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
                 content: content,
                 yAnchor: 1
@@ -95,25 +130,26 @@ const MapContainer = ({modal}) => {
                 position: new kakao.maps.LatLng(el.lat, el.lng),
             });
             kakao.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker);  
+                view_.current= !view_.current;
+                setView(view_.current);
             });
-
         });
-
-    };
+    }
 
     useEffect(()=>{
-        mapScript();
+        mapRender();
+    
+
     },[])
 
-    // useEffect(()=>{
-    //     console.log(view);
-    // },[view])
-    
-    // useEffect(()=>{
-    //     console.log(count);
-    // },[count])
-
+    useEffect(()=>{
+        return () => {
+            console.log(level_.current);
+            console.log(position_.current);
+            dispatch(set_position(position_.current));
+            dispatch(set_level(level_.current));
+        }
+    },[dispatch])
 
 
     return (
