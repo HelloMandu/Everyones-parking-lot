@@ -149,7 +149,7 @@ const App = () => {
         }
         //환경설정
         else if (pathname === Paths.main.setting) {
-            return <Header title={HeaderTitle.support.setting} />;
+            return <Header title={HeaderTitle.main.setting} />;
         }
 
         //고객센터
