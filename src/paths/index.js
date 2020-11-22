@@ -54,11 +54,11 @@ export const Paths = {
         support:{
             index:'/support',
             notice: '/support/notice',
-            notice_detail :'/support/notice/detail',
+            notice_detail :'/support/notice_detail',
             faq :'/support/faq',
             qna:'/support/qna',
-            qna_detail:'/support/qna/detail',
-            qna_write:'/support/qna/write',
+            qna_detail:'/support/qna_detail',
+            qna_write:'/support/qna_write',
         }
     },
     auth: {
@@ -138,7 +138,7 @@ export const HeaderTitle = {
             faq :'고객센터',
             qna:'고객센터 ',
             qna_detail:'고객센터',
-            qna_write:'1 :1 문의 작성',
+            qna_write:'1:1 문의 작성',
         }
     },
     auth: {

@@ -1,4 +1,6 @@
-import React from 'react';
+/*global Kakao*/
+
+import React ,{useEffect} from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
@@ -14,6 +16,10 @@ import { Paths, HeaderTitle } from './paths';
 
 const App = () => {
     const location = useLocation();
+
+    useEffect(()=>{
+        Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+    },[])
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -145,6 +151,26 @@ const App = () => {
         else if (pathname === Paths.main.setting) {
             return <Header title={HeaderTitle.main.setting} />;
         }
+
+        //고객센터
+        else if (pathname === Paths.main.support.notice) {
+            return <Header title={HeaderTitle.main.support.notice} />;
+        }
+        else if (pathname === Paths.main.support.notice_detail) {
+            return <Header title={HeaderTitle.main.support.notice_detail} />;
+        }
+        else if (pathname === Paths.main.support.faq) {
+            return <Header title={HeaderTitle.main.support.faq} />;
+        }
+        else if (pathname === Paths.main.support.qna) {
+            return <Header title={HeaderTitle.main.support.qna} />;
+        }
+        else if (pathname === Paths.main.support.qna_write) {
+            return <Header title={HeaderTitle.main.support.qna_write} />;
+        }
+
+  
+
     };
 
     return (
