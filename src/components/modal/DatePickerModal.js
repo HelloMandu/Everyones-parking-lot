@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 //styles
@@ -15,6 +15,9 @@ import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
 import FixedButton from '../button/FixedButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+//lib
+import {getDateRange} from '../../lib/calculateDate';
 
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
@@ -64,6 +67,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const test = ['00', '10', '20', '30', '40', '50'];
 const DatePickerModal = (props) => {
     const classes = useStyles();
+    const [day,setDay] = useState(new Date().getDate());
     const [start_open, setStartOpen] = useState(false);
     const [end_open ,setEndOpen] = useState(false);
     const list = test.map((data) => (
@@ -71,6 +75,17 @@ const DatePickerModal = (props) => {
             <DateItem minute={data} />
         </SwiperSlide>
     ));
+
+    useEffect(()=>{
+        let start = new Date('2020-12-21');
+        let end = new Date();
+        end.setFullYear(start.getFullYear());
+        end.setMonth(start.getMonth()+1);
+        end.setDate(start.getDate());
+        console.log(start);
+        console.log(end);
+        getDateRange(start, end);
+    },[day])
     return (
         <Dialog
             fullScreen

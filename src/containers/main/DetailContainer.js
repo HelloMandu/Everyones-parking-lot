@@ -34,6 +34,7 @@ const categorys = [
 ];
 
 const DetailContainer = ({modal}) => {
+    
     const [index, setIndex] = useState(0);
     const history = useHistory();
 
