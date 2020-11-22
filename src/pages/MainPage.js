@@ -1,7 +1,7 @@
 import React from 'react';
 import {useHistory} from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
-import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support } from './main';
+import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support,Setting } from './main';
 
 const { Paths } = require('../paths');
 
@@ -21,6 +21,7 @@ const MainPage = () => {
                 <Route path={Paths.main.notification} component={Notification} />
                 <Route path={Paths.main.coupon} component={Coupon} />
                 <Route path={Paths.main.support + '/:mode?/:modal?'} component={Support} />
+                <Route path={Paths.main.setting} component={Setting} />
                 <Route render ={()=>history.replace(Paths.main.index)} />
             </Switch>
     );

@@ -57,8 +57,7 @@ const App = () => {
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
-        }
-        else if (pathname === Paths.main.use.extend) {
+        } else if (pathname === Paths.main.use.extend) {
             return <Header title={HeaderTitle.main.use.extend} />;
         }
         // 내가 작성한 리뷰
@@ -124,7 +123,11 @@ const App = () => {
         }
         //회원 탈퇴
         else if (pathname === Paths.main.mypage.withdraw) {
-            return <Header title={HeaderTitle.main.mypage.withdraw} />
+            return <Header title={HeaderTitle.main.mypage.withdraw} />;
+        }
+        //환경설정
+        else if (pathname === Paths.main.setting) {
+            return <Header title={HeaderTitle.main.setting} />;
         }
     };
 

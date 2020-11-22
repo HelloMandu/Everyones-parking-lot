@@ -44,13 +44,21 @@ export const Paths = {
             preview: '/parking/preview',
         },
         notification: '/notification',
+        setting:'/setting',
         coupon: '/coupon',
         event: {
             index: '/event',
             list: '/event/list',
             detail: '/event/detail',
         },
-        support: '/support',
+        support:{
+            index: '/support/notice',
+            notice_detail :'/support/notice/detail',
+            faq :'/support/faq',
+            qna:'/support/qna',
+            qna_detail:'/support/qna/detail',
+            qna_write:'/support/qna/write',
+        }
     },
     auth: {
         index: '/auth',
@@ -115,13 +123,21 @@ export const HeaderTitle = {
             preview: '/parking/preview',
         },
         notification: '알림함',
+        setting:'환경설정',
         coupon: '쿠폰',
         event: {
             index: '',
             list: '이벤트',
             detail: '이벤트',
         },
-        support: '/support',
+        support:{
+            index: '고객센터',
+            notice_detail :'고객센터' ,
+            faq :'고객센터',
+            qna:'고객센터 ',
+            qna_detail:'고객센터',
+            qna_write:'1:1 문의 작성',
+        }
     },
     auth: {
         index: '',
