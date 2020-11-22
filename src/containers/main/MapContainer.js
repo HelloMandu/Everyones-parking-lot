@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef, useState,useCallback } from 'react';
 import {useHistory} from 'react-router-dom';
 
 import {Paths} from '../../paths';
@@ -29,6 +29,9 @@ const cx = cn.bind(styles);
 const MapContainer = ({modal}) => {
 
     const history= useHistory();
+    let map = null;
+    const [count ,setCount] = useState(0);
+    const [view,setView] = useState(false);
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -42,9 +45,6 @@ const MapContainer = ({modal}) => {
 
     const kakao_map = useRef(null);
 
-    useEffect(() => {
-        mapScript();
-    }, []);
 
     const zoomMap = (type) => {
 
@@ -57,14 +57,8 @@ const MapContainer = ({modal}) => {
         });
     }
 
-    const mapScript = () => {
-        let container = document.getElementById("map");
-        let options = {
-            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
-            level: 5,
-        };
-        const map = new kakao.maps.Map(container, options);
-        kakao_map.current = map;
+    const mapScript = useCallback(() => {
+  
 
         var imageSrc = MarkerImg,
             imageSize = new kakao.maps.Size(120, 70),
@@ -74,13 +68,13 @@ const MapContainer = ({modal}) => {
 
 
         markerdata.forEach((el) => {
-            let content = `<span class="custom-overlay">${el.title}</span>`;
+            let content = `<span class="custom-overlay">${el.distance}m</span>`;
 
             let marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                title: el.title,
+                title: el.distance,
             });
             new kakao.maps.CustomOverlay({
                 map: map,
@@ -89,12 +83,37 @@ const MapContainer = ({modal}) => {
                 yAnchor: 1
             });
             kakao.maps.event.addListener(marker, 'click', function () {
+                setView(!view);
+                setCount(count+1);
                 console.log(el.title);
             });
 
         });
 
-    };
+    },[view,count]);
+
+    useEffect(()=>{
+        let container = document.getElementById("map");
+        let options = {
+            center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
+            level: 5,
+        };
+        map = new kakao.maps.Map(container, options);
+        kakao_map.current = map;
+    })
+    useEffect(() => {
+        
+        mapScript();
+    }, [mapScript]);
+
+    useEffect(()=>{
+        console.log(view);
+    },[view])
+    
+    useEffect(()=>{
+        console.log(count);
+    },[count])
+
 
 
     return (
@@ -130,7 +149,7 @@ const MapContainer = ({modal}) => {
                     <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
                 </div>      
                 <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
-                <ParkingItem onClick={()=>history.push(Paths.main.detail +'?id=1')}/>
+                <ParkingItem onClick={()=>history.push(Paths.main.detail +'?id=1')} view={view}/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
             <BookmarkModal open ={modal ==='bookmark'} handleClose={() =>history.goBack()}/>
@@ -144,21 +163,27 @@ const MapContainer = ({modal}) => {
 const markerdata = [
     {
         title: "콜드스퀘어",
+        distance : 300,
         lat: 37.62197524055062,
         lng: 127.16017523675508,
     },
     {
         title: "하남돼지집",
+        distance : 300,
         lat: 37.620842424005616,
         lng: 127.1583774403176,
     },
     {
         title: "수유리우동",
+        distance : 300,
+
+
         lat: 37.624915253753194,
         lng: 127.15122688059974,
     },
     {
         title: "맛닭꼬",
+        distance : 300,
         lat: 37.62456273069659,
         lng: 127.15211256646381,
     },
