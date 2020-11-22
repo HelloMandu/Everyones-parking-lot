@@ -1,4 +1,9 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useState, useEffect } from 'react';
+import React, {
+    forwardRef,
+    useCallback,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
@@ -13,15 +18,14 @@ import useKeyDown from '../../hooks/useKeyDown';
 
 const cx = cn.bind(styles);
 
-const VerifyPhone = (props, ref) => {
-    const {setCheck} = props
+const VerifyPhone = ({setCheck}, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
     const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
         '',
         isCellPhoneForm,
         undefined,
-        isConfirm
+        isConfirm,
     );
     const onClickSendVerify = useCallback(() => {
         if (sendCheck) {
@@ -39,15 +43,15 @@ const VerifyPhone = (props, ref) => {
     const onClickVerify = useCallback(() => {
         if (verifyCheck) {
             console.log('onClickVerify');
-            setIsConfirm(true)
+            setIsConfirm(true);
+            setCheck(true);
         }
-    }, [verifyCheck, setIsConfirm]);
+    }, [verifyCheck, setIsConfirm, setCheck]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
-    useImperativeHandle(ref, ()=>({
-        phoneNumber: phone
+    useImperativeHandle(ref, () => ({
+        phoneNumber: phone,
     }));
-    useEffect(()=>setCheck(isConfirm), [setCheck, isConfirm])
     return (
         <>
             <div className={styles['send-verify']}>
