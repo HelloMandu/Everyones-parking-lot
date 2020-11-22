@@ -1,96 +1,120 @@
 @import '../../../static/stylesheets/Root.scss';
 
-.parkingpayment-container {
-    padding: $padding-side;
+.parking-enroll-container {
     @include container($pd-top);
-    margin-bottom: 140px;
-    .parkingpayment-wrapper {
-        position: relative;
+    padding-bottom: 133px;
+    .parking-enroll-area{
+        padding: $padding-side;
+    }
+    .bar{
         width: 100%;
-        margin-top: 41px;
-        margin-bottom: 14px;
-        .title {
+        height: 16px;
+        background-color: #F4F4F4;
+    }
+    .title {
+        margin: 29px 0px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .per-price {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 17px;
+        .per {
+            position: relative;
             font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 13px;
+            font-weight: 500;
+            width: 96px;
+            bottom: 6px;
         }
-        .verify-coupon {
-            position: relative;
-            .coupon {
-                width: 100%;
-                height: 48px;
-                border: 1px solid #ebebeb;
-                padding-left: 10px;
-                font-size: 15px;
-                line-height: 48px;
-            }
-            svg {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                pointer-events: none;
-            }
-        }
-
-        .use-point {
+        .price {
             display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            .point {
-                font-size: 14px;
-                color: #777777;
-                span {
-                    font-size: 14px;
-                    font-weight: bold;
-                    color: #555555;
-                }
-            }
-            .confirm-button {
-                width: 80px;
-                height: 28px;
-            }
-        }
-
-        .verify-payment {
-            position: relative;
-            .payment {
-                padding-left: 10px;
-                width: 100%;
-                height: 48px;
-                border: 1px solid #ebebeb;
-                font-size: 15px;
-                line-height: 48px;
-            }
-            svg {
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                pointer-events: none;
+            align-items: center;
+            width: 100%;
+            span {
+                position: relative;
+                font-size: 16px;
+                font-weight: 500;
+                margin-left: 10px;
+                bottom: 6px;
             }
         }
     }
-    .final-payment {
-        height: 213px;
-        background-color: #f7f8f9;
-        padding: 28px 15px;
-        .total-payment {
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
+    .schedule-wrapper{
+        margin-bottom: 18px;
+        .schedule-title{
+            font-size: 12px;
             font-weight: bold;
-            padding-bottom: 18px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid #ebebeb;
+            margin-bottom: 5px;
         }
-        .payment {
+        .select-time{
             display: flex;
             justify-content: space-between;
-            font-size: 17px;
-            font-weight: bold;
-            color: #555555;
-            margin-bottom: 6px;
+            width: 100%;
+            .select-wrapper{
+                position: relative;
+                width: 30%;
+                margin-right: 10px;
+                height: 48px;
+                border: 1px solid #EBEBEB;
+                line-height: 48px;
+                &:first-child{
+                    width: 40%;
+                }
+                &:last-child{
+                    margin-right: 0;
+                }
+                .select-list{
+                    font-size: 16px;
+                    padding: 0 12px;
+                    width: 100%;
+                }
+                svg{
+                    position: absolute;
+                    top: 50%;
+                    right: 12px;
+                    transform: translateY(-50%);
+                }
+            }
+            
+        }
+    }
+
+    .title-wrapper{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        .important-wrapper{
+            margin-top: 29px;
+            .important{
+                display: flex;
+                align-items: center;
+                padding: 3px 0px;
+                .explain{
+                    margin-left: 5px;
+                    line-height: 16px;
+                }
+            }
+        }
+    }
+
+    .button {
+        width: 100%;
+        height: 48px;
+        text-align: center;
+        color: #222222;
+        font-size: 15px;
+        font-weight: 500;
+        border: 1px solid #dbdbdb;
+        margin-bottom: 12px;
+        .plus {
+            position: relative;
+            bottom: 2px;
+            font-weight: 600;
+            font-size: 24px;
+            margin-right: 8px;
         }
     }
 }

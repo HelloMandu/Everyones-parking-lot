@@ -1,7 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
+
+import { isCellPhoneForm } from '../../lib/formatChecker';
 
 import InputBox from '../inputbox/InputBox';
 import ConfirmButton from '../button/ConfirmButton';
@@ -11,8 +13,12 @@ import useKeyDown from '../../hooks/useKeyDown';
 
 const cx = cn.bind(styles);
 
-const VerifyPhone = ({ phone, handleChangePhone, sendCheck, setSendCheck, setIsPhone }) => {
+const VerifyPhone = (props, ref) => {
     const [sent, setSent] = useState(false);
+    const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
+        '',
+        isCellPhoneForm,
+    );
     const onClickSendVerify = useCallback(() => {
         if (sendCheck) {
             console.log('onClickSendVerify');
@@ -26,13 +32,19 @@ const VerifyPhone = ({ phone, handleChangePhone, sendCheck, setSendCheck, setIsP
         '',
         (state) => state.length === 6,
     );
+    const [isConfirm, setIsConfirm] = useState(false);
     const onClickVerify = useCallback(() => {
         if (verifyCheck) {
             console.log('onClickVerify');
-            setIsPhone(true)
+            setIsConfirm(true)
         }
-    }, [verifyCheck, setIsPhone]);
+    }, [verifyCheck, setIsConfirm]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
+
+    useImperativeHandle(ref, ()=>({
+        phone: phone,
+        isConfirm: isConfirm,
+    }));
 
     return (
         <>
@@ -76,4 +88,4 @@ const VerifyPhone = ({ phone, handleChangePhone, sendCheck, setSendCheck, setIsP
     );
 };
 
-export default VerifyPhone;
+export default forwardRef(VerifyPhone);

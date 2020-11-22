@@ -15,7 +15,6 @@ import { Paths } from '../../../paths';
 const FindPage = () => {
 
     // XD => 아이디/비밀번호 찾기 어디서 부르나요..?
-
     return (
         <div>
             <Switch>
@@ -24,7 +23,7 @@ const FindPage = () => {
                 <Route path={Paths.auth.find.password} component={FindPasswordContainer} />
                 <Route path={Paths.auth.find.email_complete} component={FindEmailCompleteContainer} />
                 <Route path={Paths.auth.find.password_complete} component={FindPasswordCompleteContainer} />
-                <Route render={() => <h1>찾기페이지 404</h1>} />
+                <Route render={({history}) => history.replace(Paths.auth.find.index)} />
             </Switch>
         </div>
     );

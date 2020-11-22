@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import Coupon from './Coupon';
+import Coupon from '../coupon/Coupon';
 import FixedButton from '../button/FixedButton';
 
 import styles from './EnrollCouponModal.module.scss';

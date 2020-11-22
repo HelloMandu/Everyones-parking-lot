@@ -4,11 +4,12 @@ import React from 'react';
 import DetailContainer from '../../containers/main/DetailContainer';
 /* Containers */
 
-const DetailPage = () => {
+const DetailPage = ({match}) => {
+    const modal = match.params.modal;
 
     return (
         <div>
-            <DetailContainer />
+            <DetailContainer modal={modal}/>
         </div>
     );
 }

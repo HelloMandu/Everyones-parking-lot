@@ -1,11 +1,13 @@
 export const Paths = {
+    index :'/',
     main: {
-        index: '/',
+        index: '/main',
         detail: '/detail',
         payment: {
             index: '/payment',
             coupon: '/payment/coupon',
             type: '/payment/type',
+            enrollment: '/payment/type/enrollment',
         },
         payment_complete: '/payment_complete',
         use: {
@@ -26,13 +28,14 @@ export const Paths = {
             point: '/mypage/point',
             update: {
                 index: '/mypage/update',
-                name: '/mypage/update/name',
+                name: '/mypage/update/name', 
                 password: '/mypage/update/password',
                 hp: '/mypage/update/hp',
                 enrollment: '/mypage/update/enrollment',
                 birthday: '/mypage/update/birthday',
                 profile: '/mypage/update/profile',
             },
+            withdraw: '/mypage/withdraw',
         },
         parking: {
             index: '/parking',
@@ -41,13 +44,22 @@ export const Paths = {
             preview: '/parking/preview',
         },
         notification: '/notification',
+        setting:'/setting',
         coupon: '/coupon',
         event: {
             index: '/event',
             list: '/event/list',
             detail: '/event/detail',
         },
-        support: '/support',
+        support:{
+            index:'/support',
+            notice: '/support/notice',
+            notice_detail :'/support/notice_detail',
+            faq :'/support/faq',
+            qna:'/support/qna',
+            qna_detail:'/support/qna_detail',
+            qna_write:'/support/qna_write',
+        }
     },
     auth: {
         index: '/auth',
@@ -75,6 +87,7 @@ export const HeaderTitle = {
             index: '결제정보 확인',
             coupon: '적용 쿠폰 선택',
             type: '결제수단 선택',
+            enrollment: '결제수단 등록',
         },
         payment_complete: '/payment_complete',
         use: {
@@ -82,7 +95,7 @@ export const HeaderTitle = {
             list: '이용 내역',
             detail: '',
             cancel: '',
-            extend: '',
+            extend: '연장 신청',
         },
         review: {
             index: '/review',
@@ -90,7 +103,7 @@ export const HeaderTitle = {
             write: '리뷰 쓰기',
             detail: '리뷰 상세보기',
         },
-        mypage: {
+        mypage:{
             index: '내 정보 수정',
             point: '',
             update: {
@@ -102,6 +115,7 @@ export const HeaderTitle = {
                 birthday: '생년월일 변경',
                 profile: '',
             },
+            withdraw: '회원 탈퇴',
         },
         parking: {
             index: '',
@@ -110,13 +124,22 @@ export const HeaderTitle = {
             preview: '/parking/preview',
         },
         notification: '알림함',
+        setting:'환경설정',
         coupon: '쿠폰',
         event: {
             index: '',
             list: '이벤트',
             detail: '이벤트',
         },
-        support: '/support',
+        support:{
+            index:'',
+            notice: '고객센터',
+            notice_detail :'고객센터' ,
+            faq :'고객센터',
+            qna:'고객센터 ',
+            qna_detail:'고객센터',
+            qna_write:'1:1 문의 작성',
+        }
     },
     auth: {
         index: '',

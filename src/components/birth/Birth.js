@@ -28,7 +28,7 @@ const Birth = ({ onChangeBirth }) => {
                         <option key={y} value={y} >{y}년</option>
                     ))}
                 </select>
-                <ArrowSmall rotate={180} />
+         
             </div>
 
             <div className={cx('select-item')}>
@@ -37,7 +37,6 @@ const Birth = ({ onChangeBirth }) => {
                         <option key={m} value={m} >{m}월</option>
                     ))}
                 </select>
-                <ArrowSmall rotate={180} />
             </div>
 
             <div className={cx('select-item')}>
@@ -46,7 +45,6 @@ const Birth = ({ onChangeBirth }) => {
                         <option key={d} value={d} >{d}일</option>
                     ))}
                 </select>
-                <ArrowSmall rotate={180} />
             </div>
         </>
     );
