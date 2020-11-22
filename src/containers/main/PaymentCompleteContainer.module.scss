@@ -1,0 +1,95 @@
+@import '../../static/stylesheets/Root.scss';
+
+.gradient{
+    position: absolute;
+    background: linear-gradient(45deg, #444444, #222222);
+    width: 100%;
+    height: 360px;
+    z-index: -1;
+}
+
+.payment-complete-container{
+    padding: $padding-side;
+    @include container(0px);
+    .close{
+        position: relative;
+        height: 48px;
+        svg{
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+    }
+    .title{
+        color: white;
+        .explain{
+            height: 32px;
+            font-size: 14px;
+            line-height: 32px;
+            color: #DBDBDB;
+        }
+        .parking-status{
+            display: flex;
+            align-items: center;
+            margin-bottom: 28px;
+            .title{
+                font-size: 24px;
+                font-weight: bold;
+                margin-right: 12px;
+            }
+            .status{
+                border: 1px solid white;
+                font-size: 14px;
+                font-weight: 500;
+                text-align: center;
+                line-height: 22px;
+                width: 72px;
+                height: 22px;
+            }
+        }
+    }
+    .parking-info-wrapper{
+        background-color: white;
+        padding-bottom: 20px;
+        box-shadow: 0px 5px 10px rgba($color: #000000, $alpha: 0.12);
+        .image{
+            width: 100%;
+        }
+        .parking-info{
+            padding: 0 20px;
+            .schedule{
+                padding: 0 48px;
+                .time-title{
+                    font-size: 16px;
+                    width: 100%;
+                    text-align: center;
+                    border-bottom: 1px solid #EBEBEB;
+                    padding-top: 24px;
+                    padding-bottom: 14px;
+                    margin-bottom: 14px;
+                }
+            }
+            .rental-schedule{
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-bottom: 56px;
+                .time-wrapper{
+                    .date{
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #777777;
+                    }
+                    .time{
+                        font-size: 32px;
+                        font-weight: bold;
+                        color: #333333;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,5 +1,8 @@
 /*global kakao*/
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef, useState,useCallback } from 'react';
+import {useHistory} from 'react-router-dom';
+
+import {Paths} from '../../paths';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -16,10 +19,18 @@ import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 //componenst
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
+import ParkingItem from '../../components/items/ParkingItem';
+import CircleButton from '../../components/button/CircleButton';
+import AddressModal from '../../components/modal/AddressModal';
+import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 const cx = cn.bind(styles);
 
-const MapContainer = () => {
+const MapContainer = ({modal}) => {
+
+    const history= useHistory();
+    const [count ,setCount] = useState(0);
+    const [view,setView] = useState(false);
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -33,9 +44,6 @@ const MapContainer = () => {
 
     const kakao_map = useRef(null);
 
-    useEffect(() => {
-        mapScript();
-    }, []);
 
     const zoomMap = (type) => {
 
@@ -49,6 +57,7 @@ const MapContainer = () => {
     }
 
     const mapScript = () => {
+  
         let container = document.getElementById("map");
         let options = {
             center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
@@ -65,13 +74,14 @@ const MapContainer = () => {
 
 
         markerdata.forEach((el) => {
-            let content = `<span class="custom-overlay">${el.title}</span>`;
-
-            let marker = new kakao.maps.Marker({
+            let content = `<span class="custom-overlay">${el.title}m</span>`;
+            var iwContent = `<div style="padding:5px;">${el.title}</div>`,
+                iwRemoveable = true;
+            const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                title: el.title,
+                title: el.distance,
             });
             new kakao.maps.CustomOverlay({
                 map: map,
@@ -79,13 +89,32 @@ const MapContainer = () => {
                 content: content,
                 yAnchor: 1
             });
+            const infowindow = new kakao.maps.InfoWindow({
+                content : iwContent,
+                removable : iwRemoveable,
+                position: new kakao.maps.LatLng(el.lat, el.lng),
+            });
             kakao.maps.event.addListener(marker, 'click', function () {
-                console.log(el.title);
+                infowindow.open(map, marker);  
             });
 
         });
 
     };
+
+    useEffect(()=>{
+        mapScript();
+    },[])
+
+    // useEffect(()=>{
+    //     console.log(view);
+    // },[view])
+    
+    // useEffect(()=>{
+    //     console.log(count);
+    // },[count])
+
+
 
     return (
         <>
@@ -101,8 +130,10 @@ const MapContainer = () => {
                         <div className={styles['line']} />
                     </div>
                 </ButtonBase>
-                <div className={styles['search-input']}>
-                    <input type="text" placeholder="위치를 입력해주세요" />
+                <div className={styles['search']} onClick={()=>history.push(Paths.main.index+'/address')}>
+                    <ButtonBase className={styles['search-box']}>
+                        위치를 입력해주세요
+                    </ButtonBase>
                     <IconButton className={styles['search-btn']}>
                         <img src={search_icon} alt="search" />
                     </IconButton>
@@ -115,44 +146,47 @@ const MapContainer = () => {
                 <div className={cx('side-bar', 'right')}>
                     <CircleButton src={filter_img} onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }} />
                     <CircleButton src={time_img} />
-                    <CircleButton src={like_img} />
-                </div>
-                <Aside open={modalState.aside_} handleClose={() => { dispatchHandle({ type: 'aside_', payload: false }) }} />
+                    <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
+                </div>      
+                <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
+                <ParkingItem onClick={()=>history.push(Paths.main.detail +'?id=1')} view={view}/>
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
+            <BookmarkModal open ={modal ==='bookmark'} handleClose={() =>history.goBack()}/>
+            <AddressModal open ={modal==='address'} handleClose={() =>history.goBack()}/>
         </>
     );
 };
 
-const CircleButton = ({ src, onClick }) => {
-    return (
-        <IconButton className={styles['circle-btn']} onClick={onClick}>
-            <img src={src} alt="alt" />
-        </IconButton>
-    )
-}
+
 
 const markerdata = [
     {
         title: "콜드스퀘어",
+        distance : 300,
         lat: 37.62197524055062,
         lng: 127.16017523675508,
     },
     {
         title: "하남돼지집",
+        distance : 300,
         lat: 37.620842424005616,
         lng: 127.1583774403176,
     },
-    {
-        title: "수유리우동",
-        lat: 37.624915253753194,
-        lng: 127.15122688059974,
-    },
-    {
-        title: "맛닭꼬",
-        lat: 37.62456273069659,
-        lng: 127.15211256646381,
-    },
+    // {
+    //     title: "수유리우동",
+    //     distance : 300,
+
+
+    //     lat: 37.624915253753194,
+    //     lng: 127.15122688059974,
+    // },
+    // {
+    //     title: "맛닭꼬",
+    //     distance : 300,
+    //     lat: 37.62456273069659,
+    //     lng: 127.15211256646381,
+    // },
 ];
 
 export default MapContainer;

@@ -4,55 +4,12 @@
     border-radius: 2px;
     .image {
         width: 100%;
-        height: 120px;
     }
     .wrapper {
         padding: 14px 18px;
         .title {
             font-size: 18px;
             font-weight: bold;
-        }
-        .infolist {
-            .info {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding-top: 16px;
-                font-size: 14px;
-                font-weight: bold;
-                .info-title {
-                    color: #aaaaaa;
-                }
-                &:first-child .description {
-                    font-weight: normal;
-                }
-                &:last-child {
-                    padding-bottom: 16px;
-                    border-bottom: 1px solid #e9ebed;
-                }
-            }
-        }
-        .information {
-            margin-top: 17px;
-            .title{
-                margin-bottom: 8px;
-                svg{
-                    display: inline-block;
-                    vertical-align: middle;
-                }
-                .explain {
-                    display: inline-block;
-                    vertical-align: middle;
-                    font-size: 13px;
-                    font-weight: bold;
-                    margin-left: 6px;
-                    color: #777777;
-                }
-            }
-            .description{
-                color: #CCCCCC;
-                font-size: 11px;
-            }
         }
     }
 }

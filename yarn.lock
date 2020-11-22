@@ -7198,6 +7198,11 @@ just-curry-it@^3.1.0:
   resolved "https://registry.yarnpkg.com/just-curry-it/-/just-curry-it-3.1.0.tgz#ab59daed308a58b847ada166edd0a2d40766fbc5"
   integrity sha512-mjzgSOFzlrurlURaHVjnQodyPNvrHrf1TbQP2XU9NSqBtHQPuHZ+Eb6TAJP7ASeJN9h9K0KXoRTs8u6ouHBKvg==
 
+kakaojs@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/kakaojs/-/kakaojs-1.2.0.tgz#45e591df622b727495fc0976ce130b5ba540aaec"
+  integrity sha1-ReWR32IrcnSV/Al2zhMLW6VAquw=
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"

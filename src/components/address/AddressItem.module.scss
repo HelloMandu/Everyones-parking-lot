@@ -1,0 +1,44 @@
+html{
+    body{
+        .address-item{
+            width: 100%;
+            min-height: 50px;
+            display: flex;
+            justify-content: flex-start;
+            text-align: left;
+            align-items: flex-start;
+            margin: 24px 0;
+            &:first-child{
+                margin-top: 0;
+            }
+            .icon{
+                margin-right: 5px;
+                // position: absolute;
+              
+            }
+            .pd-box{
+            }
+            .item-info{
+                text-align: left;
+                .jibun-addr{
+                    color:#333;
+                    font-size: 18px;
+                    font-weight: 500;
+                    letter-spacing: -0.5px;
+                    padding-bottom: 5px;
+                }
+                .road-addr{
+                        color: #999;
+                        font-size: 15px;
+                }
+            }
+            .distance{
+                font-size: 15px;
+                color:#777;
+                position: absolute;
+                top:0;
+                right: 0;
+            }
+        }
+    }
+}

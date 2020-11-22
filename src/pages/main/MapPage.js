@@ -4,10 +4,12 @@ import React from 'react';
 import MapContainer from '../../containers/main/MapContainer';
 /* Containers */
 
-const MapPage = () => {
+const MapPage = ({match}) => {
+
+    const modal = match.params.modal;
 
     return (
-            <MapContainer />
+            <MapContainer modal={modal}/>
     );
 }
 

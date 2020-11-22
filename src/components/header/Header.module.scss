@@ -1,12 +1,12 @@
 @import '../../static/stylesheets/Root.scss';
-
+@import '../../static/stylesheets/Root.scss';
 .header{
     width: 100%;
     height: $header;
     box-sizing: border-box;
     position: fixed;
     background-color: #fff;
-    z-index: 1800;
+    z-index: $level0;
     .title{
         width: calc(100% - 80px);
         white-space: nowrap;
@@ -16,7 +16,7 @@
         font-weight: bold;
         text-align: left;
         color: #333;
-        margin-left:64px;
+        margin-left:48px;
         letter-spacing :-0.5px;
         line-height: $header;
     }

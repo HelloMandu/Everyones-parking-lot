@@ -9,6 +9,11 @@ $padding: 24px;
 $padding-side: 0 24px;
 $main-color:#222222;
 $disable-color: #DBDBDB;
+$level0 : 5000; //header
+$level1 : 3000; //modal 
+$level2 : 2800; //dim
+$level3 : 2500; //button
+$level4 : 2400;
 
 // 모바일 컨테이너 믹스인
 @mixin container($pd-top :48px) {
@@ -16,7 +21,6 @@ $disable-color: #DBDBDB;
     min-width: $min-width;
     min-height: $min-height;
     margin: 0 auto;
-    padding: $padding-side;
     padding-top: $pd-top;
     width: 100%;
 }

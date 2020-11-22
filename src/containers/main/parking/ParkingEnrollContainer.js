@@ -1,99 +1,245 @@
-import React, { forwardRef, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Dialog, Slide } from '@material-ui/core';
+import React from 'react';
+import { ButtonBase } from '@material-ui/core';
 
-import { Paths } from '../../../paths/index';
+import useForm from '../../../hooks/useForm';
+import useInput from '../../../hooks/useInput';
 
-import EnrollCouponModal from '../../../components/coupon/EnrollCouponModal';
-
-import ParkingInfo from '../../../components/parking/ParkingInfo';
-import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
-import CheckBox from '../../../components/checkbox/CheckBox';
+import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
-import Point from './Point';
-import Price from './Price';
-
+import Information from '../../../static/asset/svg/Information';
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
-const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+const perList = [];
+const hourList = [];
+const minuteList = [];
+for (let i = 1; i <= 6; i++) {
+    perList.push({ id: i, per: 30 * i });
+}
+for (let i = 0; i < 24; i++) {
+    hourList.push({ id: i, hour: i });
+}
+for (let i = 0; i < 60; i++) {
+    minuteList.push({ id: i + 1, minute: i });
+}
 
-const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
+const BasicInfo = () => {
+    const [parkingInfo, onChangeParkingInfo] = useForm({
+        name: '',
+        kind: '',
+        address: '',
+        addressDetail: '',
+        price: '',
+    });
+    const { name, kind, address, addressDetail, price } = parkingInfo;
 
-const enroll = [
-    {
-        id: 1,
-        checked: false,
-        description: '개인정보취급방침',
-    },
-    {
-        id: 2,
-        checked: false,
-        description: '이용약관',
-    },
-];
-
-const ParkingEnrollContainer = () => {
-    const history = useHistory();
-    const [openCoupon, setOpenCoupon] = useState(false);
-    useEffect(() => {
-        setOpenCoupon(
-            history.location.pathname === Paths.main.parking.enrollment.coupon,
-        );
-    }, [history.location.pathname]);
     return (
         <>
-            <div className={styles['parkingpayment-container']}>
-                <ParkingInfo></ParkingInfo>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'대여자 연락처'}</div>
-                    <VerifyPhone></VerifyPhone>
+            <div className={styles['title']}>주차장 기본 정보</div>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={name}
+                name={'name'}
+                placeholder={'주차 공간 이름을 입력해주세요'}
+                onChange={onChangeParkingInfo}
+            ></InputBox>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={kind}
+                name={'kind'}
+                placeholder={'주차장 종류를 선택하세요'}
+                onChange={onChangeParkingInfo}
+            ></InputBox>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={address}
+                name={'address'}
+                placeholder={'주차장 주소를 입력해주세요'}
+                onChange={onChangeParkingInfo}
+            ></InputBox>
+            <ButtonBase className={styles['button']}>주소찾기</ButtonBase>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={addressDetail}
+                name={'addressDetail'}
+                placeholder={'상세 주소를 입력해주세요'}
+                onChange={onChangeParkingInfo}
+            ></InputBox>
+            <div className={styles['per-price']}>
+                <div className={styles['per']}>30분당</div>
+                <div className={styles['price']}>
+                    <InputBox
+                        className={'input-box'}
+                        type={'text'}
+                        value={price}
+                        name={'price'}
+                        placeholder={'30분당 주차가격을 입력하세요'}
+                        onChange={onChangeParkingInfo}
+                    ></InputBox>
+                    <span>원</span>
                 </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'쿠폰 할인'}</div>
-                    <div
-                        className={styles['verify-coupon']}
-                        onClick={() =>
-                            history.push(Paths.main.parking.enrollment.coupon)
-                        }
-                    >
-                        <div className={styles['coupon']} name="coupon">
-                            오픈 이벤트 10% 할인 이벤트 쿠폰
-                        </div>
+            </div>
+        </>
+    );
+};
+
+const OperatingTime = () => {
+    const [startTime, onChangeStartTime] = useForm({
+        per: '',
+        hour: '',
+        minute: '',
+    });
+    const perSelectList = perList.map(({ id, per }) => (
+        <option className={styles['select-item']} key={id} value={per}>
+            {per}분당
+        </option>
+    ));
+    const hourSelectList = hourList.map(({ id, hour }) => (
+        <option className={styles['select-item']} key={id} value={hour}>
+            {parseInt(hour / 10) === 0 ? `0${hour}` : hour}시
+        </option>
+    ));
+    const minuteSelectList = minuteList.map(({ id, minute }) => (
+        <option className={styles['select-item']} key={id} value={minute}>
+            {parseInt(minute / 10) === 0 ? `0${minute}` : minute}분
+        </option>
+    ));
+    console.log(startTime);
+    return (
+        <>
+            <div className={styles['title']}>운영시간</div>
+            <div className={styles['schedule-wrapper']}>
+                <div className={styles['schedule-title']}>운영 시작 시간</div>
+                <div className={styles['select-time']}>
+                    <div className={styles['select-wrapper']}>
+                        <select
+                            className={styles['select-list']}
+                            name="per"
+                            onChange={onChangeStartTime}
+                        >
+                            {perSelectList}
+                        </select>
                         <ArrowSmall rotate={180}></ArrowSmall>
                     </div>
-                    <Dialog
-                        fullScreen
-                        open={openCoupon}
-                        TransitionComponent={Transition}
-                    >
-                        <EnrollCouponModal></EnrollCouponModal>
-                    </Dialog>
-                </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>{'포인트 할인'}</div>
-                    <Point></Point>
-                </div>
-                <div className={styles['parkingpayment-wrapper']}>
-                    <div className={styles['title']}>결제수단</div>
-                    <div className={styles['verify-payment']}>
-                        <div className={styles['payment']} name="payment">
-                            카카오페이
-                        </div>
-                        <ArrowSmall rotate={90}></ArrowSmall>
+                    <div className={styles['select-wrapper']}>
+                        <select
+                            className={styles['select-list']}
+                            name="hour"
+                            onChange={onChangeStartTime}
+                        >
+                            {hourSelectList}
+                        </select>
+                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
+                    <div className={styles['select-wrapper']}>
+                        <select
+                            className={styles['select-list']}
+                            name="minute"
+                            onChange={onChangeStartTime}
+                        >
+                            {minuteSelectList}
+                        </select>
+                        <ArrowSmall rotate={180}></ArrowSmall>
                     </div>
                 </div>
-                <Price></Price>
-                <CheckBox allCheckTitle={enrollTitle} checkListProps={enroll}></CheckBox>
             </div>
-            <FixedButton
-                button_name={'68,000원 결제'}
-                disable={false}
-            ></FixedButton>
+            <div className={styles['schedule-wrapper']}>
+                <div className={styles['schedule-title']}>운영 종료 시간</div>
+                <div className={styles['select-time']}>
+                    <div className={styles['select-wrapper']}>
+                        <select className={styles['select-list']} name="per">
+                            {perSelectList}
+                        </select>
+                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
+                    <div className={styles['select-wrapper']}>
+                        <select className={styles['select-list']} name="hour">
+                            {hourSelectList}
+                        </select>
+                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
+                    <div className={styles['select-wrapper']}>
+                        <select className={styles['select-list']} name="minute">
+                            {minuteSelectList}
+                        </select>
+                        <ArrowSmall rotate={180}></ArrowSmall>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const ExtraInfo = () => {
+    const [extraInfo, onChangeExtraInfo] = useInput('');
+    return (
+        <>
+            <div className={styles['title']}>추가정보</div>
+            <InputBox
+                className={'input-box'}
+                type={'text'}
+                value={extraInfo}
+                name={'extraInfo'}
+                placeholder={'주차 공간에 대한 추가적인 설명을 작성해주세요'}
+                onChange={onChangeExtraInfo}
+            ></InputBox>
+        </>
+    );
+};
+
+const ParkingPicture = () => {
+    return (
+        <>
+            <div className={styles['title-wrapper']}>
+                <div className={styles['title']}>주차공간 사진</div>
+                <div className={styles['important-wrapper']}>
+                    <div className={styles['important']}>
+                        <Information></Information>
+                        <span className={styles['explain']}>
+                            (필수) 주차 환경 파악 가능한 전경
+                        </span>
+                    </div>
+                    <div className={styles['important']}>
+                        <Information></Information>
+                        <span className={styles['explain']}>
+                            (필수) 토지, 건물 관계 입증 서류
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <ButtonBase className={styles['button']}>
+                <span className={styles['plus']}>+</span>사진추가
+            </ButtonBase>
+        </>
+    );
+};
+
+const ParkingEnrollContainer = () => {
+    return (
+        <>
+            <div className={styles['parking-enroll-container']}>
+                <div className={styles['parking-enroll-area']}>
+                    <BasicInfo></BasicInfo>
+                </div>
+                <div className={styles['bar']} />
+                <div className={styles['parking-enroll-area']}>
+                    <OperatingTime></OperatingTime>
+                </div>
+                <div className={styles['bar']} />
+                <div className={styles['parking-enroll-area']}>
+                    <ExtraInfo></ExtraInfo>
+                </div>
+                <div className={styles['parking-enroll-area']}>
+                    <ParkingPicture></ParkingPicture>
+                </div>
+            </div>
+            <FixedButton button_name={'작성완료'}></FixedButton>
         </>
     );
 };

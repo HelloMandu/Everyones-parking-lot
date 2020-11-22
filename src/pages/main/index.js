@@ -10,3 +10,4 @@ export {default as Notification} from './Notification';
 export {default as Coupon} from './CouponPage';
 export {default as Event} from './EvntPage';
 export {default as Support} from './SupportPage';
+export {default as Setting} from './SettingPage';

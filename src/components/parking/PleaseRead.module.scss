@@ -1,0 +1,22 @@
+.information {
+    margin-top: 17px;
+    .title{
+        margin-bottom: 8px;
+        svg{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .explain {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 13px;
+            font-weight: bold;
+            margin-left: 6px;
+            color: #777777;
+        }
+    }
+    .description{
+        color: #CCCCCC;
+        font-size: 11px;
+    }
+}

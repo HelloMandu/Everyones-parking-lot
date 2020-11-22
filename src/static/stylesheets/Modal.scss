@@ -23,3 +23,8 @@
     transform: translateY(-50%);
     cursor: pointer;
 }
+@mixin modal-container{
+    width: 100%;
+    min-height: 100vh;
+    z-index: 4500 !important;
+}

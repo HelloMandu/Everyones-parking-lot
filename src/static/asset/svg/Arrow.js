@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Arrow = () => (
+const Arrow = ({white}) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="10.414"
@@ -11,7 +11,7 @@ const Arrow = () => (
             d="M-1211.826-2860.78l-8,8.014,8,7.986"
             transform="translate(1220.826 2862.194)"
             fill="none"
-            stroke="#333"
+            stroke= {white ? "#fff" : "#333"}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"

@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './BottomModal.module.scss';
 import classnames from 'classnames/bind';
-import { Backdrop } from '@material-ui/core';
+import BasicButton from '../button/BasicButton';
+import { Backdrop/*, ButtonBase*/ } from '@material-ui/core';
 
 const cn = classnames.bind(styles);
 
@@ -12,10 +13,11 @@ const BottomModal = ({ open, handleClose }) => {
                 <div className={styles['box']}>
                     <div className={styles['modal-title']}>
                         조건설정
-                        <AgreeToggle name={"gd"} checked={true} />
-                        <AgreeToggle name={"gd"} checked={false} />
-                        <AgreeToggle name={"gd"} checked={false} />
-                        <AgreeToggle name={"gd"} checked={false} />
+                        <AgreeToggle name={"주차타운"} checked={true}/>
+                        <AgreeToggle name={"지하주차장"} checked={false}/>
+                        <AgreeToggle name={"지상주차장"} checked={false}/>
+                        <AgreeToggle name={"지정주차"} checked={false}/>
+                        <BasicButton button_name={"조건 설정하기"} disable={false}/>
                     </div>
                 </div>
             </div>

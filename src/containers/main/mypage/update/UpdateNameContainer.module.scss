@@ -3,7 +3,7 @@
 .container{
     @include container($pd-top);
     .name-area{
-        padding: 24px 15px;
+        padding: $padding;
         .text{
             position: relative;
             .input{
