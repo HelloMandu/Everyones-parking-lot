@@ -1,6 +1,6 @@
 /*global Kakao*/
 
-import React ,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
@@ -17,9 +17,9 @@ import { Paths, HeaderTitle } from './paths';
 const App = () => {
     const location = useLocation();
 
-    useEffect(()=>{
+    useEffect(() => {
         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
-    },[])
+    }, [])
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -151,26 +151,26 @@ const App = () => {
         else if (pathname === Paths.main.setting) {
             return <Header title={HeaderTitle.support.setting} />;
         }
-
-        //고객센터
+        //공지사항 리스트 뷰
         else if (pathname === Paths.main.support.notice) {
             return <Header title={HeaderTitle.main.support.notice} />;
         }
+        //공지사항 상세보기
         else if (pathname === Paths.main.support.notice_detail) {
             return <Header title={HeaderTitle.main.support.notice_detail} />;
         }
+        //자주 묻는 질문 리스트 뷰 
         else if (pathname === Paths.main.support.faq) {
             return <Header title={HeaderTitle.main.support.faq} />;
         }
+        //1:1문의 리스트뷰
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
         }
+        //1:1문의 작성
         else if (pathname === Paths.main.support.qna_write) {
             return <Header title={HeaderTitle.main.support.qna_write} />;
         }
-
-  
-
     };
 
     return (

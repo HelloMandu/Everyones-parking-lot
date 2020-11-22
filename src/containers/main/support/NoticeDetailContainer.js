@@ -1,8 +1,8 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 /* Library */
-import { useLocation} from 'react-router-dom';
 
-const NoticeDetailContainer = ({ viewId }) => {
+const NoticeDetailContainer = () => {
     const location = useLocation();
     return (
         <div>

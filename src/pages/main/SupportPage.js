@@ -1,13 +1,12 @@
 import React from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 /* Library */
-import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 
 import NoticeDetailContainer from '../../containers/main/support/NoticeDetailContainer';
 import QNADetailContainer from '../../containers/main/support/QNADetailContainer';
 import QNAWriteContainer from '../../containers/main/support/QNAWriteContainer';
 import SupportContainer from '../../containers/main/support/SupportContainer';
-import { Paths } from '../../paths';
+/* Container */
 
 import { Paths } from '../../paths';
 /* Paths */
