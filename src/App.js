@@ -149,8 +149,28 @@ const App = () => {
         }
         //환경설정
         else if (pathname === Paths.main.setting) {
-            return <Header title={HeaderTitle.main.setting} />;
+            return <Header title={HeaderTitle.support.setting} />;
         }
+
+        //고객센터
+        else if (pathname === Paths.main.support.notice) {
+            return <Header title={HeaderTitle.main.support.notice} />;
+        }
+        else if (pathname === Paths.main.support.notice_detail) {
+            return <Header title={HeaderTitle.main.support.notice_detail} />;
+        }
+        else if (pathname === Paths.main.support.faq) {
+            return <Header title={HeaderTitle.main.support.faq} />;
+        }
+        else if (pathname === Paths.main.support.qna) {
+            return <Header title={HeaderTitle.main.support.qna} />;
+        }
+        else if (pathname === Paths.main.support.qna_write) {
+            return <Header title={HeaderTitle.main.support.qna_write} />;
+        }
+
+  
+
     };
 
     return (
