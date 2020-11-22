@@ -74,15 +74,16 @@ const Name = forwardRef(({ setCheck, onKeyDown }, ref) => {
 });
 
 const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
-    const [password, onChangePassword] = useInput('', isPasswordForm);
+    const [password, onChangePassword, checkPasswordForm] = useInput('', isPasswordForm);
     const [passwordCheck, onChangePasswordCheck] = useInput('');
     useImperativeHandle(ref, () => ({
         password: password,
     }));
-    useEffect(() => setCheck(password === passwordCheck), [
+    useEffect(() => setCheck(checkPasswordForm && password === passwordCheck), [
         setCheck,
         password,
         passwordCheck,
+        checkPasswordForm
     ]);
     return (
         <div className={cx('input-wrapper')}>
