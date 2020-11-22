@@ -1,0 +1,60 @@
+
+
+html {
+    body {
+        .tabs {
+            width: 100%;
+            min-height: 48px;
+            margin: 0 auto;
+            background-color: #fff;
+       
+        }
+    }
+}
+html {
+    body {
+        .tab-item {
+            box-sizing: border-box;
+            border: 1px solid #ebebeb;
+            background-color: #F9F9F9;
+            min-height: 50px;
+            max-width: 100%;
+            width: 100%;
+            flex: 1 1 auto;
+            letter-spacing: -0.05rem;
+            font-size: 16px;
+            color: #aaa;
+        
+        }
+        :global(.Mui-selected) {
+        border-bottom: none;
+            background-color: #fff;
+            box-sizing: border-box;
+            color: #555;
+            font-weight: bold;
+        }
+    }
+
+}
+html {
+    body {
+        :global(.MuiTabs-indicator) {
+            display: none;
+                display: inline-block;
+                background-color: transparent;
+        }
+    }
+}
+
+html {
+    body {
+        :global(.MuiTabs-scrollButtons) {
+            width: 40px;
+                display: inline-flex;
+                width: 20px;
+        }
+        :global(.Mui-disabled) {
+            width: 0;
+        }
+    }
+}

@@ -1,0 +1,126 @@
+@import '../../static/stylesheets/Root.scss';
+
+html {
+    body {
+        :global(.MuiDialog-root) {
+            min-height: 100vh;
+            z-index: $level2 !important;
+        }
+        .dim {
+            z-index: $level2;
+        }
+    }
+}
+
+.container {
+    .total-date {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        flex-direction: column;
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #777;
+            padding: 15px 0;
+        }
+    }
+    .date-box {
+        width: 100%;
+        height: 64px;
+        border-radius: 2px;
+        background-color: #fff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+        transition: height 0.3s ease-in-out;
+        overflow: hidden;
+        position: relative;
+        .select-line {
+            width: 100%;
+            height: 40px;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+            transform: translateY(-100%);
+            // z-index: -15;
+            padding: 0 15px;
+            .line {
+                width: 100%;
+                height: 100%;
+                background-color: #F7F8F9;
+                border-radius: 10px;
+            }
+          
+        }
+  
+        .txt-value {
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            .txt {
+                font-size: 14px;
+                font-weight: bold;
+                color: #999999;
+            }
+            .value {
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
+            }
+        }
+        &.open {
+            height: 200px;
+            .select-line{
+                transform: translateY(-210%);
+                z-index: 0;
+            }
+         
+        }
+        &.end-box{
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+    }
+}
+html {
+    body {
+        .swiper{
+            display: flex;
+            justify-content: space-between;
+            .day-swiper {
+                max-height: 121px;
+                position: relative;
+            }
+            .hour-swiper{
+                max-height: 121px;
+    
+            }
+            .minute-swiper{
+                max-height: 121px;
+            }
+        }
+
+    }
+}
+html {
+    body {
+        .swiper-slide {
+            border-radius: 100px;
+            color: #6f6f6f;
+            .date-item {
+                color:gray;
+                display: flex;
+                width: 100%;
+                letter-spacing: -0.5px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #222222;
+            }
+        }
+    }
+}

@@ -27,7 +27,7 @@ const AuthPage = () => {
                 <Route path={Paths.auth.enrollment} component={EnrollCarContainer} />
                 <Route path={Paths.auth.sign_complete} component={SignCompleteContainer} />
                 <Route path={Paths.auth.find.index + '/:type?'} component={FindPage} />
-                <Route render={({ history }) => history.push(Paths.auth.login)} />
+                <Route render={({ history }) => history.replace(Paths.auth.login)} />
             </Switch>
         </div>
     );

@@ -8,9 +8,9 @@
     left: 0;
     right: 0;
     top: 100%;
-    z-index: 2600;
+    z-index: $level1;
     width: 100%;
-    padding: 30px 24px;
+    padding: 20px 24px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     box-sizing: border-box;
@@ -19,7 +19,6 @@
     -webkit-transform: translateY(0);
     transform: translateY(0);
     .box{
-        height: 500px;
         .modal-title{
             font-size: 18px;
             font-weight: bold;
@@ -40,6 +39,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 10px 0;
     .name {
         color: #333;
         font-size: 14px;
@@ -71,17 +71,6 @@
                     transition: all .3s cubic-bezier(0.39, 0.575, 0.565, 1);
                 }
             }
-            // &:hover {
-            //     .switch::before {
-            //         content: '';
-            //         position: absolute;
-            //         width: 150%; height: 150%;
-            //         top: 50%; left: 50%;
-            //         transform: translate(-50%, -50%);
-            //         border-radius: 50%;
-            //         background-color: rgba($color: #000000, $alpha: 0.1);
-            //     }
-            // }
         }
         &.checked {
             .box {
@@ -103,7 +92,7 @@
 html {
     body {
         .dim {
-            z-index: 2500;
+            z-index: $level2;
         }
     }
 }
