@@ -47,13 +47,13 @@ const SupportContainer = () => {
                 value={tabIndex}
                 onChange={(e,index)=>{
                     if(index===0){
-                        history.push(Paths.main.support.notice);
+                        history.replace(Paths.main.support.notice);
                     }
                     else if(index===1){
-                        history.push(Paths.main.support.faq);
+                        history.replace(Paths.main.support.faq);
                     }
                     else if(index===2){
-                        history.push(Paths.main.support.qna);
+                        history.replace(Paths.main.support.qna);
                     }
                 }}
                 TabIndicatorProps={{
