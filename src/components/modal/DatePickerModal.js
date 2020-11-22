@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 //styles
@@ -9,15 +9,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
-import { ButtonBase, IconButton } from '@material-ui/core';
+import { ButtonBase } from '@material-ui/core';
 
 import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
-import FixedButton from '../button/FixedButton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 //lib
-import {getDateRange} from '../../lib/calculateDate';
+import { getDateRange } from '../../lib/calculateDate';
 
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         minHeight: '100vh',
-        position:'relative',
+        position: 'relative',
         zIndex: 3000,
         padding: 0,
         paddingTop: 76,
@@ -67,25 +66,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const test = ['00', '10', '20', '30', '40', '50'];
 const DatePickerModal = (props) => {
     const classes = useStyles();
-    const [day,setDay] = useState(new Date().getDate());
+    // const [day, setDay] = useState(new Date().getDate());
     const [start_open, setStartOpen] = useState(false);
-    const [end_open ,setEndOpen] = useState(false);
+    // const [end_open ,setEndOpen] = useState(false);
     const list = test.map((data) => (
         <SwiperSlide className={styles['swiper-slide']} key={data}>
             <DateItem minute={data} />
         </SwiperSlide>
     ));
 
-    useEffect(()=>{
+    useEffect(() => {
         let start = new Date('2020-12-21');
         let end = new Date();
         end.setFullYear(start.getFullYear());
-        end.setMonth(start.getMonth()+1);
+        end.setMonth(start.getMonth() + 1);
         end.setDate(start.getDate());
         console.log(start);
         console.log(end);
         getDateRange(start, end);
-    },[day])
+    }, [/*day*/])
     return (
         <Dialog
             fullScreen
@@ -223,9 +222,9 @@ const DatePickerModal = (props) => {
                             <div className={styles['line']}></div>
                         </div>
                     </div> */}
-                </div>
-            </DialogContent>
-        </Dialog>
+                </div >
+            </DialogContent >
+        </Dialog >
     );
 };
 const DateItem = ({ minute }) => {

@@ -1,6 +1,6 @@
 /*global kakao*/
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect/*, useState, useRef*/ } from 'react';
 
 //styles
 
@@ -34,15 +34,15 @@ const RoadviewModal = (props) => {
     };
 
     return (
-        <div className={cx('modal', {open : props.open})}>
+        <div className={cx('modal', { open: props.open })}>
             <Header title={props.title} />
-                <div className={styles['container']}>
-                    <div
-                        id="roadview"
-                        style={{ width: '100vw', height: '100vh', zIndex: 1 }}
-                    />
-                </div>
-         </div>
+            <div className={styles['container']}>
+                <div
+                    id="roadview"
+                    style={{ width: '100vw', height: '100vh', zIndex: 1 }}
+                />
+            </div>
+        </div>
     );
 };
 

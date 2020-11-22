@@ -15,12 +15,14 @@ const UpdateBirthdayContiner = () => {
     }
 
     return (
-        <div className={styles['container']}>
-            <div className={styles['birth-area']}>
-                <Birth />
+        <>
+            <div className={styles['container']}>
+                <div className={styles['birth-area']}>
+                    <Birth />
+                </div>
             </div>
             <FixedButton button_name="변경" disable={false} onClick={onClickButton} />
-        </div>
+        </>
     );
 };
 

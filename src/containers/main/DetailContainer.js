@@ -1,7 +1,7 @@
 /*global Kakao*/
 
-import React,{useState,useEffect} from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
@@ -24,80 +24,80 @@ import { Paths } from '../../paths';
 
 
 const cx = cn.bind(styles);
-const categorys = [
-    {
-        ca_name: '정보',
-    },
-    {
-        ca_name: '리뷰',
-    },
-];
+// const categorys = [
+//     {
+//         ca_name: '정보',
+//     },
+//     {
+//         ca_name: '리뷰',
+//     },
+// ];
 
-const DetailContainer = ({modal}) => {
-    
+const DetailContainer = ({ modal }) => {
+
     const [index, setIndex] = useState(0);
     const history = useHistory();
 
 
-     useEffect(() => {
-         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+    useEffect(() => {
+        Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
         //  createKakaoButton();
-     }, []);
+    }, []);
 
-     const onClickKakaoNavi =()=>{
-         Kakao.Navi.start({
+    const onClickKakaoNavi = () => {
+        Kakao.Navi.start({
             name: "현대백화점 판교점",
             x: 127.11205203011632,
             y: 37.39279717586919,
             coordType: 'wgs84'
         });
-     }
-
-
-     const createKakaoButton = () => {
-        // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
-        if (Kakao) {
-
-            Kakao.Link.createDefaultButton({
-            // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
-            container: '#kakao-link-btn',
-            objectType: 'feed',
-            content: {
-              title: '타이틀',
-              description: '#리액트 #카카오 #공유버튼',
-              imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
-              link: {
-                mobileWebUrl: 'https://www.naver.com',
-                webUrl: 'https://www.naver.com',
-              },
-            },
-            social: {
-              likeCount: 77,
-              commentCount: 55,
-              sharedCount: 333,
-            },
-            buttons: [
-              {
-                title: '웹으로 보기',
-                link: {
-                  mobileWebUrl: 'https://www.naver.com',
-                  webUrl: 'https://www.naver.com',
-                },
-              },
-              {
-                title: '앱으로 보기',
-                link: {
-                  mobileWebUrl:'https://www.naver.com',
-                  webUrl:'https://www.naver.com',
-                },
-              },
-            ],
-          })
-        }
     }
+
+
+    // const createKakaoButton = () => {
+    //     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
+    //     if (Kakao) {
+
+    //         Kakao.Link.createDefaultButton({
+    //         // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
+    //         container: '#kakao-link-btn',
+    //         objectType: 'feed',
+    //         content: {
+    //           title: '타이틀',
+    //           description: '#리액트 #카카오 #공유버튼',
+    //           imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
+    //           link: {
+    //             mobileWebUrl: 'https://www.naver.com',
+    //             webUrl: 'https://www.naver.com',
+    //           },
+    //         },
+    //         social: {
+    //           likeCount: 77,
+    //           commentCount: 55,
+    //           sharedCount: 333,
+    //         },
+    //         buttons: [
+    //           {
+    //             title: '웹으로 보기',
+    //             link: {
+    //               mobileWebUrl: 'https://www.naver.com',
+    //               webUrl: 'https://www.naver.com',
+    //             },
+    //           },
+    //           {
+    //             title: '앱으로 보기',
+    //             link: {
+    //               mobileWebUrl:'https://www.naver.com',
+    //               webUrl:'https://www.naver.com',
+    //             },
+    //           },
+    //         ],
+    //       })
+    //     }
+    // }
     return (
         <div className={styles['wrapper']}>
-                  {/* <button id="kakao-link-btn">
+            {/* <button id="kakao-link-btn">
         <img src={shared_icon} alt="kakao-share-icon" />
       </button> */}
             <div className={styles['parking-img']}>
@@ -117,14 +117,14 @@ const DetailContainer = ({modal}) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} txt={"공유"}/>
+                            <CircleButton src={shared_icon} txt={"공유"} />
                             <CircleButton src={guid_icon} txt={"안내"} onClick={
-                                ()=>{
-                                    history.push(Paths.main.detail+'/nav');
+                                () => {
+                                    history.push(Paths.main.detail + '/nav');
                                     onClickKakaoNavi();
                                 }
-                                }/>
-                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={() =>history.push(Paths.main.detail +'/roadview')}/>
+                            } />
+                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={() => history.push(Paths.main.detail + '/roadview')} />
                         </div>
                     </div>
                 </div>
@@ -142,11 +142,11 @@ const DetailContainer = ({modal}) => {
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
                             10/5(수)14:00 ~ 10/5(수)16:00
-                            <ButtonBase className={styles['date-picker']} onClick={()=>history.push(Paths.main.detail+'/datepicker')}>
-                            <img src={datepicker_icon} alt="date"/>
-                        </ButtonBase>
+                            <ButtonBase className={styles['date-picker']} onClick={() => history.push(Paths.main.detail + '/datepicker')}>
+                                <img src={datepicker_icon} alt="date" />
+                            </ButtonBase>
                         </div>
-                     
+
                     </div>
                     <div className={cx('operation-time', 'space-between')}>
                         <div className={styles['txt']}>운영시간</div>
@@ -183,19 +183,19 @@ const DetailContainer = ({modal}) => {
                             />
                         </div>
                     )}
-                    {index===1 &&
-                    <div className={styles['review-list']}>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                    </div>
+                    {index === 1 &&
+                        <div className={styles['review-list']}>
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                        </div>
                     }
                 </div>
             </div>
-            <DatePickerModal open ={modal==="datepicker"} handleClose ={ ()=>history.goBack()}/>
-            <LikeButton  button_name={'12,000원 대여신청'} disable={false} />
-            <RoadviewModal open ={modal==="roadview"}handleClose ={ ()=>history.goBack()} title={"길동이 주차장"}/>
+            <DatePickerModal open={modal === "datepicker"} handleClose={() => history.goBack()} />
+            <LikeButton button_name={'12,000원 대여신청'} disable={false} />
+            <RoadviewModal open={modal === "roadview"} handleClose={() => history.goBack()} title={"길동이 주차장"} />
         </div>
     );
 };
