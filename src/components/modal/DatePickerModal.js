@@ -9,7 +9,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
-import { ButtonBase, IconButton } from '@material-ui/core';
+import { ButtonBase /*, IconButton */ } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
