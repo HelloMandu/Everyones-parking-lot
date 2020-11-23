@@ -17,7 +17,7 @@ import filter_img from '../../static/asset/svg/main/filter.svg';
 import time_img from '../../static/asset/svg/main/time.svg'
 import like_img from '../../static/asset/svg/main/like.svg';
 import MarkerImg from '../../static/asset/svg/main/marker2.svg';
-import UserMakerImg from '../../static/asset/svg/main/marker.svg';
+import UserMakerImg from '../../static/asset/svg/main/arrive_marker.svg';
 import Location_img from '../../static/asset/svg/main/location.svg';
 
 //componenst
@@ -47,6 +47,7 @@ const MapContainer = ({modal}) => {
     let position_ref = useRef({lat :37.6219752405506 , lng : 127.16017523675508  });
     let level_ref = useRef(5);
     let view_ref= useRef(false);
+    let arrive_marker = useRef(null);
     const kakao_map = useRef(null);
     const history= useHistory();
     const [view,setView] = useState(false);
@@ -82,6 +83,10 @@ const MapContainer = ({modal}) => {
                 const lng = p.coords.longitude;
                 setCoordinates(lat,lng);
                 dispatch(set_position({lat,lng}));
+                arrive_marker.current.setMap(null);  
+                setTimeout(()=>{
+                createMarker(lat,lng);
+                },1000)
             } catch (e) {
                 if (e.code === 3) {
                     //요청 시간 초과
@@ -93,8 +98,8 @@ const MapContainer = ({modal}) => {
         }
     };
 
-    const createMarker = () => {
-        const markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+    const createMarker = (lat = 33.450701,lng=126.570667) => {
+        const markerPosition = new kakao.maps.LatLng(lat, lng);
         const imageSrc = UserMakerImg,
             imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
             imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -105,21 +110,12 @@ const MapContainer = ({modal}) => {
             imageSize,
             imageOption,
         );
-        const marker = new kakao.maps.Marker({
+        arrive_marker.current = new kakao.maps.Marker({
             position: markerPosition,
             image: markerImage,
         });
 
-        let content = `<span class="arrive-overlay">도착지</span>`;
-
-        new kakao.maps.CustomOverlay({
-            map:  kakao_map.current,
-            position: markerPosition,
-            content: content,
-            yAnchor: 1
-        });
-
-        marker.setMap(kakao_map.current);
+        arrive_marker.current.setMap(kakao_map.current);
 
     };
 
