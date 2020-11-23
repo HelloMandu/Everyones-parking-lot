@@ -27,3 +27,14 @@ export const requestAddress = async (search) => {
 
 };
 
+export function getCoordinates() {
+    const OPTIONS = {
+        enableHighAccuracy: true,
+        maximumAge: 30000,
+        timeout: 10000,
+    };
+
+    return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, OPTIONS);
+    });
+}

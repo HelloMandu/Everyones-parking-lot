@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonBase} from '@material-ui/core';
 import styles from './AddressList.module.scss';
 
-import location_icon from '../../static/asset/svg/main/location.svg';
+import address_icon from '../../static/asset/svg/main/address.svg';
 
 /* 주소 아이템
     jibunAddr : 지번
@@ -14,7 +14,7 @@ const AddressItem = ({ jibunAddr, roadAddr, distance, onClick }) => {
     return (
         <ButtonBase className={styles['address-item']}>
             <div className={styles['icon']}>
-                <img src={location_icon} alt={jibunAddr} />
+                <img src={address_icon} alt={jibunAddr} />
             </div>
             <div className={styles['pd-box']}>
                 <div className={styles['item-info']}>

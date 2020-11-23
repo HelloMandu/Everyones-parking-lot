@@ -71,6 +71,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const AddressModal = (props) => {
+    
     const [search , setSearch] = useState('');
     const [isSearch, setIsSearch]  = useState(false);
     const [space_list , setSpaceList] =useState([]); 
@@ -83,7 +84,6 @@ const AddressModal = (props) => {
         let timer = setTimeout(()=>{
             setIsSearch(true);
         },1800);
-        console.log(isSearch);
         if(isSearch){
             clearTimeout(timer);
         }

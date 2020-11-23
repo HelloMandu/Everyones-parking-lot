@@ -17,6 +17,8 @@ import filter_img from '../../static/asset/svg/main/filter.svg';
 import time_img from '../../static/asset/svg/main/time.svg'
 import like_img from '../../static/asset/svg/main/like.svg';
 import MarkerImg from '../../static/asset/svg/main/marker2.svg';
+import UserMakerImg from '../../static/asset/svg/main/marker.svg';
+import Location_img from '../../static/asset/svg/main/location.svg';
 
 //componenst
 import Aside from '../../components/aside/Aside';
@@ -25,25 +27,30 @@ import ParkingItem from '../../components/items/ParkingItem';
 import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
+
 //lib
 import {getDistanceFromLatLonInKm} from '../../lib/distance';
 //action
-
 import {set_position,set_level} from '../../store/user_position';
+
+//api
+
+import {getCoordinates} from '../../api/address';
+
 const cx = cn.bind(styles);
 
 const MapContainer = ({modal}) => {
 
+    const dispatch = useDispatch();
 
     const {position,level} = useSelector((state) => state.user_position);
-
-    const dispatch = useDispatch();
-    let position_ = useRef({lat :37.6219752405506 , lng : 127.16017523675508  });
-    let level_ = useRef(5);
-    let view_= useRef(false);
+    let position_ref = useRef({lat :37.6219752405506 , lng : 127.16017523675508  });
+    let level_ref = useRef(5);
+    let view_ref= useRef(false);
     const kakao_map = useRef(null);
     const history= useHistory();
     const [view,setView] = useState(false);
+    
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -67,16 +74,69 @@ const MapContainer = ({modal}) => {
         dispatch(set_level(level));
     }
 
+    const callGetCoordinates = async () => {
+        if ('geolocation' in navigator) {
+            try {
+                const p = await getCoordinates();
+                const lat = p.coords.latitude;
+                const lng = p.coords.longitude;
+                setCoordinates(lat,lng);
+                dispatch(set_position({lat,lng}));
+            } catch (e) {
+                if (e.code === 3) {
+                    //요청 시간 초과
+                } else {
+                    alert(e.message);
+                    //위치접근 거부
+                }
+            }
+        }
+    };
+
+    const createMarker = () => {
+        const markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+        const imageSrc = UserMakerImg,
+            imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+            imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        // 마커 정보를 가지고 뷰에 띄울 마커 생성
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption,
+        );
+        const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+        });
+
+        let content = `<span class="arrive-overlay">도착지</span>`;
+
+        new kakao.maps.CustomOverlay({
+            map:  kakao_map.current,
+            position: markerPosition,
+            content: content,
+            yAnchor: 1
+        });
+
+        marker.setMap(kakao_map.current);
+
+    };
+
+    const setCoordinates =useCallback((lat,lng) =>{            
+        const moveLatLon = new kakao.maps.LatLng(lat, lng);
+        kakao_map.current.setCenter(moveLatLon);
+    },[]);
+
     const mapRender =()=>{
         let container = document.getElementById("map");
-        let lat = position.lat !==0 ? position.lat : position_.current.lat;
-        let lng = position.lng !==0 ? position.lng : position_.current.lng;
+        let lat = position.lat !==0 ? position.lat : position_ref.current.lat;
+        let lng = position.lng !==0 ? position.lng : position_ref.current.lng;
         let options = {
-            center: new kakao.maps.LatLng(lat, lng),
-            level: level !== 0 ? level : level_.current,
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: level !== 0 ? level : level_ref.current,
         };
 
-       
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
@@ -89,16 +149,16 @@ const MapContainer = ({modal}) => {
         kakao.maps.event.addListener(map, 'center_changed', function() {
             let level = map.getLevel();
             let latlng = map.getCenter();
-            level_.current=level;
-            position_.current.lat = latlng.getLat();
-            position_.current.lng = latlng.getLng();
+            level_ref.current=level;
+            position_ref.current.lat = latlng.getLat();
+            position_ref.current.lng = latlng.getLng();
         
         });
 
         kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
-            if(view_.current){
-                view_.current= !view_.current;
-                setView(view_.current);
+            if(view_ref.current){
+                view_ref.current= !view_ref.current;
+                setView(view_ref.current);
             }            
         });
 
@@ -119,7 +179,7 @@ const MapContainer = ({modal}) => {
             });
         
             kakao.maps.event.addListener(marker, 'click', function () {
-                view_.current= !view_.current;
+                view_ref.current= !view_ref.current;
                 // setView(view_.current);
                 history.push(Paths.main.detail +`/${el.title}`)
             });
@@ -128,22 +188,23 @@ const MapContainer = ({modal}) => {
 
     useEffect(()=>{
         mapRender();
+        createMarker();
     },[])
 
     useEffect(()=>{
         return () => {
-            dispatch(set_position(position_.current));
-            dispatch(set_level(level_.current));
+            dispatch(set_position(position_ref.current));
+            dispatch(set_level(level_ref.current));
         }
     },[dispatch])
 
-    useEffect(()=>{
-        const lat1 = markerdata[0].lat;
-        const lng1 =markerdata[0].lng;
-        const lat2 = markerdata[2].lat;
-        const lng2= markerdata[2].lng;
-        getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
-    },)
+    // useEffect(()=>{
+    //     const lat1 = markerdata[0].lat;
+    //     const lng1 =markerdata[0].lng;
+    //     const lat2 = markerdata[2].lat;
+    //     const lng2= markerdata[2].lng;
+    //     getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
+    // },[])
 
     return (
         <>
@@ -174,7 +235,7 @@ const MapContainer = ({modal}) => {
                 </div>
                 <div className={cx('side-bar', 'right')}>
                     <CircleButton src={filter_img} onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }} />
-                    <CircleButton src={time_img} />
+                    <CircleButton src={Location_img} onClick={callGetCoordinates}/>
                     <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
                 </div>      
                 <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
