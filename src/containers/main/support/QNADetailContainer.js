@@ -1,8 +1,8 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 /* Library */
-import { useLocation} from 'react-router-dom';
 
-const QNADetailContainer = ({qna_id}) => {
+const QNADetailContainer = () => {
     const location = useLocation();
     return (
         <div>

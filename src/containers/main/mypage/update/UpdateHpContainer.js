@@ -15,12 +15,14 @@ const UpdateHpContainer = () => {
     }
 
     return (
-        <div className={styles['container']}>
-            <div className={styles['input-area']}>
-                <VerifyPhone />
+        <>
+            <div className={styles['container']}>
+                <div className={styles['input-area']}>
+                    <VerifyPhone />
+                </div>
             </div>
             <FixedButton button_name="변경" disable={false} onClick={onClickButton} />
-        </div>
+        </>
     );
 };
 

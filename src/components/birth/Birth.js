@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import ArrowSmall from '../../static/asset/svg/ArrowSmall';
-
 import styles from './Birth.module.scss';
 
 const DATE = new Date(1970, 1, 1);
@@ -28,7 +26,7 @@ const Birth = ({ onChangeBirth }) => {
                         <option key={y} value={y} >{y}년</option>
                     ))}
                 </select>
-         
+
             </div>
 
             <div className={cx('select-item')}>

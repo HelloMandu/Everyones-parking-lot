@@ -21,23 +21,25 @@ const UpdateNameContainer = () => {
     }
 
     return (
-        <div className={styles['container']}>
-            <div className={styles['name-area']}>
-                <div className={styles['text']}>
-                    <input
-                        type="text"
-                        className={styles['input']}
-                        name="name"
-                        value={name}
-                        onChange={onChangeName}
-                        onKeyPress={onKeyPressEnter}
-                        placeholder="김종완"
-                    />
-                    <button className={styles['x-button']} onClick={onClickName}><XButton /></button>
+        <>
+            <div className={styles['container']}>
+                <div className={styles['name-area']}>
+                    <div className={styles['text']}>
+                        <input
+                            type="text"
+                            className={styles['input']}
+                            name="name"
+                            value={name}
+                            onChange={onChangeName}
+                            onKeyPress={onKeyPressEnter}
+                            placeholder="김종완"
+                        />
+                        <button className={styles['x-button']} onClick={onClickName}><XButton /></button>
+                    </div>
                 </div>
             </div>
             <FixedButton button_name="변경" disable={!name} onClick={onClickButton} />
-        </div>
+        </>
     );
 };
 
