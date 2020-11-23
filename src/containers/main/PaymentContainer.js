@@ -89,11 +89,19 @@ const enroll = [
     },
 ];
 
-const ParkingEnrollContainer = ({match}) => {
-    const {url, params} = match;
+const ParkingEnrollContainer = ({ match }) => {
+    const { url, params } = match;
     const history = useHistory();
-    const [isOpenCouponModal, openCouponModal] = useModal(url, params.modal, 'coupon');
-    const [isOpenTypeModal, openTypeModal] = useModal(url, params.modal, 'type');
+    const [isOpenCouponModal, openCouponModal] = useModal(
+        url,
+        params.modal,
+        'coupon',
+    );
+    const [isOpenTypeModal, openTypeModal] = useModal(
+        url,
+        params.modal,
+        'type',
+    );
     return (
         <>
             <div className={styles['parking-payment-container']}>
@@ -105,14 +113,12 @@ const ParkingEnrollContainer = ({match}) => {
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'쿠폰 할인'}</div>
+
                         <div
-                            className={styles['verify-coupon']}
+                            className={styles['coupon']}
                             onClick={openCouponModal}
                         >
-                            <div className={styles['coupon']} name="coupon">
-                                오픈 이벤트 10% 할인 이벤트 쿠폰
-                            </div>
-                            <ArrowSmall rotate={180}></ArrowSmall>
+                            오픈 이벤트 10% 할인 이벤트 쿠폰
                         </div>
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
@@ -124,7 +130,6 @@ const ParkingEnrollContainer = ({match}) => {
                 <div className={styles['parking-payment-area']}>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>결제수단</div>
-                        <div className={styles['verify-payment']}>
                             <div
                                 className={styles['payment']}
                                 name="payment"
@@ -132,8 +137,6 @@ const ParkingEnrollContainer = ({match}) => {
                             >
                                 카카오페이
                             </div>
-                            <ArrowSmall rotate={90}></ArrowSmall>
-                        </div>
                     </div>
                 </div>
                 <Price></Price>
@@ -150,7 +153,10 @@ const ParkingEnrollContainer = ({match}) => {
                 onClick={() => history.push(Paths.main.payment_complete)}
             ></FixedButton>
             <EnrollCouponModal open={isOpenCouponModal}></EnrollCouponModal>
-            <PaymentTypeModal open={isOpenTypeModal} match={match}></PaymentTypeModal>
+            <PaymentTypeModal
+                open={isOpenTypeModal}
+                match={match}
+            ></PaymentTypeModal>
         </>
     );
 };

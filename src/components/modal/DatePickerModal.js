@@ -82,8 +82,8 @@ const dateReducer = (state, action) => {
 const DatePickerModal = (props) => {
     let minute = [],
         hour = [];
-    for (var i = 0; i < 6; i++) minute.push(`${i}0`);
-    for (var i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
+    for (let i = 0; i < 6; i++) minute.push(`${i}0`);
+    for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
     const classes = useStyles();
 

@@ -8,7 +8,6 @@ import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
 import Information from '../../../static/asset/svg/Information';
-import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
@@ -110,66 +109,47 @@ const OperatingTime = () => {
             {parseInt(minute / 10) === 0 ? `0${minute}` : minute}분
         </option>
     ));
-    console.log(startTime);
     return (
         <>
             <div className={styles['title']}>운영시간</div>
             <div className={styles['schedule-wrapper']}>
                 <div className={styles['schedule-title']}>운영 시작 시간</div>
                 <div className={styles['select-time']}>
-                    <div className={styles['select-wrapper']}>
-                        <select
-                            className={styles['select-list']}
-                            name="per"
-                            onChange={onChangeStartTime}
-                        >
-                            {perSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
-                    <div className={styles['select-wrapper']}>
-                        <select
-                            className={styles['select-list']}
-                            name="hour"
-                            onChange={onChangeStartTime}
-                        >
-                            {hourSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
-                    <div className={styles['select-wrapper']}>
-                        <select
-                            className={styles['select-list']}
-                            name="minute"
-                            onChange={onChangeStartTime}
-                        >
-                            {minuteSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
+                    <select
+                        className={styles['select-list']}
+                        name="per"
+                        onChange={onChangeStartTime}
+                    >
+                        {perSelectList}
+                    </select>
+                    <select
+                        className={styles['select-list']}
+                        name="hour"
+                        onChange={onChangeStartTime}
+                    >
+                        {hourSelectList}
+                    </select>
+                    <select
+                        className={styles['select-list']}
+                        name="minute"
+                        onChange={onChangeStartTime}
+                    >
+                        {minuteSelectList}
+                    </select>
                 </div>
             </div>
             <div className={styles['schedule-wrapper']}>
                 <div className={styles['schedule-title']}>운영 종료 시간</div>
                 <div className={styles['select-time']}>
-                    <div className={styles['select-wrapper']}>
-                        <select className={styles['select-list']} name="per">
-                            {perSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
-                    <div className={styles['select-wrapper']}>
-                        <select className={styles['select-list']} name="hour">
-                            {hourSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
-                    <div className={styles['select-wrapper']}>
-                        <select className={styles['select-list']} name="minute">
-                            {minuteSelectList}
-                        </select>
-                        <ArrowSmall rotate={180}></ArrowSmall>
-                    </div>
+                    <select className={styles['select-list']} name="per">
+                        {perSelectList}
+                    </select>
+                    <select className={styles['select-list']} name="hour">
+                        {hourSelectList}
+                    </select>
+                    <select className={styles['select-list']} name="minute">
+                        {minuteSelectList}
+                    </select>
                 </div>
             </div>
         </>
