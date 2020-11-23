@@ -1,10 +1,13 @@
 import React from 'react';
 /* Library */
 
-const NoticeContainer = ({ noticeList }) => {
+import styles from './NoticeContainer.module.scss';
+/* StyleSheets */
+
+const NoticeContainer = () => {
 
     return (
-        <div>
+        <div className={styles['container']}>
             공지사항 리스트 뷰
         </div>
     );

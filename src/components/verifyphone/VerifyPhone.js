@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import cn from 'classnames/bind';
 
 import useInput from '../../hooks/useInput';
@@ -13,7 +13,7 @@ import useKeyDown from '../../hooks/useKeyDown';
 
 const cx = cn.bind(styles);
 
-const VerifyPhone = ({ setIsPhone }) => {
+const VerifyPhone = (props, ref) => {
     const [sent, setSent] = useState(false);
     const [phone, handleChangePhone, sendCheck, setSendCheck] = useInput(
         '',
@@ -32,13 +32,19 @@ const VerifyPhone = ({ setIsPhone }) => {
         '',
         (state) => state.length === 6,
     );
+    const [isConfirm, setIsConfirm] = useState(false);
     const onClickVerify = useCallback(() => {
         if (verifyCheck) {
             console.log('onClickVerify');
-            setIsPhone(true)
+            setIsConfirm(true)
         }
-    }, [verifyCheck, setIsPhone]);
+    }, [verifyCheck, setIsConfirm]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
+
+    useImperativeHandle(ref, ()=>({
+        phone: phone,
+        isConfirm: isConfirm,
+    }));
 
     return (
         <>
@@ -82,4 +88,4 @@ const VerifyPhone = ({ setIsPhone }) => {
     );
 };
 
-export default VerifyPhone;
+export default forwardRef(VerifyPhone);

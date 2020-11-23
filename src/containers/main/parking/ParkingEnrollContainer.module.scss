@@ -2,6 +2,7 @@
 
 .parking-enroll-container {
     @include container($pd-top);
+    padding-bottom: 133px;
     .parking-enroll-area{
         padding: $padding-side;
     }
@@ -15,16 +16,7 @@
         font-size: 16px;
         font-weight: bold;
     }
-    .enroll-button {
-        width: 100%;
-        height: 48px;
-        text-align: center;
-        color: #222222;
-        font-size: 15px;
-        font-weight: 500;
-        border: 1px solid #dbdbdb;
-        margin-bottom: 12px;
-    }
+
     .per-price {
         display: flex;
         align-items: center;
@@ -77,6 +69,7 @@
                 .select-list{
                     font-size: 16px;
                     padding: 0 12px;
+                    width: 100%;
                 }
                 svg{
                     position: absolute;
@@ -86,6 +79,42 @@
                 }
             }
             
+        }
+    }
+
+    .title-wrapper{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        .important-wrapper{
+            margin-top: 29px;
+            .important{
+                display: flex;
+                align-items: center;
+                padding: 3px 0px;
+                .explain{
+                    margin-left: 5px;
+                    line-height: 16px;
+                }
+            }
+        }
+    }
+
+    .button {
+        width: 100%;
+        height: 48px;
+        text-align: center;
+        color: #222222;
+        font-size: 15px;
+        font-weight: 500;
+        border: 1px solid #dbdbdb;
+        margin-bottom: 12px;
+        .plus {
+            position: relative;
+            bottom: 2px;
+            font-weight: 600;
+            font-size: 24px;
+            margin-right: 8px;
         }
     }
 }
