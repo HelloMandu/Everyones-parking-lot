@@ -1,7 +1,9 @@
 @import '../../../static/stylesheets/Root.scss';
+
 .container{
     @include container(96px);
 }
+
 .tabs {
     position: fixed;
     top:$header;
