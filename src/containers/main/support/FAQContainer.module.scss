@@ -1,0 +1,47 @@
+@import '../../../static/stylesheets/Root.scss';
+
+
+
+.category-container{
+    width: 100%; height: 120px;
+    background-color: #F7F8F9;
+    padding: $padding;
+    display: flex;
+    flex-wrap: wrap;
+    .category{
+        min-width: 33%;
+        border: 1px solid #E9EBED;
+        background-color: #FFF;
+        color: #333;
+        font-size: 1.167rem; // 14px;
+        font-weight: 400; // Regular
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.click{
+            background-color: #222;
+            color: #FFF;
+            font-weight: bold;
+        }
+    }
+}
+
+.non-faq{
+    width: 100%;
+    height: calc(100vh - 96px - 120px);
+    .non-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        // height: calc(100% - 96px);
+        .explain{
+            font-size: 1.333rem; // 16px;
+            font-weight: 400; // Regular
+            color: #222;
+            margin-top: 28px;
+        }
+
+    }
+}

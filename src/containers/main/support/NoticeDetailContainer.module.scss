@@ -1,0 +1,52 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($header);
+    .header-area{
+        width: 100%; height: 126px;
+        border-bottom: 2px solid #CCC;
+        padding: 0 $padding;
+        display: flex;
+        align-items: center;
+        .header-text{
+            .header-time{
+                display: flex;
+                color: #777;
+                font-size: 1.167rem; // 14px;
+                font-weight: 400; // Regular
+                margin-bottom: 12px;
+            }
+            .header-title{
+                display: flex;
+                color: #333;
+                font-size: 1.5rem; // 18px;
+                font-weight: bold; // Medium
+                margin-bottom: 20px;
+            }
+            .header-bottom{
+                display: flex;
+                .header-name{
+                    color: #333;
+                    font-size: 1.167rem; // 14px;
+                    font-weight: 500; // Medium
+                    padding-right: 10px;
+                    border-right: 2px solid #EBEBEB;
+                }
+                .header-cnt{
+                    padding-left: 10px;
+                    color: #777;
+                    font-size: 1.167rem; // 14px;
+                    font-weight: 400; // Reagulr
+                }
+            }
+        }
+    }
+    .text-area{
+        width: 100%; height: 100%;
+        padding: $padding;
+        padding-bottom: 80px;
+        color: #555;
+        font-size: 1.167rem; // 14px;
+        font-weight: 400; // Reagulr
+    }
+}
