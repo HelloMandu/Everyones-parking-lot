@@ -43,16 +43,17 @@ const MapContainer = ({modal}) => {
 
     const dispatch = useDispatch();
 
-    const {position,level} = useSelector((state) => state.user_position);
-    let position_ref = useRef({lat :37.6219752405506 , lng : 127.16017523675508  });
-    let level_ref = useRef(5);
-    let view_ref= useRef(false);
-    let arrive_marker = useRef(null);
-    const kakao_map = useRef(null);
+    const {position,level} = useSelector((state) => state.user_position); //마지막 좌표 및 레벨
+    let position_ref = useRef({lat :37.6219752405506 , lng : 127.16017523675508  }); //지도 첫렌더시 좌표
+    let level_ref = useRef(5); // 디폴트 레벨
+    let view_ref= useRef(false); // 슬라이드 여부
+    let arrive_marker = useRef(null); // 도착지 마커
+    const kakao_map = useRef(null); //카카오 맵
     const history= useHistory();
     const [view,setView] = useState(false);
     
 
+    // 모달을 제어하는 리듀서
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
             return {
@@ -63,6 +64,8 @@ const MapContainer = ({modal}) => {
         { aside_: false, filter_: false },
     );
 
+
+    //지도 레벨을 조정하는 함수
     const zoomMap = (type) => {
 
         let level = kakao_map.current.getLevel();
@@ -75,6 +78,8 @@ const MapContainer = ({modal}) => {
         dispatch(set_level(level));
     }
 
+
+    //현재 위치를 받아오는 함수.
     const callGetCoordinates = async () => {
         if ('geolocation' in navigator) {
             try {
@@ -98,6 +103,7 @@ const MapContainer = ({modal}) => {
         }
     };
 
+    // 도착지 마커를 생성하는 함수.
     const createMarker = (lat = 33.450701,lng=126.570667) => {
         const markerPosition = new kakao.maps.LatLng(lat, lng);
         const imageSrc = UserMakerImg,
@@ -119,17 +125,20 @@ const MapContainer = ({modal}) => {
 
     };
 
+
+    // 맵 중심좌표를 설정하는 함수
     const setCoordinates =useCallback((lat,lng) =>{            
         const moveLatLon = new kakao.maps.LatLng(lat, lng);
         kakao_map.current.setCenter(moveLatLon);
     },[]);
 
+    // 지도와 마커를 렌더하는 함수
     const mapRender =()=>{
         let container = document.getElementById("map");
         let lat = position.lat !==0 ? position.lat : position_ref.current.lat;
         let lng = position.lng !==0 ? position.lng : position_ref.current.lng;
         let options = {
-            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            center: new kakao.maps.LatLng(lat,lng),
             level: level !== 0 ? level : level_ref.current,
         };
 
@@ -142,6 +151,7 @@ const MapContainer = ({modal}) => {
 
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
+        //마커의 중심좌표가 변경되었을 시 이벤트
         kakao.maps.event.addListener(map, 'center_changed', function() {
             let level = map.getLevel();
             let latlng = map.getCenter();
@@ -151,6 +161,7 @@ const MapContainer = ({modal}) => {
         
         });
 
+        //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
         kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
             if(view_ref.current){
                 view_ref.current= !view_ref.current;
@@ -158,7 +169,7 @@ const MapContainer = ({modal}) => {
             }            
         });
 
-
+        // 주차장 마커 생성
         markerdata.forEach((el) => {
             let content = `<span class="custom-overlay">${el.title}m</span>`;
             const marker = new kakao.maps.Marker({
@@ -184,7 +195,6 @@ const MapContainer = ({modal}) => {
 
     useEffect(()=>{
         mapRender();
-        createMarker();
     },[])
 
     useEffect(()=>{
