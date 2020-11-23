@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import { Dialog, Slide } from '@material-ui/core';
 
 import useForm from '../../hooks/useForm';
 import useInput from '../../hooks/useInput';
 
+import Header from '../header/Header';
 import InputBox from '../inputbox/InputBox';
 import FixedButton from '../button/FixedButton';
 
 import styles from './EnrollCardModal.module.scss';
 
+const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const EnrollCardModal = () => {
+const EnrollCardModal = ({ open }) => {
     const [cardNum, onChangeCardNum] = useForm(
         {
             card1: '',
@@ -22,15 +27,16 @@ const EnrollCardModal = () => {
     const [cardPeriod, onChangeCardPeriod] = useForm(
         {
             month: '',
-            year: ''
+            year: '',
         },
         2,
     );
     const [cardPassword, onChangeCardPassword] = useInput('', undefined, 2);
-    const {card1, card2, card3, card4} = cardNum;
-    const {month, year} = cardPeriod;
+    const { card1, card2, card3, card4 } = cardNum;
+    const { month, year } = cardPeriod;
     return (
-        <>
+        <Dialog fullScreen open={open} TransitionComponent={Transition}>
+            <Header title={'결제수단등록'}></Header>
             <div className={styles['enrollcard-container']}>
                 <div className={styles['enroll-title']}>카드번호</div>
                 <div className={styles['card-input']}>
@@ -68,7 +74,7 @@ const EnrollCardModal = () => {
                 </div>
                 <div className={styles['enroll-title']}>유효기간</div>
                 <div className={styles['card-period']}>
-                    <div className={styles["card-period-wrapper"]}>
+                    <div className={styles['card-period-wrapper']}>
                         <InputBox
                             className={'input-box'}
                             type={'text'}
@@ -79,7 +85,7 @@ const EnrollCardModal = () => {
                         ></InputBox>
                     </div>
                     <span>/</span>
-                    <div className={styles["card-period-wrapper"]}>
+                    <div className={styles['card-period-wrapper']}>
                         <InputBox
                             className={'input-box'}
                             type={'text'}
@@ -103,7 +109,7 @@ const EnrollCardModal = () => {
                 </div>
             </div>
             <FixedButton button_name={'결제하기'}></FixedButton>
-        </>
+        </Dialog>
     );
 };
 

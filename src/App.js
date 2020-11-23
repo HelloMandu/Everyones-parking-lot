@@ -62,20 +62,8 @@ const App = () => {
             return <Header title={HeaderTitle.auth.find.password_complete} />;
         }
         // 결제정보 확인
-        else if (pathname === Paths.main.payment.index) {
-            return <Header title={HeaderTitle.main.payment.index} />;
-        }
-        // 결제정보 확인
-        else if (pathname === Paths.main.payment.enrollment) {
-            return <Header title={HeaderTitle.main.payment.enrollment} />;
-        }
-        // 적용 쿠폰 선택
-        else if (pathname === Paths.main.payment.coupon) {
-            return <Header title={HeaderTitle.main.payment.coupon} />;
-        }
-        // 결제 수단 선택
-        else if (pathname === Paths.main.payment.type) {
-            return <Header title={HeaderTitle.main.payment.type} />;
+        else if (pathname === Paths.main.payment) {
+            return <Header title={HeaderTitle.main.payment} />;
         }
         // 이용 내역
         else if (pathname === Paths.main.use.list) {

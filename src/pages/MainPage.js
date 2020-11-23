@@ -11,7 +11,7 @@ const MainPage = () => {
             <Switch>
                 <Route path={Paths.main.index + '/:modal?'} component={Map} />
                 <Route path={Paths.main.detail +'/:modal?'} component={Detail} />
-                <Route path={Paths.main.payment.index} component={Payment} />
+                <Route path={Paths.main.payment +'/:modal?/:modal2?'} component={Payment} />
                 <Route path={Paths.main.payment_complete} component={PaymentComplete} />
                 <Route path={Paths.main.use.index} component={Use} />
                 <Route path={Paths.main.review.index} component={Review} />
