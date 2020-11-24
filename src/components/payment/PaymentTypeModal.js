@@ -6,10 +6,8 @@ import { ButtonBase } from '@material-ui/core';
 
 import useModal from '../../hooks/useModal';
 
-import {Paths} from '../../paths';
-
 import EnrollCardModal from './EnrollCardModal';
-
+import Header from '../header/Header';
 import FixedButton from '../button/FixedButton';
 
 import KakaoPay from '../../static/asset/svg/payment/KakaoPay.js';
@@ -29,10 +27,12 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PaymentContainer = () => {
-    const [isOpenCardRegister, openCardRegisterModal] = useModal(Paths.main.payment.enrollment);
+const PaymentContainer = ({ open, match }) => {
+    const {url, params} = match;
+    const [isOpenCardEnrollment, openCardEnrollment] = useModal(url, params.modal2, 'enrollment');
     return (
-        <>
+        <Dialog fullScreen open={open} TransitionComponent={Transition}>
+            <Header title={'결제 수단 선택'}></Header>
             <div className={styles['payment-container']}>
                 <h2 className={styles['payment-title']}>등록카드 결제</h2>
                 <Swiper
@@ -74,8 +74,11 @@ const PaymentContainer = () => {
                         </div>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <div className={styles['card-register']} onClick={openCardRegisterModal}>
-                                <RegisterIcon></RegisterIcon>
+                        <div
+                            className={styles['card-register']}
+                            onClick={openCardEnrollment}
+                        >
+                            <RegisterIcon></RegisterIcon>
                             <div>카드등록</div>
                         </div>
                     </SwiperSlide>
@@ -101,14 +104,8 @@ const PaymentContainer = () => {
                 </ul>
             </div>
             <FixedButton button_name={'결제하기'}></FixedButton>
-            <Dialog
-                fullScreen
-                open={isOpenCardRegister}
-                TransitionComponent={Transition}
-            >
-                <EnrollCardModal></EnrollCardModal>
-            </Dialog>
-        </>
+            <EnrollCardModal open={isOpenCardEnrollment}></EnrollCardModal>
+        </Dialog>
     );
 };
 

@@ -1,4 +1,4 @@
-import React ,{/*useEffect,useState,*/ useRef}from 'react';
+import React, {/*useEffect,useState,*/ useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 //styles
@@ -87,10 +87,10 @@ const AddressModal = (props) => {
                             className={styles['search-input']}
                             placeholder="도착지를 알려주세요"
                             ref={ref}
-                   
+
                         />
                         <IconButton className={styles['search-icon']}>
-                            <img src={search_icon} alt=""/>
+                            <img src={search_icon} alt="" />
                         </IconButton>
                     </div>
                     <div className={styles['distance-list']}>

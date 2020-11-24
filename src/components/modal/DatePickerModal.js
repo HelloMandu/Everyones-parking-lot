@@ -9,7 +9,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
-import { ButtonBase, IconButton } from '@material-ui/core';
+import { ButtonBase /*, IconButton */ } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -82,8 +82,8 @@ const dateReducer = (state, action) => {
 const DatePickerModal = (props) => {
     let minute = [],
         hour = [];
-    for (var i = 0; i < 6; i++) minute.push(`${i}0`);
-    for (var i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
+    for (let i = 0; i < 6; i++) minute.push(`${i}0`);
+    for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
     const classes = useStyles();
 
@@ -91,8 +91,8 @@ const DatePickerModal = (props) => {
     const [date_list, setDateList] = useState([]);
     const [start_open, setStartOpen] = useState(false);
     const [end_open, setEndOpen] = useState(false);
-    const [start_date , setStateDate] = useState(0);
-    const [end_date , setEndDate] = useState(0);
+    const [start_date, setStateDate] = useState(0);
+    const [end_date, setEndDate] = useState(0);
 
     const day_list = date_list.map((data) => (
         <SwiperSlide className={styles['swiper-slide']} key={data}>
@@ -111,10 +111,10 @@ const DatePickerModal = (props) => {
     ));
 
     useEffect(() => {
-        const {start_day,start_hour, start_minute} = date_index;
-        const {end_day,end_hour, end_minute} = date_index;
-        setStateDate(date_list[start_day]+' ' + hour[start_hour]+ ':' + minute[start_minute]);
-        setEndDate(date_list[end_day]+' ' + hour[end_hour]+ ':' + minute[end_minute]);
+        const { start_day, start_hour, start_minute } = date_index;
+        const { end_day, end_hour, end_minute } = date_index;
+        setStateDate(date_list[start_day] + ' ' + hour[start_hour] + ':' + minute[start_minute]);
+        setEndDate(date_list[end_day] + ' ' + hour[end_hour] + ':' + minute[end_minute]);
     }, [date_index]);
 
     useEffect(() => {
@@ -150,7 +150,7 @@ const DatePickerModal = (props) => {
                                 className={styles['value']}
                                 onClick={() => setStartOpen(!start_open)}
                             >
-                              {start_date}
+                                {start_date}
                                 <Select />
                             </ButtonBase>
                         </div>
@@ -284,7 +284,7 @@ const DatePickerModal = (props) => {
                     </div>
                 </div>
             </DialogContent>
-            <FixedButton disable={false} button_name={"시간 설정 완료"}/>
+            <FixedButton disable={false} button_name={"시간 설정 완료"} />
         </Dialog>
 
     );

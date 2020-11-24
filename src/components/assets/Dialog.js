@@ -15,7 +15,7 @@ import styles from './Dialog.module.scss';
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
-        zIndex: 3500,
+        zIndex: 5000,
     },
 }));
 
