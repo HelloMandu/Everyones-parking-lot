@@ -8,7 +8,7 @@ import { Paths } from '../../paths'
 
 import styles from './LoginContainer.module.scss'
 
-import logo from '../../static/asset/png/logo.png'
+import Logo from '../../static/asset/svg/Logo'
 import background from '../../static/asset/png/auth_background.png'
 
 import Naver from '../../static/asset/svg/auth/naver'
@@ -32,11 +32,7 @@ const LoginContainer = () => {
     return (
         <div className={cx('container')}>
             <div className={cx("logo")}>
-                <img src={logo} alt="" />
-            </div>
-
-            <div className={cx("background")}>
-                <img src={background} alt="" />
+                <Logo />
             </div>
 
             <div className={cx("area")}>
