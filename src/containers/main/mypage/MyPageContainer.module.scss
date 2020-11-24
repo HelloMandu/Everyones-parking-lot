@@ -25,14 +25,12 @@
                 border-radius: 50%;
                 position: absolute;
                 right: 0; bottom: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 .input-file{
                     display: none;
                     outline: none;
-                }
-                & > svg{
-                    position: relative;
-                    top: 50%; left: 50%;
-                    transform: translate(-50%, -50%);
                 }
             }
         }
@@ -62,13 +60,14 @@
                 background-color: #222;
                 border-radius: 18px;
                 margin-top: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 .enroll{
-                    text-align: center;
-                    line-height: 32px;
-                    position: relative;
-                    & > svg{
-                        vertical-align: middle;
-                    }
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     & > span{
                         margin-left: 5px;
                         color: #FFF;

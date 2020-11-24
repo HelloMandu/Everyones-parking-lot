@@ -3,12 +3,7 @@ export const Paths = {
     main: {
         index: '/main',
         detail: '/detail',
-        payment: {
-            index: '/payment',
-            coupon: '/payment/coupon',
-            type: '/payment/type',
-            enrollment: '/payment/type/enrollment',
-        },
+        payment: '/payment',
         payment_complete: '/payment_complete',
         use: {
             index: '/use',
@@ -76,19 +71,14 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'https://172.20.10.6:8080/',
+    api: 'http://localhost:8080/',
 };
 
 export const HeaderTitle = {
     main: {
         index: '/',
         detail: '/detail',
-        payment: {
-            index: '결제정보 확인',
-            coupon: '적용 쿠폰 선택',
-            type: '결제수단 선택',
-            enrollment: '결제수단 등록',
-        },
+        payment: '결제정보 확인',
         payment_complete: '/payment_complete',
         use: {
             index: '',

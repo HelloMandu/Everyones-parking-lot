@@ -1,8 +1,8 @@
 /*global kakao*/
-import React, { useEffect, useReducer, useRef, useState,useCallback } from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useEffect, useReducer, useRef, /* useState, useCallback*/ } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import {Paths} from '../../paths';
+import { Paths } from '../../paths';
 
 //styles
 import styles from './MapContainer.module.scss';
@@ -26,11 +26,11 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 const cx = cn.bind(styles);
 
-const MapContainer = ({modal}) => {
+const MapContainer = ({ modal }) => {
 
-    const history= useHistory();
-    const [count ,setCount] = useState(0);
-    const [view,setView] = useState(false);
+    const history = useHistory();
+    // const [count ,setCount] = useState(0);
+    // const [view,setView] = useState(false);
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -57,7 +57,7 @@ const MapContainer = ({modal}) => {
     }
 
     const mapScript = () => {
-  
+
         let container = document.getElementById("map");
         let options = {
             center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508),
@@ -90,26 +90,26 @@ const MapContainer = ({modal}) => {
                 yAnchor: 1
             });
             const infowindow = new kakao.maps.InfoWindow({
-                content : iwContent,
-                removable : iwRemoveable,
+                content: iwContent,
+                removable: iwRemoveable,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
             });
             kakao.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker);  
+                infowindow.open(map, marker);
             });
 
         });
 
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         mapScript();
-    },[])
+    }, [])
 
     // useEffect(()=>{
     //     console.log(view);
     // },[view])
-    
+
     // useEffect(()=>{
     //     console.log(count);
     // },[count])
@@ -130,7 +130,7 @@ const MapContainer = ({modal}) => {
                         <div className={styles['line']} />
                     </div>
                 </ButtonBase>
-                <div className={styles['search']} onClick={()=>history.push(Paths.main.index+'/address')}>
+                <div className={styles['search']} onClick={() => history.push(Paths.main.index + '/address')}>
                     <ButtonBase className={styles['search-box']}>
                         위치를 입력해주세요
                     </ButtonBase>
@@ -146,14 +146,14 @@ const MapContainer = ({modal}) => {
                 <div className={cx('side-bar', 'right')}>
                     <CircleButton src={filter_img} onClick={() => { dispatchHandle({ type: 'filter_', payload: true }) }} />
                     <CircleButton src={time_img} />
-                    <CircleButton src={like_img} onClick={()=>history.push(Paths.main.index +'/bookmark')}/>
-                </div>      
-                <Aside open={modalState.aside_} handleClose ={() => { dispatchHandle({ type: 'aside_', payload: false }) }}/>
-                <ParkingItem onClick={()=>history.push(Paths.main.detail +'?id=1')} view={view}/>
+                    <CircleButton src={like_img} onClick={() => history.push(Paths.main.index + '/bookmark')} />
+                </div>
+                <Aside open={modalState.aside_} handleClose={() => { dispatchHandle({ type: 'aside_', payload: false }) }} />
+                <ParkingItem onClick={() => history.push(Paths.main.detail + '?id=1')} /*view={view}*/ />
             </div>
             <BottomModal open={modalState.filter_} handleClose={() => { dispatchHandle({ type: 'filter_', payload: false }) }} />
-            <BookmarkModal open ={modal ==='bookmark'} handleClose={() =>history.goBack()}/>
-            <AddressModal open ={modal==='address'} handleClose={() =>history.goBack()}/>
+            <BookmarkModal open={modal === 'bookmark'} handleClose={() => history.goBack()} />
+            <AddressModal open={modal === 'address'} handleClose={() => history.goBack()} />
         </>
     );
 };
@@ -163,13 +163,13 @@ const MapContainer = ({modal}) => {
 const markerdata = [
     {
         title: "콜드스퀘어",
-        distance : 300,
+        distance: 300,
         lat: 37.62197524055062,
         lng: 127.16017523675508,
     },
     {
         title: "하남돼지집",
-        distance : 300,
+        distance: 300,
         lat: 37.620842424005616,
         lng: 127.1583774403176,
     },

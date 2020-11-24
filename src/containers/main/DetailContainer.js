@@ -1,7 +1,7 @@
 /*global Kakao*/
 
-import React,{useState,useEffect} from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useState, /* useEffect */ } from 'react';
+import { useHistory } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
@@ -19,7 +19,7 @@ import guid_icon from '../../static/asset/svg/detail/guid.svg';
 import roadview_icon from '../../static/asset/svg/detail/roadview.svg';
 import shared_icon from '../../static/asset/svg/detail/shared.svg';
 import datepicker_icon from '../../static/asset/svg/detail/time_filter.svg';
-import { ButtonBase ,IconButton} from '@material-ui/core';
+import { ButtonBase, IconButton } from '@material-ui/core';
 import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
@@ -34,23 +34,23 @@ const cx = cn.bind(styles);
 //     },
 // ];
 
-const DetailContainer = ({modal}) => {
-    
+const DetailContainer = ({ modal }) => {
+
     const [index, setIndex] = useState(0);
     const history = useHistory();
 
 
-     const onClickKakaoNavi =()=>{
-         Kakao.Navi.start({
+    const onClickKakaoNavi = () => {
+        Kakao.Navi.start({
             name: "현대백화점 판교점",
             x: 127.11205203011632,
             y: 37.39279717586919,
             coordType: 'wgs84'
         });
-     }
+    }
 
 
-    //  const createKakaoButton = () => {
+    // const createKakaoButton = () => {
     //     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
     //     if (Kakao) {
 
@@ -93,10 +93,10 @@ const DetailContainer = ({modal}) => {
     // }
     return (
         <div className={styles['wrapper']}>
-            <IconButton className={styles['back']} onClick={()=>history.goBack()}>
+            <IconButton className={styles['back']} onClick={() => history.goBack()}>
                 <Arrow white={true}></Arrow>
             </IconButton>
-                  {/* <button id="kakao-link-btn">
+            {/* <button id="kakao-link-btn">
         <img src={shared_icon} alt="kakao-share-icon" />
       </button> */}
             <div className={styles['parking-img']}>
@@ -116,14 +116,14 @@ const DetailContainer = ({modal}) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} txt={"공유"}/>
+                            <CircleButton src={shared_icon} txt={"공유"} />
                             <CircleButton src={guid_icon} txt={"안내"} onClick={
-                                ()=>{
-                                    history.push(Paths.main.detail+'/nav');
+                                () => {
+                                    history.push(Paths.main.detail + '/nav');
                                     onClickKakaoNavi();
                                 }
-                                }/>
-                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={() =>history.push(Paths.main.detail +'/roadview')}/>
+                            } />
+                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={() => history.push(Paths.main.detail + '/roadview')} />
                         </div>
                     </div>
                 </div>
@@ -141,11 +141,11 @@ const DetailContainer = ({modal}) => {
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
                             10/5(수)14:00 ~ 10/5(수)16:00
-                            <ButtonBase className={styles['date-picker']} onClick={()=>history.push(Paths.main.detail+'/datepicker')}>
-                            <img src={datepicker_icon} alt="date"/>
-                        </ButtonBase>
+                            <ButtonBase className={styles['date-picker']} onClick={() => history.push(Paths.main.detail + '/datepicker')}>
+                                <img src={datepicker_icon} alt="date" />
+                            </ButtonBase>
                         </div>
-                     
+
                     </div>
                     <div className={cx('operation-time', 'space-between')}>
                         <div className={styles['txt']}>운영시간</div>
@@ -182,19 +182,19 @@ const DetailContainer = ({modal}) => {
                             />
                         </div>
                     )}
-                    {index===1 &&
-                    <div className={styles['review-list']}>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                        <DetailReviewItem/>
-                    </div>
+                    {index === 1 &&
+                        <div className={styles['review-list']}>
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                            <DetailReviewItem />
+                        </div>
                     }
                 </div>
             </div>
-            <DatePickerModal open ={modal==="datepicker"} handleClose ={ ()=>history.goBack()}/>
-            <LikeButton  button_name={'12,000원 대여신청'} disable={false} />
-            <RoadviewModal open ={modal==="roadview"}handleClose ={ ()=>history.goBack()} title={"길동이 주차장"}/>
+            <DatePickerModal open={modal === "datepicker"} handleClose={() => history.goBack()} />
+            <LikeButton button_name={'12,000원 대여신청'} disable={false} />
+            <RoadviewModal open={modal === "roadview"} handleClose={() => history.goBack()} title={"길동이 주차장"} />
         </div>
     );
 };

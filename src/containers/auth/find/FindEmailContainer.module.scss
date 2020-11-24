@@ -1,0 +1,14 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    padding: $padding;
+
+    @include container($pd-top);
+
+    .title{
+        font-size: 14px;
+        color: #999999;
+        margin-top: 28px;
+        margin-bottom: 8px;
+    }
+}

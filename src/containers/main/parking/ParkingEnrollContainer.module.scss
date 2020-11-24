@@ -3,13 +3,13 @@
 .parking-enroll-container {
     @include container($pd-top);
     padding-bottom: 133px;
-    .parking-enroll-area{
+    .parking-enroll-area {
         padding: $padding-side;
     }
-    .bar{
+    .bar {
         width: 100%;
         height: 16px;
-        background-color: #F4F4F4;
+        background-color: #f4f4f4;
     }
     .title {
         margin: 29px 0px;
@@ -42,57 +42,46 @@
             }
         }
     }
-    .schedule-wrapper{
+    .schedule-wrapper {
         margin-bottom: 18px;
-        .schedule-title{
+        .schedule-title {
             font-size: 12px;
             font-weight: bold;
             margin-bottom: 5px;
         }
-        .select-time{
+        .select-time {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            .select-wrapper{
-                position: relative;
-                width: 30%;
+            .select-list {
                 margin-right: 10px;
                 height: 48px;
-                border: 1px solid #EBEBEB;
+                border: 1px solid #ebebeb;
                 line-height: 48px;
-                &:first-child{
-                    width: 40%;
+                font-size: 16px;
+                padding: 0 12px;
+                width: 100%;
+                &:first-child {
+                    width: 150%;
                 }
-                &:last-child{
+                &:last-child {
                     margin-right: 0;
                 }
-                .select-list{
-                    font-size: 16px;
-                    padding: 0 12px;
-                    width: 100%;
-                }
-                svg{
-                    position: absolute;
-                    top: 50%;
-                    right: 12px;
-                    transform: translateY(-50%);
-                }
             }
-            
         }
     }
 
-    .title-wrapper{
+    .title-wrapper {
         display: flex;
         justify-content: space-between;
         margin-bottom: 20px;
-        .important-wrapper{
+        .important-wrapper {
             margin-top: 29px;
-            .important{
+            .important {
                 display: flex;
                 align-items: center;
                 padding: 3px 0px;
-                .explain{
+                .explain {
                     margin-left: 5px;
                     line-height: 16px;
                 }

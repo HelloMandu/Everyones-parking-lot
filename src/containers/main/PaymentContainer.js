@@ -1,6 +1,5 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Dialog, Slide } from '@material-ui/core';
 
 import useInput from '../../hooks/useInput';
 import { numberFormat } from '../../lib/formatter';
@@ -75,10 +74,6 @@ const Price = () => {
     );
 };
 
-const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
 const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
 
 const enroll = [
@@ -94,13 +89,19 @@ const enroll = [
     },
 ];
 
-const ParkingEnrollContainer = () => {
+const ParkingEnrollContainer = ({ match }) => {
+    const { url, params } = match;
     const history = useHistory();
-    const [isOpenCoupon, openCouponModal] = useModal(Paths.main.payment.coupon);
-    const [isOpenPayment, OpenPayment] = useModal(Paths.main.payment.type, [
-        Paths.main.payment.type,
-        Paths.main.payment.enrollment,
-    ]);
+    const [isOpenCouponModal, openCouponModal] = useModal(
+        url,
+        params.modal,
+        'coupon',
+    );
+    const [isOpenTypeModal, openTypeModal] = useModal(
+        url,
+        params.modal,
+        'type',
+    );
     return (
         <>
             <div className={styles['parking-payment-container']}>
@@ -112,14 +113,12 @@ const ParkingEnrollContainer = () => {
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'쿠폰 할인'}</div>
+
                         <div
-                            className={styles['verify-coupon']}
+                            className={styles['coupon']}
                             onClick={openCouponModal}
                         >
-                            <div className={styles['coupon']} name="coupon">
-                                오픈 이벤트 10% 할인 이벤트 쿠폰
-                            </div>
-                            <ArrowSmall rotate={180}></ArrowSmall>
+                            오픈 이벤트 10% 할인 이벤트 쿠폰
                         </div>
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
@@ -131,16 +130,13 @@ const ParkingEnrollContainer = () => {
                 <div className={styles['parking-payment-area']}>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>결제수단</div>
-                        <div className={styles['verify-payment']}>
                             <div
                                 className={styles['payment']}
                                 name="payment"
-                                onClick={OpenPayment}
+                                onClick={openTypeModal}
                             >
                                 카카오페이
                             </div>
-                            <ArrowSmall rotate={90}></ArrowSmall>
-                        </div>
                     </div>
                 </div>
                 <Price></Price>
@@ -156,20 +152,11 @@ const ParkingEnrollContainer = () => {
                 disable={false}
                 onClick={() => history.push(Paths.main.payment_complete)}
             ></FixedButton>
-            <Dialog
-                fullScreen
-                open={isOpenCoupon}
-                TransitionComponent={Transition}
-            >
-                <EnrollCouponModal></EnrollCouponModal>
-            </Dialog>
-            <Dialog
-                fullScreen
-                open={isOpenPayment}
-                TransitionComponent={Transition}
-            >
-                <PaymentTypeModal></PaymentTypeModal>
-            </Dialog>
+            <EnrollCouponModal open={isOpenCouponModal}></EnrollCouponModal>
+            <PaymentTypeModal
+                open={isOpenTypeModal}
+                match={match}
+            ></PaymentTypeModal>
         </>
     );
 };
