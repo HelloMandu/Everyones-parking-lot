@@ -1,5 +1,8 @@
+/*global daum*/
 import React, { useCallback, useEffect, useState } from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
+
+import { requestGetAddressInfo } from '../../../api/place';
 
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
@@ -29,11 +32,31 @@ const BasicInfo = () => {
     const [parkingInfo, onChangeParkingInfo] = useForm({
         name: '',
         kind: '',
-        address: '',
-        addressDetail: '',
-        price: '',
     });
-    const { name, kind, address, addressDetail, price } = parkingInfo;
+    const { name, kind } = parkingInfo;
+
+    const [addressInfo, setAddressInfo] = useState(null);
+    const [address, setAddress] = useState('');
+    const [addressDetail, onChangeAddressDetail] = useInput('');
+    const [price, onChangePrice] = useInput('');
+
+    const getAddressInfo = async (address) =>{
+        const response = await requestGetAddressInfo(address);
+        if(response.data.documents){
+            setAddressInfo(response.data.documents[0]);
+        }
+    }
+
+    const onClickAddressSearch = useCallback(() => {
+        daum.postcode.load(() => {
+            new daum.Postcode({
+                oncomplete: (data) => {
+                    setAddress(data.address);
+                    getAddressInfo(data.address);
+                },
+            }).open();
+        });
+    }, []);
 
     return (
         <div className={styles['parking-enroll-area']}>
@@ -60,16 +83,20 @@ const BasicInfo = () => {
                 value={address}
                 name={'address'}
                 placeholder={'주차장 주소를 입력해주세요'}
-                onChange={onChangeParkingInfo}
             ></InputBox>
-            <ButtonBase className={styles['button']}>주소찾기</ButtonBase>
+            <ButtonBase
+                className={styles['button']}
+                onClick={onClickAddressSearch}
+            >
+                주소찾기
+            </ButtonBase>
             <InputBox
                 className={'input-box'}
                 type={'text'}
                 value={addressDetail}
                 name={'addressDetail'}
                 placeholder={'상세 주소를 입력해주세요'}
-                onChange={onChangeParkingInfo}
+                onChange={onChangeAddressDetail}
             ></InputBox>
             <div className={styles['per-price']}>
                 <div className={styles['per']}>30분당</div>
@@ -80,7 +107,7 @@ const BasicInfo = () => {
                         value={price}
                         name={'price'}
                         placeholder={'30분당 주차가격을 입력하세요'}
-                        onChange={onChangeParkingInfo}
+                        onChange={onChangePrice}
                     ></InputBox>
                     <span>원</span>
                 </div>
