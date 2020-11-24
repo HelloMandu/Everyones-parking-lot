@@ -13,7 +13,7 @@ import DialogContainer from './containers/assets/DialogContainer';
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
-import { requestGetUserInfo } from './api/user';
+// import { requestGetUserInfo } from './api/user';
 
 const App = () => {
     const location = useLocation();

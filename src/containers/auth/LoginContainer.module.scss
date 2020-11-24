@@ -5,7 +5,7 @@
 
     .logo{
         height: 275px;
-        margin-bottom: 274px;
+        margin-bottom: 115px;
         
         & > svg{
             width: 230px;
@@ -16,10 +16,20 @@
         }
     }
 
+    .background{
+        & > img{
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            vertical-align: bottom;
+            width: 100%;
+        }
+    }
+
     .area{
         height: 323px;
         position: relative;
-        padding: 0 $padding;
+        padding: 41px $padding 0;
         border: none;
 
         .button{
@@ -37,5 +47,12 @@
                 margin-right: 12px;
             }
         }
+    }
+
+    & > img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
     }
 }
