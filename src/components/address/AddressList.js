@@ -12,7 +12,7 @@ import address_icon from '../../static/asset/svg/main/address.svg';
 */
 const AddressItem = ({ jibunAddr, roadAddr, distance, onClick }) => {
     return (
-        <ButtonBase className={styles['address-item']}>
+        <ButtonBase className={styles['address-item']} onClick={onClick}>
             <div className={styles['icon']}>
                 <img src={address_icon} alt={jibunAddr} />
             </div>
@@ -39,7 +39,7 @@ export default ({addr_list,onClick})=>{
             roadAddr={addr.roadAddr}
             post_num={addr.zipNo}
             distance={addr.distance}
-            onClick={() => onClick(addr.jibunAddr, addr.zipNo, index)}
+            onClick={() => onClick(addr.jibunAddr)}
         />
     ))
     return(

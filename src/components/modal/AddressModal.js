@@ -1,6 +1,9 @@
-import React ,{useEffect,useState,useCallback, useRef}from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+/*global kakao*/
 
+import React ,{useEffect,useState,useCallback, useRef}from 'react';
+import {useSelector , useDispatch} from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import {useHistory} from 'react-router-dom';
 //styles
 
 import cn from 'classnames/bind';
@@ -24,7 +27,11 @@ import space_zone from '../../static/asset/png/space_zone.png';
 
 //api
 import {requestAddress} from '../../api/address';
-import { set_level } from '../../store/user_position';
+
+//action
+import {set_arrive,set_address} from '../../store/user_position';
+import { Paths } from '../../paths';
+
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -72,6 +79,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AddressModal = (props) => {
     
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const {address} = useSelector((state) =>state.user_position);
     const [search , setSearch] = useState('');
     const [isSearch, setIsSearch]  = useState(false);
     const [space_list , setSpaceList] =useState([]); 
@@ -107,6 +117,35 @@ const AddressModal = (props) => {
             callGetAddressSearch();
         }
     },[callGetAddressSearch,isSearch])
+
+    const onClickAddressItem =(jibun)=>{
+        console.log(jibun);
+
+        try {
+            var geocoder = new kakao.maps.services.Geocoder();
+            var lat, lng;
+            //선택한 주소의 좌표정보 받아오기
+            geocoder.addressSearch(jibun, async function (
+                result,
+                status,
+            ) {
+                // 정상적으로 검색이 완료됐으면
+                if (status === kakao.maps.services.Status.OK) {
+                    lat = result[0].y;
+                    lng = result[0].x;
+                    dispatch(set_address(jibun));
+                    dispatch(set_arrive({lat,lng}));
+                    history.replace(Paths.main.index);
+                }
+                //검색이 완료되지 않앗으면.
+                else {
+                    console.log('검색 실패');
+                }
+            });
+        } catch (e) {
+            
+        }
+    }
 
     return (
         <Dialog
@@ -161,7 +200,7 @@ const AddressModal = (props) => {
                     )}
                     {search.length !== 0 && (
                         <>
-                        <AddressList addr_list={addr_list} />
+                        <AddressList addr_list={addr_list} onClick={onClickAddressItem}/>
                         </>
                     )}
                 </div>
