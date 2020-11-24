@@ -1,5 +1,5 @@
-import React from 'react';
-import { ButtonBase } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ButtonBase, IconButton } from '@material-ui/core';
 
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
@@ -8,6 +8,7 @@ import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
 import Information from '../../../static/asset/svg/Information';
+import Delete from '../../../static/asset/svg/parking/Delete';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
@@ -35,7 +36,7 @@ const BasicInfo = () => {
     const { name, kind, address, addressDetail, price } = parkingInfo;
 
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>주차장 기본 정보</div>
             <InputBox
                 className={'input-box'}
@@ -84,7 +85,7 @@ const BasicInfo = () => {
                     <span>원</span>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
@@ -109,8 +110,9 @@ const OperatingTime = () => {
             {parseInt(minute / 10) === 0 ? `0${minute}` : minute}분
         </option>
     ));
+    console.log(startTime);
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>운영시간</div>
             <div className={styles['schedule-wrapper']}>
                 <div className={styles['schedule-title']}>운영 시작 시간</div>
@@ -152,14 +154,14 @@ const OperatingTime = () => {
                     </select>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
 const ExtraInfo = () => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>추가정보</div>
             <InputBox
                 className={'input-box'}
@@ -169,13 +171,61 @@ const ExtraInfo = () => {
                 placeholder={'주차 공간에 대한 추가적인 설명을 작성해주세요'}
                 onChange={onChangeExtraInfo}
             ></InputBox>
+        </div>
+    );
+};
+
+const FileItem = ({ file, onDelete }) => {
+    const [imgFile, setImgFile] = useState(null);
+    useEffect(() => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result;
+            if (base64) {
+                setImgFile(base64.toString());
+            }
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }, [file]);
+    return (
+        <>
+            {imgFile && (
+                <div className={styles['file-item']}>
+                    <img
+                        className={styles['file-image']}
+                        src={imgFile}
+                        alt="file"
+                    />
+                    <IconButton
+                        className={styles['file-delete']}
+                        onClick={onDelete}
+                    >
+                        <Delete />
+                    </IconButton>
+                </div>
+            )}
         </>
     );
 };
 
 const ParkingPicture = () => {
+    const [fileList, setFileList] = useState([]); //파일
+    const onChangeFileList = useCallback((e) => {
+        const { files } = e.target;
+        const newFileList = [];
+        for (let i = 0; i < files.length; i++) {
+            newFileList.push({ id: i + 1, file: files[i] });
+        }
+        setFileList(newFileList);
+    }, []);
+    const handleDeleteFile = useCallback(
+        (id) => setFileList(fileList.filter((file) => file.id !== id)),
+        [fileList],
+    );
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
                 <div className={styles['title']}>주차공간 사진</div>
                 <div className={styles['important-wrapper']}>
@@ -193,10 +243,33 @@ const ParkingPicture = () => {
                     </div>
                 </div>
             </div>
-            <ButtonBase className={styles['button']}>
-                <span className={styles['plus']}>+</span>사진추가
-            </ButtonBase>
-        </>
+            <div className="file-wrapper">
+                <ButtonBase className={styles['button']}>
+                    <label htmlFor="file-setter">
+                        <span className={styles['plus']}>+</span>사진추가
+                    </label>
+                </ButtonBase>
+                <input
+                    id="file-setter"
+                    className={styles['input-files']}
+                    onChange={onChangeFileList}
+                    multiple="multiple"
+                    type="file"
+                    accept="image/gif, image/jpeg, image/png, image/svg"
+                    formEncType="multipart/form-data"
+                />
+                <ul className={styles['file-list']}>
+                    {fileList.map(({ id, file }) => (
+                        <li key={id}>
+                            <FileItem
+                                file={file}
+                                onDelete={() => handleDeleteFile(id)}
+                            ></FileItem>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 };
 
@@ -204,20 +277,12 @@ const ParkingEnrollContainer = () => {
     return (
         <>
             <div className={styles['parking-enroll-container']}>
-                <div className={styles['parking-enroll-area']}>
-                    <BasicInfo></BasicInfo>
-                </div>
+                <BasicInfo></BasicInfo>
                 <div className={styles['bar']} />
-                <div className={styles['parking-enroll-area']}>
-                    <OperatingTime></OperatingTime>
-                </div>
+                <OperatingTime></OperatingTime>
                 <div className={styles['bar']} />
-                <div className={styles['parking-enroll-area']}>
-                    <ExtraInfo></ExtraInfo>
-                </div>
-                <div className={styles['parking-enroll-area']}>
-                    <ParkingPicture></ParkingPicture>
-                </div>
+                <ExtraInfo></ExtraInfo>
+                <ParkingPicture></ParkingPicture>
             </div>
             <FixedButton button_name={'작성완료'}></FixedButton>
         </>

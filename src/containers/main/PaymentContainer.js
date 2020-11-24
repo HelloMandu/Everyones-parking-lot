@@ -16,8 +16,6 @@ import FixedButton from '../../components/button/FixedButton';
 import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
 
-import ArrowSmall from '../../static/asset/svg/ArrowSmall';
-
 import styles from './PaymentContainer.module.scss';
 import useModal from '../../hooks/useModal';
 
