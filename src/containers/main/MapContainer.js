@@ -52,8 +52,8 @@ const MapContainer = ({ modal }) => {
     ); //마지막 좌표 및 레벨
 
     let position_ref = useRef({
-        lat: 37.6219752405506,
-        lng: 127.16017523675508,
+        lat: 35.1158949746728,
+        lng: 128.966901860943,
     }); //지도 첫렌더시 좌표
     let level_ref = useRef(5); // 디폴트 레벨
     let view_ref = useRef(false); // 슬라이드 여부
@@ -223,7 +223,6 @@ const MapContainer = ({ modal }) => {
     }, [dispatch]);
 
 
-    //commit test
     // useEffect(()=>{
     //     const lat1 = markerdata[0].lat;
     //     const lng1 =markerdata[0].lng;
@@ -328,10 +327,10 @@ const MapContainer = ({ modal }) => {
 
 const markerdata = [
     {
-        title: '콜드스퀘어',
+        title: '승학주차장',
         distance: 300,
-        lat: 37.62197524055062,
-        lng: 127.16017523675508,
+        lat: 35.1158949746728,
+        lng: 128.966901860943,
     },
     {
         title: '하남돼지집',

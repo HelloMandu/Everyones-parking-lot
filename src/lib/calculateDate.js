@@ -43,7 +43,7 @@ export const getDateRange = (start, end) => {
             DAY : month + '/' + date +' '+week[day],
             DATE : new Date(`${ss_day.getFullYear()}-${month}-${date }`),
         }
-        res_day.push(month + '/' + date +' '+week[day]);
+        res_day.push(obj);
         ss_day.setDate(ss_day.getDate() + 1);
     }
     return res_day;
