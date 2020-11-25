@@ -91,10 +91,11 @@ export const requestPostEnrollParking = async (
         lng,
         place_name,
         place_comment,
-        place_img,
+        place_images,
         place_fee,
         oper_start_time,
         oper_end_time,
+        place_type
     },
 ) => {
     /*
@@ -125,18 +126,19 @@ export const requestPostEnrollParking = async (
         lng,
         place_name,
         place_comment,
-        place_img,
+        place_images,
         place_fee,
         oper_start_time,
         oper_end_time,
+        place_type
     });
     const URL = Paths.api + 'api/place';
-    const response = await axios.post(URL, {
+    const options = {
         headers: {
-            authorization: `Bearer ${JWT_TOKEN}`,
-        },
-        formData,
-    });
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        }
+    };
+    const response = await axios.post(URL, formData, options);
 
     return response;
 };
