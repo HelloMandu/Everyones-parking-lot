@@ -25,6 +25,7 @@ import like_img from '../../static/asset/svg/main/like.svg';
 import MarkerImg from '../../static/asset/svg/main/marker2.svg';
 import UserMakerImg from '../../static/asset/svg/main/arrive_marker.svg';
 import Location_img from '../../static/asset/svg/main/location.svg';
+import MyLocaiton_img from '../../static/asset/svg/main/mylocation.svg';
 
 //componenst
 import Aside from '../../components/aside/Aside';
@@ -93,6 +94,7 @@ const MapContainer = ({ modal }) => {
                 const lat = p.coords.latitude;
                 const lng = p.coords.longitude;
                 setCoordinates(lat, lng);
+                createMyLocationMarker(lat,lng);
             } catch (e) {
                 if (e.code === 3) {
                     //요청 시간 초과
@@ -103,6 +105,23 @@ const MapContainer = ({ modal }) => {
             }
         }
     };
+
+    const createMyLocationMarker =(lat,lng)=>{
+        const imageSrc = MyLocaiton_img;
+        const imageSize = new kakao.maps.Size(22, 22); // 마커이미지의 크기입니다
+        const imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption,
+        );
+        const markerPosition = new kakao.maps.LatLng(lat, lng);
+        const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+        });
+        marker.setMap(kakao_map.current);
+    }
 
     // 도착지 마커를 생성하는 함수.
     const createArriveMarker = () => {

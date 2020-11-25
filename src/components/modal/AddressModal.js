@@ -27,6 +27,7 @@ import space_zone from '../../static/asset/png/space_zone.png';
 
 //api
 import {requestAddress} from '../../api/address';
+import {requestGetAddressInfo} from '../../api/place';
 
 //action
 import {set_arrive,set_address} from '../../store/user_position';
@@ -81,6 +82,8 @@ const AddressModal = (props) => {
     
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const [index ,setIndex] =useState(0);
     const {address} = useSelector((state) =>state.user_position);
     const [search , setSearch] = useState('');
     const [isSearch, setIsSearch]  = useState(false);
@@ -118,32 +121,16 @@ const AddressModal = (props) => {
         }
     },[callGetAddressSearch,isSearch])
 
-    const onClickAddressItem =(jibun)=>{
-        console.log(jibun);
-
-        try {
-            var geocoder = new kakao.maps.services.Geocoder();
-            var lat, lng;
-            //선택한 주소의 좌표정보 받아오기
-            geocoder.addressSearch(jibun, async function (
-                result,
-                status,
-            ) {
-                // 정상적으로 검색이 완료됐으면
-                if (status === kakao.maps.services.Status.OK) {
-                    lat = result[0].y;
-                    lng = result[0].x;
-                    dispatch(set_address(jibun));
-                    dispatch(set_arrive({lat,lng}));
-                    history.replace(Paths.main.index);
-                }
-                //검색이 완료되지 않앗으면.
-                else {
-                    console.log('검색 실패');
-                }
-            });
-        } catch (e) {
-            
+    const onClickAddressItem =async (jibun)=>{
+        try{
+            const res =await requestGetAddressInfo(jibun);
+            const {x,y,address_name,building_name} = res.data.documents[0].road_address;
+            dispatch(set_address(address_name+' ' + building_name));
+            dispatch(set_arrive({lat : y,lng : x}));
+            history.replace(Paths.main.index);
+        }  
+        catch(e){
+            console.error(e);
         }
     }
 
@@ -177,12 +164,12 @@ const AddressModal = (props) => {
                     {search.length === 0 && (
                         <>
                             <div className={styles['distance-list']}>
-                                <DistanceItem on={true}></DistanceItem>
-                                <DistanceItem on={false}></DistanceItem>
-                                <DistanceItem on={false}></DistanceItem>
+                                <DistanceItem on={index===0} onClick={()=>setIndex(0)} distance={'100m'}/>
+                                <DistanceItem on={index===1}onClick={()=>setIndex(1)} distance={'300m'}/>
+                                <DistanceItem on={index===2}onClick={()=>setIndex(2)} distance ={'1km' }/>
                             </div>
                             <p>최근 이용 스페이스 존</p>
-                            <div className={styles['item-list']}>
+                            <div className={styles['space-list']}>
                                 <AddressList addr_list={space_list} />
                             </div>
                             <div className={styles['event-zone']}>
@@ -209,10 +196,10 @@ const AddressModal = (props) => {
     );
 };
 
-const DistanceItem = ({ on }) => {
+const DistanceItem = ({ on,onClick ,distance}) => {
     return (
-        <ButtonBase className={cx('distance-item', { on })}>
-            100m 이내
+        <ButtonBase className={cx('distance-item', { on })} onClick={onClick}>
+            {distance} 이내
         </ButtonBase>
     );
 };
