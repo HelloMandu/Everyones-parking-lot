@@ -39,11 +39,11 @@ export const getDateRange = (start, end) => {
         let date = ss_day.getDate();
         date = date < 10 ? '0' + date : date;
         let day = ss_day.getDay();
-        // let obj ={
-        //     DAY : month + '/' + date +' '+week[day],
-        //     DATE : new Date(`${ss_day.getFullYear()}-${month}-${date }`),
-        // }
-        res_day.push(month + '/' + date + ' ' + week[day]);
+        let obj ={
+            DAY : month + '/' + date +' '+week[day],
+            DATE : new Date(`${ss_day.getFullYear()}-${month}-${date }`),
+        }
+        res_day.push(obj);
         ss_day.setDate(ss_day.getDate() + 1);
     }
     return res_day;

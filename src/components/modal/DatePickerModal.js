@@ -95,8 +95,8 @@ const DatePickerModal = (props) => {
     const [end_date, setEndDate] = useState(0);
 
     const day_list = date_list.map((data) => (
-        <SwiperSlide className={styles['swiper-slide']} key={data}>
-            <DateItem value={data} />
+        <SwiperSlide className={styles['swiper-slide']} key={data.DAY}>
+            <DateItem value={data.DAY} />
         </SwiperSlide>
     ));
     const hour_list = hour.map((h) => (
@@ -111,11 +111,13 @@ const DatePickerModal = (props) => {
     ));
 
     useEffect(() => {
-        const { start_day, start_hour, start_minute } = date_index;
-        const { end_day, end_hour, end_minute } = date_index;
-        setStateDate(date_list[start_day] + ' ' + hour[start_hour] + ':' + minute[start_minute]);
-        setEndDate(date_list[end_day] + ' ' + hour[end_hour] + ':' + minute[end_minute]);
-    }, [date_index]);
+        const {start_day,start_hour, start_minute} = date_index;
+        const {end_day,end_hour, end_minute} = date_index;
+        console.log(date_list[start_day]);
+        setStateDate(date_list[start_day].DAY+' ' + hour[start_hour]+ ':' + minute[start_minute]);
+        setEndDate(date_list[end_day].DAY+' ' + hour[end_hour]+ ':' + minute[end_minute]);
+    }, [date_index,date_list]);
+
 
     useEffect(() => {
         let start = new Date();
@@ -124,8 +126,10 @@ const DatePickerModal = (props) => {
         end.setMonth(start.getMonth() + 1);
         end.setDate(start.getDate());
         const res = getDateRange(start, end);
+        console.log(res);
         setDateList(res);
     }, []);
+  
 
 
     return (
