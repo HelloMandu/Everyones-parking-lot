@@ -56,3 +56,23 @@ select::-ms-expand {
     color:#777;
     pointer-events: none;
 }
+.arrive-overlay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 64px;
+    min-height: 32px;
+    font-size: 14px;
+    background-color: #555;
+    border-radius: 10px;
+    color:#fff;
+    font-weight: bold;
+    bottom:50px;
+    left:5px;
+    position: relative;
+    border-radius: 6px;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+}
