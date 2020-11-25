@@ -1,4 +1,5 @@
 import axios from 'axios';
+import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
@@ -115,9 +116,27 @@ export const requestPostEnrollParking = async (
 
         *응답: success / failure
     */
-
+    const formData = makeFormData({
+        addr,
+        addr_detail,
+        addr_extra,
+        post_num,
+        lat,
+        lng,
+        place_name,
+        place_comment,
+        place_img,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+    });
     const URL = Paths.api + 'api/place';
-    const response = await axios.post(URL);
+    const response = await axios.post(URL, {
+        headers: {
+            authorization: `Bearer ${JWT_TOKEN}`,
+        },
+        formData,
+    });
 
     return response;
 };

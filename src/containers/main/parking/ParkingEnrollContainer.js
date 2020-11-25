@@ -1,8 +1,16 @@
 /*global daum*/
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+    forwardRef,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
 
-import { requestGetAddressInfo } from '../../../api/place';
+import { requestGetAddressInfo, requestPostEnrollParking } from '../../../api/place';
+import { getDateRange } from '../../../lib/calculateDate';
 
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
@@ -15,48 +23,101 @@ import Delete from '../../../static/asset/svg/parking/Delete';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
-const perList = [];
-const hourList = [];
-const minuteList = [];
-for (let i = 1; i <= 6; i++) {
-    perList.push({ id: i, per: 30 * i });
-}
-for (let i = 0; i < 24; i++) {
-    hourList.push({ id: i, hour: i });
-}
-for (let i = 0; i < 60; i++) {
-    minuteList.push({ id: i + 1, minute: i });
-}
+const typeList = [
+    {
+        id: 0,
+        type: '주차타운',
+    },
+    {
+        id: 1,
+        type: '지하주차장',
+    },
+    {
+        id: 2,
+        type: '지상주차장',
+    },
+    {
+        id: 3,
+        type: '지정주차',
+    },
+];
 
-const BasicInfo = () => {
-    const [parkingInfo, onChangeParkingInfo] = useForm({
-        name: '',
-        kind: '',
-    });
-    const { name, kind } = parkingInfo;
+const BasicInfo = forwardRef(({ setCheck }, ref) => {
+    const [name, onChangeName, checkName] = useInput(
+        '',
+        (state) => state.length > 0,
+    );
+    const [type, onChangeType] = useInput('');
+    const [address, setAddress] = useState(
+        ''
+    );
+    const [postNum, setPostNum] = useState();
+    const [addressDetail, onChangeAddressDetail, checkAddressDetail] = useInput(
+        '',
+        (state) => state.length > 0,
+    );
+    const [lat, setLat] = useState();
+    const [lng, setLng] = useState();
+    const [price, onChangePrice, checkPrice] = useInput(
+        '',
+        (state) => state.length > 0,
+    );
 
-    const [addressInfo, setAddressInfo] = useState(null);
-    const [address, setAddress] = useState('');
-    const [addressDetail, onChangeAddressDetail] = useInput('');
-    const [price, onChangePrice] = useInput('');
-
-    const getAddressInfo = async (address) =>{
-        const response = await requestGetAddressInfo(address);
-        if(response.data.documents){
-            setAddressInfo(response.data.documents[0]);
-        }
-    }
+    const getAddressInfo = useCallback(
+        async (address) => {
+            const response = await requestGetAddressInfo(address);
+            if (response.data.documents) {
+                const {
+                    address_name,
+                    x: lng,
+                    y: lat,
+                } = response.data.documents[0];
+                setAddress(address_name);
+                setLat(lat);
+                setLng(lng);
+            }
+        },
+        [setAddress],
+    );
 
     const onClickAddressSearch = useCallback(() => {
         daum.postcode.load(() => {
             new daum.Postcode({
                 oncomplete: (data) => {
-                    setAddress(data.address);
+                    setPostNum(data.zonecode);
                     getAddressInfo(data.address);
                 },
             }).open();
         });
-    }, []);
+    }, [getAddressInfo]);
+
+    const typeSelectList = typeList.map(({ id, type }) => (
+        <option className={styles['select-item']} key={id} value={id}>
+            {type}
+        </option>
+    ));
+
+    useImperativeHandle(ref, () => ({
+        name,
+        type,
+        address,
+        addressDetail,
+        lat, lng,
+        postNum,
+        price,
+    }));
+
+    useEffect(() => {
+        setCheck(
+            checkName && address.length > 0 && checkAddressDetail && checkPrice,
+        );
+    }, [
+        setCheck,
+        checkName,
+        address,
+        checkAddressDetail,
+        checkPrice,
+    ]);
 
     return (
         <div className={styles['parking-enroll-area']}>
@@ -67,16 +128,15 @@ const BasicInfo = () => {
                 value={name}
                 name={'name'}
                 placeholder={'주차 공간 이름을 입력해주세요'}
-                onChange={onChangeParkingInfo}
+                onChange={onChangeName}
             ></InputBox>
-            <InputBox
-                className={'input-box'}
-                type={'text'}
-                value={kind}
-                name={'kind'}
-                placeholder={'주차장 종류를 선택하세요'}
-                onChange={onChangeParkingInfo}
-            ></InputBox>
+            <select
+                className={styles['select-type']}
+                name="type"
+                onChange={onChangeType}
+            >
+                {typeSelectList}
+            </select>
             <InputBox
                 className={'input-box'}
                 type={'text'}
@@ -114,79 +174,120 @@ const BasicInfo = () => {
             </div>
         </div>
     );
-};
+});
 
-const OperatingTime = () => {
-    const [startTime, onChangeStartTime] = useForm({
-        per: '',
-        hour: '',
-        minute: '',
-    });
-    const perSelectList = perList.map(({ id, per }) => (
-        <option className={styles['select-item']} key={id} value={per}>
-            {per}분당
-        </option>
-    ));
-    const hourSelectList = hourList.map(({ id, hour }) => (
-        <option className={styles['select-item']} key={id} value={hour}>
-            {parseInt(hour / 10) === 0 ? `0${hour}` : hour}시
-        </option>
-    ));
-    const minuteSelectList = minuteList.map(({ id, minute }) => (
-        <option className={styles['select-item']} key={id} value={minute}>
-            {parseInt(minute / 10) === 0 ? `0${minute}` : minute}분
-        </option>
-    ));
-    console.log(startTime);
+const TimeSelector = ({ title, date, hour, minute, onChange }) => {
     return (
-        <div className={styles['parking-enroll-area']}>
-            <div className={styles['title']}>운영시간</div>
-            <div className={styles['schedule-wrapper']}>
-                <div className={styles['schedule-title']}>운영 시작 시간</div>
-                <div className={styles['select-time']}>
-                    <select
-                        className={styles['select-list']}
-                        name="per"
-                        onChange={onChangeStartTime}
-                    >
-                        {perSelectList}
-                    </select>
-                    <select
-                        className={styles['select-list']}
-                        name="hour"
-                        onChange={onChangeStartTime}
-                    >
-                        {hourSelectList}
-                    </select>
-                    <select
-                        className={styles['select-list']}
-                        name="minute"
-                        onChange={onChangeStartTime}
-                    >
-                        {minuteSelectList}
-                    </select>
-                </div>
-            </div>
-            <div className={styles['schedule-wrapper']}>
-                <div className={styles['schedule-title']}>운영 종료 시간</div>
-                <div className={styles['select-time']}>
-                    <select className={styles['select-list']} name="per">
-                        {perSelectList}
-                    </select>
-                    <select className={styles['select-list']} name="hour">
-                        {hourSelectList}
-                    </select>
-                    <select className={styles['select-list']} name="minute">
-                        {minuteSelectList}
-                    </select>
-                </div>
+        <div className={styles['schedule-wrapper']}>
+            <div className={styles['schedule-title']}>{title}</div>
+            <div className={styles['select-time']}>
+                <select
+                    className={styles['select-list']}
+                    name="day"
+                    onChange={onChange}
+                >
+                    {date}
+                </select>
+                <select
+                    className={styles['select-list']}
+                    name="hour"
+                    onChange={onChange}
+                >
+                    {hour}
+                </select>
+                <select
+                    className={styles['select-list']}
+                    name="minute"
+                    onChange={onChange}
+                >
+                    {minute}
+                </select>
             </div>
         </div>
     );
 };
 
-const ExtraInfo = () => {
+const OperatingTime = forwardRef((props, ref) => {
+    const [dateList, setDateList] = useState([]);
+    const [hourList, setHourList] = useState([]);
+    const [minuteList, setMinuteList] = useState([]);
+    const [startTime, onChangeStartTime] = useForm({
+        day: '',
+        hour: '',
+        minute: '',
+    });
+    const [endTime, onChangeEndTime] = useForm({
+        day: '',
+        hour: '',
+        minute: '',
+    });
+
+    const perSelectList = dateList.map((value, index) => (
+        <option className={styles['select-item']} key={index} value={value.DAY}>
+            {value.DAY}
+        </option>
+    ));
+    const hourSelectList = hourList.map((value, index) => (
+        <option className={styles['select-item']} key={index} value={value}>
+            {parseInt(value / 10) === 0 ? `0${value}` : value}시
+        </option>
+    ));
+    const minuteSelectList = minuteList.map((value, index) => (
+        <option className={styles['select-item']} key={index} value={value}>
+            {parseInt(value / 10) === 0 ? `0${value}` : value}분
+        </option>
+    ));
+
+    useImperativeHandle(ref, () => ({
+        startTime, endTime
+    }));
+
+    useEffect(() => {
+        const startDate = new Date();
+        const endDate = new Date(
+            startDate.getFullYear(),
+            startDate.getMonth() + 1,
+            startDate.getDate(),
+        );
+        setDateList(getDateRange(startDate, endDate));
+        const newHourList = [];
+        for (let i = 0; i < 24; i++) {
+            newHourList.push(i);
+        }
+        setHourList(newHourList);
+        const newMinuteList = [];
+        for (let i = 0; i < 60; i++) {
+            newMinuteList.push(i);
+        }
+        setMinuteList(newMinuteList);
+    }, []);
+
+    return (
+        <div className={styles['parking-enroll-area']}>
+            <div className={styles['title']}>운영시간</div>
+            <TimeSelector
+                title={'운영 시작 시간'}
+                date={perSelectList}
+                hour={hourSelectList}
+                minute={minuteSelectList}
+                onChange={onChangeStartTime}
+            />
+            <TimeSelector
+                title={'운영 종료 시간'}
+                date={perSelectList}
+                hour={hourSelectList}
+                minute={minuteSelectList}
+                onChange={onChangeEndTime}
+            />
+        </div>
+    );
+});
+
+const ExtraInfo = forwardRef((props, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
+    useImperativeHandle(ref, () => ({
+        extraInfo
+    }));
     return (
         <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>추가정보</div>
@@ -200,7 +301,7 @@ const ExtraInfo = () => {
             ></InputBox>
         </div>
     );
-};
+});
 
 const FileItem = ({ file, onDelete }) => {
     const [imgFile, setImgFile] = useState(null);
@@ -237,7 +338,7 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const ParkingPicture = () => {
+const ParkingPicture = forwardRef(({setCheck}, ref) => {
     const [fileList, setFileList] = useState([]); //파일
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
@@ -251,6 +352,12 @@ const ParkingPicture = () => {
         (id) => setFileList(fileList.filter((file) => file.id !== id)),
         [fileList],
     );
+    useImperativeHandle(ref, () => ({
+        fileList
+    }));
+    useEffect(()=>{
+        setCheck(fileList.length >= 2);
+    }, [setCheck, fileList])
     return (
         <div className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
@@ -298,20 +405,69 @@ const ParkingPicture = () => {
             </div>
         </div>
     );
-};
+});
 
 const ParkingEnrollContainer = () => {
+    const [checkAll, setCheckAll] = useState(false);
+    const [checkBasicInfo, setCheckBasicInfo] = useState(false);
+    const [checkParkingPicture, setCheckParkingPicture] = useState(false);
+
+    const basicInfo = useRef(null);
+    const operatingTime = useRef(null);
+    const extraInfo = useRef(null);
+    const parkingPicture = useRef(null);
+
+    useEffect(()=>{
+        setCheckAll(checkBasicInfo && checkParkingPicture);
+    }, [checkBasicInfo, checkParkingPicture])
+    const onClickEnrollParking = useCallback(async () =>{
+        if(checkAll){
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            // const response = await requestPostEnrollParking(
+            //     JWT_TOKEN,
+            //     {
+            //         addr: basicInfo.current.address,
+            //         addr_detail: basicInfo.current.addressDetail,
+            //         post_num: basicInfo.current.postNum,
+            //         lat: basicInfo.current.addressDetail.lat,
+            //         lng: basicInfo.current.addressDetail.lng,
+            //         place_name: basicInfo.current.name,
+            //         place_comment: extraInfo.current.extraInfo,
+            //         place_img: parkingPicture.current.fileList,
+            //         place_fee: basicInfo.current.price,
+            //         oper_start_time: operatingTime.current.startTime,
+            //         oper_end_time: operatingTime.current.endTime,
+            //     },
+                
+            // )
+            // console.log(response);
+            console.log(
+                JWT_TOKEN,
+                basicInfo.current.address,
+                basicInfo.current.addressDetail,
+                basicInfo.current.postNum,
+                basicInfo.current.lat,
+                basicInfo.current.lng,
+                basicInfo.current.name,
+                extraInfo.current.extraInfo,
+                parkingPicture.current.fileList,
+                basicInfo.current.price,
+                operatingTime.current.startTime, //
+                operatingTime.current.endTime, //
+            )
+        }
+    }, [checkAll])
     return (
         <>
             <div className={styles['parking-enroll-container']}>
-                <BasicInfo></BasicInfo>
+                <BasicInfo setCheck={setCheckBasicInfo} ref={basicInfo}></BasicInfo>
                 <div className={styles['bar']} />
-                <OperatingTime></OperatingTime>
+                <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
-                <ExtraInfo></ExtraInfo>
-                <ParkingPicture></ParkingPicture>
+                <ExtraInfo ref={extraInfo}></ExtraInfo>
+                <ParkingPicture setCheck={setCheckParkingPicture} ref={parkingPicture}></ParkingPicture>
             </div>
-            <FixedButton button_name={'작성완료'}></FixedButton>
+            <FixedButton button_name={'작성완료'} disable={!checkAll} onClick={onClickEnrollParking}></FixedButton>
         </>
     );
 };
