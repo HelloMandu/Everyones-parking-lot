@@ -1,3 +1,6 @@
+
+const week = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
+
 export const calculateDate = (date, term, type) => {
     const cal_date = new Date(date);
     switch (type) {
@@ -14,10 +17,11 @@ export const calculateDate = (date, term, type) => {
     }
 };
 
-const week = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
 
+
+// yyyy/mm/dd hh:mm  -> yyyy/mm/dd(화) hh:mm 로 포멧팅
 export const calculateDay = (date) => {
-    date = date.replace(/-/gi, '/'); // '2019/09/09 17:22'
+    date = date.replace(/-/gi, '/'); 
     var newArr = date.split(' ');
 
     const cal_date = new Date(date);
@@ -27,6 +31,19 @@ export const calculateDay = (date) => {
     return str;
 };
 
+//날짜를 yyyy-mm-dd 로 변환
+export const getFormatDate =(date)=>{
+    var year = date.getFullYear();
+    var month = (date.getMonth()+1);
+    var day= date.getDate();
+    month = month>=10 ? month : '0'+ month;
+    day = day>=10 ? day: '0' +day;
+    return year + '/'+month+'/'+day;
+
+}
+
+
+//시작날짜와 끝날짜에 대한 리스트 생성 11/24 (화) ~12/24(수)
 export const getDateRange = (start, end) => {
     let res_day = [];
     let ss_day = new Date(start);
@@ -41,7 +58,7 @@ export const getDateRange = (start, end) => {
         let day = ss_day.getDay();
         let obj ={
             DAY : month + '/' + date +' '+week[day],
-            DATE : new Date(`${ss_day.getFullYear()}-${month}-${date }`),
+            DATE : getFormatDate(new Date(`${ss_day.getFullYear()}-${month}-${date }`)),
         }
         res_day.push(obj);
         ss_day.setDate(ss_day.getDate() + 1);

@@ -113,9 +113,10 @@ const DatePickerModal = (props) => {
     useEffect(() => {
         const {start_day,start_hour, start_minute} = date_index;
         const {end_day,end_hour, end_minute} = date_index;
-        console.log(date_list[start_day]);
-        setStateDate(date_list[start_day].DAY+' ' + hour[start_hour]+ ':' + minute[start_minute]);
-        setEndDate(date_list[end_day].DAY+' ' + hour[end_hour]+ ':' + minute[end_minute]);
+        if(date_list.length!==0){
+            setStateDate(date_list[start_day].DAY+' ' + hour[start_hour]+ ':' + minute[start_minute]);
+            setEndDate(date_list[end_day].DAY+' ' + hour[end_hour]+ ':' + minute[end_minute]);
+        }
     }, [date_index,date_list]);
 
 
