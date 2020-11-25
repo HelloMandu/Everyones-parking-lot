@@ -222,6 +222,8 @@ const MapContainer = ({ modal }) => {
         };
     }, [dispatch]);
 
+
+    //commit test
     // useEffect(()=>{
     //     const lat1 = markerdata[0].lat;
     //     const lng1 =markerdata[0].lng;
