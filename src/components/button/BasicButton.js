@@ -12,9 +12,9 @@ const cx = cn.bind(styles);
 */
 
 
-const BasicButton =({button_name ,disable})=>{
+const BasicButton =({button_name ,disable, color})=>{
     return(
-        <ButtonBase className={cx('basic-button',{disable})}  disableRipple={disable}>
+        <ButtonBase className={cx('basic-button',{disable}, color)}  disableRipple={disable}>
             {button_name}
         </ButtonBase>
     )

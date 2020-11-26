@@ -6,6 +6,8 @@ import { ButtonBase } from '@material-ui/core';
 
 // import { Paths } from '../../../paths';
 
+import BasicButton from '../../../components/button/BasicButton';
+
 import styles from './UseDetailContainer.module.scss';
 
 import Parking from '../../../static/asset/png/parking.png';
@@ -42,7 +44,7 @@ const UseDetailContainer = ({ location }) => {
 
     return (
         <>
-            <div className={cx('container')}>
+            <div className={cx('container', 'top')}>
                 <div className={cx('title')}>길동이의 주차 공간</div>
                 <div className={cx('card')}>
                     <img src={Parking} alt="" />
@@ -90,29 +92,62 @@ const UseDetailContainer = ({ location }) => {
                 </div>
             </div>
 
-            <div className={cx("bar")} />
+            <div className={cx('bar')} />
 
-            {/* <div className={cx("container")}>
-                <div classNames={cx("discount-area")}>
-                    <div className={cx("discount-wrapper")}>할인 정보</div>
+            <div className={cx('container')}>
+                <div classNames={cx('discount-area')}>
+                    <div className={cx('discount-title')}>할인 정보</div>
                     <div className={cx('content-area')}>
                         <Info
-                            attribute={"사용 쿠폰"}
-                            value={"오픈 이벤트 10% 할인 쿠폰"}
+                            attribute={'사용 쿠폰'}
+                            value={'오픈 이벤트 10% 할인 쿠폰'}
                         />
                         <Info
-                            attribute={"쿠폰 할인"}
-                            value={"- 1,000원"}
+                            attribute={'쿠폰 할인'}
+                            value={'- 1,000원'}
                             black={true}
                         />
                         <Info
-                            attribute={"포인트 사용"}
-                            value={"- 1,000원"}
+                            attribute={'포인트 사용'}
+                            value={'- 1,000원'}
                             black={true}
                         />
                     </div>
                 </div>
-            </div> */}
+            </div>
+
+            <div className={cx('bar')} />
+
+            <div className={cx('container')}>
+                <div classNames={cx('discount-area')}>
+                    <div className={cx('discount-title')}>결제 정보</div>
+                    <div className={cx('content-area')}>
+                        <Info
+                            attribute={'결제 일시'}
+                            value={'2020-00-00 00:00:00'}
+                        />
+                        <Info
+                            attribute={'결제수단'}
+                            value={'카카오페이'}
+                            black={true}
+                        />
+                        <Info
+                            attribute={'결제금액'}
+                            value={'70,000원'}
+                            black={true}
+                        />
+                    </div>
+                </div>
+
+                <div className={cx('button-area')}>
+                    <BasicButton
+                        button_name={'대여 취소하기'}
+                        disable={false}
+                        color={'white'}
+                    />
+                    <BasicButton button_name={'연장 하기'} disable={false} />
+                </div>
+            </div>
         </>
     );
 };
