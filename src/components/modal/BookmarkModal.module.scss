@@ -4,10 +4,7 @@ html {
     body {
         :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: 4500 !important;
-        }
-        .dim {
-            z-index: $level2;
+            z-index: $level2 !important;
         }
     }
 }

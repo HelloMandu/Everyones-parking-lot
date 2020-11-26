@@ -15,7 +15,7 @@ const cx = cn.bind(styles);
 */
 
 
-const LikeButton = ({ button_name, disable, like, count }) => {
+const LikeButton = ({ button_name, disable, like, count ,onClick}) => {
     return (
         <div className={styles['like-button']}>
             <div className={styles['box']}>
@@ -23,7 +23,7 @@ const LikeButton = ({ button_name, disable, like, count }) => {
                     <Like />
                     <div className={styles['count']}> 122 </div>
                 </ButtonBase>
-                <ButtonBase className={cx('basic-button', { disable })} disableRipple={disable}>
+                <ButtonBase className={cx('basic-button', { disable })} disableRipple={disable} onClick={onClick}>
                     {button_name}
                 </ButtonBase>
             </div>
