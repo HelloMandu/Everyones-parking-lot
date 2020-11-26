@@ -1,12 +1,13 @@
-import React from 'react';
-// import qs from 'qs';
-// import { Link } from 'react-router-dom';
-import classNames from 'classnames/bind';
+import React, { useReducer } from 'react';
+import qs from 'qs';
+import { Link } from 'react-router-dom';
+import classnames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-// import { Paths } from '../../../paths';
+import { Paths } from '../../../paths';
 
 import BasicButton from '../../../components/button/BasicButton';
+import Refund from '../../../components/use/Refund'
 
 import styles from './UseDetailContainer.module.scss';
 
@@ -15,7 +16,7 @@ import Parking from '../../../static/asset/png/parking.png';
 import Tel from '../../../static/asset/svg/use/Tel';
 import MessageBox from '../../../static/asset/svg/use/MessageBox';
 
-const cx = classNames.bind(styles);
+const cx = classnames.bind(styles);
 
 const Info = ({ attribute, value, black }) => {
     return (
@@ -36,11 +37,21 @@ const Button = ({ name, children }) => {
 };
 
 const UseDetailContainer = ({ location }) => {
-    // const query = qs.parse(location.search, {
-    //     ignoreQueryPrefix: true,
-    // });
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
 
-    // const { id } = query;
+    const { id } = query;
+
+    const [modalState, dispatchHandle] = useReducer(
+        (state, action) => {
+            return {
+                ...state,
+                [action.type]: action.payload,
+            };
+        },
+        { refund: false },
+    );
 
     return (
         <>
@@ -95,7 +106,7 @@ const UseDetailContainer = ({ location }) => {
             <div className={cx('bar')} />
 
             <div className={cx('container')}>
-                <div classNames={cx('discount-area')}>
+                <div className={cx('discount-area')}>
                     <div className={cx('discount-title')}>할인 정보</div>
                     <div className={cx('content-area')}>
                         <Info
@@ -119,7 +130,7 @@ const UseDetailContainer = ({ location }) => {
             <div className={cx('bar')} />
 
             <div className={cx('container')}>
-                <div classNames={cx('discount-area')}>
+                <div className={cx('discount-area')}>
                     <div className={cx('discount-title')}>결제 정보</div>
                     <div className={cx('content-area')}>
                         <Info
@@ -140,14 +151,19 @@ const UseDetailContainer = ({ location }) => {
                 </div>
 
                 <div className={cx('button-area')}>
+                    <Link to={Paths.main.use.cancel + `?id=${id}`}>
                     <BasicButton
                         button_name={'대여 취소하기'}
                         disable={false}
                         color={'white'}
+                        onClick={() => dispatchHandle({type: 'refund', payload:true})}
                     />
                     <BasicButton button_name={'연장 하기'} disable={false} />
+                    </Link>
                 </div>
             </div>
+
+            <Refund open={modalState.refund} handleClose={() => dispatchHandle({type: 'refund', payload: false})} />
         </>
     );
 };
