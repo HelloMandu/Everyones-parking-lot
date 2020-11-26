@@ -193,7 +193,7 @@ const DetailContainer = ({ modal }) => {
                 </div>
             </div>
             <DatePickerModal open={modal === "datepicker"} handleClose={() => history.goBack()} />
-            <LikeButton button_name={'12,000원 대여신청'} disable={false} />
+            <LikeButton button_name={'12,000원 대여신청'} disable={false}  onClick= {()=>history.push(Paths.main.payment)} />
             <RoadviewModal open={modal === "roadview"} handleClose={() => history.goBack()} title={"길동이 주차장"} />
         </div>
     );

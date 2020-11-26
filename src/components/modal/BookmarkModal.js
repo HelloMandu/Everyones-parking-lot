@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
-import AddressItem from '../../components/address/AddressItem';
+import AddressList from '../address/AddressList';
 
 import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
@@ -72,11 +72,12 @@ const BookmarkModal = (props) => {
             <DialogContent className={classes.content}>
                 <div className={styles['container']}>
                     <div className={styles['item-list']}>
-                        <AddressItem />
-                        <AddressItem />
-                        <AddressItem />
-                        <AddressItem />
-                        <AddressItem />
+                    <AddressList addr_list ={[]}/>
+                        {/* <AddressList />
+                        <AddressList />
+                        <AddressList />
+                        <AddressList />
+                        <AddressList /> */}
                     </div>
                 </div>
             </DialogContent>
