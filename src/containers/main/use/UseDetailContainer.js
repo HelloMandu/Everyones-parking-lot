@@ -7,7 +7,7 @@ import { ButtonBase } from '@material-ui/core';
 import { Paths } from '../../../paths';
 
 import BasicButton from '../../../components/button/BasicButton';
-import Refund from '../../../components/use/Refund'
+import Refund from '../../../components/use/Refund';
 
 import styles from './UseDetailContainer.module.scss';
 
@@ -151,19 +151,29 @@ const UseDetailContainer = ({ location }) => {
                 </div>
 
                 <div className={cx('button-area')}>
-                    <Link to={Paths.main.use.cancel + `?id=${id}`}>
                     <BasicButton
                         button_name={'대여 취소하기'}
                         disable={false}
                         color={'white'}
-                        onClick={() => dispatchHandle({type: 'refund', payload:true})}
+                        onClick={() =>
+                            dispatchHandle({ type: 'refund', payload: true })
+                        }
                     />
-                    <BasicButton button_name={'연장 하기'} disable={false} />
+                    <Link to={Paths.main.use.extend + `?id=${id}`}>
+                        <BasicButton
+                            button_name={'연장 하기'}
+                            disable={false}
+                        />
                     </Link>
                 </div>
             </div>
 
-            <Refund open={modalState.refund} handleClose={() => dispatchHandle({type: 'refund', payload: false})} />
+            <Refund
+                open={modalState.refund}
+                handleClose={() =>
+                    dispatchHandle({ type: 'refund', payload: false })
+                }
+            />
         </>
     );
 };
