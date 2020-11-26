@@ -1,0 +1,46 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($header);
+    .data-area{
+        padding: $padding;
+        .text{
+            font-size: 1.167rem; // 14px;
+            font-weight: bold;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        .email-wrap{
+            margin-bottom: 12px;
+            &>input::placeholder{
+                font-size: 1.083rem; // 13px;
+                font-weight: 400; // Regular
+                color: #CCC;
+            }
+        }
+        .subject-wrap{
+            margin-bottom: 12px;
+            &>input::placeholder{
+                font-size: 1.083rem; // 13px;
+                font-weight: 400; // Regular
+                color: #CCC;
+            }
+        }
+        .question-wrap{
+            width: 100%;
+            margin-bottom: 40px;
+            .input-question{
+                padding: 15px 10px;
+                width: 100%; min-height: 120px;
+                border: none;
+                background-color: #F9F9F9;
+                resize: none;
+                &::placeholder{
+                    font-size: 1.167rem; // 14px;
+                    font-weight: 400; // Regular
+                    color: #CCC;
+                }
+            }
+        }
+    }
+}
