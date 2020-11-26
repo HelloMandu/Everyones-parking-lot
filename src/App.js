@@ -154,6 +154,10 @@ const App = () => {
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
         }
+        //1:1문의 상세보기 
+        else if (pathname === Paths.main.support.qna_detail) {
+            return <Header title={HeaderTitle.main.support.qna_detail} />;
+        }
         //1:1문의 작성
         else if (pathname === Paths.main.support.qna_write) {
             return <Header title={HeaderTitle.main.support.qna_write} />;

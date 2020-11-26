@@ -1,6 +1,75 @@
 @import '../../../static/stylesheets/Root.scss';
 
-
+.container{
+    padding-bottom: 80px;
+    &>a:last-child{
+        &>.item-area:last-child{
+            border-bottom: 1px solid #E9EBED;
+        }
+    }
+}
+html{
+    body{
+        .item-area{
+            width: 100%; height: 128px;
+            background-color: #FFF;
+            border-top: 1px solid #E9EBED;
+            border-left: 1px solid #E9EBED;
+            border-right: 1px solid #E9EBED;
+            padding: 0 $padding;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            .date{
+                font-size: 1.167rem; // 14px;
+                font-weight: 400; // Regular
+                color: #AAA;
+                margin-bottom: 12px;
+            }
+            .title{
+                font-size: 1.417rem; // 17px;
+                font-weight: 500; // Medium
+                color: #333;
+                margin-bottom: 18px;
+            }
+            .bottom{
+                display: flex;
+                .name{
+                    font-size: 1.167rem; // 14px;
+                    font-weight: 500; // Medium
+                    color: #333;
+                    padding-right: 10px;
+                    border-right: 2px solid #EBEBEB;
+                }
+                .count{
+                    font-size: 1.167rem; // 14px;
+                    font-weight: 400; // Regular
+                    color: #777;
+                    padding-left: 10px;
+                }
+            }
+            .button{
+                width: 80px; height: 32px;
+                position: absolute;
+                top: 50%; right: $padding;
+                transform: translateY(-50%);
+                background-color: #E9EBED;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.083rem; // 13px;
+                font-weight: 500; // Medium
+                color: #777;
+                &.status{
+                    background-color: #222;
+                    color: #FFF;
+                }
+            }
+        }
+    }
+}
 .header-container{
     width: 100%; height: 56px;
     background-color: #F7F8F9;
