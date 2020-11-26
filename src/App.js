@@ -7,19 +7,19 @@ import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
 import ErrorPage from './pages/ErrorPage';
 
-// import DialogContainer from './containers/assets/DialogContainer';
+import DialogContainer from './containers/assets/DialogContainer';
 // import LoadingContainer from './containers/assets/LoadingContainer';
 
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
+// import { requestGetUserInfo } from './api/user';
 
 const App = () => {
     const location = useLocation();
-
     useEffect(() => {
         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
-    }, [])
+    }, []);
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -61,22 +61,9 @@ const App = () => {
             return <Header title={HeaderTitle.auth.find.password_complete} />;
         }
         // 결제정보 확인
-        else if (pathname === Paths.main.payment.index) {
-            return <Header title={HeaderTitle.main.payment.index} />;
+        else if (pathname === Paths.main.payment) {
+            return <Header title={HeaderTitle.main.payment} />;
         }
-        // 결제정보 확인
-        else if (pathname === Paths.main.payment.enrollment) {
-            return <Header title={HeaderTitle.main.payment.enrollment} />;
-        }
-        // 적용 쿠폰 선택
-        else if (pathname === Paths.main.payment.coupon) {
-            return <Header title={HeaderTitle.main.payment.coupon} />;
-        }
-        // 결제 수단 선택
-        else if (pathname === Paths.main.payment.type) {
-            return <Header title={HeaderTitle.main.payment.type} />;
-        }
-
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
@@ -139,7 +126,7 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.enrollment) {
             return <Header title={HeaderTitle.main.mypage.update.enrollment} />;
         }
-        //생년월일 변경
+        //생년월일 변경 
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
@@ -185,6 +172,7 @@ const App = () => {
                 <Route path={Paths.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
+            <DialogContainer/>
         </div>
     );
 };

@@ -8,7 +8,11 @@ export const requestGetUserInfo = async (JWT_TOKEN) => {
     // * 응답: user: 유저 정보 Object
 
     const URL = Paths.api + "api/user";
-    const response = await axios.get(URL);
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
@@ -23,7 +27,9 @@ export const requestPostSignIn = async (email, password) => {
     // - 페이스북 로그인 요청 API(POST): /api/user/facebook
 
     const URL = Paths.api + "api/user/signin";
-    const response = await axios.post(URL);
+    const response = await axios.post(URL, {
+        email, password
+    });
 
     return response;
 };
@@ -38,7 +44,12 @@ export const requestPostAuth = async (email, name, password, birth, phone_number
     // * 응답: success / failure
 
     const URL = Paths.api + "api/user";
-    const response = await axios.post(URL);
+    const response = await axios.post(URL,{
+        headers:{
+            'Content-type': 'application/json; charset=utf-8',
+        },
+        email, name, password, birth, phone_number
+    });
 
     return response;
 };

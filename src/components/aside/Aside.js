@@ -95,17 +95,17 @@ const Aside = ({ open, handleClose }) => {
                     <LinkItem
                         src={SupportIcon}
                         link_name={'공지사항'}
-                        onClick={() => onClickItem(Paths.main.use.list)}
+                        onClick={() => onClickItem(Paths.main.support.notice)}
                     />
                     <LinkItem
                         src={QnAIcon}
                         link_name={'자주묻는질문'}
-                        onClick={() => onClickItem(Paths.main.use.list)}
+                        onClick={() => onClickItem(Paths.main.support.faq)}
                     />
                     <LinkItem
                         src={FaQIcon}
                         link_name={'1:1 문의'}
-                        onClick={() => onClickItem(Paths.main.use.list)}
+                        onClick={() => onClickItem(Paths.main.support.qna)}
                     />
                 </div>
             </div>

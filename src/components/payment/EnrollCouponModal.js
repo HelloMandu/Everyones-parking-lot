@@ -1,11 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, forwardRef } from 'react';
+import { Dialog, Slide } from '@material-ui/core';
 
 import Coupon from '../coupon/Coupon';
+import Header from '../header/Header';
 import FixedButton from '../button/FixedButton';
 
 import styles from './EnrollCouponModal.module.scss';
 
-const EnrollCouponContainer = () => {
+const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const EnrollCouponContainer = ({ open }) => {
     const [useCoupon, setUseCoupon] = useState(false);
     const [couponList, setCouponList] = useState([
         // {
@@ -59,13 +65,16 @@ const EnrollCouponContainer = () => {
     );
 
     return (
-        <div className={styles['enroll-coupon']}>
-            <Coupon list={couponList} onClick={onClickCoupon}></Coupon>
-            <FixedButton
-                button_name={'쿠폰적용'}
-                disable={!useCoupon}
-            ></FixedButton>
-        </div>
+        <Dialog fullScreen open={open} TransitionComponent={Transition}>
+            <Header title={'적용쿠폰선택'}></Header>
+            <div className={styles['enroll-coupon']}>
+                <Coupon list={couponList} onClick={onClickCoupon}></Coupon>
+                <FixedButton
+                    button_name={'쿠폰적용'}
+                    disable={!useCoupon}
+                ></FixedButton>
+            </div>
+        </Dialog>
     );
 };
 

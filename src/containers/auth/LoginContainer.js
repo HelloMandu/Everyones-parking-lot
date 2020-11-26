@@ -11,10 +11,10 @@ import styles from './LoginContainer.module.scss'
 import logo from '../../static/asset/png/logo.png'
 import background from '../../static/asset/png/auth_background.png'
 
-import Naver from '../../static/asset/svg/naver'
-import Kakao from '../../static/asset/svg/kakao'
-import Facebook from '../../static/asset/svg/facebook'
-import Email from '../../static/asset/svg/mail'
+import Naver from '../../static/asset/svg/auth/naver'
+import Kakao from '../../static/asset/svg/auth/kakao'
+import Facebook from '../../static/asset/svg/auth/facebook'
+import Email from '../../static/asset/svg/auth/mail'
 
 const cx = classNames.bind(styles)
 
