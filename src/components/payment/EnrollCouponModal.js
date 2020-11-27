@@ -14,38 +14,38 @@ const Transition = forwardRef((props, ref) => {
 const EnrollCouponContainer = ({ open }) => {
     const [useCoupon, setUseCoupon] = useState(false);
     const [couponList, setCouponList] = useState([
-        // {
-        //     cp_id: 1,
-        //     cp_subject: '첫 대여 할인쿠폰',
-        //     cp_start_date: '2020/11/15',
-        //     cp_end_date: '2021/11/15',
-        //     cp_price: 3000,
-        //     checked: false,
-        // },
-        // {
-        //     cp_id: 2,
-        //     cp_subject: '첫 대여 할인 쿠폰',
-        //     cp_start_date: '2020/11/15',
-        //     cp_end_date: '2021/11/15',
-        //     cp_price: 3000,
-        //     checked: false,
-        // },
-        // {
-        //     cp_id: 3,
-        //     cp_subject: '첫 대여 할인쿠폰',
-        //     cp_start_date: '2020/11/15',
-        //     cp_end_date: '2021/11/15',
-        //     cp_price: 3000,
-        //     checked: false,
-        // },
-        // {
-        //     cp_id: 4,
-        //     cp_subject: '첫 대여 할인쿠폰',
-        //     cp_start_date: '2020/11/15',
-        //     cp_end_date: '2021/11/15',
-        //     cp_price: 3000,
-        //     checked: false,
-        // },
+        {
+            cp_id: 1,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+        },
+        {
+            cp_id: 2,
+            cp_subject: '첫 대여 할인 쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+        },
+        {
+            cp_id: 3,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+        },
+        {
+            cp_id: 4,
+            cp_subject: '첫 대여 할인쿠폰',
+            cp_start_date: '2020/11/15',
+            cp_end_date: '2021/11/15',
+            cp_price: 3000,
+            checked: false,
+        },
     ]);
     const onClickCoupon = useCallback(
         (id) => {

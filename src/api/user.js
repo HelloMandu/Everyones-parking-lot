@@ -45,6 +45,9 @@ export const requestPostAuth = async (email, name, password, birth, phone_number
 
     const URL = Paths.api + "api/user";
     const response = await axios.post(URL,{
+        headers:{
+            'Content-type': 'application/json; charset=utf-8',
+        },
         email, name, password, birth, phone_number
     });
 
