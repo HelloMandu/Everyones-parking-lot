@@ -1,3 +1,5 @@
+@import '../../static/stylesheets/Root.scss';
+
 .coupon-list{
     width: 100%;
     padding: 0px 24px;
@@ -64,5 +66,15 @@
     .explain{
         font-size: 16px;
         margin-top: 20px;
+    }
+}
+
+html {
+    body {
+        :global(.MuiDialog-root) {
+            min-height: 100vh;
+            z-index: $level2 !important;
+        }
+     
     }
 }

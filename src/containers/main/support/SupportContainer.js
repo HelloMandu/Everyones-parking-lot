@@ -50,7 +50,7 @@ const SupportContainer = () => {
                         history.replace(Paths.main.support.notice);
                     }
                     else if (index === 1) {
-                        history.replace(Paths.main.support.faq);
+                        history.replace(Paths.main.support.faq + '?type=0');
                     }
                     else if (index === 2) {
                         history.replace(Paths.main.support.qna);

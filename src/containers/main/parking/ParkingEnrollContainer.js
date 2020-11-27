@@ -7,11 +7,18 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 
-import { requestGetAddressInfo, requestPostEnrollParking } from '../../../api/place';
-import { getDateRange } from '../../../lib/calculateDate';
+import { Paths } from '../../../paths';
 
+import {
+    requestGetAddressInfo,
+    requestPostEnrollParking,
+} from '../../../api/place';
+import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
+
+import { useDialog } from '../../../hooks/useDialog';
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
 
@@ -47,10 +54,8 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
         '',
         (state) => state.length > 0,
     );
-    const [type, onChangeType] = useInput('');
-    const [address, setAddress] = useState(
-        ''
-    );
+    const [type, onChangeType] = useInput('0');
+    const [address, setAddress] = useState('');
     const [postNum, setPostNum] = useState();
     const [addressDetail, onChangeAddressDetail, checkAddressDetail] = useInput(
         '',
@@ -102,7 +107,8 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
         type,
         address,
         addressDetail,
-        lat, lng,
+        lat,
+        lng,
         postNum,
         price,
     }));
@@ -111,13 +117,7 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
         setCheck(
             checkName && address.length > 0 && checkAddressDetail && checkPrice,
         );
-    }, [
-        setCheck,
-        checkName,
-        address,
-        checkAddressDetail,
-        checkPrice,
-    ]);
+    }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
 
     return (
         <div className={styles['parking-enroll-area']}>
@@ -162,7 +162,7 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                 <div className={styles['per']}>30분당</div>
                 <div className={styles['price']}>
                     <InputBox
-                        className={'input-box'}
+                        className={'input-box-right'}
                         type={'text'}
                         value={price}
                         name={'price'}
@@ -212,18 +212,25 @@ const OperatingTime = forwardRef((props, ref) => {
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
     const [startTime, onChangeStartTime] = useForm({
-        day: '',
-        hour: '',
-        minute: '',
+        day: getFormatDate(new Date()),
+        hour: 0,
+        minute: 0,
     });
     const [endTime, onChangeEndTime] = useForm({
-        day: '',
-        hour: '',
-        minute: '',
+        day: getFormatDate(new Date()),
+        hour: 0,
+        minute: 0,
     });
 
+    const [startTimeFormat, setStartTimeFormat] = useState();
+    const [endTimeFormat, setEndTimeFormat] = useState();
+
     const perSelectList = dateList.map((value, index) => (
-        <option className={styles['select-item']} key={index} value={value.DAY}>
+        <option
+            className={styles['select-item']}
+            key={index}
+            value={value.DATE}
+        >
             {value.DAY}
         </option>
     ));
@@ -237,9 +244,9 @@ const OperatingTime = forwardRef((props, ref) => {
             {parseInt(value / 10) === 0 ? `0${value}` : value}분
         </option>
     ));
-
     useImperativeHandle(ref, () => ({
-        startTime, endTime
+        startTimeFormat,
+        endTimeFormat,
     }));
 
     useEffect(() => {
@@ -261,7 +268,14 @@ const OperatingTime = forwardRef((props, ref) => {
         }
         setMinuteList(newMinuteList);
     }, []);
-
+    useEffect(()=>{
+        setStartTimeFormat(
+            `${startTime.day} ${startTime.hour}:${startTime.minute}`,
+        );
+    }, [startTime])
+    useEffect(() => {
+        setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
+    }, [endTime]);
     return (
         <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>운영시간</div>
@@ -286,7 +300,7 @@ const OperatingTime = forwardRef((props, ref) => {
 const ExtraInfo = forwardRef((props, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
     useImperativeHandle(ref, () => ({
-        extraInfo
+        extraInfo,
     }));
     return (
         <div className={styles['parking-enroll-area']}>
@@ -338,26 +352,28 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const ParkingPicture = forwardRef(({setCheck}, ref) => {
-    const [fileList, setFileList] = useState([]); //파일
+const ParkingPicture = forwardRef(({ setCheck }, ref) => {
+    const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
-        const newFileList = [];
-        for (let i = 0; i < files.length; i++) {
-            newFileList.push({ id: i + 1, file: files[i] });
+        if (files) {
+            const newFileList = [];
+            for (let i = 0; i < files.length; i++) {
+                newFileList.push({ id: i + 1, file: files[i] });
+            }
+            setFileList(newFileList);
         }
-        setFileList(newFileList);
     }, []);
     const handleDeleteFile = useCallback(
         (id) => setFileList(fileList.filter((file) => file.id !== id)),
         [fileList],
     );
     useImperativeHandle(ref, () => ({
-        fileList
+        fileList,
     }));
-    useEffect(()=>{
+    useEffect(() => {
         setCheck(fileList.length >= 2);
-    }, [setCheck, fileList])
+    }, [setCheck, fileList]);
     return (
         <div className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
@@ -417,57 +433,59 @@ const ParkingEnrollContainer = () => {
     const extraInfo = useRef(null);
     const parkingPicture = useRef(null);
 
-    useEffect(()=>{
-        setCheckAll(checkBasicInfo && checkParkingPicture);
-    }, [checkBasicInfo, checkParkingPicture])
-    const onClickEnrollParking = useCallback(async () =>{
-        if(checkAll){
+    const openDialog = useDialog();
+    const history = useHistory();
+
+    const onClickEnrollParking = useCallback(async () => {
+        if (checkAll) {
             const JWT_TOKEN = localStorage.getItem('user_id');
-            // const response = await requestPostEnrollParking(
-            //     JWT_TOKEN,
-            //     {
-            //         addr: basicInfo.current.address,
-            //         addr_detail: basicInfo.current.addressDetail,
-            //         post_num: basicInfo.current.postNum,
-            //         lat: basicInfo.current.addressDetail.lat,
-            //         lng: basicInfo.current.addressDetail.lng,
-            //         place_name: basicInfo.current.name,
-            //         place_comment: extraInfo.current.extraInfo,
-            //         place_img: parkingPicture.current.fileList,
-            //         place_fee: basicInfo.current.price,
-            //         oper_start_time: operatingTime.current.startTime,
-            //         oper_end_time: operatingTime.current.endTime,
-            //     },
-                
-            // )
-            // console.log(response);
-            console.log(
-                JWT_TOKEN,
-                basicInfo.current.address,
-                basicInfo.current.addressDetail,
-                basicInfo.current.postNum,
-                basicInfo.current.lat,
-                basicInfo.current.lng,
-                basicInfo.current.name,
-                extraInfo.current.extraInfo,
-                parkingPicture.current.fileList,
-                basicInfo.current.price,
-                operatingTime.current.startTime, //
-                operatingTime.current.endTime, //
-            )
+            const response = await requestPostEnrollParking(JWT_TOKEN, {
+                addr: basicInfo.current.address,
+                addr_detail: basicInfo.current.addressDetail,
+                post_num: basicInfo.current.postNum,
+                place_type: basicInfo.current.type,
+                lat: basicInfo.current.lat,
+                lng: basicInfo.current.lng,
+                place_name: basicInfo.current.name,
+                place_comment: extraInfo.current.extraInfo,
+                place_images: parkingPicture.current.fileList,
+                place_fee: basicInfo.current.price,
+                oper_start_time: operatingTime.current.startTimeFormat,
+                oper_end_time: operatingTime.current.endTimeFormat,
+            });
+            if (response.data.msg === 'success') {
+                openDialog('등록완료', '주차공간 등록을 완료했습니다');
+                history.replace(Paths.main.parking.manage);
+            } else {
+                openDialog('등록실패', '주차공간 등록에 실패했습니다');
+            }
         }
-    }, [checkAll])
+    }, [checkAll, history, openDialog]);
+
+    useEffect(() => {
+        setCheckAll(checkBasicInfo && checkParkingPicture);
+    }, [checkBasicInfo, checkParkingPicture]);
     return (
         <>
             <div className={styles['parking-enroll-container']}>
-                <BasicInfo setCheck={setCheckBasicInfo} ref={basicInfo}></BasicInfo>
+                <BasicInfo
+                    setCheck={setCheckBasicInfo}
+                    ref={basicInfo}
+                ></BasicInfo>
                 <div className={styles['bar']} />
                 <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
                 <ExtraInfo ref={extraInfo}></ExtraInfo>
-                <ParkingPicture setCheck={setCheckParkingPicture} ref={parkingPicture}></ParkingPicture>
+                <ParkingPicture
+                    setCheck={setCheckParkingPicture}
+                    ref={parkingPicture}
+                ></ParkingPicture>
             </div>
-            <FixedButton button_name={'작성완료'} disable={!checkAll} onClick={onClickEnrollParking}></FixedButton>
+            <FixedButton
+                button_name={'작성완료'}
+                disable={!checkAll}
+                onClick={onClickEnrollParking}
+            ></FixedButton>
         </>
     );
 };

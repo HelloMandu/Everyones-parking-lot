@@ -1,6 +1,92 @@
 @import '../../../static/stylesheets/Root.scss';
 
+.container{
+    padding-bottom: 80px;
+    .text-area{
+        width: 100%; height: 88px;
+        padding: 0 $padding;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        .text-wrap{
+            display: flex;
+            pointer-events: none;
+            .question{
+                font-size: 1.417rem; // 17px
+                font-weight: bold;
+                color: #333;
+            }
+            .text{
+                margin-left: 20px;
+                .title{
+                    font-size: 1.25rem; // 15px
+                    font-weight: bold;
+                    color: #333;
+                }
+                .bottom{
+                    margin-top: 12px;
+                    display: flex;
+                    .name{
+                        padding-right: 10px;
+                        border-right: 2px solid #EBEBEB;
+                        font-size: 1.167rem; // 14px;
+                        font-weight: 500; // Medium
+                        color: #333;
+                    }
+                    .count{
+                        padding-left: 10px;
+                        font-size: 1.167rem; // 14px;
+                        font-weight: 400; // Regular
+                        color: #777;
+                    }
+                }
+            }
+        }
+        .arrow{
+            padding: 0;
+            width: 12px; height: 6px;
+            &>span{
+                width: 100%; height: 100%;
+                &>svg{
+                    width: 100%; height: 100%;
+                }
+            }
+            position: absolute;
+            top: 50%; right: $padding;
+            transform: translateY(-50%);
+        }
+    }
+    .sub-text{
+        opacity: 0;
+        width: 100%; height: 0;
+        background-color: #FFF;
+        font-size: 1.167rem; // 14px;
+        font-weight: 400; // Regular
+        color: #555;
+        line-height: 22px;
+        transition: all 0.3s ease-in-out;
+        &.click{
+            opacity: 1;
+            height: 160px;
+            padding: $padding;
+            border: 1px solid #E9EBED;
+            border-bottom: none;
+            transition: all 0.3s ease-in-out;
+        }
+    }
+}
 
+.border{
+    border: 1px solid #E9EBED;
+    background-color: #FFF;
+    &.click{
+        background-color: #F7F8F9;
+    }
+    & + &{
+        border-top: none;
+    }
+}
 
 .category-container{
     width: 100%; height: 120px;

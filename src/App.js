@@ -8,7 +8,7 @@ import MainPage from './pages/MainPage';
 import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
-// import LoadingContainer from './containers/assets/LoadingContainer';
+import LoadingContainer from './containers/assets/LoadingContainer';
 
 import Header from './components/header/Header';
 
@@ -154,6 +154,10 @@ const App = () => {
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
         }
+        //1:1문의 상세보기 
+        else if (pathname === Paths.main.support.qna_detail) {
+            return <Header title={HeaderTitle.main.support.qna_detail} />;
+        }
         //1:1문의 작성
         else if (pathname === Paths.main.support.qna_write) {
             return <Header title={HeaderTitle.main.support.qna_write} />;
@@ -169,8 +173,10 @@ const App = () => {
                 <Route component={ErrorPage} />
             </Switch>
             <DialogContainer/>
+            <LoadingContainer/>
         </div>
     );
 };
 
 export default App;
+ 
