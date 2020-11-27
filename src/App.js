@@ -13,7 +13,7 @@ import DialogContainer from './containers/assets/DialogContainer';
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
-import { requestGetUserInfo } from './api/user';
+// import { requestGetUserInfo } from './api/user';
 
 const App = () => {
     const location = useLocation();
@@ -126,7 +126,7 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.enrollment) {
             return <Header title={HeaderTitle.main.mypage.update.enrollment} />;
         }
-        //생년월일 변경
+        //생년월일 변경 
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
@@ -153,6 +153,10 @@ const App = () => {
         //1:1문의 리스트뷰
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
+        }
+        //1:1문의 상세보기 
+        else if (pathname === Paths.main.support.qna_detail) {
+            return <Header title={HeaderTitle.main.support.qna_detail} />;
         }
         //1:1문의 작성
         else if (pathname === Paths.main.support.qna_write) {

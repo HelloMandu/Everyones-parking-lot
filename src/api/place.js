@@ -1,4 +1,5 @@
 import axios from 'axios';
+import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
@@ -10,9 +11,8 @@ export const requestGetParkingList = async (
     max_price,
     start_date,
     end_date,
-    filter
+    filter,
 ) => {
-
     // lat: 요청할 주차공간의 기준 위도(Float, 필수) => 세로
     // lng: 요청할 주차공간의 기준 경도(Float, 필수) => 가로
     // range: 요청할 주차공간의 거리 범위(Intager, 10km?)
@@ -24,7 +24,7 @@ export const requestGetParkingList = async (
 
     // * 응답: places: [주차공간 Array…]
 
-    const URL = Paths.api + "api/place";
+    const URL = Paths.api + 'api/place';
     const response = await axios.get(URL);
 
     return response;
@@ -36,7 +36,7 @@ export const requestGetLikeParkingList = async (JWT_TOKEN) => {
 
     // * 응답: places: [주차공간 Array…]
 
-    const URL = Paths.api + "api/place/like";
+    const URL = Paths.api + 'api/place/like';
     const response = await axios.get(URL);
 
     return response;
@@ -47,11 +47,11 @@ export const requestGetDetailParking = async (place_id) => {
 
     // * 응답: place: 주차공간 데이터 Object(리뷰 리스트 데이터도 포함)
 
-    const URL = Paths.api + "api/place/:place_id";
+    const URL = Paths.api + 'api/place/:place_id';
     const response = await axios.get(URL);
 
     return response;
-}
+};
 
 export const requestPutLikeParking = async (JWT_TOKEN, status) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -59,14 +59,13 @@ export const requestPutLikeParking = async (JWT_TOKEN, status) => {
 
     // * 응답: status: 변경된 좋아요 상태
 
-    const URL = Paths.api + "api/place/like";
+    const URL = Paths.api + 'api/place/like';
     const response = await axios.put(URL);
 
     return response;
 };
 
 export const requestGetMyParkingList = async (JWT_TOKEN) => {
-
     /* 
         내 주차공간 리스트 요청 API
 
@@ -76,15 +75,34 @@ export const requestGetMyParkingList = async (JWT_TOKEN) => {
     */
 
     const URL = Paths.api + 'api/place/my';
-    const response = await axios.get(URL);
+    const config  = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        }
+    };
+    const response = await axios.get(URL, config);
 
     return response;
 };
 
-export const requestPostEnrollParking = async (JWT_TOKEN, {
-    addr, addr_detail, addr_extra, post_num, lat, lng, place_name, place_comment, place_img, place_fee, oper_start_time, oper_end_time
-}) => {
-
+export const requestPostEnrollParking = async (
+    JWT_TOKEN,
+    {
+        addr,
+        addr_detail,
+        addr_extra,
+        place_type,
+        post_num,
+        lat,
+        lng,
+        place_name,
+        place_comment,
+        place_images,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+    },
+) => {
     /*
         주차공간 등록 요청 API
 
@@ -93,28 +111,64 @@ export const requestPostEnrollParking = async (JWT_TOKEN, {
         addr_detail: 주차공간 상세주소(String)
         addr_extra: 주차공간 여분주소(String)
         post_num: 주차공간 우편번호(String)
+        place_type: 주차타입(Intager, 필수)
         lat: 주차공간의 위도(Float, 필수) => 세로
         lng: 주차공간의 경도(Float, 필수) => 가로
         place_name: 주차공간 이름(String, 필수)
         place_comment: 주차공간 설명(String, 필수)
-        place_img: 주차공간 이미지([FileList], 필수)
+        place_images: 주차공간 이미지([FileList], 필수)
         place_fee: 주차공간 요금 / 30분 기준(Intager, 필수)
         oper_start_time: 운영 시작 시간(DateTimeString, 필수)
         oper_end_time: 운영 종료 시간(DateTimeString, 필수)
 
         *응답: success / failure
     */
-
+    const formData = makeFormData({
+        addr,
+        addr_detail,
+        addr_extra,
+        post_num,
+        lat,
+        lng,
+        place_name,
+        place_comment,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+        place_type
+    });
     const URL = Paths.api + 'api/place';
-    const response = await axios.post(URL);
+    place_images.forEach(({file}) => formData.append('place_images', file, file.name));
+    const config  = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+            ContentType: 'multipart/form-data',
+        }
+    };
+    // return formData;
+    const response = await axios.post(URL, formData, config);
 
     return response;
 };
 
-export const requestPutModifyParking = async (JWT_TOKEN, {
-    addr, addr_detail, addr_extra, post_num, lat, lng, place_name, place_comment, place_img, place_fee, oper_start_time, oper_end_time
-}, place_id) => {
-
+export const requestPutModifyParking = async (
+    JWT_TOKEN,
+    {
+        addr,
+        addr_detail,
+        addr_extra,
+        post_num,
+        lat,
+        lng,
+        place_name,
+        place_comment,
+        place_img,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+    },
+    place_id,
+) => {
     /*
         주차공간 수정 요청 API
 
@@ -142,7 +196,6 @@ export const requestPutModifyParking = async (JWT_TOKEN, {
 };
 
 export const requestDeleteParking = async (JWT_TOKEN, place_id) => {
-
     /*
         주차공간 삭제 요청 API
 
@@ -154,5 +207,18 @@ export const requestDeleteParking = async (JWT_TOKEN, place_id) => {
     const URL = Paths.api + 'api/place/:place_id';
     const response = await axios.delete(URL);
 
+    return response;
+};
+
+export const requestGetAddressInfo = async (address) => {
+    const URL = 'https://dapi.kakao.com/v2/local/search/address.json';
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `KakaoAK d747c230bfd2f62cfcf8accd952285b8`,
+        },
+        params: {
+            query: address,
+        },
+    });
     return response;
 };
