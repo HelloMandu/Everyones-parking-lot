@@ -96,9 +96,11 @@ const UseDetailContainer = ({ location }) => {
                         <Button name={'고객센터 연결'}>
                             <Tel />
                         </Button>
+                        <Link to={Paths.main.review.write + `?id=${id}`} >
                         <Button name={'리뷰 작성 하기'}>
                             <MessageBox />
                         </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

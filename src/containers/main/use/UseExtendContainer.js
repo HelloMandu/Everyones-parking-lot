@@ -149,7 +149,7 @@ const UseExtendContainer = ({ match, location }) => {
             </div>
 
             <div className={cx('container')}>
-            <BasicButton button_name={`${numberFormat(68000)}원 결제`} disable={false} />
+                <BasicButton button_name={`${numberFormat(68000)}원 결제`} disable={false} />
             </div>
         </>
     );

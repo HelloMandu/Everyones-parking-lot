@@ -1,0 +1,7 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    padding: $padding;
+
+    @include container($pd-top);
+}
