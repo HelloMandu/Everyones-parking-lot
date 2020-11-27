@@ -1,7 +1,12 @@
 import React from 'react';
 import qs from 'qs';
 import { useLocation } from 'react-router-dom';
+import className from 'classnames/bind'
 /* Library */
+
+import styles from './ReviewWriteContainer.module.scss'
+
+const cx = className.bind(styles)
 
 const WriteReview = () => {
 
@@ -31,11 +36,12 @@ const ReviewWriteContainer = () => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     })
-    const { review_id } = query;
+    const { id } = query;
 
     return (
-        <div className="container">
-            {review_id ? <ModifyReview /> : <WriteReview />}
+        <div className={cx("container")}>
+        {console.log(id, location)}
+            {id ? <ModifyReview /> : <WriteReview />}
         </div>
     );
 };
