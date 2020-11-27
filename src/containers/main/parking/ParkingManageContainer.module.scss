@@ -29,10 +29,12 @@
             border-radius: 2px;
             box-shadow: 0px 5px 10px rgba($color: #000000, $alpha: 0.08);
             margin-bottom: 40px;
-            img {
-                display: block;
-                background-repeat: no-repeat;
+            .parking-image {
                 width: 100%;
+                padding-top: 36.585365%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
             }
             .parking-info {
                 width: 100%;

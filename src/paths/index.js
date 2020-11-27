@@ -71,7 +71,7 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/',
+    api: 'http://localhost:8080/',    
 };
 
 export const HeaderTitle = {

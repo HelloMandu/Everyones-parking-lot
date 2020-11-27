@@ -6,11 +6,9 @@ import { ButtonBase } from '@material-ui/core';
 import useLoading from '../../../hooks/useLoading';
 import { useDialog } from '../../../hooks/useDialog';
 import { requestGetMyParkingList } from '../../../api/place';
-import {getFormatDateTime} from '../../../lib/calculateDate';
+import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
-
-// import parkingImage from '../../../static/asset/png/parking.png';
 
 import styles from './ParkingManageContainer.module.scss';
 
@@ -20,7 +18,10 @@ const ParkingItem = ({ status, image, title, start, end, price }) => {
     //이미지 수정해야함
     return (
         <>
-            <img src={`../../../../../parking-server/uploads/${image}`} alt="parking" />
+            <div
+                className={styles['parking-image']}
+                style={{ backgroundImage: `url(${Paths.api}uploads/${image})` }}
+            />
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <div className={cx('status', { status })}>
@@ -75,9 +76,16 @@ const ParkingManageContainer = () => {
             </Link>
             <ul className={styles['parking-list']}>
                 {parkingList.map(
-                    (
-                        { place_id, place_status, place_images, place_name, oper_start_time, oper_end_time, per, place_fee },
-                    ) => (
+                    ({
+                        place_id,
+                        place_status,
+                        place_images,
+                        place_name,
+                        oper_start_time,
+                        oper_end_time,
+                        per,
+                        place_fee,
+                    }) => (
                         <ButtonBase
                             className={styles['parking-item']}
                             component="li"
