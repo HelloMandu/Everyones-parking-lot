@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import { ButtonBase } from '@material-ui/core';
-=======
 /*global daum*/
 import React, {
     forwardRef,
@@ -15,7 +11,6 @@ import { useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 
 import { Paths } from '../../../paths';
->>>>>>> mandu
 
 import {
     requestGetAddressInfo,
@@ -31,33 +26,10 @@ import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
 import Information from '../../../static/asset/svg/Information';
+import Delete from '../../../static/asset/svg/parking/Delete';
 
 import styles from './ParkingEnrollContainer.module.scss';
 
-<<<<<<< HEAD
-const perList = [];
-const hourList = [];
-const minuteList = [];
-for (let i = 1; i <= 6; i++) {
-    perList.push({ id: i, per: 30 * i });
-}
-for (let i = 0; i < 24; i++) {
-    hourList.push({ id: i, hour: i });
-}
-for (let i = 0; i < 60; i++) {
-    minuteList.push({ id: i + 1, minute: i });
-}
-
-const BasicInfo = () => {
-    const [parkingInfo, onChangeParkingInfo] = useForm({
-        name: '',
-        kind: '',
-        address: '',
-        addressDetail: '',
-        price: '',
-    });
-    const { name, kind, address, addressDetail, price } = parkingInfo;
-=======
 const typeList = [
     {
         id: 0,
@@ -146,10 +118,9 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
             checkName && address.length > 0 && checkAddressDetail && checkPrice,
         );
     }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
->>>>>>> mandu
 
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>주차장 기본 정보</div>
             <InputBox
                 className={'input-box'}
@@ -157,32 +128,35 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                 value={name}
                 name={'name'}
                 placeholder={'주차 공간 이름을 입력해주세요'}
-                onChange={onChangeParkingInfo}
+                onChange={onChangeName}
             ></InputBox>
-            <InputBox
-                className={'input-box'}
-                type={'text'}
-                value={kind}
-                name={'kind'}
-                placeholder={'주차장 종류를 선택하세요'}
-                onChange={onChangeParkingInfo}
-            ></InputBox>
+            <select
+                className={styles['select-type']}
+                name="type"
+                onChange={onChangeType}
+            >
+                {typeSelectList}
+            </select>
             <InputBox
                 className={'input-box'}
                 type={'text'}
                 value={address}
                 name={'address'}
                 placeholder={'주차장 주소를 입력해주세요'}
-                onChange={onChangeParkingInfo}
             ></InputBox>
-            <ButtonBase className={styles['button']}>주소찾기</ButtonBase>
+            <ButtonBase
+                className={styles['button']}
+                onClick={onClickAddressSearch}
+            >
+                주소찾기
+            </ButtonBase>
             <InputBox
                 className={'input-box'}
                 type={'text'}
                 value={addressDetail}
                 name={'addressDetail'}
                 placeholder={'상세 주소를 입력해주세요'}
-                onChange={onChangeParkingInfo}
+                onChange={onChangeAddressDetail}
             ></InputBox>
             <div className={styles['per-price']}>
                 <div className={styles['per']}>30분당</div>
@@ -193,26 +167,51 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                         value={price}
                         name={'price'}
                         placeholder={'30분당 주차가격을 입력하세요'}
-                        onChange={onChangeParkingInfo}
+                        onChange={onChangePrice}
                     ></InputBox>
                     <span>원</span>
                 </div>
             </div>
-        </>
+        </div>
+    );
+});
+
+const TimeSelector = ({ title, date, hour, minute, onChange }) => {
+    return (
+        <div className={styles['schedule-wrapper']}>
+            <div className={styles['schedule-title']}>{title}</div>
+            <div className={styles['select-time']}>
+                <select
+                    className={styles['select-list']}
+                    name="day"
+                    onChange={onChange}
+                >
+                    {date}
+                </select>
+                <select
+                    className={styles['select-list']}
+                    name="hour"
+                    onChange={onChange}
+                >
+                    {hour}
+                </select>
+                <select
+                    className={styles['select-list']}
+                    name="minute"
+                    onChange={onChange}
+                >
+                    {minute}
+                </select>
+            </div>
+        </div>
     );
 };
 
-const OperatingTime = () => {
+const OperatingTime = forwardRef((props, ref) => {
+    const [dateList, setDateList] = useState([]);
+    const [hourList, setHourList] = useState([]);
+    const [minuteList, setMinuteList] = useState([]);
     const [startTime, onChangeStartTime] = useForm({
-<<<<<<< HEAD
-        per: '',
-        hour: '',
-        minute: '',
-    });
-    const perSelectList = perList.map(({ id, per }) => (
-        <option className={styles['select-item']} key={id} value={per}>
-            {per}분당
-=======
         day: getFormatDate(new Date()),
         hour: 0,
         minute: 0,
@@ -233,21 +232,18 @@ const OperatingTime = () => {
             value={value.DATE}
         >
             {value.DAY}
->>>>>>> mandu
         </option>
     ));
-    const hourSelectList = hourList.map(({ id, hour }) => (
-        <option className={styles['select-item']} key={id} value={hour}>
-            {parseInt(hour / 10) === 0 ? `0${hour}` : hour}시
+    const hourSelectList = hourList.map((value, index) => (
+        <option className={styles['select-item']} key={index} value={value}>
+            {parseInt(value / 10) === 0 ? `0${value}` : value}시
         </option>
     ));
-    const minuteSelectList = minuteList.map(({ id, minute }) => (
-        <option className={styles['select-item']} key={id} value={minute}>
-            {parseInt(minute / 10) === 0 ? `0${minute}` : minute}분
+    const minuteSelectList = minuteList.map((value, index) => (
+        <option className={styles['select-item']} key={index} value={value}>
+            {parseInt(value / 10) === 0 ? `0${value}` : value}분
         </option>
     ));
-<<<<<<< HEAD
-=======
     useImperativeHandle(ref, () => ({
         startTimeFormat,
         endTimeFormat,
@@ -280,64 +276,34 @@ const OperatingTime = () => {
     useEffect(() => {
         setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
     }, [endTime]);
->>>>>>> mandu
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>운영시간</div>
-            <div className={styles['schedule-wrapper']}>
-                <div className={styles['schedule-title']}>운영 시작 시간</div>
-                <div className={styles['select-time']}>
-                    <select
-                        className={styles['select-list']}
-                        name="per"
-                        onChange={onChangeStartTime}
-                    >
-                        {perSelectList}
-                    </select>
-                    <select
-                        className={styles['select-list']}
-                        name="hour"
-                        onChange={onChangeStartTime}
-                    >
-                        {hourSelectList}
-                    </select>
-                    <select
-                        className={styles['select-list']}
-                        name="minute"
-                        onChange={onChangeStartTime}
-                    >
-                        {minuteSelectList}
-                    </select>
-                </div>
-            </div>
-            <div className={styles['schedule-wrapper']}>
-                <div className={styles['schedule-title']}>운영 종료 시간</div>
-                <div className={styles['select-time']}>
-                    <select className={styles['select-list']} name="per">
-                        {perSelectList}
-                    </select>
-                    <select className={styles['select-list']} name="hour">
-                        {hourSelectList}
-                    </select>
-                    <select className={styles['select-list']} name="minute">
-                        {minuteSelectList}
-                    </select>
-                </div>
-            </div>
-        </>
+            <TimeSelector
+                title={'운영 시작 시간'}
+                date={perSelectList}
+                hour={hourSelectList}
+                minute={minuteSelectList}
+                onChange={onChangeStartTime}
+            />
+            <TimeSelector
+                title={'운영 종료 시간'}
+                date={perSelectList}
+                hour={hourSelectList}
+                minute={minuteSelectList}
+                onChange={onChangeEndTime}
+            />
+        </div>
     );
-};
+});
 
-const ExtraInfo = () => {
+const ExtraInfo = forwardRef((props, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
-<<<<<<< HEAD
-=======
     useImperativeHandle(ref, () => ({
         extraInfo,
     }));
->>>>>>> mandu
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>추가정보</div>
             <InputBox
                 className={'input-box'}
@@ -347,13 +313,45 @@ const ExtraInfo = () => {
                 placeholder={'주차 공간에 대한 추가적인 설명을 작성해주세요'}
                 onChange={onChangeExtraInfo}
             ></InputBox>
+        </div>
+    );
+});
+
+const FileItem = ({ file, onDelete }) => {
+    const [imgFile, setImgFile] = useState(null);
+    useEffect(() => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result;
+            if (base64) {
+                setImgFile(base64.toString());
+            }
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }, [file]);
+    return (
+        <>
+            {imgFile && (
+                <div className={styles['file-item']}>
+                    <img
+                        className={styles['file-image']}
+                        src={imgFile}
+                        alt="file"
+                    />
+                    <IconButton
+                        className={styles['file-delete']}
+                        onClick={onDelete}
+                    >
+                        <Delete />
+                    </IconButton>
+                </div>
+            )}
         </>
     );
 };
 
-<<<<<<< HEAD
-const ParkingPicture = () => {
-=======
 const ParkingPicture = forwardRef(({ setCheck }, ref) => {
     const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
@@ -376,9 +374,8 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
     useEffect(() => {
         setCheck(fileList.length >= 2);
     }, [setCheck, fileList]);
->>>>>>> mandu
     return (
-        <>
+        <div className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
                 <div className={styles['title']}>주차공간 사진</div>
                 <div className={styles['important-wrapper']}>
@@ -396,22 +393,37 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
                     </div>
                 </div>
             </div>
-            <ButtonBase className={styles['button']}>
-                <span className={styles['plus']}>+</span>사진추가
-            </ButtonBase>
-        </>
+            <div className="file-wrapper">
+                <ButtonBase className={styles['button']}>
+                    <label htmlFor="file-setter">
+                        <span className={styles['plus']}>+</span>사진추가
+                    </label>
+                </ButtonBase>
+                <input
+                    id="file-setter"
+                    className={styles['input-files']}
+                    onChange={onChangeFileList}
+                    multiple="multiple"
+                    type="file"
+                    accept="image/gif, image/jpeg, image/png, image/svg"
+                    formEncType="multipart/form-data"
+                />
+                <ul className={styles['file-list']}>
+                    {fileList.map(({ id, file }) => (
+                        <li key={id}>
+                            <FileItem
+                                file={file}
+                                onDelete={() => handleDeleteFile(id)}
+                            ></FileItem>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
-};
+});
 
 const ParkingEnrollContainer = () => {
-<<<<<<< HEAD
-    return (
-        <>
-            <div className={styles['parking-enroll-container']}>
-                <div className={styles['parking-enroll-area']}>
-                    <BasicInfo></BasicInfo>
-                </div>
-=======
     const [checkAll, setCheckAll] = useState(false);
     const [checkBasicInfo, setCheckBasicInfo] = useState(false);
     const [checkParkingPicture, setCheckParkingPicture] = useState(false);
@@ -460,22 +472,9 @@ const ParkingEnrollContainer = () => {
                     setCheck={setCheckBasicInfo}
                     ref={basicInfo}
                 ></BasicInfo>
->>>>>>> mandu
                 <div className={styles['bar']} />
-                <div className={styles['parking-enroll-area']}>
-                    <OperatingTime></OperatingTime>
-                </div>
+                <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
-<<<<<<< HEAD
-                <div className={styles['parking-enroll-area']}>
-                    <ExtraInfo></ExtraInfo>
-                </div>
-                <div className={styles['parking-enroll-area']}>
-                    <ParkingPicture></ParkingPicture>
-                </div>
-            </div>
-            <FixedButton button_name={'작성완료'}></FixedButton>
-=======
                 <ExtraInfo ref={extraInfo}></ExtraInfo>
                 <ParkingPicture
                     setCheck={setCheckParkingPicture}
@@ -487,7 +486,6 @@ const ParkingEnrollContainer = () => {
                 disable={!checkAll}
                 onClick={onClickEnrollParking}
             ></FixedButton>
->>>>>>> mandu
         </>
     );
 };

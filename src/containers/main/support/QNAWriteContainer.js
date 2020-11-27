@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React from 'react';
-=======
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
->>>>>>> mandu
 /* Library */
 
 import FixedButton from '../../../components/button/FixedButton';
@@ -105,8 +101,6 @@ const FilesPicture = () => {
 };
 
 const QNAWriteContainer = () => {
-<<<<<<< HEAD
-=======
 
     const subjectRef = useRef();
     const questionRef = useRef();
@@ -120,7 +114,6 @@ const QNAWriteContainer = () => {
         alert('문의 작성')
     }
 
->>>>>>> mandu
     return (
         <>
             <div className={styles['container']}>

@@ -1,10 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
-=======
 import qs from 'qs';
 import classnames from 'classnames/bind';
 import { useLocation } from 'react-router-dom';
->>>>>>> mandu
 /* Library */
 
 import styles from './QNADetailContainer.module.scss';
@@ -13,8 +10,6 @@ import styles from './QNADetailContainer.module.scss';
 const cn = classnames.bind(styles);
 
 const QNADetailContainer = () => {
-<<<<<<< HEAD
-=======
 
     const location = useLocation();
     const query = qs.parse(location.search, {
@@ -22,7 +17,6 @@ const QNADetailContainer = () => {
     });
     const qna_id = parseInt(query.id);
 
->>>>>>> mandu
     return (
         <div className={styles['container']}>
             <div className={styles['header-area']}>

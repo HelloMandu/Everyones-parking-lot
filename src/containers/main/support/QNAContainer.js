@@ -56,45 +56,27 @@ const QNAContainer = () => {
         {
             qna_id: 1,
             qna_date: '2020/05/22',
-<<<<<<< HEAD
-            qna_title: 'TEST 공지사항',
-            qna_name: '스페이스',
-            qna_cnt: '조회수 123',
-=======
             qna_title: '도와 주도와 요세요!',
             qna_name: '스페이스',
             qna_cnt: '조회수 123',
             qna_status: false,
->>>>>>> mandu
         },
         {
             qna_id: 2,
             qna_date: '2020/05/22',
-<<<<<<< HEAD
-            qna_title: 'TEST 공지사항',
-            qna_name: '스페이스',
-            qna_cnt: '조회수 123',
-=======
             qna_title: '도와 주도와 요세요!',
             qna_name: '스페이스',
             qna_cnt: '조회수 123',
             qna_status: true,
 
->>>>>>> mandu
         },
         {
             qna_id: 3,
             qna_date: '2020/05/22',
-<<<<<<< HEAD
-            qna_title: 'TEST 공지사항',
-            qna_name: '스페이스',
-            qna_cnt: '조회수 123',
-=======
             qna_title: '도와 주도와 요세요!',
             qna_name: '스페이스',
             qna_cnt: '조회수 123',
             qna_status: true,
->>>>>>> mandu
         },
     ]);
 
