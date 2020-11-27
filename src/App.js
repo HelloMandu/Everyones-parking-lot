@@ -8,7 +8,7 @@ import MainPage from './pages/MainPage';
 import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
-// import LoadingContainer from './containers/assets/LoadingContainer';
+import LoadingContainer from './containers/assets/LoadingContainer';
 
 import Header from './components/header/Header';
 
@@ -173,8 +173,10 @@ const App = () => {
                 <Route component={ErrorPage} />
             </Switch>
             <DialogContainer/>
+            <LoadingContainer/>
         </div>
     );
 };
 
 export default App;
+ 
