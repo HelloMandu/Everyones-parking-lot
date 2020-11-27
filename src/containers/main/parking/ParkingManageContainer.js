@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import cn from 'classnames/bind';
 
 import { ButtonBase } from '@material-ui/core';
 
 import { Paths } from '../../../paths';
+import { requestGetMyParkingList } from '../../../api/place';
 
 import parkingImage from '../../../static/asset/png/parking.png';
 
@@ -81,6 +82,14 @@ const parkingList = [
 ];
 
 const ParkingManageContainer = () => {
+    useEffect(()=>{
+        const getParkingList = async () =>{
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            const response = await requestGetMyParkingList(JWT_TOKEN);
+            console.log(response);
+        }
+        getParkingList();
+    }, [])
     return (
         <div className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>

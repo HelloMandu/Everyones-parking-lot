@@ -2,10 +2,10 @@ import React, { memo } from 'react';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-import CouponCheckBox from './CouponCheckBox';
-import CouponCheck from './CouponCheck';
+import CouponCheckBox from '../../static/asset/svg/coupon/CouponCheckBox';
+import CouponCheck from '../../static/asset/svg/coupon/CouponCheck';
 
-import CouponBox from './CouponBox';
+import CouponBox from '../../static/asset/svg/coupon/CouponBox';
 
 import { numberFormat } from '../../lib/formatter';
 
