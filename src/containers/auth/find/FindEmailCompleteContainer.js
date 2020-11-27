@@ -35,7 +35,7 @@ const FindEmailCompleteContainer = () => {
             </div>
 
             <Link to={Paths.auth.signin} ><BasicButton button_name={'로그인'} disable={false} /></Link>
-            <Link to={Paths.auth.find.password} ><BasicButton button_name={'비밀번호 찾기'} disable={false} /></Link>
+            <Link to={Paths.auth.find.password} ><BasicButton button_name={'비밀번호 찾기'} disable={false} color={'gray'} /></Link>
         </div>
     );
 };
