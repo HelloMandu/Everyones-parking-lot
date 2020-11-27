@@ -5,6 +5,7 @@ import className from 'classnames/bind'
 /* Library */
 
 import styles from './ReviewWriteContainer.module.scss'
+import StarHalf from '../../../static/asset/svg/review/StarHalf'
 
 const cx = className.bind(styles)
 
@@ -25,7 +26,7 @@ const ModifyReview = () => {
 
     return (
         <div>
-            리뷰 수정
+            리뷰 수정<StarHalf />
         </div>
     );
 };
@@ -42,6 +43,7 @@ const ReviewWriteContainer = () => {
         <div className={cx("container")}>
         {console.log(id, location)}
             {id ? <ModifyReview /> : <WriteReview />}
+            
         </div>
     );
 };
