@@ -7,7 +7,7 @@ export const requestGetUserInfo = async (JWT_TOKEN) => {
 
     // * 응답: user: 유저 정보 Object
 
-    const URL = Paths.api + "api/user";
+    const URL = Paths.api + "user";
     const response = await axios.get(URL, {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`
@@ -26,7 +26,7 @@ export const requestPostSignIn = async (email, password) => {
     // - 네이버 로그인 요청 API(POST): /api/user/naver
     // - 페이스북 로그인 요청 API(POST): /api/user/facebook
 
-    const URL = Paths.api + "api/user/signin";
+    const URL = Paths.api + "user/signin";
     const response = await axios.post(URL, {
         email, password
     });
@@ -43,7 +43,7 @@ export const requestPostAuth = async (email, name, password, birth, phone_number
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "api/user";
+    const URL = Paths.api + "user";
     const response = await axios.post(URL,{
         headers:{
             'Content-type': 'application/json; charset=utf-8',
@@ -62,7 +62,7 @@ export const requestPutEnrollCar = async (email, car_location, car_num, car_imag
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "api/user";
+    const URL = Paths.api + "user";
     const response = await axios.put(URL);
 
     return response;
@@ -77,7 +77,7 @@ export const requestPostFindId = async (name, phone_number, auth_number) => {
     // * 응답: email: 유저 이메일 String
 
 
-    const URL = Paths.api + "api/user/find";
+    const URL = Paths.api + "user/find";
     const response = await axios.post(URL);
 
     return response;
@@ -91,7 +91,7 @@ export const requestPostFindPassword = async (name, email, phone_number, auth_nu
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "api/user/find";
+    const URL = Paths.api + "user/find";
     const response = await axios.post(URL);
 
     return response;
@@ -105,7 +105,7 @@ export const requestPutResetPassword = async (name, email, phone_number, passwor
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "api/user";
+    const URL = Paths.api + "user";
     const response = await axios.put(URL);
 
     return response;

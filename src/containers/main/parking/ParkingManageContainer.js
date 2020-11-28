@@ -15,12 +15,11 @@ import styles from './ParkingManageContainer.module.scss';
 const cx = cn.bind(styles);
 
 const ParkingItem = ({ status, image, title, start, end, price }) => {
-    //이미지 수정해야함
     return (
         <>
             <div
                 className={styles['parking-image']}
-                style={{ backgroundImage: `url(${Paths.api}uploads/${image})` }}
+                style={{ backgroundImage: `url(${Paths.storage}${image})` }}
             />
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
@@ -56,7 +55,6 @@ const ParkingManageContainer = () => {
             onLoading('parking/manage');
             const JWT_TOKEN = localStorage.getItem('user_id');
             const { data } = await requestGetMyParkingList(JWT_TOKEN);
-            console.log(data.places);
             if (data.msg === 'success') {
                 setParkingList(data.places);
             } else {

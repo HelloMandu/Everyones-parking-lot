@@ -29,7 +29,7 @@ export const requestPostRental = async (JWT_TOKEN,
 
     // * 응답: rental_id: 대여 주문 번호
 
-    const URL = Paths.api + "api/rental";
+    const URL = Paths.api + "rental";
     const response = await axios.post(URL);
 
     return response;
@@ -41,7 +41,7 @@ export const requestGetConfirmRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: order: 주문 정보
 
-    const URL = Paths.api + "api/rental/:rental_id";
+    const URL = Paths.api + "rental/:rental_id";
     const response = await axios.get(URL);
 
     return response;
@@ -53,7 +53,7 @@ export const requestGetUseRental = async (JWT_TOKEN, filter) => {
 
     // * orders:  [주문 정보 Array…]
 
-    const URL = Paths.api + "api/rental";
+    const URL = Paths.api + "rental";
     const response = await axios.get(URL);
 
     return response;
@@ -66,7 +66,7 @@ export const requestGetDetailUseRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: order: 주문 정보
 
-    const URL = Paths.api + "api/rental/:rental_id";
+    const URL = Paths.api + "rental/:rental_id";
     const response = await axios.get(URL);
 
     return response;
@@ -79,7 +79,7 @@ export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: success / failure
 
-    const URL = Paths.api + 'api/rental/:rental_id';
+    const URL = Paths.api + 'rental/:rental_id';
     const response = await axios.put(URL);
 
     return response;

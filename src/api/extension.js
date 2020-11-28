@@ -11,7 +11,7 @@ export const requestPostExtension = async (JWT_TOKEN, rental_id, end_time, payme
 
 	// * 응답: success / failure
 
-	const URL = Paths.api + "api/extension";
+	const URL = Paths.api + "extension";
 	const response = await axios.post(URL);
 
 	return response;
