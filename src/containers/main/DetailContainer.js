@@ -1,6 +1,6 @@
 /*global Kakao*/
 
-import React, { useState, /* useEffect */ } from 'react';
+import React, { useState,useEffect  } from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
@@ -23,31 +23,41 @@ import { ButtonBase, IconButton } from '@material-ui/core';
 import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
+//api
+import {requestGetDetailParking} from '../../api/place';
+
 
 const cx = cn.bind(styles);
-// const categorys = [
-//     {
-//         ca_name: '정보',
-//     },
-//     {
-//         ca_name: '리뷰',
-//     },
-// ];
-
-const DetailContainer = ({ modal }) => {
+const DetailContainer = ({ modal, place_id }) => {
 
     const [index, setIndex] = useState(0);
     const history = useHistory();
 
+    // 상세보기 할 주차공간 api 호출
+    const callGetDetailParking = async ()=>{
+        try{
+            const res = await requestGetDetailParking(place_id);
 
+        }
+        catch(e){
+            console.error(e);
+        }
+
+    }
+
+    // 카카오 내비게이션 실행
     const onClickKakaoNavi = () => {
         Kakao.Navi.start({
-            name: "현대백화점 판교점",
-            x: 127.11205203011632,
-            y: 37.39279717586919,
+            name: "현대백화점 판교점", // 도착지 지번
+            x: 127.11205203011632, //도착지 x좌표
+            y: 37.39279717586919, //도착지 y 좌표
             coordType: 'wgs84'
         });
     }
+
+    useEffect(()=>{
+        //detail id 로 받아오기
+    },[])
 
 
     // const createKakaoButton = () => {

@@ -1,5 +1,6 @@
-import {createAction , handleActions} from 'redux-actions';
+//유저 포지션
 
+import {createAction , handleActions} from 'redux-actions';
 const SET_POSITION  = 'position/SET_POSITION';
 const SET_LEVEL = 'position/SET_LEVEL';
 const SET_ADDRESSS ='position/ADDRESS';
@@ -28,7 +29,7 @@ const initState = {
 };
 
 
-const user_position = handleActions(
+const position = handleActions(
     {
         [SET_POSITION]: (state, action) => {
             return{
@@ -58,4 +59,4 @@ const user_position = handleActions(
     initState,
 );
 
-export default user_position;
+export default position;

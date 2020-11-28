@@ -42,7 +42,7 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
 //action
-import { set_position, set_level } from '../../store/user_position';
+import { set_position, set_level } from '../../store/main/position';
 
 //api
 
@@ -53,7 +53,7 @@ const cx = cn.bind(styles);
 const MapContainer = ({ modal }) => {
     const dispatch = useDispatch();
     const { position, level, address, arrive } = useSelector(
-        (state) => state.user_position,
+        (state) => state.position,
     ); //마지막 좌표 및 레벨
 
     let position_ref = useRef({

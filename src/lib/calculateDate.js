@@ -1,20 +1,23 @@
 
 const week = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
 
-export const calculateDate = (date, term, type) => {
-    const cal_date = new Date(date);
-    switch (type) {
-        case 'DATE':
-            return new Date(cal_date.setDate(cal_date.getDate() - term));
-        case 'MONTH':
-            return new Date(cal_date.setMonth(cal_date.getMonth() - term));
-        case 'YEAR':
-            return new Date(
-                cal_date.setFullYear(cal_date.getFullYear() - term),
-            );
-        default:
-            return cal_date;
-    }
+export const calculateDate = (start_date, end_date, start_time , end_time)  => {
+    // start_date = getFormatDate(start_date) + ' ' + start_time;
+    // end_date = getFormatDate(start_date) + ' ' + end_time;
+
+    const start = new Date(start_date + ' ' + start_time);
+    const end = new Date(end_date + ' ' + end_time);
+    console.log(start);
+    console.log(end);
+
+    const elapsedMSec = end.getTime() - start.getTime(); // 172800000
+    const elapsedDay = elapsedMSec / 1000 / 60 / 60 ; // 2
+
+    console.log(elapsedMSec);
+    console.log(elapsedDay);
+
+    return elapsedDay;
+
 };
 
 

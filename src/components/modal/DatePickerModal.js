@@ -2,8 +2,8 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 //styles
-
 import cn from 'classnames/bind';
+
 //components
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,7 +16,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import FixedButton from '../button/FixedButton';
 
 //lib
-import { getDateRange } from '../../lib/calculateDate';
+import { getDateRange ,calculateDate} from '../../lib/calculateDate';
 
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
@@ -80,6 +80,7 @@ const dateReducer = (state, action) => {
     };
 };
 const DatePickerModal = (props) => {
+
     let minute = [],
         hour = [];
     for (let i = 0; i < 6; i++) minute.push(`${i}0`);
@@ -93,6 +94,7 @@ const DatePickerModal = (props) => {
     const [end_open, setEndOpen] = useState(false);
     const [start_date, setStateDate] = useState(0);
     const [end_date, setEndDate] = useState(0);
+
 
     const day_list = date_list.map((data) => (
         <SwiperSlide className={styles['swiper-slide']} key={data.DAY}>
@@ -111,16 +113,19 @@ const DatePickerModal = (props) => {
     ));
 
     useEffect(() => {
-        const {start_day,start_hour, start_minute} = date_index;
-        const {end_day,end_hour, end_minute} = date_index;
-        if(date_list.length!==0){
-            setStateDate(date_list[start_day].DAY+' ' + hour[start_hour]+ ':' + minute[start_minute]);
-            setEndDate(date_list[end_day].DAY+' ' + hour[end_hour]+ ':' + minute[end_minute]);
-        }
-    }, [date_index,date_list]);
 
+        const date1 = new Date('2020-11-28 10:00:00');
+        console.log(date1);
+        // 2020년 7월 3일 
+        const date2 = new Date('2020-11-29 09:02:00');
+        
+        const elapsedMSec = date2.getTime() - date1.getTime(); // 172800000
+        const elapsedDay = elapsedMSec / 1000 / 60 / 60 ; // 2
+        
+        console.log(elapsedMSec);
+        console.log(elapsedDay);
 
-    useEffect(() => {
+        console.log('hello');
         let start = new Date();
         let end = new Date();
         end.setFullYear(start.getFullYear());
@@ -130,7 +135,39 @@ const DatePickerModal = (props) => {
         console.log(res);
         setDateList(res);
     }, []);
-  
+
+
+    useEffect(() => {
+        const { start_day, start_hour, start_minute } = date_index;
+        const { end_day, end_hour, end_minute } = date_index;
+ 
+        if (date_list.length !== 0) {
+            
+            const newStartState ={
+                DAY: date_list[start_day].DAY + ' ' + hour[start_hour] + ':' + minute[start_minute],
+                DATE : date_list[start_day].DATE,
+                TIME : hour[start_hour] + ':' + minute[start_minute],
+            }
+            const newEndState ={
+                DAY : date_list[end_day].DAY + ' ' + hour[end_hour] + ':' + minute[end_minute],
+                DATE : date_list[end_day].DATE,
+                TIME : hour[end_hour] + ':' + minute[end_minute],
+            }
+
+            setStateDate(newStartState);
+            setEndDate(newEndState);
+            // setStateDate(date_list[start_day].DAY + ' ' + hour[start_hour] + ':' + minute[start_minute]);
+            // setEndDate(date_list[end_day].DAY + ' ' + hour[end_hour] + ':' + minute[end_minute]);
+        }
+    }, [date_index, date_list]);
+
+    useEffect(()=>{
+        if(start_date!==0){
+            calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME);
+
+        }
+    },[start_date,end_date])
+
 
 
     return (
@@ -146,7 +183,7 @@ const DatePickerModal = (props) => {
                 <div className={styles['container']}>
                     <div className={styles['total-date']}>
                         <h1>총 1일 2시간 대여</h1>
-                        <p>{start_date} ~ {end_date}</p>
+                        <p>{start_date.DAY} ~ {end_date.DAY}</p>
                     </div>
                     <div className={cx('date-box', { open: start_open })}>
                         <div className={styles['txt-value']}>
@@ -155,7 +192,7 @@ const DatePickerModal = (props) => {
                                 className={styles['value']}
                                 onClick={() => setStartOpen(!start_open)}
                             >
-                                {start_date}
+                                {start_date.DAY}
                                 <Select />
                             </ButtonBase>
                         </div>
@@ -228,7 +265,7 @@ const DatePickerModal = (props) => {
                                 className={styles['value']}
                                 onClick={() => setEndOpen(!end_open)}
                             >
-                                10/07(수) 15:00
+                                {end_date.DAY}
                                 <Select />
                             </ButtonBase>
                         </div>
