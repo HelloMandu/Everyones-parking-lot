@@ -2,30 +2,31 @@
 
 import {createAction , handleActions} from 'redux-actions';
 
-const SET_FILTER  = 'filter/SET_FILTER';
+const SET_FILTERS  = 'filter/SET_FILTERS';
 
-export const set_filter = createAction(SET_FILTER);
+export const set_filters = createAction(SET_FILTERS);
 
 const initState = {
     parking_town: true,  //주차타운
     underground_parking : true, //지하주차장
     ground_parking : true, //지상주차장
-    ground_parking : true,  //지상주차장
     stated_parking : true, //지정주차장
  
 };
 
 
-const filter = handleActions(
+const filters = handleActions(
     {
-        [SET_FILTER] : (state,action)=>{
+        [SET_FILTERS] : (state,action)=>{
+            const {type,value} = action.payload;
+          
             return{
                 ...state,
-                [action.type] : action.payload,
+                [type] : value,
             }
         }
     },
     initState,
 );
 
-export default filter;
+export default filters;

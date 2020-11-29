@@ -2,21 +2,17 @@
 const week = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)'];
 
 export const calculateDate = (start_date, end_date, start_time , end_time)  => {
-    // start_date = getFormatDate(start_date) + ' ' + start_time;
-    // end_date = getFormatDate(start_date) + ' ' + end_time;
 
     const start = new Date(start_date + ' ' + start_time);
     const end = new Date(end_date + ' ' + end_time);
-    console.log(start);
-    console.log(end);
 
     const elapsedMSec = end.getTime() - start.getTime(); // 172800000
     const elapsedDay = elapsedMSec / 1000 / 60 / 60 ; // 2
 
-    console.log(elapsedMSec);
-    console.log(elapsedDay);
-
-    return elapsedDay;
+    const day = Math.floor(elapsedDay/24);
+    const hour =Math.floor(elapsedDay%24);
+    const minute = Math.ceil ((Math.abs (hour -elapsedDay%24) * 60).toFixed(1));
+    return {day,hour,minute};
 
 };
 

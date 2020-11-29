@@ -94,6 +94,7 @@ const DatePickerModal = (props) => {
     const [end_open, setEndOpen] = useState(false);
     const [start_date, setStateDate] = useState(0);
     const [end_date, setEndDate] = useState(0);
+    const [total_date ,setTotalDate] = useState(0);
 
 
     const day_list = date_list.map((data) => (
@@ -113,26 +114,12 @@ const DatePickerModal = (props) => {
     ));
 
     useEffect(() => {
-
-        const date1 = new Date('2020-11-28 10:00:00');
-        console.log(date1);
-        // 2020년 7월 3일 
-        const date2 = new Date('2020-11-29 09:02:00');
-        
-        const elapsedMSec = date2.getTime() - date1.getTime(); // 172800000
-        const elapsedDay = elapsedMSec / 1000 / 60 / 60 ; // 2
-        
-        console.log(elapsedMSec);
-        console.log(elapsedDay);
-
-        console.log('hello');
         let start = new Date();
         let end = new Date();
         end.setFullYear(start.getFullYear());
         end.setMonth(start.getMonth() + 1);
         end.setDate(start.getDate());
         const res = getDateRange(start, end);
-        console.log(res);
         setDateList(res);
     }, []);
 
@@ -142,7 +129,6 @@ const DatePickerModal = (props) => {
         const { end_day, end_hour, end_minute } = date_index;
  
         if (date_list.length !== 0) {
-            
             const newStartState ={
                 DAY: date_list[start_day].DAY + ' ' + hour[start_hour] + ':' + minute[start_minute],
                 DATE : date_list[start_day].DATE,
@@ -153,21 +139,20 @@ const DatePickerModal = (props) => {
                 DATE : date_list[end_day].DATE,
                 TIME : hour[end_hour] + ':' + minute[end_minute],
             }
-
             setStateDate(newStartState);
             setEndDate(newEndState);
-            // setStateDate(date_list[start_day].DAY + ' ' + hour[start_hour] + ':' + minute[start_minute]);
-            // setEndDate(date_list[end_day].DAY + ' ' + hour[end_hour] + ':' + minute[end_minute]);
         }
     }, [date_index, date_list]);
 
     useEffect(()=>{
-        if(start_date!==0){
-            calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME);
-
+        if(start_date!==0 && end_date !==0){
+            setTotalDate(calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME));
         }
     },[start_date,end_date])
 
+    useEffect(()=>{
+        console.log(total_date);
+    },[total_date])
 
 
     return (
