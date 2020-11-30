@@ -16,7 +16,7 @@ import {
     requestGetAddressInfo,
     requestPostEnrollParking,
 } from '../../../api/place';
-import { getDateRange } from '../../../lib/calculateDate';
+import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useForm from '../../../hooks/useForm';
@@ -54,7 +54,7 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
         '',
         (state) => state.length > 0,
     );
-    const [type, onChangeType] = useInput(0);
+    const [type, onChangeType] = useInput('0');
     const [address, setAddress] = useState('');
     const [postNum, setPostNum] = useState();
     const [addressDetail, onChangeAddressDetail, checkAddressDetail] = useInput(
@@ -162,7 +162,7 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                 <div className={styles['per']}>30분당</div>
                 <div className={styles['price']}>
                     <InputBox
-                        className={'input-box'}
+                        className={'input-box-right'}
                         type={'text'}
                         value={price}
                         name={'price'}
@@ -212,18 +212,18 @@ const OperatingTime = forwardRef((props, ref) => {
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
     const [startTime, onChangeStartTime] = useForm({
-        day: new Date().getFullYear(),
+        day: getFormatDate(new Date()),
         hour: 0,
         minute: 0,
     });
     const [endTime, onChangeEndTime] = useForm({
-        day: new Date().getFullYear(),
+        day: getFormatDate(new Date()),
         hour: 0,
         minute: 0,
     });
 
-    const [startTimeFormat, setStartTimeFormat] = useState('');
-    const [endTimeFormat, setEndTimeFormat] = useState('');
+    const [startTimeFormat, setStartTimeFormat] = useState();
+    const [endTimeFormat, setEndTimeFormat] = useState();
 
     const perSelectList = dateList.map((value, index) => (
         <option
@@ -244,7 +244,6 @@ const OperatingTime = forwardRef((props, ref) => {
             {parseInt(value / 10) === 0 ? `0${value}` : value}분
         </option>
     ));
-
     useImperativeHandle(ref, () => ({
         startTimeFormat,
         endTimeFormat,
@@ -269,14 +268,14 @@ const OperatingTime = forwardRef((props, ref) => {
         }
         setMinuteList(newMinuteList);
     }, []);
-    useEffect(() => {
+    useEffect(()=>{
         setStartTimeFormat(
-            new Date(`${startTime.day} ${startTime.hour}:${startTime.minute}`),
+            `${startTime.day} ${startTime.hour}:${startTime.minute}`,
         );
-        setEndTimeFormat(
-            new Date(`${endTime.day} ${endTime.hour}:${endTime.minute}`),
-        );
-    }, [startTime, endTime]);
+    }, [startTime])
+    useEffect(() => {
+        setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
+    }, [endTime]);
     return (
         <div className={styles['parking-enroll-area']}>
             <div className={styles['title']}>운영시간</div>
@@ -354,14 +353,16 @@ const FileItem = ({ file, onDelete }) => {
 };
 
 const ParkingPicture = forwardRef(({ setCheck }, ref) => {
-    const [fileList, setFileList] = useState([]); //파일
+    const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
-        const newFileList = [];
-        for (let i = 0; i < files.length; i++) {
-            newFileList.push({ id: i + 1, file: files[i] });
+        if (files) {
+            const newFileList = [];
+            for (let i = 0; i < files.length; i++) {
+                newFileList.push({ id: i + 1, file: files[i] });
+            }
+            setFileList(newFileList);
         }
-        setFileList(newFileList);
     }, []);
     const handleDeleteFile = useCallback(
         (id) => setFileList(fileList.filter((file) => file.id !== id)),

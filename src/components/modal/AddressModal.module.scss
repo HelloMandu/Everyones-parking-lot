@@ -4,13 +4,14 @@ html {
     body {
         :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: $level1 !important;
+            z-index: $level2 !important;
         }
     }
 }
 html {
     body {
         .distance-item {
+            transition: all 0.3s ease-in-out;
             box-sizing: border-box;
             margin: 0 7.5px;
             &:first-child {
@@ -35,7 +36,7 @@ html {
 
 
 .container {
-    .item-list {
+    .space-list {
         max-height: 200px;
         overflow: hidden;
         overflow-y: scroll;

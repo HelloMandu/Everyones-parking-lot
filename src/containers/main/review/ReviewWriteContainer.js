@@ -1,7 +1,13 @@
 import React from 'react';
 import qs from 'qs';
 import { useLocation } from 'react-router-dom';
+import className from 'classnames/bind'
 /* Library */
+
+import styles from './ReviewWriteContainer.module.scss'
+import StarHalf from '../../../static/asset/svg/review/StarHalf'
+
+const cx = className.bind(styles)
 
 const WriteReview = () => {
 
@@ -20,7 +26,7 @@ const ModifyReview = () => {
 
     return (
         <div>
-            리뷰 수정
+            리뷰 수정<StarHalf />
         </div>
     );
 };
@@ -31,11 +37,13 @@ const ReviewWriteContainer = () => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     })
-    const { review_id } = query;
+    const { id } = query;
 
     return (
-        <div className="container">
-            {review_id ? <ModifyReview /> : <WriteReview />}
+        <div className={cx("container")}>
+        {console.log(id, location)}
+            {id ? <ModifyReview /> : <WriteReview />}
+            
         </div>
     );
 };

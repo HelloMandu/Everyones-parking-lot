@@ -1,0 +1,217 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    padding: $padding;
+
+    max-width: $max-width;
+    min-width: $min-width;
+    margin: 0 auto;
+    width: 100%;
+
+    .card{
+        border: 1px solid #E9EBED;
+        box-shadow: 0px 5px 10px rgba($color: #000000, $alpha: 0.05);
+        margin-bottom: 16px;
+
+        .title{
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-bottom: 18px;
+        }
+
+        .button-area{
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+
+            & > button{
+                padding: 10px 8px;
+                border: 1px solid #EBEBEB;
+                margin-right: 16px;
+
+                & > svg{
+                    margin-right: 6px;
+                }
+            }
+
+            & > button:last-child{
+                margin: 0;
+            }
+        }
+
+        .information{
+            padding: 0 $padding;
+            color: #777777;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 16px;
+            
+            & > svg{
+                vertical-align: middle;
+            }
+
+            .information-content{
+                font-size: 12px;
+                color: #CCCCCC;
+                margin: 10px 0 24px;
+                word-break: break-all;
+            }
+        }
+    }
+
+    .content-area{
+        padding: 0 20px;
+
+        .attribute-wrapper{
+            .attribute{
+                font-size: 14px;
+                font-weight: bold;
+                color: #AAAAAA;
+                display: inline-block;
+                margin-bottom: 10px;
+            }
+
+            .value{
+                font-size: 14px;
+                color: #777777;
+                float: right;
+                margin-bottom: 10px;
+            }
+
+            .black{
+                font-weight: bold;
+                color: #333333;
+            }
+        }
+
+        .attribute-wrapper:last-child{
+            border-bottom: 1px solid #E9EBED;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .discount-title{
+        font-size: 18px;
+        font-weight: bold;
+        color: #222222;
+        margin-bottom: 18px;
+    }
+
+    .button-area{
+        padding-top: 24px;
+
+        & > button{
+            width: 33%;
+            height: 48px;
+            margin-right: 0.5%;
+            margin-bottom: 0.5%;
+            border: 1px solid #EBEBEB;
+        }
+
+        & > button:nth-child(3n){
+            margin: 0;
+        }
+    }
+}
+
+.bar{
+    width: 100%;
+    height: 16px;
+    background-color: #F4F4F4;
+}
+
+.top{
+    padding-top: $pd-top + 20px;
+}
+
+.checkout-time-container{
+    width: 100%;
+    height: 134px;
+    background-color: #F7F8F9;
+    padding: 20px $padding;
+
+    .box{
+        width: 100%;
+        height: 100%;
+        background-color: #FFFFFF;
+        border: 1px solid #222222;
+        border-radius: 2px;
+
+        .checkout-time-area{
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+
+            .comment{
+                font-size: 14px;
+                color: #555555;
+            }
+
+            .checkout-time{
+                font-size: 20px;
+                font-weight: bold;
+                color: #222222;
+            }
+        }
+    }
+}
+
+.parking-payment-area {
+    padding: $padding-side;
+    word-break: keep-all;
+
+    .parking-payment-wrapper {
+        position: relative;
+        width: 100%;
+        margin-top: 41px;
+        margin-bottom: 14px;
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 13px;
+        }
+    
+        .payment {
+            padding-left: 10px;
+            width: 100%;
+            height: 48px;
+            border: 1px solid #ebebeb;
+            font-size: 15px;
+            line-height: 48px;
+            background: url('../../../static/asset/svg/arrow.svg') no-repeat calc(100% - 8px) 50% #fff;   
+        }
+    }
+}
+
+
+.extend-price{
+    width: 100%;
+    height: 88px;
+    background-color: #F7F8F9;
+
+    & > .attribute-wrapper{
+        display: flex;
+        justify-content: space-between;
+        padding: $padding;
+        width: 100%;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+
+        .attribute{
+            font-size: 18px;
+            font-weight: bold;
+            color: #222222;
+        }
+
+        .value{
+            font-size: 18px;
+            font-weight: bold;
+            color: #222222;
+        }
+    }
+}

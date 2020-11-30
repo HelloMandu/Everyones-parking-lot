@@ -9,7 +9,7 @@ export const requestPostWriteReview = async (JWT_TOKEN, rental_id, place_id, rev
     // review_body: 리뷰 내용
     // review_rating: 리뷰 평점
 
-    const URL = Paths.api + "api/review";
+    const URL = Paths.api + "review";
     const response = await axios.post(URL);
 
     return response;
@@ -22,7 +22,7 @@ export const requestPutModifyReview = async (JWT_TOKEN, review_id, review_body, 
     // review_rating: 수정할 리뷰 평점
 
 
-    const URL = Paths.api + "api/review/:review_id";
+    const URL = Paths.api + "review/:review_id";
     const response = await axios.put(URL);
 
     return response;
@@ -33,7 +33,7 @@ export const requestGetReviewList = async (JWT_TOKEN) => {
 
     // * 응답: reviews: [리뷰 Array…]
 
-    const URL = Paths.api + "api/review";
+    const URL = Paths.api + "review";
     const response = await axios.get(URL);
 
     return response;
@@ -44,7 +44,7 @@ export const requestGetDetailReview = async (review_id) => {
 
     // * 응답: review: 리뷰 상세 정보
 
-    const URL = Paths.api + "api/review/:review_id";
+    const URL = Paths.api + "review/:review_id";
     const response = await axios.get(URL);
 
     return response;
@@ -57,7 +57,7 @@ export const requestPostWriteComment = async (JWT_TOKEN, review_id, comment_body
 
     // * 응답: comment: 댓글 정보
 
-    const URL = Paths.api + "api/comment";
+    const URL = Paths.api + "comment";
     const response = await axios.post(URL);
 
     return response;

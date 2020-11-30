@@ -1,8 +1,4 @@
-import React from 'react';
-
-const Plus = () => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
       <g id="그룹_5021" data-name="그룹 5021" transform="translate(-3383 -9683)">
         <rect id="사각형_2991" data-name="사각형 2991" width="24" height="24" transform="translate(3383 9683)" fill="none" />
         <g id="그룹_5020" data-name="그룹 5020" transform="translate(3294.5 9131.5)">
@@ -11,7 +7,3 @@ const Plus = () => {
         </g>
       </g>
     </svg>
-  );
-};
-
-export default Plus;

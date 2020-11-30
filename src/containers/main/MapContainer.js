@@ -16,15 +16,20 @@ import { Paths } from '../../paths';
 import styles from './MapContainer.module.scss';
 import cn from 'classnames/bind';
 import { ButtonBase, IconButton } from '@material-ui/core';
-import search_icon from '../../static/asset/svg/main/search.svg';
-import zoom_in from '../../static/asset/svg/main/plus.svg';
-import zoom_out from '../../static/asset/svg/main/minus.svg';
-import filter_img from '../../static/asset/svg/main/filter.svg';
-import time_img from '../../static/asset/svg/main/time.svg';
-import like_img from '../../static/asset/svg/main/like.svg';
-import MarkerImg from '../../static/asset/svg/main/marker2.svg';
-import UserMakerImg from '../../static/asset/svg/main/arrive_marker.svg';
-import Location_img from '../../static/asset/svg/main/location.svg';
+
+//main icons
+import SEARCH from '../../static/asset/svg/main/search.svg';
+import ZOOMIN from '../../static/asset/svg/main/plus.svg';
+import ZOOMOUT from '../../static/asset/svg/main/minus.svg';
+import FILTER from '../../static/asset/svg/main/filter.svg';
+import POSITION from '../../static/asset/svg/main/location.svg';
+import TIME from '../../static/asset/svg/main/time.svg';
+import BOOKMARK from '../../static/asset/svg/main/like.svg';
+
+//marker
+import PARKING_MARKER from '../../static/asset/svg/main/marker2.svg';
+import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
+import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 
 //componenst
 import Aside from '../../components/aside/Aside';
@@ -55,9 +60,10 @@ const MapContainer = ({ modal }) => {
         lat: 35.1158949746728,
         lng: 128.966901860943,
     }); //지도 첫렌더시 좌표
-    let level_ref = useRef(5); // 디폴트 레벨
-    let view_ref = useRef(false); // 슬라이드 여부
-    let arrive_markers = useRef([]);
+    let map_lev = useRef(5); // 디폴트 레벨
+    let slide_view = useRef(false); // 슬라이드 여부
+    let arrive_markers = useRef([]); //도착지 마커
+    let user_location_marker = useRef([]); // 유저 위치 마커
     const kakao_map = useRef(null); //카카오 맵
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
@@ -93,6 +99,7 @@ const MapContainer = ({ modal }) => {
                 const lat = p.coords.latitude;
                 const lng = p.coords.longitude;
                 setCoordinates(lat, lng);
+                createMyLocationMarker(lat,lng);
             } catch (e) {
                 if (e.code === 3) {
                     //요청 시간 초과
@@ -104,6 +111,29 @@ const MapContainer = ({ modal }) => {
         }
     };
 
+    const createMyLocationMarker =(lat,lng)=>{
+        if(user_location_marker.current.length!==0){
+            user_location_marker.current.map((marker) => marker.setMap(null));
+            user_location_marker.current = [];
+        }
+        const imageSrc = USER_LOCATION_MARKER;
+        const imageSize = new kakao.maps.Size(22, 22); // 마커이미지의 크기입니다
+        const imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption,
+        );
+        const markerPosition = new kakao.maps.LatLng(lat, lng);
+        const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+        });
+        marker.setMap(kakao_map.current);
+        user_location_marker.current.push(marker);
+
+    }
+
     // 도착지 마커를 생성하는 함수.
     const createArriveMarker = () => {
         if (arrive_markers.current.length !== 0) {
@@ -113,7 +143,7 @@ const MapContainer = ({ modal }) => {
         }
         const lat = arrive.lat ? arrive.lat : 0;
         const lng = arrive.lng ? arrive.lng : 0;
-        const imageSrc = UserMakerImg;
+        const imageSrc = ARRIVED_MARKER;
         const imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
         const imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         const markerImage = new kakao.maps.MarkerImage(
@@ -144,13 +174,13 @@ const MapContainer = ({ modal }) => {
         let lng = position.lng !== 0 ? position.lng : position_ref.current.lng;
         let options = {
             center: new kakao.maps.LatLng(lat, lng),
-            level: level !== 0 ? level : level_ref.current,
+            level: level !== 0 ? level : map_lev.current,
         };
 
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
-        var imageSrc = MarkerImg,
+        var imageSrc = PARKING_MARKER,
             imageSize = new kakao.maps.Size(120, 70),
             imageOption = { offset: new kakao.maps.Point(27, 69) };
 
@@ -164,16 +194,16 @@ const MapContainer = ({ modal }) => {
         kakao.maps.event.addListener(map, 'center_changed', function () {
             let level = map.getLevel();
             let latlng = map.getCenter();
-            level_ref.current = level;
+            map_lev.current = level;
             position_ref.current.lat = latlng.getLat();
             position_ref.current.lng = latlng.getLng();
         });
 
         //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
         kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-            if (view_ref.current) {
-                view_ref.current = !view_ref.current;
-                setOnSlide(view_ref.current);
+            if (slide_view.current) {
+                slide_view.current = !slide_view.current;
+                setOnSlide(slide_view.current);
             }
         });
 
@@ -194,7 +224,7 @@ const MapContainer = ({ modal }) => {
             });
 
             kakao.maps.event.addListener(marker, 'click', function () {
-                view_ref.current = !view_ref.current;
+                slide_view.current = !slide_view.current;
                 // setView(view_.current);
                 history.push(Paths.main.detail + `/${el.title}`);
             });
@@ -218,7 +248,7 @@ const MapContainer = ({ modal }) => {
     useEffect(() => {
         return () => {
             dispatch(set_position(position_ref.current));
-            dispatch(set_level(level_ref.current));
+            dispatch(set_level(map_lev.current));
         };
     }, [dispatch]);
 
@@ -261,18 +291,18 @@ const MapContainer = ({ modal }) => {
                         위치를 입력해주세요
                     </ButtonBase>
                     <IconButton className={styles['search-btn']}>
-                        <img src={search_icon} alt="search" />
+                        <img src={SEARCH} alt="search" />
                     </IconButton>
                 </div>
                 <div className={cx('side-bar', 'left')}>
                     <CircleButton
-                        src={zoom_in}
+                        src={ZOOMIN}
                         onClick={() => {
                             zoomMap('zoomin');
                         }}
                     />
                     <CircleButton
-                        src={zoom_out}
+                        src={ZOOMOUT}
                         onClick={() => {
                             zoomMap('zoomout');
                         }}
@@ -280,17 +310,17 @@ const MapContainer = ({ modal }) => {
                 </div>
                 <div className={cx('side-bar', 'right')}>
                     <CircleButton
-                        src={filter_img}
+                        src={FILTER}
                         onClick={() => {
                             dispatchHandle({ type: 'filter_', payload: true });
                         }}
                     />
                     <CircleButton
-                        src={Location_img}
+                        src={POSITION}
                         onClick={callGetCoordinates}
                     />
                     <CircleButton
-                        src={like_img}
+                        src={BOOKMARK}
                         onClick={() =>
                             history.push(Paths.main.index + '/bookmark')
                         }

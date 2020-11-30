@@ -12,7 +12,7 @@ import InputBox from '../../components/inputbox/InputBox';
 import { requestPostSignIn } from '../../api/user'
 
 import styles from './SignInContainer.module.scss';
-import logo from '../../static/asset/png/logo.png';
+import Logo from '../../static/asset/svg/Logo';
 
 import Naver from '../../static/asset/svg/auth/naver';
 import Kakao from '../../static/asset/svg/auth/kakao';
@@ -46,7 +46,7 @@ const SignInContainer = () => {
     return (
         <div className={cx('container')}>
             <div className={cx('logo')}>
-                <img src={logo} alt="" />
+                <Logo />
             </div>
 
             <InputBox
