@@ -46,47 +46,45 @@
     }
 }
 
-    .file-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        height: 100%;
-        .button{
-            min-width: 98px;
-            min-height: 98px;
+.file-list {
+    box-sizing: border-box;
+    width: 100%;
+    .button{
+        width: 33.3%;
+        padding: 0 5px;
+        margin-bottom: 10px;
+        vertical-align: top;
+        label{
             border: 1px solid #521919;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            label{
-                position: relative;
-                display: inline-block;
-                width: 100%;
-                height: 100%;
-                svg{
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate((-50%, -50%));
-                }
-            }
+            display: inline-block;
+            width: 100%;
+            padding-top: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background: url('./plus.svg') no-repeat center; 
         }
-        .input-files {
-            display: none;
-        }
-        li{
-            min-width: 98px; 
-            min-height: 98px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
+    }
+    .input-files {
+        display: none;
+    }
+    li{
+        width: 33.3%;
+        padding: 0 5px;
+        margin-bottom: 10px;
+        display: inline-block;
         .file-item {
             position: relative;
-            display: inline-block;
-            width: 100%; height: 100%;
+            width: 100%;
+            padding-top: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
             border: 1px solid #CCC;
             .file-image {
                 position: absolute;
-                width: 100%; height: 100%;
+                width: 100%; 
+                height: 100%;
             }
             .file-delete {
                 position: absolute;
@@ -103,3 +101,4 @@
             }
         }
     }
+}
