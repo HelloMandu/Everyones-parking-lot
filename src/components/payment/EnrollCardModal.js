@@ -1,8 +1,12 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useCallback, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 
 import useForm from '../../hooks/useForm';
 import useInput from '../../hooks/useInput';
+import { useDialog } from '../../hooks/useDialog';
+
+import { requestPostCardEnroll } from '../../api/card';
 
 import Header from '../header/Header';
 import InputBox from '../inputbox/InputBox';
@@ -15,7 +19,7 @@ const Transition = forwardRef((props, ref) => {
 });
 
 const EnrollCardModal = ({ open }) => {
-    const [cardNum, onChangeCardNum] = useForm(
+    const [cardNum, onChangeCardNum, checkCardNum] = useForm(
         {
             card1: '',
             card2: '',
@@ -24,53 +28,75 @@ const EnrollCardModal = ({ open }) => {
         },
         4,
     );
-    const [cardPeriod, onChangeCardPeriod] = useForm(
+    const { card1, card2, card3, card4 } = cardNum;
+
+    const [cardPeriod, onChangeCardPeriod, checkCardPeriod] = useForm(
         {
             month: '',
             year: '',
         },
         2,
     );
-    const [cardPassword, onChangeCardPassword] = useInput('', undefined, 2);
-    const { card1, card2, card3, card4 } = cardNum;
     const { month, year } = cardPeriod;
+
+    const [cardPassword, onChangeCardPassword, checkCardPassword] = useInput(
+        '',
+        (state) => state.length === 2,
+        2,
+    );
+
+    const [allCheck, setAllCheck] = useState(false);
+
+    const openDialog = useDialog();
+    const history = useHistory();
+    const handleEnrollCard = useCallback(async () => {
+        if (!allCheck) {
+            openDialog('등록실패', '필수입력사항을 입력해주세요');
+            return;
+        }
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const CARD_NUM = `${cardNum.card1}-${cardNum.card2}-${cardNum.card3}-${cardNum.card4}`;
+        const { data } = await requestPostCardEnroll(JWT_TOKEN, CARD_NUM);
+        if (data.msg === 'success') {
+        }
+    }, [allCheck, cardNum, openDialog]);
+
+    useEffect(() => {
+        setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword);
+    }, [checkCardNum, checkCardPeriod, checkCardPassword]);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제수단등록'}></Header>
             <div className={styles['enrollcard-container']}>
                 <div className={styles['enroll-title']}>카드번호</div>
                 <div className={styles['card-input']}>
-                    <InputBox
-                        className={'input-box'}
+                    <input
                         type={'text'}
                         name={'card1'}
                         value={card1}
                         onChange={onChangeCardNum}
-                    ></InputBox>
+                    />
                     -
-                    <InputBox
-                        className={'input-box'}
+                    <input
                         type={'text'}
                         name={'card2'}
                         value={card2}
                         onChange={onChangeCardNum}
-                    ></InputBox>
+                    />
                     -
-                    <InputBox
-                        className={'input-box'}
+                    <input
                         type={'text'}
                         name={'card3'}
                         value={card3}
                         onChange={onChangeCardNum}
-                    ></InputBox>
+                    />
                     -
-                    <InputBox
-                        className={'input-box'}
+                    <input
                         type={'text'}
                         name={'card4'}
                         value={card4}
                         onChange={onChangeCardNum}
-                    ></InputBox>
+                    />
                 </div>
                 <div className={styles['enroll-title']}>유효기간</div>
                 <div className={styles['card-period']}>
@@ -97,7 +123,6 @@ const EnrollCardModal = ({ open }) => {
                     </div>
                 </div>
                 <div className={styles['enroll-title']}>비밀번호</div>
-
                 <div className={styles['card-password']}>
                     <InputBox
                         className={'input-box'}
@@ -108,7 +133,11 @@ const EnrollCardModal = ({ open }) => {
                     ></InputBox>
                 </div>
             </div>
-            <FixedButton button_name={'결제하기'}></FixedButton>
+            <FixedButton
+                button_name={'등록하기'}
+                disable={!allCheck}
+                onClick={handleEnrollCard}
+            ></FixedButton>
         </Dialog>
     );
 };

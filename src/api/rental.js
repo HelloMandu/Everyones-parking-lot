@@ -1,36 +1,56 @@
 import axios from 'axios';
+import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
 export const requestPostRental = async (JWT_TOKEN,
     place_id,
-    coupon_id,
-    start_time,
-    end_time,
-    payment_time,
+    cp_id,
+    rental_start_time,
+    rental_end_time,
+    payment_type,
     rental_price,
-    deposite,
+    deposit,
     point_price,
-    coupon_price,
+    card_id,
     phone_number
 ) => {
+    /*
+        결제 및 대여 등록 요청 API(POST): /api/rental
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
 
-    // { headers }: JWT_TOKEN(유저 로그인 토큰)
-    // place_id: 결제할 주차공간 id
-    // coupon_id: 사용할 쿠폰 id
-    // start_time: 대여 시작 시간
-    // end_time: 대여 종료 시간
-    // payment_type: 결제 수단
-    // rental_price: 대여비
-    // deposit: 보증금
-    // point_price: 사용할 포인트 할인액
-    // coupon_price: 사용할 쿠폰 할인액
-    // phone_number: 대여자 연락처 ======> DB 변경 필요
+        place_id: 결제할 주차공간 id(Interger, 필수)
+        cp_id: 사용할 쿠폰 id(Integer)
+        rental_start_time: 대여 시작 시간(DateTimeString, 필수)
+        rental_end_time: 대여 종료 시간(DateTimeString, 필수)
+        rental_price: 대여비(UNSIGNED Integer, 필수)
+        point_price: 사용할 포인트 할인 금액(UNSIGNED Integer)
+        deposit: 보증금(UNSIGNED Integer, 필수)
+        payment_type: 결제 수단(Integer, 0: 카드 | 1: 카카오페이 | 2: 네이버페이 | 3: 페이코, 필수)
+        card_id: 결제 카드 id(Integer, payment_type이 0이면 필수)
+        phone_number: 대여자 연락처(String, 필수)
 
-    // * 응답: rental_id: 대여 주문 번호
-
+        * 응답: rental_id = 대여 주문 번호
+    */
     const URL = Paths.api + "rental";
-    const response = await axios.post(URL);
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    }
+    const formData = makeFormData({
+        place_id,
+        cp_id,
+        rental_start_time,
+        rental_end_time,
+        payment_type,
+        rental_price,
+        deposit,
+        point_price,
+        card_id,
+        phone_number
+    });
+    const response = await axios.post(URL, formData, config);
 
     return response;
 };
