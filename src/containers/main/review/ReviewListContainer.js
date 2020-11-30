@@ -68,6 +68,7 @@ const ReviewItem = ({
 }) => {
     return (
         <div className={cx('card')}>
+            <Link to={Paths.main.review.detail + `?id=${review_id}`}>
             <img src={`${Parking}`} alt={`${review_img}`} />
             <div className={cx('title')}>{place_id}.title</div>
             <div className={cx('rating')}>{review_rating}</div>
@@ -76,6 +77,7 @@ const ReviewItem = ({
                 <hr />
             </div>
             <div className={cx('body')}>{review_body}</div>
+            </Link>
 
             <div className={cx('button-area')}>
                 <ButtonBase>삭제</ButtonBase>

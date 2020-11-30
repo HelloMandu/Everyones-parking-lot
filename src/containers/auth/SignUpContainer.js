@@ -239,7 +239,6 @@ const SignUpContainer = () => {
                     ref={passwordRef}
                 ></Password>
                 <BirthSelector
-                    setCheck={setCheckPhone}
                     onChangeBirth={onChangeBirth}
                 ></BirthSelector>
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
