@@ -31,3 +31,9 @@
 [1126/131724.972:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
 >>>>>>> 2fe0c0d0d1221a2759c40d98db3ce86e44492e22
 >>>>>>> mandu
+[1128/151125.245:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[1128/160204.196:ERROR:process_info.cc(359)] UncheckedAllocate
+[1128/160208.420:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/154637.552:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/155358.914:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)
+[1130/161221.238:ERROR:directory_reader_win.cc(43)] FindFirstFile: 지정된 경로를 찾을 수 없습니다. (0x3)

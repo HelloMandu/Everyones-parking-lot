@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import className from 'classnames/bind';
 import { Link } from 'react-router-dom'
 import { ButtonBase } from '@material-ui/core';
 
 import { Paths } from '../../../paths'
+
+import { requestGetReviewList } from '../../../api/review'
 
 import styles from './ReviewListContainer.module.scss';
 import Parking from '../../../static/asset/png/parking.png';
@@ -87,6 +89,18 @@ const ReviewItem = ({
 
 const ReviewListContainer = () => {
     // requestGetReviewList API
+
+
+    const getReviewList = useCallback(async(token) => {
+        const response = await requestGetReviewList(token)
+        console.log(response)
+        return response
+    }, [])
+
+    useEffect(() => {
+        const token = localStorage.getItem('user_id')
+        getReviewList(token)
+    }, [getReviewList])
 
     return (
         <div className={cx('container')}>
