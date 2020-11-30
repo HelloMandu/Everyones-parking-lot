@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import className from 'classnames/bind';
 /* Library */
 
+import FixedButton from '../../../components/button/FixedButton'
+
 import styles from './ReviewWriteContainer.module.scss';
 import Rating from '@material-ui/lab/Rating';
 
@@ -35,10 +37,11 @@ const ModifyReview = () => {
             </div>
 
             <div className={cx('input')}>
-                <input
-                    type="textarea"
+                <textarea
                     name="review"
-                    placeholder="리뷰를 작성해주세요.작성시 100P를 지급해드립니다."
+                    rows="10"
+                    cols="20"
+                    placeholder="리뷰를 작성해주세요.&#13;&#10;작성시 100P를 지급해드립니다."
                 />
             </div>
         </div>
@@ -53,10 +56,13 @@ const ReviewWriteContainer = () => {
     const { id } = query;
 
     return (
+        <>
         <div className={cx('container')}>
             {console.log(id, location)}
             {id ? <ModifyReview /> : <WriteReview />}
         </div>
+        <FixedButton button_name={id ? "수정하기" : "작성하기"} disable={false} />
+        </>
     );
 };
 
