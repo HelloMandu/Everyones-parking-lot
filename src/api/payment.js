@@ -10,7 +10,7 @@ export const requestGetPayInfo = async (JWT_TOKEN, place_id, start_time, end_tim
 
     // * 응답: place: 주차공간 정보(요금, 보증금)
 
-    const URL = Paths.api + "api/order";
+    const URL = Paths.api + "order";
     const response = await axios.get(URL);
 
     return response;
@@ -22,7 +22,7 @@ export const requestGetCoupon = async (JWT_TOKEN, place_id) => {
 
     // * 응답: coupons: [사용가능한 쿠폰 Array…]
 
-    const URL = Paths.api + "api/coupon";
+    const URL = Paths.api + "coupon";
     const response = await axios.get(URL);
 
     return response;

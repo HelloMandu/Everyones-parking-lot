@@ -71,7 +71,8 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/',    
+    api: 'http://localhost:8080/api/',    
+    storage: 'http://localhost:8080/uploads/',
 };
 
 export const HeaderTitle = {
