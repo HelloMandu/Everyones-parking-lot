@@ -58,12 +58,16 @@ const EnrollCardModal = ({ open }) => {
         const CARD_NUM = `${cardNum.card1}-${cardNum.card2}-${cardNum.card3}-${cardNum.card4}`;
         const { data } = await requestPostCardEnroll(JWT_TOKEN, CARD_NUM);
         if (data.msg === 'success') {
+            history.goBack();
+        } else {
+            openDialog('등록실패', '네트워크상태를 확인하세요')
         }
-    }, [allCheck, cardNum, openDialog]);
+    }, [allCheck, cardNum, openDialog, history]);
 
-    useEffect(() => {
-        setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword);
-    }, [checkCardNum, checkCardPeriod, checkCardPassword]);
+    useEffect(
+        () => setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword),
+        [checkCardNum, checkCardPeriod, checkCardPassword],
+    );
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제수단등록'}></Header>
