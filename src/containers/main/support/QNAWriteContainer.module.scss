@@ -47,11 +47,10 @@
 }
 
 .file-list {
-    box-sizing: border-box;
     width: 100%;
     .button{
-        width: 33.3%;
-        padding: 0 5px;
+        width: calc(33.3% - 10px);
+        margin: 0 5px;
         margin-bottom: 10px;
         vertical-align: top;
         label{
