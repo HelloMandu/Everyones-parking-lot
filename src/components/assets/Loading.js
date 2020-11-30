@@ -7,7 +7,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
+        zIndex: 5000,
         color: '#fff'
     },
 }));
