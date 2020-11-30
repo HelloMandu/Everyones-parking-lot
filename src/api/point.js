@@ -7,8 +7,12 @@ export const requestGetMyPoint = async (JWT_TOKEN) => {
 
     // * 응답: point_logs: [포인트 사용 기록 Array…]
 
-    const URL = Paths.api + "point_log";
-    const response = await axios.get(URL);
+    const URL = Paths.api + 'point_log';
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
