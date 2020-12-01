@@ -190,9 +190,7 @@ export const requestPutReCarInfo = async (JWT_TOKEN, { car_location, car_num, ca
             ContentType: 'multipart/form-data',
         },
     };
-    console.log(car_location, car_num, car_image);
     const formData = makeFormData({ car_location, car_num });
-    console.log(typeof car_image, car_image.name)
     formData.append('car_image', car_image);
 
     const response = await axios.put(URL, formData, config);
