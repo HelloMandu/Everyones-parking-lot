@@ -8,9 +8,11 @@
         font-weight: bold;
         .info-title {
             color: #aaaaaa;
+            min-width: 60px;
         }
         &:first-child .description {
             font-weight: normal;
+            text-align: right;
         }
         &:last-child {
             padding-bottom: 16px;

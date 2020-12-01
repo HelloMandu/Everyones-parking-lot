@@ -6,7 +6,6 @@
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
-    border: 1px solid #F0F0F0;
     &::placeholder{
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular
@@ -21,6 +20,7 @@
     margin-bottom: 12px;
     border-radius: 100px;
     padding: 0 18px;
+    outline: none;
 }
 
 .input-bar{
@@ -48,7 +48,6 @@
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
-    border: 1px solid #F0F0F0;
     text-align: right;
     &::placeholder{
         font-size: 1.167rem; // 14px;

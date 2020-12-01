@@ -1,10 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import cn from 'classnames/bind';
 import { Dialog, Slide } from '@material-ui/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ButtonBase } from '@material-ui/core';
 
 import useModal from '../../hooks/useModal';
+import { requestGetCardInfo } from '../../api/card';
 
 import EnrollCardModal from './EnrollCardModal';
 import Header from '../header/Header';
@@ -30,6 +31,15 @@ const Transition = forwardRef((props, ref) => {
 const PaymentContainer = ({ open, match }) => {
     const {url, params} = match;
     const [isOpenCardEnrollment, openCardEnrollment] = useModal(url, params.modal2, 'enrollment');
+
+    const [cardList, setCardList] = useState([]);
+    useEffect(()=>{
+        const requestCardInfo = async () =>{
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            const response = await requestGetCardInfo(JWT_TOKEN);
+            console.log(response);
+        }
+    })
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제 수단 선택'}></Header>
