@@ -2,6 +2,8 @@ import { createAction, handleActions } from "redux-actions";
 import { call, put, takeLatest } from "redux-saga/effects";
 
 import { finishLoading, startLoading } from "./loading";
+
+import { requestGetUserInfo } from '../api/user'
 /* Axios API */
 
 const GET_USER = 'user/GET_USER';
@@ -24,7 +26,7 @@ function *getUserSaga(action) {
     yield put(startLoading(GET_USER));
     try {
         const { payload: JWT_TOKEN } = action;
-        const user = yield call(() => {}, JWT_TOKEN);
+        const user = yield call(requestGetUserInfo, JWT_TOKEN);
         yield put({
             type: GET_USER_SUCCESS,
             payload: user.data
@@ -68,8 +70,7 @@ const user = handleActions(
     {
         [GET_USER_SUCCESS]: (state, action) => ({
             ...state,
-            ...action.payload.user,
-            ...action.payload.shop
+            ...action.payload.user
         }),
         [UPDATE_USER]: (state, action) => ({
             ...state,
