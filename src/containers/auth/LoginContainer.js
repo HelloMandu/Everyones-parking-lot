@@ -25,9 +25,9 @@ const Button = ({ name, color, backgroundColor, children }) => {
     );
 }
 
-
 const LoginContainer = () => {
     const history = useHistory()
+    
     const onClickBack = () => history.push(Paths.main.index)
 
     return (

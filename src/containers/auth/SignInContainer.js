@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
 /* Library */
 
 import useInput from '../../hooks/useInput';
@@ -8,6 +9,8 @@ import { useDialog } from '../../hooks/useDialog'
 import InputBox from '../../components/inputbox/InputBox';
 
 import { requestPostSignIn } from '../../api/user'
+
+import { getUser } from '../../store/user';
 
 import { Paths } from '../../paths';
 
@@ -23,6 +26,9 @@ const cx = classNames.bind(styles);
 
 const SignInContainer = () => {
     const history = useHistory()
+
+    const dispatch = useDispatch()
+
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
 
@@ -36,12 +42,13 @@ const SignInContainer = () => {
         
         if(response.data.msg === 'success') {
             localStorage.setItem("user_id", response.data.token)
+            dispatch(getUser(response.data.token))
             history.push(Paths.main.index)
         } else {
             openDialog(response.data.msg, '')
             console.log(response.data.msg)
         }
-    }, [email, password, history, openDialog]);
+    }, [email, password, dispatch, history, openDialog]);
 
     useEffect(() => {
         emailRef.current.focus();
