@@ -14,7 +14,7 @@ export const requestGetMyPoint = async (JWT_TOKEN) => {
         }
     });
 
-    return response;
+    return response.data.point_logs;
 };
 
 export const requestPostWithdraw = async (JWT_TOKEN, price) => {

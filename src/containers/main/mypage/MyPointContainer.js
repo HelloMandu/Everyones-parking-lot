@@ -14,6 +14,7 @@ import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 /* stylesheets */
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
 /* Hooks */
 
 import { Paths } from '../../../paths';
@@ -107,19 +108,19 @@ const WithdrawModal = ({ click, setClick }) => {
 
 const MyPointContainer = () => {
 
-    const [click, setClick] = useState(false);
     const history = useHistory();
+    const openDialog = useDialog();
+    const [click, setClick] = useState(false);
 
     const getPointList = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             const response = await requestGetMyPoint(JWT_TOKEN);
             console.log(response);
-
         } else {
-            history.push(Paths.auth.signin);
+            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
         }
-    }, [])
+    }, [history, openDialog])
 
     useEffect(() => {
         try {
