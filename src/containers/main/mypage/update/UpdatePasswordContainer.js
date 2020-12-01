@@ -1,4 +1,5 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { useCallback, useRef, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -9,10 +10,19 @@ import styles from './UpdatePasswordContainer.module.scss';
 /* Stylesheets */
 
 import useInput from '../../../../hooks/useInput';
-import { useState } from 'react';
+import { useDialog } from '../../../../hooks/useDialog';
 /* Hooks */
 
+import { Paths } from '../../../../paths';
+/* Paths */
+
+import { requestPutRePassword } from '../../../../api/user';
+/* API */
+
 const UpdatePasswordContainer = () => {
+
+    const history = useHistory();
+    const openDialog = useDialog();
 
     const toNewPasswordRef = useRef(null);
     const toConfirmPasswordRef = useRef(null);
@@ -26,10 +36,20 @@ const UpdatePasswordContainer = () => {
     const [messageStyle, setMessageStyle] = useState({});
 
 
-    const onClickButton = useCallback(() => {
+    const onClickButton = useCallback(async () => {
         // 업데이트 요청
-        alert("비밀번호 업데이트");
-    }, []);
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            const response = await requestPutRePassword(JWT_TOKEN, newPassword);
+            if (response.msg === 'success') {
+                openDialog("비밀번호변경 완료", "", () => history.push(Paths.main.mypage.index));
+            } else {
+                openDialog(response.msg, response.sub);
+            }
+        } else {
+            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+        }
+    }, [history, newPassword, openDialog]);
 
     useMemo(() => {
         if (confirmPassword !== "") {
@@ -65,7 +85,7 @@ const UpdatePasswordContainer = () => {
                     <div className={styles['cur-area']}>
                         <InputBox
                             className={'input-box'}
-                            type={'text'}
+                            type={'password'}
                             value={curPassword}
                             placeholder={'현재 비밀번호'}
                             onChange={onChangeCurPassword}
@@ -77,7 +97,7 @@ const UpdatePasswordContainer = () => {
                     <div className={styles['new-area']}>
                         <InputBox
                             className={'input-box'}
-                            type={'text'}
+                            type={'password'}
                             value={newPassword}
                             placeholder={'새 비밀번호'}
                             onChange={onChangeNewPassword}
@@ -90,7 +110,7 @@ const UpdatePasswordContainer = () => {
                     <div className={styles['confirm-area']}>
                         <InputBox
                             className={'input-box'}
-                            type={'text'}
+                            type={'password'}
                             value={confirmPassword}
                             placeholder={'비밀번호 재확인'}
                             onChange={onChangeConfirmPassword}
