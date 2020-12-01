@@ -125,7 +125,7 @@ const Logo = () => {
                         <g
                             id="그룹_5026"
                             dataname="그룹 5026"
-                            clip-path="url(#clip-path)"
+                            clipPath="url(#clip-path)"
                         >
                             <path
                                 id="패스_2524"

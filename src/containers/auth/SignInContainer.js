@@ -1,19 +1,20 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { ButtonBase } from '@material-ui/core';
-import classNames from 'classnames/bind';
 /* Library */
 
-import { Paths } from '../../paths';
-
 import useInput from '../../hooks/useInput';
+import { useDialog } from '../../hooks/useDialog'
+
 import InputBox from '../../components/inputbox/InputBox';
 
 import { requestPostSignIn } from '../../api/user'
 
+import { Paths } from '../../paths';
+
+import classNames from 'classnames/bind';
+import { ButtonBase } from '@material-ui/core';
 import styles from './SignInContainer.module.scss';
 import Logo from '../../static/asset/svg/Logo';
-
 import Naver from '../../static/asset/svg/auth/naver';
 import Kakao from '../../static/asset/svg/auth/kakao';
 import Facebook from '../../static/asset/svg/auth/facebook';
@@ -28,6 +29,8 @@ const SignInContainer = () => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
+    const openDialog = useDialog()
+
     const onClickLogin = useCallback(async () => {
         const response = await requestPostSignIn(email, password)
         
@@ -35,9 +38,10 @@ const SignInContainer = () => {
             localStorage.setItem("user_id", response.data.token)
             history.push(Paths.main.index)
         } else {
+            openDialog(response.data.msg, '')
             console.log(response.data.msg)
         }
-    }, [email, password, history]);
+    }, [email, password, history, openDialog]);
 
     useEffect(() => {
         emailRef.current.focus();

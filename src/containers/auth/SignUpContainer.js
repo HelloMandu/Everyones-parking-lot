@@ -6,27 +6,26 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import classNames from 'classnames/bind';
 import { useHistory } from 'react-router-dom';
 /* Library */
 
+import { requestPostAuth } from '../../api/user';
+
 import useInput from '../../hooks/useInput';
 import useBirth from '../../hooks/useBirth';
+import { useDialog } from '../../hooks/useDialog'
+
 import InputBox from '../../components/inputbox/InputBox';
-import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
-
 import Birth from '../../components/birth/Birth';
-
 import CheckBox from '../../components/checkbox/CheckBox';
-
 import VerifyPhone from '../../components/verifyphone/VerifyPhone';
-
 import FixedButton from '../../components/button/FixedButton';
 
-import { requestPostAuth } from '../../api/user';
+import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
 
 import { Paths } from '../../paths';
 
+import classNames from 'classnames/bind';
 import styles from './SignUpContainer.module.scss';
 
 const cx = classNames.bind(styles);
@@ -185,6 +184,8 @@ const SignUpContainer = () => {
     const passwordRef = useRef(null);
     const phoneRef = useRef(null);
 
+    const openDialog = useDialog()
+
     const onClickSignUp = useCallback(async () => {
         if (!signUp) {
             return;
@@ -194,12 +195,17 @@ const SignUpContainer = () => {
             nameRef.current.name,
             passwordRef.current.password,
             getBirth(),
-            phoneRef.current.phoneNumber,
+            phoneRef.current.phoneNumber
         );
+
+        console.log(response)
         if (response.data.msg === 'success')
             history.push(Paths.auth.sign_complete);
-        else console.log(response.data.msg);
-    }, [history, signUp, getBirth]);
+        else{
+            openDialog(response.data.msg, "")
+            console.log(response.data.msg);
+        }
+    }, [history, signUp, getBirth, openDialog]);
 
     const onKeyDownSignUp = useCallback(
         async (e) => {
