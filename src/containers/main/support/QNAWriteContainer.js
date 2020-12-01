@@ -13,7 +13,6 @@ import Delete from '../../../static/asset/svg/parking/Delete';
 /* Static */
 
 import styles from './QNAWriteContainer.module.scss';
-import Plus from './Plus';
 /* StyleSheets */
 
 const FileItem = ({ file, onDelete }) => {
@@ -33,12 +32,10 @@ const FileItem = ({ file, onDelete }) => {
     return (
         <>
             {imgFile && (
-                <div className={styles['file-item']}>
-                    <img
-                        className={styles['file-image']}
-                        src={imgFile}
-                        alt="file"
-                    />
+                <div
+                    className={styles['file-item']}
+                    style={{ backgroundImage: `url(${imgFile})` }}
+                >
                     <IconButton
                         className={styles['file-delete']}
                         onClick={onDelete}
@@ -75,9 +72,7 @@ const FilesPicture = () => {
     return (
         <ul className={styles['file-list']}>
             <ButtonBase className={styles['button']}>
-                <label htmlFor="file-setter">
-                    <Plus />
-                </label>
+                <label htmlFor="file-setter" />
             </ButtonBase>
             <input
                 id="file-setter"

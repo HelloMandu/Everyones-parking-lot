@@ -2,6 +2,10 @@
 
 .container{
     @include container($pd-top);
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-image: url('../../static/asset/png/auth_background.png');
 
     .logo{
         height: 275px;
@@ -51,7 +55,7 @@
 
     & > img {
         position: absolute;
-        top: 0;
+        bottom:0;
         width: 100%;
         z-index: -1;
     }

@@ -24,7 +24,7 @@ export const requestGetParkingList = async (
 
     // * 응답: places: [주차공간 Array…]
 
-    const URL = Paths.api + 'api/place';
+    const URL = Paths.api + 'place';
     const response = await axios.get(URL);
 
     return response;
@@ -36,7 +36,7 @@ export const requestGetLikeParkingList = async (JWT_TOKEN) => {
 
     // * 응답: places: [주차공간 Array…]
 
-    const URL = Paths.api + 'api/place/like';
+    const URL = Paths.api + 'place/like';
     const response = await axios.get(URL);
 
     return response;
@@ -47,7 +47,7 @@ export const requestGetDetailParking = async (place_id) => {
 
     // * 응답: place: 주차공간 데이터 Object(리뷰 리스트 데이터도 포함)
 
-    const URL = Paths.api + 'api/place/:place_id';
+    const URL = Paths.api + 'place/:place_id';
     const response = await axios.get(URL);
 
     return response;
@@ -59,7 +59,7 @@ export const requestPutLikeParking = async (JWT_TOKEN, status) => {
 
     // * 응답: status: 변경된 좋아요 상태
 
-    const URL = Paths.api + 'api/place/like';
+    const URL = Paths.api + 'place/like';
     const response = await axios.put(URL);
 
     return response;
@@ -74,7 +74,7 @@ export const requestGetMyParkingList = async (JWT_TOKEN) => {
         *응답: places = [주차공간 Array...]
     */
 
-    const URL = Paths.api + 'api/place/my';
+    const URL = Paths.api + 'place/my';
     const config  = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
@@ -137,7 +137,7 @@ export const requestPostEnrollParking = async (
         oper_end_time,
         place_type
     });
-    const URL = Paths.api + 'api/place';
+    const URL = Paths.api + 'place';
     place_images.forEach(({file}) => formData.append('place_images', file, file.name));
     const config  = {
         headers: {
@@ -189,7 +189,7 @@ export const requestPutModifyParking = async (
         *응답: success / failure
     */
 
-    const URL = Paths.api + 'api/place/:place_id';
+    const URL = Paths.api + 'place/:place_id';
     const response = await axios.put(URL);
 
     return response;
@@ -204,7 +204,7 @@ export const requestDeleteParking = async (JWT_TOKEN, place_id) => {
         *응답: success / failure
     */
 
-    const URL = Paths.api + 'api/place/:place_id';
+    const URL = Paths.api + 'place/:place_id';
     const response = await axios.delete(URL);
 
     return response;

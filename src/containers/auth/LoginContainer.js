@@ -40,7 +40,7 @@ const LoginContainer = () => {
                 <Link to={Paths.auth.signin} ><Button name={"이메일로 주차하기"} color={"#EBEBEB"} backgroundColor={"#333333"}><Email /></Button></Link>
             </div>
             
-            <img src={background} alt="" />
+            {/* <img src={background} alt="" /> */}
         </div>
     );
 };

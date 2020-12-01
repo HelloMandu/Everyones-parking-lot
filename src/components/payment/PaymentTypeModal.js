@@ -38,7 +38,6 @@ const PaymentContainer = ({ open, match }) => {
                 <Swiper
                     className={styles['card-swiper']}
                     spaceBetween={20}
-                    onSlideChange={(swiper) => console.log(swiper)}
                 >
                     <SwiperSlide>
                         <div className={styles['card-wrapper']}>
