@@ -16,10 +16,6 @@ import NaverPay from '../../static/asset/svg/payment/NaverPay.js';
 import Payco from '../../static/asset/svg/payment/Payco.js';
 import RegisterIcon from './RegisterIcon';
 
-import Card1 from '../../static/asset/png/card/06.png';
-import Card2 from '../../static/asset/png/card/02.png';
-import Card3 from '../../static/asset/png/card/03.png';
-
 import styles from './PaymentTypeModal.module.scss';
 
 const cx = cn.bind(styles);
@@ -29,59 +25,43 @@ const Transition = forwardRef((props, ref) => {
 });
 
 const PaymentContainer = ({ open, match }) => {
-    const {url, params} = match;
-    const [isOpenCardEnrollment, openCardEnrollment] = useModal(url, params.modal2, 'enrollment');
+    const { url, params } = match;
+    const [isOpenCardEnrollment, openCardEnrollment] = useModal(
+        url,
+        params.modal2,
+        'enrollment',
+    );
 
     const [cardList, setCardList] = useState([]);
-    useEffect(()=>{
-        const requestCardInfo = async () =>{
+    useEffect(() => {
+        const requestCardInfo = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const response = await requestGetCardInfo(JWT_TOKEN);
-            console.log(response);
-        }
-    })
+            const resCard = response.data.cards;
+            setCardList(resCard);
+        };
+        requestCardInfo();
+    }, []);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제 수단 선택'}></Header>
             <div className={styles['payment-container']}>
                 <h2 className={styles['payment-title']}>등록카드 결제</h2>
-                <Swiper
-                    className={styles['card-swiper']}
-                    spaceBetween={20}
-                >
-                    <SwiperSlide>
-                        <div className={styles['card-wrapper']}>
-                            <img src={Card1} alt="card"></img>
-                            <div className={styles['card-info']}>
-                                <div className={styles['card-num']}>
-                                    현대카드(1234 **** **** ****)
+                <Swiper className={styles['card-swiper']} spaceBetween={20}>
+                    {cardList.map(({card_id, bank_name, card_type, card_num}) => (
+                        <SwiperSlide key={card_id}>
+                            <div className={styles['card-wrapper']}>
+                                <img src={process.env.PUBLIC_URL + `/card/${card_type}.png`} alt="card"></img>
+                                <div className={styles['card-info']}>
+                                    <div className={styles['card-num']}>
+                                        {bank_name}({card_num.split('-')[0]}{' '}
+                                        **** **** ****)
+                                    </div>
+                                    <ButtonBase>삭제</ButtonBase>
                                 </div>
-                                <ButtonBase>삭제</ButtonBase>
                             </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className={styles['card-wrapper']}>
-                            <img src={Card2} alt="card"></img>
-                            <div className={styles['card-info']}>
-                                <div className={styles['card-num']}>
-                                    현대카드(1234 **** **** ****)
-                                </div>
-                                <ButtonBase>삭제</ButtonBase>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className={styles['card-wrapper']}>
-                            <img src={Card3} alt="card"></img>
-                            <div className={styles['card-info']}>
-                                <div className={styles['card-num']}>
-                                    현대카드(1234 **** **** ****)
-                                </div>
-                                <ButtonBase>삭제</ButtonBase>
-                            </div>
-                        </div>
-                    </SwiperSlide>
+                        </SwiperSlide>
+                    ))}
                     <SwiperSlide>
                         <div
                             className={styles['card-register']}
@@ -113,7 +93,7 @@ const PaymentContainer = ({ open, match }) => {
                 </ul>
             </div>
             <FixedButton button_name={'결제하기'}></FixedButton>
-            <EnrollCardModal open={isOpenCardEnrollment}></EnrollCardModal>
+            <EnrollCardModal open={isOpenCardEnrollment} setCardList={setCardList}></EnrollCardModal>
         </Dialog>
     );
 };
