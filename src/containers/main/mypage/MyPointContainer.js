@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classnames from 'classnames/bind';
+import { useHistory } from 'react-router-dom';
 import { ButtonBase, Backdrop, makeStyles } from '@material-ui/core';
 /* Library */
 
@@ -13,23 +14,19 @@ import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 /* stylesheets */
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
 /* Hooks */
+
+import { Paths } from '../../../paths';
+/* Paths */
+
+import { requestGetMyPoint } from '../../../api/point';
+/* api */
 
 const cn = classnames.bind(styles);
 const card = [
     '은행선택',
 ];
-
-// const PointItem = ({ status }) => {
-//     return (
-//         <div className={styles['point-wrap']}>
-//             <div className={cn('status-text', status)}>적립</div>
-//             <div className={styles['time']}>2020-00-00 00:00:00</div>
-//             <div className={styles['text']}>주차공간 대여 수익금<span></span></div>
-//             <div className={cn('point', status)}>+ 1,000P</div>
-//         </div>
-//     );
-// };
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -97,10 +94,41 @@ const WithdrawModal = ({ click, setClick }) => {
     )
 }
 
+// const PointItem = ({ status }) => {
+//     return (
+//         <div className={styles['point-wrap']}>
+//             <div className={cn('status-text', status)}>적립</div>
+//             <div className={styles['time']}>2020-00-00 00:00:00</div>
+//             <div className={styles['text']}>주차공간 대여 수익금<span></span></div>
+//             <div className={cn('point', status)}>+ 1,000P</div>
+//         </div>
+//     );
+// };
+
 
 const MyPointContainer = () => {
 
+    const history = useHistory();
+    const openDialog = useDialog();
     const [click, setClick] = useState(false);
+
+    const getPointList = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            const response = await requestGetMyPoint(JWT_TOKEN);
+            console.log(response);
+        } else {
+            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+        }
+    }, [history, openDialog])
+
+    useEffect(() => {
+        try {
+            getPointList();
+        } catch (e) {
+            console.log('pointList 오류')
+        }
+    }, [getPointList]);
 
     return (
         <>
