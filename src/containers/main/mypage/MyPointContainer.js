@@ -114,7 +114,6 @@ const MyPointContainer = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             const response = await requestGetMyPoint(JWT_TOKEN);
-            console.log(response);
         } else {
             openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
         }

@@ -39,15 +39,11 @@ const UpdatePasswordContainer = () => {
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
         const JWT_TOKEN = localStorage.getItem('user_id');
-        if (JWT_TOKEN) {
-            const response = await requestPutRePassword(JWT_TOKEN, newPassword);
-            if (response.msg === 'success') {
-                openDialog("비밀번호변경 완료", "", () => history.push(Paths.main.mypage.index));
-            } else {
-                openDialog(response.msg, response.sub);
-            }
+        const response = await requestPutRePassword(JWT_TOKEN, newPassword);
+        if (response.msg === 'success') {
+            openDialog("비밀번호변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
-            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+            openDialog(response.msg, response.sub);
         }
     }, [history, newPassword, openDialog]);
 

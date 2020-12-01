@@ -217,3 +217,20 @@ export const requestPutReBirth = async (JWT_TOKEN, birth) => {
 
     return response.data;
 }
+
+export const requestDeleteUser = async (JWT_TOKEN) => {
+    /*
+        회원 탈퇴 요청 API(DELETE): /api/user
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
+
+        * 응답: success / failure
+    */
+    const URL = Paths.api + 'user';
+    const response = await axios.delete(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    });
+
+    return response.data;
+}
