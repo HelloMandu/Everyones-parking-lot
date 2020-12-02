@@ -1,7 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import qs from 'qs';
 
 import useInput from '../../hooks/useInput';
+import useModal from '../../hooks/useModal';
 import { numberFormat } from '../../lib/formatter';
 
 import { Paths } from '../../paths/index';
@@ -17,7 +19,6 @@ import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
 
 import styles from './PaymentContainer.module.scss';
-import useModal from '../../hooks/useModal';
 
 const Point = () => {
     const [point, handleChangePoint] = useInput('');
@@ -87,7 +88,12 @@ const enroll = [
     },
 ];
 
-const ParkingEnrollContainer = ({ match }) => {
+const ParkingEnrollContainer = ({ location, match }) => {
+    const { place_id, start_time, end_time } = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    console.log(place_id, start_time, end_time);
+
     const { url, params } = match;
     const history = useHistory();
     const [isOpenCouponModal, openCouponModal] = useModal(
@@ -128,13 +134,13 @@ const ParkingEnrollContainer = ({ match }) => {
                 <div className={styles['parking-payment-area']}>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>결제수단</div>
-                            <div
-                                className={styles['payment']}
-                                name="payment"
-                                onClick={openTypeModal}
-                            >
-                                카카오페이
-                            </div>
+                        <div
+                            className={styles['payment']}
+                            name="payment"
+                            onClick={openTypeModal}
+                        >
+                            카카오페이
+                        </div>
                     </div>
                 </div>
                 <Price></Price>

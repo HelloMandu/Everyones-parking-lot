@@ -81,7 +81,6 @@ const ParkingManageContainer = () => {
                         place_name,
                         oper_start_time,
                         oper_end_time,
-                        per,
                         place_fee,
                     }) => (
                         <ButtonBase
