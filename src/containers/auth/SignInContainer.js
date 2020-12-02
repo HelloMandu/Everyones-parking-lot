@@ -116,18 +116,24 @@ const SignInContainer = () => {
 
             <div className={cx('social-icon-wrapper')}>
                 <ButtonBase
+                    component="a"
+                    href={Paths.api + 'Oauth/naver'}
                     className={cx('social-icon')}
                     style={{ background: '#00BF19' }}
                 >
                     <Naver />
                 </ButtonBase>
                 <ButtonBase
+                    component="a"
+                    href={Paths.api + 'Oauth/kakao'}
                     className={cx('social-icon')}
                     style={{ background: '#FCE000' }}
                 >
                     <Kakao />
                 </ButtonBase>
                 <ButtonBase
+                    component="a"
+                    href={Paths.api + 'Oauth/facebook'}
                     className={cx('social-icon')}
                     style={{ background: '#4267B2' }}
                 >

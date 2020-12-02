@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import classNames from 'classnames/bind'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 /* Library */
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
 
 import InputBox from '../../../components/inputbox/InputBox';
 
 import { isPasswordForm } from '../../../lib/formatChecker';
 
-import FixedButton from '../../../components/button/FixedButton';
-
-import { useDialog } from '../../../hooks/useDialog';
+import { requestPutRePassword } from '../../../api/user'
 
 import { Paths } from '../../../paths'
 
+import classNames from 'classnames/bind'
 import styles from './FindPasswordCompleteContainer.module.scss'
+import FixedButton from '../../../components/button/FixedButton';
 
 const cx = classNames.bind(styles)
 
 const FindPasswordCompleteContainer = () => {
+    const history = useHistory()
     const openDialog = useDialog();
 
     const [password, onChangePassword] = useInput(
@@ -29,16 +30,17 @@ const FindPasswordCompleteContainer = () => {
     const [passwordCheck, onChangePasswordCheck] = useInput('');
     const [submit, setSubmit] = useState(false)
 
-    const onClickSignUp = () => {
-        if(password === '') openDialog("비밀번호를 입력해주세요", "")
-        else {
-            if(passwordCheck) openDialog("비밀번호를 재입력해주세요", "")
-            else {
-                if(!submit) openDialog("비밀번호가 일치하지 않습니다.", "")
-                else console.log("onClickSignUp")
-            }
+    const onClickSignUp = useCallback(async() => {
+        const token = localStorage.getItem('user_id')
+        const resetPW = await requestPutRePassword(token, password)
+
+        console.log(resetPW)
+        if(resetPW.msg === "success"){
+            history.push(Paths.auth.signin)
+        } else {
+            openDialog(resetPW.msg, "")
         }
-    }
+    }, [password, history, openDialog])
 
     useEffect(() => {
         if(password !== '' && passwordCheck !== '' && password === passwordCheck) setSubmit(true)
@@ -87,7 +89,7 @@ const FindPasswordCompleteContainer = () => {
                     </div>
                 </div>
         </div>
-        <Link to={Paths.auth.signin} ><FixedButton button_name={"비밀번호 변경 후 로그인"} disable={!submit} onClick={onClickSignUp} /></Link>
+        <FixedButton button_name={"비밀번호 변경 후 로그인"} disable={!submit} onClick={onClickSignUp} />
         </>
     );
 };
