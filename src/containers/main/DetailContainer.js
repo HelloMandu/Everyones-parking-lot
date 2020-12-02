@@ -26,13 +26,17 @@ import Arrow from '../../static/asset/svg/Arrow';
 //api
 import {requestGetDetailParking} from '../../api/place';
 
+//lib
+import {getFormatDay} from '../../lib/calculateDate';
 
 const cx = cn.bind(styles);
 const DetailContainer = ({ modal, place_id }) => {
 
     const [index, setIndex] = useState(0);
     const history = useHistory();
-
+    const [start_date, setStartDate] = useState(0);
+    const [end_date, setEndDate] = useState(0);
+    
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = async ()=>{
         try{
@@ -56,8 +60,19 @@ const DetailContainer = ({ modal, place_id }) => {
     }
 
     useEffect(()=>{
-        //detail id 로 받아오기
+        let start = new Date();
+        let end = new Date();
+        end.setFullYear(start.getFullYear());
+        end.setMonth(start.getMonth());
+        end.setDate(start.getDate()+1);
+        setStartDate(getFormatDay(start));
+        setEndDate(getFormatDay(end));
     },[])
+
+    useEffect(()=>{
+        console.log(start_date);
+        console.log(end_date);
+    },[start_date,end_date])
 
 
     // const createKakaoButton = () => {
@@ -150,7 +165,7 @@ const DetailContainer = ({ modal, place_id }) => {
                     <div className={cx('shared-time', 'space-between')}>
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
-                            10/5(수)14:00 ~ 10/5(수)16:00
+                            {start_date.DAY} ~ {end_date.DAY}
                             <ButtonBase className={styles['date-picker']} onClick={() => history.push(Paths.main.detail + '/datepicker')}>
                                 <img src={datepicker_icon} alt="date" />
                             </ButtonBase>
@@ -202,7 +217,12 @@ const DetailContainer = ({ modal, place_id }) => {
                     }
                 </div>
             </div>
-            <DatePickerModal open={modal === "datepicker"} handleClose={() => history.goBack()} />
+            <DatePickerModal 
+            open={modal === "datepicker"} 
+            handleClose={() => history.goBack()}
+            start_date = {start_date}
+            end_date= {end_date}
+            />
             <LikeButton button_name={'12,000원 대여신청'} disable={false}  onClick= {()=>history.push(Paths.main.payment)} />
             <RoadviewModal open={modal === "roadview"} handleClose={() => history.goBack()} title={"길동이 주차장"} />
         </div>

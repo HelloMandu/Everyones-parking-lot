@@ -12,7 +12,12 @@ export const calculateDate = (start_date, end_date, start_time , end_time)  => {
     const day = Math.floor(elapsedDay/24);
     const hour =Math.floor(elapsedDay%24);
     const minute = Math.ceil ((Math.abs (hour -elapsedDay%24) * 60).toFixed(1));
-    return {day,hour,minute};
+    let possible = true;
+    if( (day <0 || hour <0 || minute <0)  || (day===0 && hour===0 && minute===0)){
+         possible = false;
+    }
+    
+    return {day,hour,minute,possible};
 
 };
 
@@ -41,6 +46,21 @@ export const getFormatDate =(date)=>{
 
 }
 
+export const getFormatDay =(params)=>{
+    let ss_day = new Date(params);
+    let month = ss_day.getMonth() + 1;
+    month = month < 10 ? '0' + month : month;
+    let date = ss_day.getDate();
+    date = date < 10 ? '0' + date : date;
+    let day = ss_day.getDay();
+
+    let obj ={
+        DAY : month + '/' + date +' '+week[day],
+        DATE : getFormatDate(new Date(`${ss_day.getFullYear()}-${month}-${date }`)),
+    }
+    return obj;
+
+}
 
 //시작날짜와 끝날짜에 대한 리스트 생성 11/24 (화) ~12/24(수)
 export const getDateRange = (start, end) => {
@@ -50,17 +70,11 @@ export const getDateRange = (start, end) => {
 
     //한달 주기 리스트 생성
     while (ss_day.getTime() <= ee_day.getTime()) {
-        let month = ss_day.getMonth() + 1;
-        month = month < 10 ? '0' + month : month;
-        let date = ss_day.getDate();
-        date = date < 10 ? '0' + date : date;
-        let day = ss_day.getDay();
-        let obj ={
-            DAY : month + '/' + date +' '+week[day],
-            DATE : getFormatDate(new Date(`${ss_day.getFullYear()}-${month}-${date }`)),
-        }
+        let obj = getFormatDay(ss_day);
         res_day.push(obj);
         ss_day.setDate(ss_day.getDate() + 1);
     }
     return res_day;
 };
+
+

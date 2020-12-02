@@ -238,12 +238,11 @@ const MapContainer = ({ modal }) => {
             new kakao.maps.CustomOverlay({
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                // content: content,
+                content: content,
                 yAnchor: 1,
             });
 
             kakao.maps.event.addListener(marker, 'click', function () {
-           
                 history.push(Paths.main.detail + `/${el.title}`);
             });
             const str = JSON.stringify(el);
@@ -253,9 +252,7 @@ const MapContainer = ({ modal }) => {
         clusterer.addMarkers(data);
 
         kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
-
             slide_view.current = !slide_view.current;
-    
             const markers =cluster.getMarkers() ;
             const slides = markers.map((maker)=>{
                 const data = maker.getTitle();
