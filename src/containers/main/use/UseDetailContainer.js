@@ -1,20 +1,19 @@
 import React, { useReducer } from 'react';
 import qs from 'qs';
-import { Link } from 'react-router-dom';
-import classnames from 'classnames/bind';
-import { ButtonBase } from '@material-ui/core';
-
-import { Paths } from '../../../paths';
+import { Link, useHistory } from 'react-router-dom';
 
 import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
 
+import { Paths } from '../../../paths';
+
+import classnames from 'classnames/bind';
+import { ButtonBase } from '@material-ui/core';
 import styles from './UseDetailContainer.module.scss';
-
 import Parking from '../../../static/asset/png/parking.png';
-
 import Tel from '../../../static/asset/svg/use/Tel';
 import MessageBox from '../../../static/asset/svg/use/MessageBox';
+import XButton from '../../../static/asset/svg/auth/XButton';
 
 const cx = classnames.bind(styles);
 
@@ -37,6 +36,7 @@ const Button = ({ name, children }) => {
 };
 
 const UseDetailContainer = ({ location }) => {
+    const history = useHistory()
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
@@ -56,7 +56,13 @@ const UseDetailContainer = ({ location }) => {
     return (
         <>
             <div className={cx('container', 'top')}>
-                <div className={cx('title')}>길동이의 주차 공간</div>
+                <div className={cx('title-area')}>
+                    <div className={cx('title')}>길동이의 주차 공간</div>
+                    <div className={cx('rendal-status')}>이용중</div>
+                </div>
+                <div className={cx('x-button')} onClick={() => history.goBack()}>
+                    <XButton />
+                </div>
                 <div className={cx('card')}>
                     <img src={Parking} alt="" />
 
@@ -96,10 +102,10 @@ const UseDetailContainer = ({ location }) => {
                         <Button name={'고객센터 연결'}>
                             <Tel />
                         </Button>
-                        <Link to={Paths.main.review.write + `?id=${id}`} >
-                        <Button name={'리뷰 작성 하기'}>
-                            <MessageBox />
-                        </Button>
+                        <Link to={Paths.main.review.write + `?id=${id}`}>
+                            <Button name={'리뷰 작성 하기'}>
+                                <MessageBox />
+                            </Button>
                         </Link>
                     </div>
                 </div>
