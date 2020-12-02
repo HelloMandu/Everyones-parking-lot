@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import classNames from 'classnames/bind'
+
+import { requestGetUseRental } from '../../../api/rental'
 
 import { Paths } from '../../../paths';
 
 import { numberFormat } from '../../../lib/formatter'
 
+import classNames from 'classnames/bind'
 import styles from './UseListContainer.module.scss'
 
 const cx = classNames.bind(styles)
@@ -38,6 +40,20 @@ const list = [
 ];
 
 const UseListContainer = () => {
+    const [useList, setUseList] = useState()
+
+    const getUseList = useCallback(async() => {
+        const token = localStorage.getItem('user_id')
+        const useRental = await requestGetUseRental(token)
+
+        console.log(useRental, useList, setUseList)
+    }, [useList])
+
+    useEffect(() => {
+        getUseList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
         <div className={cx("container")}>
             {list.map(item => 
