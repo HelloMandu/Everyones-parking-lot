@@ -47,6 +47,7 @@ import { set_position, set_level } from '../../store/main/position';
 //api
 
 import { getCoordinates } from '../../api/address';
+import {requsetGetSampleDate} from '../../api/place';
 
 const cx = cn.bind(styles);
 
@@ -67,7 +68,7 @@ const MapContainer = ({ modal }) => {
     const kakao_map = useRef(null); //카카오 맵
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
-
+    const [slide_list,setSlideList] = useState([]);
     // 모달을 제어하는 리듀서
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -189,6 +190,24 @@ const MapContainer = ({ modal }) => {
             imageSize,
             imageOption,
         );
+        // 마커 클러스터러를 생성합니다
+        var clusterer = new kakao.maps.MarkerClusterer({
+            map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+            minLevel: 5, // 클러스터 할 최소 지도 레벨
+            disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
+            styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+                width : '40px', height : '40px',
+                background: 'rgba(255, 80, 80, .8)',
+                borderRadius: '30px',
+                color: '#000',
+                fontSize:'15px',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                lineHeight: '40px'
+            }
+        ]
+        });
 
         //마커의 중심좌표가 변경되었을 시 이벤트
         kakao.maps.event.addListener(map, 'center_changed', function () {
@@ -207,32 +226,49 @@ const MapContainer = ({ modal }) => {
             }
         });
 
+        let markerdata = requsetGetSampleDate();
         // 주차장 마커 생성
-        markerdata.forEach((el) => {
-            let content = `<span class="custom-overlay">${el.title}m</span>`;
+        const data = markerdata.map((el) => {
+            let content = `<span class="custom-overlay">${el.distance}m</span>`;
             const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                title: el.distance,
             });
             new kakao.maps.CustomOverlay({
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                content: content,
+                // content: content,
                 yAnchor: 1,
             });
 
             kakao.maps.event.addListener(marker, 'click', function () {
-                slide_view.current = !slide_view.current;
-                // setView(view_.current);
+           
                 history.push(Paths.main.detail + `/${el.title}`);
             });
+            const str = JSON.stringify(el);
+            marker.setTitle(str);
+            return marker;
+        });
+        clusterer.addMarkers(data);
+
+        kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
+
+            slide_view.current = !slide_view.current;
+    
+            const markers =cluster.getMarkers() ;
+            const slides = markers.map((maker)=>{
+                const data = maker.getTitle();
+                return JSON.parse(data);
+            })
+            setSlideList(slides)
+            setOnSlide(slide_view.current);
         });
     };
 
     useEffect(() => {
         mapRender();
+        // requsetGetSampleDate();
     }, []);
 
     useEffect(() => {
@@ -335,6 +371,7 @@ const MapContainer = ({ modal }) => {
                 <ParkingItem
                     onClick={() => history.push(Paths.main.detail + '?id=1')}
                     view={on_slide}
+                    slide_list={slide_list}
                 />
             </div>
             <BottomModal
@@ -355,31 +392,6 @@ const MapContainer = ({ modal }) => {
     );
 };
 
-const markerdata = [
-    {
-        title: '승학주차장',
-        distance: 300,
-        lat: 35.1158949746728,
-        lng: 128.966901860943,
-    },
-    {
-        title: '하남돼지집',
-        distance: 300,
-        lat: 37.620842424005616,
-        lng: 127.1583774403176,
-    },
-    {
-        title: '수유리우동',
-        distance: 300,
-        lat: 37.624915253753194,
-        lng: 127.15122688059974,
-    },
-    {
-        title: '맛닭꼬',
-        distance: 300,
-        lat: 37.62456273069659,
-        lng: 127.15211256646381,
-    },
-];
+
 
 export default MapContainer;
