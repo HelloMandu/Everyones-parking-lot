@@ -198,9 +198,11 @@ const MapContainer = ({ modal }) => {
             disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
             styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
                 width : '40px', height : '40px',
-                background: 'rgba(255, 80, 80, .8)',
+                background: 'rgba(34, 34, 34, .8)',
                 borderRadius: '30px',
-                color: '#000',
+                color: '#fff',
+                border:'1px solid white',
+                boxSizing:'border-box',
                 fontSize:'15px',
                 textAlign: 'center',
                 fontWeight: 'bold',
@@ -234,12 +236,16 @@ const MapContainer = ({ modal }) => {
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
+                zIndex:1500,
+                
             });
             new kakao.maps.CustomOverlay({
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
                 content: content,
                 yAnchor: 1,
+                clickable:true,
+                zIndex : 1600,
             });
 
             kakao.maps.event.addListener(marker, 'click', function () {

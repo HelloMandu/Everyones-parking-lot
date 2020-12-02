@@ -34,8 +34,8 @@ const ParkingItem = ({ onClick, title }) => {
 
 const ParkingList = ({ onClick, view, slide_list }) => {
     const list = slide_list.map((slide) => (
-        <SwiperSlide className={styles['swiper-slide']}>
-            <ParkingItem key={slide.title} title={slide.title} onClick={onClick} />
+        <SwiperSlide className={styles['swiper-slide']} key = {slide.title}>
+            <ParkingItem  title={slide.title} onClick={onClick} />
         </SwiperSlide>
     ));
     return (
