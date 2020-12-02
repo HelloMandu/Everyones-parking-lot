@@ -18,6 +18,9 @@ body {
 input{
     box-sizing: border-box;
     outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
 }
 // 기본 체크박스 숨기기
 input[type='checkbox'] {
@@ -38,7 +41,7 @@ select {
     appearance: none;
     outline: none;
     /*화살표 배경 넣기*/
-    // background: url('../../components/svg/select_arrow.svg') no-repeat calc(100% - 8px) 50% #fff;   
+    background: url('./static/asset/svg/select.svg') no-repeat calc(100% - 8px) 50% #fff;   
     /*화살표 select박스 오른쪽 중앙 배치,배경 흰색*/
 }
 select::-ms-expand {
@@ -54,5 +57,25 @@ select::-ms-expand {
     font-size: 14px;
     font-weight: bold;
     color:#777;
+    pointer-events: none;
+}
+.arrive-overlay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 64px;
+    min-height: 32px;
+    font-size: 14px;
+    background-color: #555;
+    border-radius: 10px;
+    color:#fff;
+    font-weight: bold;
+    bottom:50px;
+    left:5px;
+    position: relative;
+    border-radius: 6px;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
     pointer-events: none;
 }

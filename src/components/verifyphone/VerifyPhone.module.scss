@@ -1,0 +1,43 @@
+.send-verify {
+    display: flex;
+    margin-bottom: 10px;
+    .hasMargin{
+        margin-left: 10px;
+    }
+}
+
+.verify-phone {
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    transition: all .3s ease-in;
+    position: relative;
+    .timer{
+        position: absolute;
+        width: 48px;
+        height: 100%;
+        right: 96px;
+        font-size: 16px;
+        line-height: 48px;
+        text-align: center;
+        color: #222222;
+    }
+}
+
+.confirm-button {
+    min-width: 96px;
+    height: 48px;
+}
+
+.sent{
+    opacity: 1;
+    pointer-events: auto;
+    height: auto;
+}
+
+.isConfirm{
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+}

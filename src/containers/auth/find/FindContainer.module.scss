@@ -1,0 +1,34 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    padding: $padding;
+
+    @include container($pd-top);
+
+    .area{
+        border: 1px solid #EBEBEB;
+        border-radius: 2px;
+        padding: 24px 36px 30px;
+        margin-bottom: 26px;
+        position: relative;
+        height: 160px;
+
+        .item-title{
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .item-content{
+            font-size: 14px;
+            color: #999999;
+        }
+
+        .item-icon{
+            position: absolute;
+            bottom: 32px;
+            right: 30px;
+        }
+    }
+
+    .area:first-child{ margin-top: 34px;}
+}

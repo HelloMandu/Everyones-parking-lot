@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_1916" data-name="사각형 1916" width="20" height="20" transform="translate(58 396)" fill="#333"/>
+    </clipPath>
+  </defs>
+  <g id="그룹_4994" data-name="그룹 4994" transform="translate(-30 -288)">
+    <g id="마스크_그룹_11" data-name="마스크 그룹 11" transform="translate(-26 -106)" clip-path="url(#clip-path)">
+      <g id="list-3" transform="translate(60.337 396)">
+        <g id="그룹_3934" data-name="그룹 3934" transform="translate(0)">
+          <g id="그룹_3933" data-name="그룹 3933">
+            <path id="패스_195" data-name="패스 195" d="M18.88,0H4.859a.652.652,0,0,0-.652.652v18.7A.652.652,0,0,0,4.859,20H18.88a.652.652,0,0,0,.652-.652V.652A.652.652,0,0,0,18.88,0ZM10.2,1.3h3.338v.839H10.2ZM18.228,18.7H5.511V1.3H8.9V2.8a.652.652,0,0,0,.652.652h4.643a.652.652,0,0,0,.652-.652V1.3h3.385Z" transform="translate(-4.207)" fill="#333"/>
+          </g>
+        </g>
+        <g id="그룹_3936" data-name="그룹 3936" transform="translate(3.272 6.201)">
+          <g id="그룹_3935" data-name="그룹 3935">
+            <path id="패스_196" data-name="패스 196" d="M18.226,11.162H10.748a.652.652,0,1,0,0,1.3h7.478a.652.652,0,0,0,0-1.3Z" transform="translate(-10.096 -11.162)" fill="#333"/>
+          </g>
+        </g>
+        <g id="그룹_3938" data-name="그룹 3938" transform="translate(3.272 10.42)">
+          <g id="그룹_3937" data-name="그룹 3937">
+            <path id="패스_197" data-name="패스 197" d="M18.226,18.755H10.748a.652.652,0,1,0,0,1.3h7.478a.652.652,0,0,0,0-1.3Z" transform="translate(-10.096 -18.755)" fill="#333"/>
+          </g>
+        </g>
+        <g id="그룹_3940" data-name="그룹 3940" transform="translate(3.272 14.638)">
+          <g id="그룹_3939" data-name="그룹 3939">
+            <path id="패스_198" data-name="패스 198" d="M18.226,26.349H10.748a.652.652,0,0,0,0,1.3h7.478a.652.652,0,0,0,0-1.3Z" transform="translate(-10.096 -26.349)" fill="#333"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <rect id="사각형_3001" data-name="사각형 3001" width="24" height="24" transform="translate(30 288)" fill="none"/>
+  </g>
+</svg>

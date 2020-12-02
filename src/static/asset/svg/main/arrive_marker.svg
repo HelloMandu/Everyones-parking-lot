@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="82" height="85" viewBox="0 0 82 85">
+  <defs>
+    <filter id="사각형_1850" x="0" y="0" width="82" height="50" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="타원_135" x="24" y="51" width="34" height="34" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="도착지" x="12" y="7" width="59" height="36" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="그룹_3874" data-name="그룹 3874" transform="translate(-173 -310)">
+    <g id="그룹_5012" data-name="그룹 5012" transform="translate(1 -1)">
+      <g transform="matrix(1, 0, 0, 1, 172, 311)" filter="url(#사각형_1850)">
+        <rect id="사각형_1850-2" data-name="사각형 1850" width="64" height="32" rx="10" transform="translate(9 6)" fill="#555"/>
+      </g>
+      <g id="그룹_5010" data-name="그룹 5010">
+        <g id="그룹_5011" data-name="그룹 5011">
+          <g transform="matrix(1, 0, 0, 1, 172, 311)" filter="url(#타원_135)">
+            <g id="타원_135-2" data-name="타원 135" transform="translate(33 57)" fill="#555" stroke="#fff" stroke-width="2">
+              <circle cx="8" cy="8" r="8" stroke="none"/>
+              <circle cx="8" cy="8" r="7" fill="none"/>
+            </g>
+          </g>
+          <line id="선_653" data-name="선 653" y1="28" transform="translate(213.5 344.5)" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="2"/>
+        </g>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 172, 311)" filter="url(#도착지)">
+        <text id="도착지-2" data-name="도착지" transform="translate(21 28)" fill="#fff" font-size="14" font-family="MalgunGothicBold, Malgun Gothic" letter-spacing="-0.05em"><tspan x="0" y="0">도착지</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

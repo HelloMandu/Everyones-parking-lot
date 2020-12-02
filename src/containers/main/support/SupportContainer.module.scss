@@ -1,0 +1,16 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container(96px);
+}
+
+.tabs {
+    position: fixed;
+    top:$header;
+    left:0;
+    .tab {
+        min-width: 50px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+}

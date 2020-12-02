@@ -1,0 +1,29 @@
+@import '../../static/stylesheets/Root.scss';
+html{
+    body{
+        .fixed-button-container{
+            position: fixed;
+            z-index: $level3;
+            width: 100%;
+            padding: 10px 20px;
+            bottom: 0;
+            background-color: white;
+            .fixed-button{
+                width: 100%;
+                height: 56px;
+                background-color: $main-color;
+                border-radius: 10px;
+                color:#fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 17px;
+                font-weight: bold;
+                transition: all .3s ease-in;
+                &.disable{
+                    background-color: $disable-color;
+                }
+            }
+        }
+    }
+}

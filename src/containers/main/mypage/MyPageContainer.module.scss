@@ -1,0 +1,169 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container{
+    @include container($pd-top);
+    background-color: #F4F4F4;
+    padding-bottom: 130px;
+    .user-area{
+        width: 100%; height: 160px;
+        background-color: #FFF;
+        position: relative;
+        display: flex;
+        .img-wrap{
+            width: 104px; height: 104px;
+            border: 1px solid #DBDBDB;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%; left: 38px;
+            transform: translateY(-50%);
+            & > img{
+                width: 100%; height: 100%;
+            }
+            .camera{
+                width: 32px; height: 32px;
+                background-color: #222;
+                border-radius: 50%;
+                position: absolute;
+                right: 0; bottom: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .input-file{
+                    display: none;
+                    outline: none;
+                }
+            }
+        }
+        .right-wrap{
+            position: absolute;
+            top: 50%; left: 164px;
+            transform: translateY(-50%);
+            .name-wrap{
+                position: relative;
+                .user-name{
+                    display: inline-block;
+                    & > span{
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        color: #333;
+                    }
+                }
+                & > svg{
+                    margin-left: 10px;
+                    position: absolute;
+                    top: 40%;
+                    width: 8px; height: 4px;
+                }
+            }
+            .enroll-wrap{
+                width: 130px; height: 32px;
+                background-color: #222;
+                border-radius: 18px;
+                margin-top: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .enroll{
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    & > span{
+                        margin-left: 5px;
+                        color: #FFF;
+                        font-size: 1.167rem; // 14px;
+                        font-weight: 500; // Medium
+                    }
+                }
+            }
+        }
+    }
+    .mypage-area{
+        margin-top: 16px;
+        .parking-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            padding: 0 $padding;
+        }
+        .use-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            border-top: none;
+            padding: 0 $padding;
+        }
+    }
+    .info-area{
+        margin-top: 16px;
+        .hp-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            padding: 0 $padding;
+        }
+        .email-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            border-top: none;
+            padding: 0 $padding;
+        }
+        .birthday-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            border-top: none;
+            padding: 0 $padding;
+        }
+    }
+    .password-area{
+        margin-top: 16px;
+        .password-wrap{
+            width: 100%; height: 56px;
+            background-color: #FFF;
+            border: 1px solid #EBEBEB;
+            padding: 0 $padding;
+        }
+    }
+    .withdraw-area{
+        margin-top: 40px;
+        padding: 0 $padding;
+        .withdraw-wrap{
+            width: 100%; height: 48px;
+            border: 2px solid #DBDBDB;
+            padding: 0 $padding;
+            text-align: center;
+            line-height: 48px;
+            & > span{
+                font-size: 1.167rem; // 14px;
+                font-weight: 400; // Regular
+                color: #777;
+            }
+        }
+    }
+}
+
+// common
+.text{
+    width: 100%; height: 56px;
+    line-height: 56px;
+    position: relative;
+    & > span{
+        font-size: 1.167rem; // 14px;
+        font-weight: 400; // Regular
+        color: #777;
+    }
+    .user-text{
+        font-size: 1.333rem; // 16px;
+        font-weight: 500; // Medium
+        color: #333;
+        position: absolute;
+        right: 24px;
+    }
+    & > svg{
+        position: absolute;
+        right: 0;
+        top: 43%; 
+    }
+}

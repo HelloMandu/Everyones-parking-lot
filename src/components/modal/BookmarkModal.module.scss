@@ -1,0 +1,18 @@
+@import '../../static/stylesheets/Root.scss';
+
+html {
+    body {
+        :global(.MuiDialog-root) {
+            min-height: 100vh;
+            z-index: $level2 !important;
+        }
+    }
+}
+
+
+.container {
+    .item-list {
+        
+    }
+
+}
