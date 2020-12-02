@@ -90,7 +90,11 @@ const ParkingManageContainer = () => {
                         >
                             <ParkingItem
                                 status={place_status}
-                                image={place_images[0].split('\\')[1]}
+                                image={
+                                    Array.isArray(place_images)
+                                        ? place_images[0].split('\\')[1]
+                                        : ''
+                                }
                                 title={place_name}
                                 start={oper_start_time}
                                 end={oper_end_time}

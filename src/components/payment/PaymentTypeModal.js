@@ -108,8 +108,8 @@ const PaymentContainer = ({ open, match }) => {
     const handleDeleteCard = useCallback(
         (id) => {
             openDialog(
-                '삭제확인',
-                '정말 삭제 하시겠습니끼?',
+                '정말 삭제 하시겠습니까?',
+                '',
                 () => onDeleteCard(id),
                 true,
             );

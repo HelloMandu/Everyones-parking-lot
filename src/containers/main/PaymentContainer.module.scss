@@ -24,6 +24,7 @@
             padding-left: 10px;
             font-size: 15px;
             line-height: 48px;
+            justify-content: start;
             background: url('../../static/asset/svg/select.svg') no-repeat
                 calc(100% - 8px) 50% #fff;
         }
@@ -48,17 +49,18 @@
             }
         }
 
+        .payment {
+            padding-left: 10px;
+            width: 100%;
+            height: 48px;
+            border: 1px solid #ebebeb;
+            font-size: 15px;
+            line-height: 48px;
+            justify-content: start;
 
-            .payment {
-                padding-left: 10px;
-                width: 100%;
-                height: 48px;
-                border: 1px solid #ebebeb;
-                font-size: 15px;
-                line-height: 48px;
-                background: url('../../static/asset/svg/arrow.svg') no-repeat calc(100% - 8px) 50% #fff;   
-            }
-
+            background: url('../../static/asset/svg/arrow.svg') no-repeat
+                calc(100% - 8px) 50% #fff;
+        }
     }
     .final-payment {
         height: 213px;
