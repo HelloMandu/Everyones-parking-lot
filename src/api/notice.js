@@ -14,7 +14,7 @@ export const requestPostWirteNotice = async (notice_tile, notice_body, notice_im
         *응답: success / failure
     */
 
-    const URL = Paths.api + "notice";
+    const URL = Paths.api + 'notice';
     const response = await axios.post(URL);
 
     return response;
@@ -23,31 +23,30 @@ export const requestPostWirteNotice = async (notice_tile, notice_body, notice_im
 export const requestGetNoticeList = async () => {
 
     /*
-        공지사항 리스트 요청 API
+        공지사항 리스트 요청 API(GET): /api/notice
 
-        *응답: notices = [공지사항 Array...]
+        * 응답: notices = [공지사항 Array...]
     */
 
-    const URL = Paths.api + "notice";
+    const URL = Paths.api + 'notice';
     const response = await axios.get(URL);
 
-    return response;
+    return response.data;
 }
 
 export const requestGetDetailNotice = async (notice_id) => {
 
     /*
-        공지사항 상세 정보 요청 API
+        공지사항 상세 정보 요청 API(GET): /api/notice/:notice_id
+        { params: notice_id }: 상세 정보를 가져올 공지사항 id
 
-        notice_id: 상세 정보를 가져올 공지사항 id
-
-        *응답: notice = { 공지사항 상세 정보 Object }
+        * 응답: notice = { 공지사항 상세 정보 Object }
     */
 
-    const URL = Paths.api + "notice/:notice_id";
+    const URL = Paths.api + 'notice/' + notice_id;
     const response = await axios.get(URL);
 
-    return response;
+    return response.data;
 }
 
 export const requestPutModifyNotice = async (notice_id, notice_title, notice_body, notice_img) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+// import qs from 'qs';
 
 import useInput from '../../hooks/useInput';
 import useModal from '../../hooks/useModal';
@@ -9,6 +10,17 @@ import { numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
 
 import { Paths } from '../../paths/index';
+
+import PaymentTypeModal from '../../components/payment/PaymentTypeModal';
+import EnrollCouponModal from '../../components/payment/EnrollCouponModal';
+
+import ParkingInfo from '../../components/parking/ParkingInfo';
+import VerifyPhone from '../../components/verifyphone/VerifyPhone';
+import CheckBox from '../../components/checkbox/CheckBox';
+import FixedButton from '../../components/button/FixedButton';
+import InputBox from '../../components/inputbox/InputBox';
+import ConfirmButton from '../../components/button/ConfirmButton';
+
 import styles from './PaymentContainer.module.scss';
 import { ButtonBase } from '@material-ui/core';
 
@@ -118,7 +130,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'포인트 할인'}</div>
-                        <Point></Point>
+                        {/* <Point></Point> */}
                     </div>
                 </div>
                 <div className={styles['bar']}></div>
@@ -137,7 +149,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 <Price></Price>
                 <div className={styles['parking-payment-area']}>
                     <CheckBox
-                        allCheckTitle={enrollTitle}
+                        // allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                     ></CheckBox>
                 </div>
@@ -155,3 +167,5 @@ const ParkingEnrollContainer = ({ location, match }) => {
         </>
     );
 };
+
+export default ParkingEnrollContainer;
