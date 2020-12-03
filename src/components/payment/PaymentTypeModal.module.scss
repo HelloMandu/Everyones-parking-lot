@@ -19,6 +19,11 @@
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
+                transition: transform 0.3s ease-in-out;
+                transform: scale(0.9);
+            }
+            & > .active {
+                transform: scale(1);
             }
             .card-info {
                 width: 100%;
@@ -26,11 +31,18 @@
                 display: flex;
                 justify-content: space-between;
                 font-size: 14px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
                 button {
                     width: 48px;
                     height: 24px;
                     border: 1px solid #dbdbdb;
                 }
+            }
+            .active {
+                opacity: 1;
+                pointer-events: auto;
             }
         }
         .card-register {
@@ -55,7 +67,7 @@
     .pay-list {
         display: flex;
         justify-content: space-around;
-        img{
+        img {
             padding: 3px;
         }
         .pay-name {

@@ -117,6 +117,17 @@ const PaymentContainer = ({ open, match }) => {
         [openDialog, onDeleteCard],
     );
 
+    const [activeCard, setActiveCard] = useState(0);
+    useEffect(() => {
+        const newCardList = cardList.map((card, index) =>
+            activeCard === index
+                ? { ...card, active: true }
+                : { ...card, active: false },
+        );
+        setCardList(newCardList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeCard]);
+
     useEffect(() => {
         const payCheck = payList.reduce(
             (prev, cur) => prev || cur.checked,
@@ -134,20 +145,28 @@ const PaymentContainer = ({ open, match }) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const response = await requestGetCardInfo(JWT_TOKEN);
             const { cards } = response.data;
-            const newCardList = cards.map((card) => ({
+            const newCardList = cards.map((card, index) => ({
                 ...card,
                 checked: false,
+                active: activeCard === index,
             }));
             setCardList(newCardList);
         };
         requestCardInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제 수단 선택'}></Header>
             <div className={styles['payment-container']}>
                 <h2 className={styles['payment-title']}>등록카드 결제</h2>
-                <Swiper className={styles['card-swiper']} spaceBetween={20}>
+                <Swiper
+                    className={styles['card-swiper']}
+                    spaceBetween={20}
+                    onSlideChange={({ activeIndex }) =>
+                        setActiveCard(activeIndex)
+                    }
+                >
                     {cardList.map(
                         (
                             {
@@ -156,6 +175,7 @@ const PaymentContainer = ({ open, match }) => {
                                 card_type,
                                 card_num,
                                 checked,
+                                active,
                             },
                             index,
                         ) => (
@@ -164,13 +184,16 @@ const PaymentContainer = ({ open, match }) => {
                                     <img
                                         className={cx('card-image', {
                                             checked,
+                                            active,
                                         })}
                                         data-key={index}
                                         src={`${process.env.PUBLIC_URL}/card/${card_type}.png`}
                                         alt="card"
                                         onClick={handleCardList}
                                     ></img>
-                                    <div className={styles['card-info']}>
+                                    <div
+                                        className={cx('card-info', { active })}
+                                    >
                                         <div className={styles['card-num']}>
                                             {bank_name}({card_num.split('-')[0]}{' '}
                                             **** **** ****)

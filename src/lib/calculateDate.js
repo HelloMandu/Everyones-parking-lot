@@ -75,3 +75,12 @@ export const getFormatDateTime = (formatted) => {
     minute = minute >= 10 ? minute : `0${minute}`;
     return `${month}/${date}${week[day]} ${hour}:${minute}`;
 };
+
+export const getFormatDateNanTime = (formatted) => {
+    const formatDate = new Date(formatted);
+    const year = formatDate.getFullYear();
+    const month = formatDate.getMonth() + 1;
+    let date = formatDate.getDate();
+    date = date >= 10 ? date : `0${date}`;
+    return `${year}/${month}/${date}`;
+};

@@ -78,8 +78,8 @@ export const requestPostFindId = async (name, phone_number, auth_number) => {
     // * 응답: email: 유저 이메일 String
 
 
-    const URL = Paths.api + "user/find";
-    const response = await axios.post(URL);
+    const URL = Paths.api + "user/find/user_id";
+    const response = await axios.post(URL, {name, phone_number});
 
     return response;
 };
@@ -92,8 +92,8 @@ export const requestPostFindPassword = async (name, email, phone_number, auth_nu
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "user/find";
-    const response = await axios.post(URL);
+    const URL = Paths.api + "user/find/user_pw";
+    const response = await axios.post(URL, {name, email, phone_number});
 
     return response;
 };
@@ -190,9 +190,7 @@ export const requestPutReCarInfo = async (JWT_TOKEN, { car_location, car_num, ca
             ContentType: 'multipart/form-data',
         },
     };
-    console.log(car_location, car_num, car_image);
     const formData = makeFormData({ car_location, car_num });
-    console.log(typeof car_image, car_image.name)
     formData.append('car_image', car_image);
 
     const response = await axios.put(URL, formData, config);
@@ -216,6 +214,23 @@ export const requestPutReBirth = async (JWT_TOKEN, birth) => {
         },
     };
     const response = await axios.put(URL, { birth }, config);
+
+    return response.data;
+}
+
+export const requestDeleteUser = async (JWT_TOKEN) => {
+    /*
+        회원 탈퇴 요청 API(DELETE): /api/user
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
+
+        * 응답: success / failure
+    */
+    const URL = Paths.api + 'user';
+    const response = await axios.delete(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    });
 
     return response.data;
 }
