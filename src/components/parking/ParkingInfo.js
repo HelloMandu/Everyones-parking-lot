@@ -1,9 +1,11 @@
 import React from 'react';
 
-import ParkingInfoList from './ParkingInfoList';
-import PleaseRead from './PleaseRead';
+import { getFormatDateTime } from '../../lib/calculateDate';
+import { numberFormat } from '../../lib/formatter';
 
-import parkingImage from '../../static/asset/png/parking.png';
+import { Paths } from '../../paths';
+
+import PleaseRead from './PleaseRead';
 
 import styles from './ParkingInfo.module.scss';
 
@@ -25,17 +27,36 @@ const infos = [
     },
 ];
 
-const ParkingInfo = () => {
+const ParkingInfo = ({ parkingInfo }) => {
+    if (!parkingInfo) {
+        return null;
+    }
+    const { title, image, price, deposit, start_time, end_time } = parkingInfo;
+    infos[0].description = `${getFormatDateTime(
+        start_time,
+    )} ~ ${getFormatDateTime(end_time)}`;
+    infos[1].description = `${numberFormat(price)}원`;
+    infos[2].description = `${numberFormat(deposit)}원`;
     return (
         <div className={styles['parkinginfo']}>
-            <img
+            <div
                 className={styles['image']}
-                src={parkingImage}
-                alt="주차공간이미지"
+                style={{
+                    backgroundImage: `url(${Paths.storage}${image})`,
+                }}
             />
             <div className={styles['wrapper']}>
-                <div className={styles['title']}>길동이 주차공간</div>
-                <ParkingInfoList list={infos}></ParkingInfoList>
+                <div className={styles['title']}>{title}</div>
+                <ul className={styles['infolist']}>
+                    {infos.map(({ id, title, description }) => (
+                        <li className={styles['info']} key={id}>
+                            <div className={styles['info-title']}>{title}</div>
+                            <div className={styles['description']}>
+                                {description}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
                 <PleaseRead></PleaseRead>
             </div>
         </div>

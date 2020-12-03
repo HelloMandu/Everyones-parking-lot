@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+// import qs from 'qs';
 
 import useInput from '../../hooks/useInput';
+import useModal from '../../hooks/useModal';
+import useLoading from '../../hooks/useLoading';
 import { numberFormat } from '../../lib/formatter';
+
+import { requestGetPayInfo } from '../../api/payment';
 
 import { Paths } from '../../paths/index';
 
@@ -19,7 +24,7 @@ import ConfirmButton from '../../components/button/ConfirmButton';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
 import styles from './PaymentContainer.module.scss';
-import useModal from '../../hooks/useModal';
+import { ButtonBase } from '@material-ui/core';
 
 const Point = () => {
     const [point, handleChangePoint] = useInput('');
@@ -47,7 +52,7 @@ const Point = () => {
     );
 };
 
-const Price = () => {
+const Price = ({ price, deposit }) => {
     return (
         <div className={styles['final-payment']}>
             <div className={styles['total-payment']}>
@@ -56,11 +61,11 @@ const Price = () => {
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>대여비</div>
-                <div className={styles['price']}>{numberFormat(60000)}원</div>
+                <div className={styles['price']}>{numberFormat(price)}원</div>
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>보증금</div>
-                <div className="price">{numberFormat(10000)}원</div>
+                <div className="price">{numberFormat(deposit)}원</div>
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>쿠폰 할인</div>
@@ -88,8 +93,11 @@ const enroll = [
         description: '이용약관',
     },
 ];
-
-const ParkingEnrollContainer = ({ match }) => {
+const ParkingEnrollContainer = ({ location, match }) => {
+    // const { place_id, start_time, end_time } = qs.parse(location.search, {
+    //     ignoreQueryPrefix: true,
+    // });
+    const [parkingInfo, setParkingInfo] = useState();
     const { url, params } = match;
     const history = useHistory();
     const [isOpenCouponModal, openCouponModal] = useModal(
@@ -102,11 +110,40 @@ const ParkingEnrollContainer = ({ match }) => {
         params.modal,
         'type',
     );
+    const [onLoading, offLoading] = useLoading();
+    useEffect(() => {
+        const getPaymentInfo = async (place_id, start_time, end_time) => {
+            onLoading('payment');
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            const { data } = await requestGetPayInfo(
+                JWT_TOKEN,
+                place_id,
+                start_time,
+                end_time,
+            );
+            const { deposit, place, total_price } = data;
+            const { place_name, place_images } = place;
+            const image = Array.isArray(place_images)
+                ? place_images[0].split('\\')[1]
+                : '';
+            setParkingInfo({
+                title: place_name,
+                image: image,
+                price: total_price,
+                deposit: deposit,
+                start_time,
+                end_time,
+            });
+            offLoading('payment');
+        };
+        getPaymentInfo(6, '2020/12/02 09:00', '2020/12/02 10:00');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return (
         <>
             <div className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
-                    <ParkingInfo></ParkingInfo>
+                    <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'대여자 연락처'}</div>
                         <VerifyPhone></VerifyPhone>
@@ -114,12 +151,12 @@ const ParkingEnrollContainer = ({ match }) => {
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'쿠폰 할인'}</div>
 
-                        <div
+                        <ButtonBase
                             className={styles['coupon']}
                             onClick={openCouponModal}
                         >
                             오픈 이벤트 10% 할인 이벤트 쿠폰
-                        </div>
+                        </ButtonBase>
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'포인트 할인'}</div>
@@ -130,13 +167,13 @@ const ParkingEnrollContainer = ({ match }) => {
                 <div className={styles['parking-payment-area']}>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>결제수단</div>
-                            <div
-                                className={styles['payment']}
-                                name="payment"
-                                onClick={openTypeModal}
-                            >
-                                카카오페이
-                            </div>
+                        <ButtonBase
+                            className={styles['payment']}
+                            name="payment"
+                            onClick={openTypeModal}
+                        >
+                            카카오페이
+                        </ButtonBase>
                     </div>
                 </div>
                 <Price></Price>
