@@ -1,57 +1,62 @@
-.input-box{
+.input-box {
     width: 100%;
     height: 48px;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     padding: 0 10px;
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
-    &::placeholder{
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &::placeholder {
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular
-        color: #CCC;
+        color: #ccc;
     }
-} 
+}
 
-.input-radius{
+.input-radius {
     width: 100%;
     height: 48px;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     margin-bottom: 12px;
     border-radius: 100px;
     padding: 0 18px;
     outline: none;
 }
 
-.input-bar{
+.input-bar {
     width: 100%;
     height: 48px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #cccccc;
     padding: 0 12px;
 }
 
-.verify-box{
+.verify-box {
     width: 85%;
     height: 48px;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     padding: 0 10px;
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
 }
 
-.input-box-right{
+.input-box-right {
     width: 100%;
     height: 48px;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
     padding: 0 10px;
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
     text-align: right;
-    &::placeholder{
+    &::placeholder {
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular
-        color: #CCC;
+        color: #ccc;
     }
-} 
+}
