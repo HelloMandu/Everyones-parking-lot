@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-// import qs from 'qs';
+import qs from 'qs';
 
 import useInput from '../../hooks/useInput';
 import useModal from '../../hooks/useModal';
 import useLoading from '../../hooks/useLoading';
+import { useDialog } from '../../hooks/useDialog';
 import { numberFormat } from '../../lib/formatter';
 
 import { requestGetPayInfo } from '../../api/payment';
@@ -50,12 +51,18 @@ const Point = () => {
     );
 };
 
-const Price = ({ price, deposit }) => {
+const Price = ({ parkingInfo, totalPrice = 0,  coupon = 0, point = 0 }) => {
+    if (!parkingInfo) {
+        return null;
+    }
+    const { price, deposit } = parkingInfo;
     return (
         <div className={styles['final-payment']}>
             <div className={styles['total-payment']}>
                 <div className={styles['title']}>최종 결제금액</div>
-                <div className={styles['price']}>{numberFormat(60000)}원</div>
+                <div className={styles['price']}>
+                    {numberFormat(totalPrice)}원
+                </div>
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>대여비</div>
@@ -67,11 +74,11 @@ const Price = ({ price, deposit }) => {
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>쿠폰 할인</div>
-                <div className={styles['price']}>{numberFormat(-1000)}원</div>
+                <div className={styles['price']}>{numberFormat(coupon)}원</div>
             </div>
             <div className={styles['payment']}>
                 <div className={styles['title']}>포인트 할인</div>
-                <div className={styles['price']}>{numberFormat(-1000)}원</div>
+                <div className={styles['price']}>{numberFormat(point)}원</div>
             </div>
         </div>
     );
@@ -91,24 +98,30 @@ const enroll = [
         description: '이용약관',
     },
 ];
+
 const ParkingEnrollContainer = ({ location, match }) => {
-    // const { place_id, start_time, end_time } = qs.parse(location.search, {
-    //     ignoreQueryPrefix: true,
-    // });
-    const [parkingInfo, setParkingInfo] = useState();
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    const { place_id, start_time, end_time } = query;
     const { url, params } = match;
     const history = useHistory();
     const [isOpenCouponModal, openCouponModal] = useModal(
         url,
         params.modal,
-        'coupon',
+        `coupon${location.search}`,
     );
     const [isOpenTypeModal, openTypeModal] = useModal(
         url,
         params.modal,
-        'type',
+        `type${location.search}`,
     );
+
+    const [parkingInfo, setParkingInfo] = useState();
+    const [totalPrice, setTotalPrice] = useState(0);
+
     const [onLoading, offLoading] = useLoading();
+    const openDialog = useDialog();
     useEffect(() => {
         const getPaymentInfo = async (place_id, start_time, end_time) => {
             onLoading('payment');
@@ -119,22 +132,30 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 start_time,
                 end_time,
             );
-            const { deposit, place, total_price } = data;
-            const { place_name, place_images } = place;
-            const image = Array.isArray(place_images)
-                ? place_images[0].split('\\')[1]
-                : '';
-            setParkingInfo({
-                title: place_name,
-                image: image,
-                price: total_price,
-                deposit: deposit,
-                start_time,
-                end_time,
-            });
+            if (data.msg === 'success') {
+                const { deposit, place, total_price: price } = data;
+                const { place_name: title, place_images } = place;
+                const image = Array.isArray(place_images)
+                    ? place_images[0].split('\\')[1]
+                    : '';
+                setParkingInfo({
+                    title,
+                    image,
+                    price,
+                    deposit,
+                    start_time,
+                    end_time,
+                });
+                setTotalPrice(price + deposit);
+            } else {
+                openDialog('결제정보를 불러오는데 실패했습니다', '', () =>
+                    history.goBack(),
+                );
+            }
             offLoading('payment');
         };
-        getPaymentInfo(6, '2020/12/02 09:00', '2020/12/02 10:00');
+        // getPaymentInfo(6, '2020/12/02 09:00', '2020/12/02 10:00');
+        getPaymentInfo(place_id, start_time, end_time);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
@@ -148,7 +169,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'쿠폰 할인'}</div>
-
                         <ButtonBase
                             className={styles['coupon']}
                             onClick={openCouponModal}
@@ -174,7 +194,10 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         </ButtonBase>
                     </div>
                 </div>
-                <Price></Price>
+                <Price
+                    totalPrice={totalPrice}
+                    parkingInfo={parkingInfo}
+                ></Price>
                 <div className={styles['parking-payment-area']}>
                     <CheckBox
                         allCheckTitle={enrollTitle}
