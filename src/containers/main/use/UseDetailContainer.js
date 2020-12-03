@@ -5,6 +5,13 @@ import { Link, useHistory } from 'react-router-dom';
 import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
 
+// import { useDialog } from '../../../hooks/useDialog';
+
+// import { requestGetDetailUseRental } from '../../../api/rental';
+
+import { getFormatDateTime } from '../../../lib/calculateDate';
+import { numberFormat } from '../../../lib/formatter';
+
 import { Paths } from '../../../paths';
 
 import classnames from 'classnames/bind';
@@ -35,8 +42,42 @@ const Button = ({ name, children }) => {
     );
 };
 
+const useDetail = {
+    rental_id: 1,
+    total_price: 60000,
+    term_price: 1000,
+    deposit: 10000,
+    point_price: 0,
+    payment_price: 0,
+    cancle_price: 0,
+    calculated_price: 0,
+    payment_type: 0,
+    rental_start_time: '2020-12-02 16:41:01',
+    rental_end_time: '2020-12-02 20:59:37',
+    cancel_reason: '',
+    cancel_time: 0,
+    calculated_time: '',
+    deleted: 0,
+    created_at: 0,
+    updated_at: 0,
+    order_user_id: 0,
+    place_user_id: 0,
+    ppayment_id: 0,
+    place_id: 1,
+    cp_id: 0,
+};
+
+const USE_WAIT = '이용대기';
+const USE_USING = '이용중';
+const USE_FINISH = '이용완료';
+const USE_CANCEL = '이용취소';
+
 const UseDetailContainer = ({ location }) => {
-    const history = useHistory()
+    const history = useHistory();
+    // const openDialog = useDialog();
+    // const [useDetail, setUseDetail] = useState();
+    const current = new Date();
+
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
@@ -53,14 +94,49 @@ const UseDetailContainer = ({ location }) => {
         { refund: false },
     );
 
+    // const getUseDetail = useCallback(async () => {
+    //     const token = localStorage.getItem('user_id');
+    //     const { data } = await requestGetDetailUseRental(token, id);
+    //     const { msg, order, coupon, place_user } = data;
+    //     if (msg === 'success') {
+    //         setUseDetail({
+    //             order,
+    //             coupon,
+    //             place_user,
+    //         });
+    //     } else {
+    //         openDialog(msg);
+    //     }
+    // }, [id, openDialog]);
+
+    // useEffect(() => {
+    //     getUseDetail();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
     return (
         <>
             <div className={cx('container', 'top')}>
                 <div className={cx('title-area')}>
-                    <div className={cx('title')}>길동이의 주차 공간</div>
-                    <div className={cx('rendal-status')}>이용중</div>
+                    <div className={cx('title')}>
+                        {useDetail.place_id}.title
+                    </div>
+                    <div className={cx('rendal-status')}>
+                        {current.getTime() -
+                            new Date(useDetail.rental_start_time).getTime() <
+                        0
+                            ? USE_WAIT
+                            : useDetail.calculated_time
+                            ? USE_FINISH
+                            : useDetail.cancel_time
+                            ? USE_CANCEL
+                            : USE_USING}
+                    </div>
                 </div>
-                <div className={cx('x-button')} onClick={() => history.goBack()}>
+                <div
+                    className={cx('x-button')}
+                    onClick={() => history.goBack()}
+                >
                     <XButton />
                 </div>
                 <div className={cx('card')}>
@@ -71,31 +147,29 @@ const UseDetailContainer = ({ location }) => {
                     <div className={cx('content-area')}>
                         <Info
                             attribute={'주차 공간 이름'}
-                            value={'길동이 주차공간'}
+                            value={useDetail.place_id + '.title'}
                         />
                         <Info
                             attribute={'대여시간'}
-                            value={'10/05(수) 14:00 ~ 10/05(수) 16:00'}
+                            value={
+                                getFormatDateTime(useDetail.rental_start_time) +
+                                ' ~ ' +
+                                getFormatDateTime(useDetail.rental_end_time)
+                            }
                             black={true}
                         />
-                        <Info
-                            attribute={'운영시간'}
-                            value={'10/05(수) 09:00 ~ 10/05(수) 16:00'}
-                        />
+                        <Info attribute={'운영시간'} value={'?'} />
                         <Info
                             attribute={'주차요금'}
-                            value={'30분당 3,000원'}
+                            value={numberFormat(useDetail.term_price) + '원'}
                             black={true}
                         />
                         <Info
                             attribute={'제공자 연락처'}
-                            value={'0504-123-1234'}
+                            value={useDetail.place_user_id + '.phoneNumber'}
                             black={true}
                         />
-                        <Info
-                            attribute={'이전 대여자 연락처'}
-                            value={'0504-123-1234'}
-                        />
+                        <Info attribute={'이전 대여자 연락처'} value={'?'} />
                     </div>
 
                     <div className={cx('button-area')}>
@@ -123,12 +197,12 @@ const UseDetailContainer = ({ location }) => {
                         />
                         <Info
                             attribute={'쿠폰 할인'}
-                            value={'- 1,000원'}
+                            value={`- ${numberFormat(1000)}원`}
                             black={true}
                         />
                         <Info
                             attribute={'포인트 사용'}
-                            value={'- 1,000원'}
+                            value={`- ${numberFormat(1000)}원`}
                             black={true}
                         />
                     </div>
@@ -152,7 +226,7 @@ const UseDetailContainer = ({ location }) => {
                         />
                         <Info
                             attribute={'결제금액'}
-                            value={'70,000원'}
+                            value={numberFormat(70000) + '원'}
                             black={true}
                         />
                     </div>
