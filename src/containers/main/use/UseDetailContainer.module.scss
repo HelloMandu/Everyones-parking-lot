@@ -41,7 +41,7 @@
             margin-bottom: 30px;
             padding: 0 20px;
 
-            & > button{
+            button{
                 padding: 10px 8px;
                 border: 1px solid #EBEBEB;
                 margin-right: 16px;
@@ -51,7 +51,7 @@
                 }
             }
 
-            & > button:last-child{
+            button:last-child{
                 margin: 0;
             }
         }

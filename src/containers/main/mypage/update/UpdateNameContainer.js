@@ -31,15 +31,11 @@ const UpdateNameContainer = () => {
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
         const JWT_TOKEN = localStorage.getItem('user_id');
-        if (JWT_TOKEN) {
-            const response = await requestPutReName(JWT_TOKEN, name);
-            if (response.msg === 'success') {
-                openDialog("이름변경 완료", "", () => history.push(Paths.main.mypage.index));
-            } else {
-                openDialog(response.msg);
-            }
+        const response = await requestPutReName(JWT_TOKEN, name);
+        if (response.msg === 'success') {
+            openDialog("이름변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
-            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+            openDialog(response.msg);
         }
     }, [history, name, openDialog]);
 

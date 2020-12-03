@@ -34,7 +34,11 @@ export const requestGetReviewList = async (JWT_TOKEN) => {
     // * 응답: reviews: [리뷰 Array…]
 
     const URL = Paths.api + "review";
-    const response = await axios.get(URL);
+    const response = await axios.get(URL, {
+        headers: {
+            'Authorization': `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };

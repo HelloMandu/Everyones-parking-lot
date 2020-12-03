@@ -84,8 +84,6 @@ const Price = ({ parkingInfo, totalPrice = 0,  coupon = 0, point = 0 }) => {
     );
 };
 
-const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
-
 const enroll = [
     {
         id: 1,
@@ -178,7 +176,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'포인트 할인'}</div>
-                        <Point></Point>
+                        {/* <Point></Point> */}
                     </div>
                 </div>
                 <div className={styles['bar']}></div>
@@ -200,7 +198,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 ></Price>
                 <div className={styles['parking-payment-area']}>
                     <CheckBox
-                        allCheckTitle={enrollTitle}
+                        // allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                     ></CheckBox>
                 </div>
