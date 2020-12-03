@@ -18,7 +18,7 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EnrollCardModal = ({ open }) => {
+const EnrollCardModal = ({ open, setCardList }) => {
     const [cardNum, onChangeCardNum, checkCardNum] = useForm(
         {
             card1: '',
@@ -51,19 +51,25 @@ const EnrollCardModal = ({ open }) => {
     const history = useHistory();
     const handleEnrollCard = useCallback(async () => {
         if (!allCheck) {
-            openDialog('등록실패', '필수입력사항을 입력해주세요');
+            openDialog('등록실패', '필수 입력 사항을 입력해 주세요');
             return;
         }
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const CARD_NUM = `${cardNum.card1}-${cardNum.card2}-${cardNum.card3}-${cardNum.card4}`;
-        const { data } = await requestPostCardEnroll(JWT_TOKEN, CARD_NUM);
+        const cardNumber = `${cardNum.card1}-${cardNum.card2}-${cardNum.card3}-${cardNum.card4}`;
+        const cardValid = `20${cardPeriod.year}/${cardPeriod.month}`;
+        const { data } = await requestPostCardEnroll(JWT_TOKEN, cardNumber, cardValid, cardPassword);
         if (data.msg === 'success') {
+            setCardList(cardList => cardList.concat(data.card));
+            history.goBack();
+        } else {
+            openDialog('등록실패', '네트워크 상태를 확인하세요')
         }
-    }, [allCheck, cardNum, openDialog]);
+    }, [allCheck, cardNum, openDialog, history, cardPeriod, cardPassword, setCardList]);
 
-    useEffect(() => {
-        setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword);
-    }, [checkCardNum, checkCardPeriod, checkCardPassword]);
+    useEffect(
+        () => setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword),
+        [checkCardNum, checkCardPeriod, checkCardPassword],
+    );
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제수단등록'}></Header>
