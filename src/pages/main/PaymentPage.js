@@ -4,9 +4,9 @@ import React from 'react';
 import PaymentContainer from '../../containers/main/PaymentContainer';
 /* Containers */
 
-const PaymentPage = ({match}) => {
+const PaymentPage = ({location, match}) => {
 
-    return <PaymentContainer match={match}/>
+    return <PaymentContainer location={location} match={match}/>
 };
 
 export default PaymentPage;

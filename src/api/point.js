@@ -7,10 +7,14 @@ export const requestGetMyPoint = async (JWT_TOKEN) => {
 
     // * 응답: point_logs: [포인트 사용 기록 Array…]
 
-    const URL = Paths.api + "api/point_log";
-    const response = await axios.get(URL);
+    const URL = Paths.api + 'point_log';
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
-    return response;
+    return response.data.point_logs;
 };
 
 export const requestPostWithdraw = async (JWT_TOKEN, price) => {
@@ -19,7 +23,7 @@ export const requestPostWithdraw = async (JWT_TOKEN, price) => {
 
     // * 응답: point_logs: [새로운 포인트 사용 기록 Array…]
 
-    const URL = Paths.api + "api/point_log";
+    const URL = Paths.api + "point_log";
     const response = await axios.post(URL);
 
     return response;
