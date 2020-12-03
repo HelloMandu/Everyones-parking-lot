@@ -78,8 +78,8 @@ export const requestPostFindId = async (name, phone_number, auth_number) => {
     // * 응답: email: 유저 이메일 String
 
 
-    const URL = Paths.api + "user/find";
-    const response = await axios.post(URL);
+    const URL = Paths.api + "user/find/user_id";
+    const response = await axios.post(URL, {name, phone_number});
 
     return response;
 };
@@ -92,8 +92,8 @@ export const requestPostFindPassword = async (name, email, phone_number, auth_nu
 
     // * 응답: success / failure
 
-    const URL = Paths.api + "user/find";
-    const response = await axios.post(URL);
+    const URL = Paths.api + "user/find/user_pw";
+    const response = await axios.post(URL, {name, email, phone_number});
 
     return response;
 };
