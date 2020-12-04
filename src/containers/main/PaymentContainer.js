@@ -31,9 +31,10 @@ const Point = ({ point, usePoint, setUsePoint, onChange }) => {
         point,
         setUsePoint,
     ]);
-    useEffect(() => {
-        setIsTotal(parseInt(point) === parseInt(usePoint));
-    }, [point, usePoint]);
+    useEffect(() => setIsTotal(parseInt(point) === parseInt(usePoint)), [
+        point,
+        usePoint,
+    ]);
     return (
         <div className={styles['parking-payment-wrapper']}>
             <div className={styles['title']}>{'포인트 할인'}</div>
@@ -199,10 +200,21 @@ const ParkingEnrollContainer = ({ location, match }) => {
             }
             offLoading('payment');
         };
-        // getPaymentInfo(6, '2020/12/02 09:00', '2020/12/02 10:00');
         getPaymentInfo(place_id, start_time, end_time);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const [phoneCheck, setPhoneCheck] = useState(false);
+    const [agreeCheck, setAgreeCheck] = useState(false);
+    const [finalCheck, setFinalCheck] = useState(false);
+    useEffect(
+        () =>
+            setFinalCheck(
+                phoneCheck && agreeCheck && paymentType !== '결제수단 선택',
+            ),
+        [agreeCheck, paymentType, phoneCheck],
+    );
+
     return (
         <>
             <div className={styles['parking-payment-container']}>
@@ -210,7 +222,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'대여자 연락처'}</div>
-                        <VerifyPhone></VerifyPhone>
+                        <VerifyPhone setCheck={setPhoneCheck}></VerifyPhone>
                     </div>
                     <div className={styles['parking-payment-wrapper']}>
                         <div className={styles['title']}>{'쿠폰 할인'}</div>
@@ -218,7 +230,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                             className={styles['coupon']}
                             onClick={openCouponModal}
                         >
-                            오픈 이벤트 10% 할인 이벤트 쿠폰
+                            쿠폰을 선택해주세요
                         </ButtonBase>
                     </div>
                     <Point
@@ -242,12 +254,13 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     <CheckBox
                         allCheckTitle={enrollTitle}
                         checkListProps={enroll}
+                        setCheck={setAgreeCheck}
                     ></CheckBox>
                 </div>
             </div>
             <FixedButton
                 button_name={`${numberFormat(totalPrice)}원 결제`}
-                disable={false}
+                disable={!finalCheck}
                 onClick={() => history.push(Paths.main.payment_complete)}
             ></FixedButton>
             <EnrollCouponModal open={isOpenCouponModal}></EnrollCouponModal>
