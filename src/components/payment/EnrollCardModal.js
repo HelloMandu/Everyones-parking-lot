@@ -69,15 +69,17 @@ const EnrollCardModal = ({ open, setCardList }) => {
         } else {
             openDialog('등록실패', '네트워크 상태를 확인하세요');
         }
-    }, [
-        allCheck,
-        cardNum,
-        openDialog,
-        history,
-        cardPeriod,
-        cardPassword,
-        setCardList,
-    ]);
+
+        cardNum.card1 = ''
+        cardNum.card2 = ''
+        cardNum.card3 = ''
+        cardNum.card4 = ''
+
+        cardPeriod.month = ''
+        cardPeriod.year = ''
+
+        onChangeCardPassword()
+    }, [allCheck, cardNum, cardPeriod, cardPassword, onChangeCardPassword, openDialog, setCardList, history]);
 
     useEffect(
         () => setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword),

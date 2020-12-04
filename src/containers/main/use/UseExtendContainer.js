@@ -6,9 +6,13 @@ import PaymentTypeModal from '../../../components/payment/PaymentTypeModal';
 import CheckBox from '../../../components/checkbox/CheckBox';
 
 import useModal from '../../../hooks/useModal';
+import { useDialog } from '../../../hooks/useDialog'
+
+// import { requestGetDetailUseRental } from '../../../api/rental';
+import { requestPostExtension } from '../../../api/extension';
 
 import { numberFormat } from '../../../lib/formatter';
-import { getFormatDateTime } from '../../../lib/calculateDate'
+import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import classNames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
@@ -66,9 +70,9 @@ const useDetail = {
     cp_id: 0,
 };
 
-const SECOND = 1000
-const MINUITE = 60 * SECOND
-const HOUR = 60 * MINUITE
+const SECOND = 1000;
+const MINUITE = 60 * SECOND;
+const HOUR = 60 * MINUITE;
 
 const UseExtendContainer = ({ match, location }) => {
     const { url, params } = match;
@@ -84,17 +88,22 @@ const UseExtendContainer = ({ match, location }) => {
         `type?id=${id}`,
     );
 
-    const checkoutTime = new Date(useDetail.rental_end_time).getTime()
-    
+    const checkoutTime = new Date(useDetail.rental_end_time).getTime();
 
-    const [endTime, setEndTime] = useState(checkoutTime)
+    const [endTime, setEndTime] = useState(checkoutTime);
+    const [checked, setChecked] = useState(false);
+    const [paymentType, setPaymentType] = useState('결제수단 선택');
+    const token = localStorage.getItem('user_id');
+    const openDialog = useDialog()
 
-    const onClickExtend = useCallback((ext) => {
-        setEndTime(endTime + ext)
-    }, [endTime])
-    
+    const onClickExtend = useCallback(
+        (ext) => {
+            setEndTime(endTime + ext);
+        },
+        [endTime],
+    );
+
     // const getUseDetail = useCallback(async () => {
-    //     const token = localStorage.getItem('user_id');
     //     const { data } = await requestGetDetailUseRental(token, id);
     //     const { msg, order, coupon, place_user } = data;
     //     if (msg === 'success') {
@@ -113,17 +122,39 @@ const UseExtendContainer = ({ match, location }) => {
     //     getUseDetail();
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, []);
-    
+
+    const onClickExtendPayment = useCallback(async () => {
+        const { data } = await requestPostExtension(
+            token,
+            useDetail.rental_id,
+            useDetail.rental_end_time,
+            useDetail.calculated_time,
+            10000,
+        );
+
+        if(data.msg === 'success'){
+
+        } else {
+            openDialog(data.msg)
+        }
+    }, [openDialog, token]);
+
     return (
         <>
             <div className={cx('container', 'top')}>
                 <div className={cx('card')}>
-                    <div className={cx('title')}>{useDetail.place_id}.title</div>
+                    <div className={cx('title')}>
+                        {useDetail.place_id}.title
+                    </div>
 
                     <div className={cx('content-area')}>
                         <Info
                             attribute={'대여시간'}
-                            value={`${getFormatDateTime(useDetail.rental_start_time)} ~ ${getFormatDateTime(useDetail.rental_end_time)}`}
+                            value={`${getFormatDateTime(
+                                useDetail.rental_start_time,
+                            )} ~ ${getFormatDateTime(
+                                useDetail.rental_end_time,
+                            )}`}
                         />
                         <Info
                             attribute={'주차요금'}
@@ -155,12 +186,24 @@ const UseExtendContainer = ({ match, location }) => {
             <div className={cx('container')}>
                 <div className={cx('extend-title')}>연장 시간 선택</div>
                 <div className={cx('button-area')}>
-                    <ButtonBase onClick={() => onClickExtend(30 * MINUITE)}>+ 30분</ButtonBase>
-                    <ButtonBase onClick={() => onClickExtend(HOUR)}>+ 1시간</ButtonBase>
-                    <ButtonBase onClick={() => onClickExtend(2 * HOUR)}>+ 2시간</ButtonBase>
-                    <ButtonBase onClick={() => onClickExtend(6 * HOUR)}>+ 6시간</ButtonBase>
-                    <ButtonBase onClick={() => onClickExtend(12 * HOUR)}>+ 12시간</ButtonBase>
-                    <ButtonBase onClick={() => onClickExtend(24 * HOUR)}>+ 1일</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(30 * MINUITE)}>
+                        + 30분
+                    </ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(HOUR)}>
+                        + 1시간
+                    </ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(2 * HOUR)}>
+                        + 2시간
+                    </ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(6 * HOUR)}>
+                        + 6시간
+                    </ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(12 * HOUR)}>
+                        + 12시간
+                    </ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(24 * HOUR)}>
+                        + 1일
+                    </ButtonBase>
                 </div>
             </div>
 
@@ -183,7 +226,7 @@ const UseExtendContainer = ({ match, location }) => {
                         name="payment"
                         onClick={openTypeModal}
                     >
-                        카카오페이
+                        {paymentType}
                     </div>
                 </div>
             </div>
@@ -191,6 +234,7 @@ const UseExtendContainer = ({ match, location }) => {
             <PaymentTypeModal
                 open={isOpenTypeModal}
                 match={match}
+                setPaymentType={setPaymentType}
             ></PaymentTypeModal>
 
             <div className={cx('extend-price')}>
@@ -204,12 +248,16 @@ const UseExtendContainer = ({ match, location }) => {
                 <CheckBox
                     allCheckTitle={enrollTitle}
                     checkListProps={enroll}
+                    setCheck={setChecked}
                 ></CheckBox>
             </div>
-            {console.log(enroll)}
 
             <div className={cx('container')}>
-                <BasicButton button_name={`${numberFormat(68000)}원 결제`} disable={false} />
+                <BasicButton
+                    button_name={`${numberFormat(68000)}원 결제`}
+                    disable={!(paymentType !== '결제수단 선택' && checked)}
+                    onClick={onClickExtendPayment}
+                />
             </div>
         </>
     );
