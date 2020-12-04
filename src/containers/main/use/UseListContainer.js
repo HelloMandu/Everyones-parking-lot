@@ -120,7 +120,6 @@ const UseListContainer = () => {
     // const [useList, setUseList] = useState();
 
     const current = new Date();
-    console.log(current.getTime() - new Date('2021-12-02 20:59:37').getTime())
 
     // const getUseList = useCallback(async() => {
     //     const token = localStorage.getItem('user_id')

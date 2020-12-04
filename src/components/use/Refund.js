@@ -24,15 +24,15 @@ const Info = ({ attribute, value, black }) => {
     );
 };
 
-const Refund = ({ open, handleClose }) => {
+const Refund = ({ open, handleClose, paymentPrice, deposit, couponPrice, pointPrice }) => {
     return (
         <>
             <div className={cx('bottom-modal', { on: open })}>
                 <div className={cx('title')}>대여 취소 신청</div>
-                <Info attribute={'대여비'} value={numberFormat(60000)} />
-                <Info attribute={'보증금'} value={numberFormat(10000)} />
-                <Info attribute={'쿠폰 할인'} value={numberFormat(-1000)} />
-                <Info attribute={'포인트 할인'} value={numberFormat(-1000)} />
+                <Info attribute={'대여비'} value={paymentPrice} />
+                <Info attribute={'보증금'} value={deposit} />
+                <Info attribute={'쿠폰 할인'} value={couponPrice} />
+                <Info attribute={'포인트 할인'} value={pointPrice} />
                 <Info
                     attribute={'최종 환불금액'}
                     value={numberFormat(68000)}

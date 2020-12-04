@@ -44,11 +44,11 @@ const Button = ({ name, children }) => {
 
 const useDetail = {
     rental_id: 1,
-    total_price: 60000,
+    total_price: 0,
     term_price: 1000,
     deposit: 10000,
     point_price: 0,
-    payment_price: 0,
+    payment_price: 60000,
     cancle_price: 0,
     calculated_price: 0,
     payment_type: 0,
@@ -77,7 +77,7 @@ const UseDetailContainer = ({ location }) => {
     // const openDialog = useDialog();
     // const [useDetail, setUseDetail] = useState();
     const current = new Date();
-
+    
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
@@ -193,16 +193,16 @@ const UseDetailContainer = ({ location }) => {
                     <div className={cx('content-area')}>
                         <Info
                             attribute={'사용 쿠폰'}
-                            value={'오픈 이벤트 10% 할인 쿠폰'}
+                            value={`useDetail.coupon.cp_subject`}
                         />
                         <Info
                             attribute={'쿠폰 할인'}
-                            value={`- ${numberFormat(1000)}원`}
+                            value={`useDetail.coupon.cp_price원`}
                             black={true}
                         />
                         <Info
                             attribute={'포인트 사용'}
-                            value={`- ${numberFormat(1000)}원`}
+                            value={`useDetail.order.point_price원`}
                             black={true}
                         />
                     </div>
@@ -217,16 +217,24 @@ const UseDetailContainer = ({ location }) => {
                     <div className={cx('content-area')}>
                         <Info
                             attribute={'결제 일시'}
-                            value={'2020-00-00 00:00:00'}
+                            value={'useDetail.order.caculated_time'}
                         />
                         <Info
                             attribute={'결제수단'}
-                            value={'카카오페이'}
+                            value={
+                                useDetail.payment_type === 0
+                                    ? '카드결제'
+                                    : useDetail.payment_type === 1
+                                    ? '카카오페이'
+                                    : useDetail.payment_type === 2
+                                    ? '네이버페이'
+                                    : '페이코결제'
+                            }
                             black={true}
                         />
                         <Info
                             attribute={'결제금액'}
-                            value={numberFormat(70000) + '원'}
+                            value={numberFormat(useDetail.payment_price) + '원'}
                             black={true}
                         />
                     </div>
@@ -255,6 +263,10 @@ const UseDetailContainer = ({ location }) => {
                 handleClose={() =>
                     dispatchHandle({ type: 'refund', payload: false })
                 }
+                paymentPrice={'useDetail.order.payment_price'}
+                deposit={'useDetail.order.deposit'}
+                couponPrice={'useDetail.coupon.cp_price'}
+                pointPrice={'useDetail.order.point_price'}
             />
         </>
     );

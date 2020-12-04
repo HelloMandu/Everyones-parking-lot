@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import qs from 'qs';
 
 import BasicButton from '../../../components/button/BasicButton';
@@ -8,6 +8,7 @@ import CheckBox from '../../../components/checkbox/CheckBox';
 import useModal from '../../../hooks/useModal';
 
 import { numberFormat } from '../../../lib/formatter';
+import { getFormatDateTime } from '../../../lib/calculateDate'
 
 import classNames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
@@ -40,6 +41,35 @@ const enroll = [
     },
 ];
 
+const useDetail = {
+    rental_id: 1,
+    total_price: 0,
+    term_price: 1000,
+    deposit: 10000,
+    point_price: 0,
+    payment_price: 60000,
+    cancle_price: 0,
+    calculated_price: 0,
+    payment_type: 0,
+    rental_start_time: '2020-12-02 16:41:01',
+    rental_end_time: '2020-12-02 20:59:37',
+    cancel_reason: '',
+    cancel_time: 0,
+    calculated_time: '',
+    deleted: 0,
+    created_at: 0,
+    updated_at: 0,
+    order_user_id: 0,
+    place_user_id: 0,
+    ppayment_id: 0,
+    place_id: 1,
+    cp_id: 0,
+};
+
+const SECOND = 1000
+const MINUITE = 60 * SECOND
+const HOUR = 60 * MINUITE
+
 const UseExtendContainer = ({ match, location }) => {
     const { url, params } = match;
     const query = qs.parse(location.search, {
@@ -53,27 +83,56 @@ const UseExtendContainer = ({ match, location }) => {
         params.modal,
         `type?id=${id}`,
     );
-    console.log(match);
+
+    const checkoutTime = new Date(useDetail.rental_end_time).getTime()
+    
+
+    const [endTime, setEndTime] = useState(checkoutTime)
+
+    const onClickExtend = useCallback((ext) => {
+        setEndTime(endTime + ext)
+    }, [endTime])
+    
+    // const getUseDetail = useCallback(async () => {
+    //     const token = localStorage.getItem('user_id');
+    //     const { data } = await requestGetDetailUseRental(token, id);
+    //     const { msg, order, coupon, place_user } = data;
+    //     if (msg === 'success') {
+    //         setUseDetail({
+    //             order,
+    //             coupon,
+    //             place_user,
+    //         });
+    //          여기 setEndTime
+    //     } else {
+    //         openDialog(msg);
+    //     }
+    // }, [id, openDialog]);
+
+    // useEffect(() => {
+    //     getUseDetail();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+    
     return (
         <>
-            {console.log(id)}
             <div className={cx('container', 'top')}>
                 <div className={cx('card')}>
-                    <div className={cx('title')}>길동이의 주차 공간</div>
+                    <div className={cx('title')}>{useDetail.place_id}.title</div>
 
                     <div className={cx('content-area')}>
                         <Info
                             attribute={'대여시간'}
-                            value={'10/5(수)14:00 ~ 10/5(수)16:00'}
+                            value={`${getFormatDateTime(useDetail.rental_start_time)} ~ ${getFormatDateTime(useDetail.rental_end_time)}`}
                         />
                         <Info
                             attribute={'주차요금'}
-                            value={`${numberFormat(60000)}원`}
+                            value={`${numberFormat(useDetail.payment_price)}원`}
                             black={true}
                         />
                         <Info
                             attribute={'보증금'}
-                            value={`${numberFormat(10000)}원`}
+                            value={`${numberFormat(useDetail.deposit)}원`}
                             black={true}
                         />
                     </div>
@@ -96,12 +155,12 @@ const UseExtendContainer = ({ match, location }) => {
             <div className={cx('container')}>
                 <div className={cx('extend-title')}>연장 시간 선택</div>
                 <div className={cx('button-area')}>
-                    <ButtonBase>+ 30분</ButtonBase>
-                    <ButtonBase>+ 1시간</ButtonBase>
-                    <ButtonBase>+ 2시간</ButtonBase>
-                    <ButtonBase>+ 6시간</ButtonBase>
-                    <ButtonBase>+ 12시간</ButtonBase>
-                    <ButtonBase>+ 1일</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(30 * MINUITE)}>+ 30분</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(HOUR)}>+ 1시간</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(2 * HOUR)}>+ 2시간</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(6 * HOUR)}>+ 6시간</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(12 * HOUR)}>+ 12시간</ButtonBase>
+                    <ButtonBase onClick={() => onClickExtend(24 * HOUR)}>+ 1일</ButtonBase>
                 </div>
             </div>
 
@@ -110,7 +169,7 @@ const UseExtendContainer = ({ match, location }) => {
                     <div className={cx('checkout-time-area')}>
                         <div className={cx('comment')}>연장 후 출차 시간</div>
                         <div className={cx('checkout-time')}>
-                            10/05(수) 19:00
+                            {getFormatDateTime(endTime)}
                         </div>
                     </div>
                 </div>
@@ -147,6 +206,7 @@ const UseExtendContainer = ({ match, location }) => {
                     checkListProps={enroll}
                 ></CheckBox>
             </div>
+            {console.log(enroll)}
 
             <div className={cx('container')}>
                 <BasicButton button_name={`${numberFormat(68000)}원 결제`} disable={false} />
