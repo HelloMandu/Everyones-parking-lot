@@ -1,5 +1,6 @@
 import React, { forwardRef, useState, useEffect, useCallback } from 'react';
 import cn from 'classnames/bind';
+import { useHistory } from 'react-router-dom';
 import { Dialog, Slide } from '@material-ui/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ButtonBase } from '@material-ui/core';
@@ -25,7 +26,8 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PaymentContainer = ({ open, match }) => {
+const PaymentContainer = ({ open, match, setPaymentType }) => {
+    const history = useHistory();
     const { url, params } = match;
     const [isOpenCardEnrollment, openCardEnrollment] = useModal(
         url,
@@ -67,8 +69,9 @@ const PaymentContainer = ({ open, match }) => {
                 checked: false,
             }));
             setCardList(newCardList);
+            setPaymentType(e.target.dataset.pay);
         },
-        [payList, cardList],
+        [payList, cardList, setPaymentType],
     );
     const handleCardList = useCallback(
         (e) => {
@@ -84,8 +87,9 @@ const PaymentContainer = ({ open, match }) => {
                 checked: false,
             }));
             setPayList(newPayList);
+            setPaymentType('등록카드결제');
         },
-        [payList, cardList],
+        [payList, cardList, setPaymentType],
     );
 
     const openDialog = useDialog();
@@ -231,6 +235,7 @@ const PaymentContainer = ({ open, match }) => {
                             <img
                                 className={cx({ checked })}
                                 data-key={index}
+                                data-pay={title}
                                 src={src}
                                 alt="card"
                                 onClick={handlePayList}
@@ -243,6 +248,7 @@ const PaymentContainer = ({ open, match }) => {
             <FixedButton
                 button_name={'결제하기'}
                 disable={!check}
+                onClick={() => history.goBack()}
             ></FixedButton>
             <EnrollCardModal
                 open={isOpenCardEnrollment}
