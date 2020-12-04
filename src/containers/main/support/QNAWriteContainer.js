@@ -1,5 +1,6 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 /* Library */
 
 import FixedButton from '../../../components/button/FixedButton';
@@ -7,6 +8,7 @@ import InputBox from '../../../components/inputbox/InputBox';
 /* Components */
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
 /* Hooks */
 
 import Delete from '../../../static/asset/svg/parking/Delete';
@@ -14,6 +16,12 @@ import Delete from '../../../static/asset/svg/parking/Delete';
 
 import styles from './QNAWriteContainer.module.scss';
 /* StyleSheets */
+
+import { requestPostWriteQNA } from '../../../api/qna';
+/* API */
+
+import { Paths } from '../../../paths';
+/* Paths */
 
 const FileItem = ({ file, onDelete }) => {
     const [imgFile, setImgFile] = useState(null);
@@ -48,7 +56,8 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const FilesPicture = () => {
+// eslint-disable-next-line
+const FilesPicture = forwardRef(({ }, ref) => {
 
     const [fileList, setFileList] = useState([]); //파일
 
@@ -65,9 +74,9 @@ const FilesPicture = () => {
         (id) => setFileList(fileList.filter((file) => file.id !== id)),
         [fileList],
     );
-    // useEffect(() => {
-    //     setCheck(fileList.length >= 2);
-    // }, [setCheck, fileList]);
+    useImperativeHandle(ref, () => ({
+        fileList,
+    }));
 
     return (
         <ul className={styles['file-list']}>
@@ -93,21 +102,41 @@ const FilesPicture = () => {
             ))}
         </ul>
     );
-};
+});
 
 const QNAWriteContainer = () => {
 
+    const openDialog = useDialog();
+    const history = useHistory();
+
     const subjectRef = useRef();
     const questionRef = useRef();
+    const parkingPicture = useRef();
 
     const [email, onChangeEmail] = useInput('');
     const [subject, onChangeSubject] = useInput('');
     const [question, onChangeQuestion] = useInput('');
 
-    const onClickButton = () => {
+    const [checkAll, setCheckAll] = useState(false);
+
+    const onClickButton = useCallback(async () => {
         // 업데이트 요청
-        alert('문의 작성')
-    }
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPostWriteQNA(JWT_TOKEN, email, subject, question, parkingPicture.current !== undefined ? parkingPicture.current.fileList : null);
+        if (response.msg === 'success') {
+            openDialog("1:1문의 작성 완료", "", () => history.push(Paths.main.support.qna));
+        } else {
+            openDialog(response.msg, response.sub);
+        }
+    }, [history, openDialog, email, question, subject]);
+
+    useEffect(() => {
+        if (email !== '' && subject !== '' && question !== '') {
+            setCheckAll(true);
+        } else {
+            setCheckAll(false);
+        }
+    }, [email, subject, question]);
 
     return (
         <>
@@ -151,11 +180,11 @@ const QNAWriteContainer = () => {
                     </div>
                     <div className={styles['files-wrap']}>
                         <div className={styles['text']}>첨부파일</div>
-                        <FilesPicture />
+                        <FilesPicture ref={parkingPicture} />
                     </div>
                 </div>
             </div>
-            <FixedButton button_name="문의하기" disable={false} onClick={onClickButton} />
+            <FixedButton button_name="문의하기" disable={!checkAll} onClick={onClickButton} />
 
         </>
     );

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 /* Library */
 
 import profile from '../../../static/asset/png/profile.png';
@@ -11,12 +11,19 @@ import Car from '../../../static/asset/svg/Car';
 import Camera from '../../../static/asset/svg/Camera';
 /* StyleSheets */
 
+import { useDialog } from '../../../hooks/useDialog';
+/* Hooks */
+
 import { Paths } from '../../../paths'
+import { useSelector } from 'react-redux';
 /* Paths */
 
 
 const MyPageContainer = () => {
 
+    const history = useHistory();
+    const openDialog = useDialog();
+    const getUserInfo = useSelector(state => state.user);
     const fileRef = useRef();
 
     return (
