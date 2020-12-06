@@ -84,3 +84,12 @@ export const getFormatDateNanTime = (formatted) => {
     date = date >= 10 ? date : `0${date}`;
     return `${year}/${month}/${date}`;
 };
+
+export const getFormatDateString = (formatted) => {
+    const formatDate = new Date(formatted);
+    const year = formatDate.getFullYear();
+    const month = formatDate.getMonth() + 1;
+    let date = formatDate.getDate();
+    // date = date >= 10 ? date : `0${date}`;
+    return `${year}년 ${month}월 ${date}일`;
+};

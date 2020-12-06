@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 /* Library */
 
 import profile from '../../../static/asset/png/profile.png';
@@ -11,18 +12,16 @@ import Car from '../../../static/asset/svg/Car';
 import Camera from '../../../static/asset/svg/Camera';
 /* StyleSheets */
 
-import { useDialog } from '../../../hooks/useDialog';
-/* Hooks */
+import { getFormatDateString } from '../../../lib/calculateDate';
+import { stringToTel } from '../../../lib/formatter';
+/* Lib */
 
 import { Paths } from '../../../paths'
-import { useSelector } from 'react-redux';
 /* Paths */
 
 
 const MyPageContainer = () => {
 
-    const history = useHistory();
-    const openDialog = useDialog();
     const getUserInfo = useSelector(state => state.user);
     const fileRef = useRef();
 
@@ -30,7 +29,7 @@ const MyPageContainer = () => {
         <div className={styles['container']}>
             <div className={styles['user-area']}>
                 <div className={styles['img-wrap']}>
-                    <img src={profile} alt="프로필 사진" />
+                    {getUserInfo.profile_img ? <img src={getUserInfo.profile_img} alt="프로필 사진" /> : <img src={profile} alt="프로필 사진" />}
                     <div className={styles['camera']} onClick={() => fileRef.current.click()}>
                         <input type="file" className={styles['input-file']} ref={fileRef} />
                         <Camera />
@@ -40,7 +39,7 @@ const MyPageContainer = () => {
                     <Link to={Paths.main.mypage.update.name}>
                         <div className={styles['name-wrap']}>
                             <div className={styles['user-name']}>
-                                <span>스페이스</span>
+                                <span>{getUserInfo.name}</span>
                             </div>
                             <ArrowSmall rotate={90} />
                         </div>
@@ -78,7 +77,7 @@ const MyPageContainer = () => {
                     <div className={styles['hp-wrap']}>
                         <div className={styles['text']} >
                             <span>휴대폰번호</span>
-                            <span className={styles['user-text']}>010-8885-7406</span>
+                            <span className={styles['user-text']}>{stringToTel(getUserInfo.phone_number)}</span>
                             <ArrowSmall rotate={90} />
                         </div>
                     </div>
@@ -86,14 +85,14 @@ const MyPageContainer = () => {
                 <div className={styles['email-wrap']}>
                     <div className={styles['text']} >
                         <span>이메일 주소</span>
-                        <span className={styles['user-text']}>space@naver.com</span>
+                        <span className={styles['user-text']}>{getUserInfo.email}</span>
                     </div>
                 </div>
                 <Link to={Paths.main.mypage.update.birthday}>
                     <div className={styles['birthday-wrap']}>
                         <div className={styles['text']} >
                             <span>생년월일</span>
-                            <span className={styles['user-text']}>1992년 6월 25일</span>
+                            <span className={styles['user-text']}>{getFormatDateString(getUserInfo.birth)}</span>
                             <ArrowSmall rotate={90} />
                         </div>
                     </div>

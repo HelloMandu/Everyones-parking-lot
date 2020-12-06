@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -16,6 +17,9 @@ import { useDialog } from '../../../../hooks/useDialog';
 import { Paths } from '../../../../paths';
 /* Paths */
 
+import { updateUser } from '../../../../store/user';
+/* Store */
+
 import { requestPutRePassword } from '../../../../api/user';
 /* API */
 
@@ -23,6 +27,7 @@ const UpdatePasswordContainer = () => {
 
     const history = useHistory();
     const openDialog = useDialog();
+    const reduxDispatch = useDispatch();
 
     const toNewPasswordRef = useRef(null);
     const toConfirmPasswordRef = useRef(null);
@@ -35,17 +40,17 @@ const UpdatePasswordContainer = () => {
     const [password, setPassword] = useState(false);
     const [messageStyle, setMessageStyle] = useState({});
 
-
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPutRePassword(JWT_TOKEN, newPassword);
         if (response.msg === 'success') {
+            reduxDispatch(updateUser('password', newPassword));
             openDialog("비밀번호변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
             openDialog(response.msg, response.sub);
         }
-    }, [history, newPassword, openDialog]);
+    }, [history, newPassword, openDialog, reduxDispatch]);
 
     useMemo(() => {
         if (confirmPassword !== "") {
