@@ -129,7 +129,7 @@ const BirthSelector = ({ onChangeBirth }) => {
         <div className={cx('input-wrapper')}>
             <div className={cx('input-title')}>생년월일</div>
             <div className={cx('select-wrapper')}>
-                <Birth onChangeBirth={onChangeBirth} />
+                <Birth onChangeBirth={onChangeBirth} year={1996} />
             </div>
         </div>
     );
