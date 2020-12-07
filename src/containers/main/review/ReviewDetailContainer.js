@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
+
+import { requestGetDetailReview } from '../../../api/review'
 
 import { Paths } from '../../../paths';
 
@@ -60,6 +62,15 @@ const ReviewDetailContainer = ({ location }) => {
     const onClickSubmit = () => {
         console.log('submit');
     };
+
+    const getReview = useCallback(async() => {
+        const {data} = await requestGetDetailReview(id)
+        console.log(data)
+    }, [id])
+
+    useEffect(() => {
+        getReview()
+    }, [getReview])
 
     // requestGetDetailReview API
     // requestPostWriteComment API

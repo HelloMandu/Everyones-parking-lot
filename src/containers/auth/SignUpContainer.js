@@ -129,7 +129,7 @@ const BirthSelector = ({ onChangeBirth }) => {
         <div className={cx('input-wrapper')}>
             <div className={cx('input-title')}>생년월일</div>
             <div className={cx('select-wrapper')}>
-                <Birth onChangeBirth={onChangeBirth} year={1996} />
+                <Birth onChangeBirth={onChangeBirth} />
             </div>
         </div>
     );
@@ -234,6 +234,7 @@ const SignUpContainer = () => {
 
     return (
         <>
+        {console.log(getBirth())}
             <div className={cx('container')}>
                 <Email
                     setCheck={setCheckEmail}
