@@ -1,6 +1,6 @@
 /*global Kakao*/
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import './App.scss';
 import AuthPage from './pages/AuthPage';
@@ -13,6 +13,8 @@ import LoadingContainer from './containers/assets/LoadingContainer';
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
+import { useDispatch } from 'react-redux';
+import { getUser } from './store/user';
 // import { requestGetUserInfo } from './api/user';
 
 const App = () => {
@@ -20,6 +22,19 @@ const App = () => {
     useEffect(() => {
         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
     }, []);
+
+    const dispatch = useDispatch()
+
+    const judgementLogin = useCallback(() => {
+        const token = localStorage.getItem('user_id')
+        
+        dispatch(getUser(token))
+    }, [dispatch])
+
+    useEffect(() => {
+        judgementLogin()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -167,7 +182,7 @@ const App = () => {
     return (
         <div className="App">
             {renderHeader()}
-            <Switch className="test">
+            <Switch>
                 <Route path={Paths.auth.index} component={AuthPage} />
                 <Route path={Paths.index} component={MainPage} />
                 <Route component={ErrorPage} />

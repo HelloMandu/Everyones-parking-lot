@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { Paths } from '../../paths';
 
-import ParkingInfoList from '../../components/parking/ParkingInfoList';
 import PleaseRead from '../../components/parking/PleaseRead';
 
 import parkingImage from '../../static/asset/png/parking.png';
@@ -74,7 +73,18 @@ const PaymentCompleteContainer = () => {
                                 </div>
                             </div>
                         </div>
-                        <ParkingInfoList list={infos}></ParkingInfoList>
+                        <ul className={styles['infolist']}>
+                            {infos.map(({ id, title, description }) => (
+                                <li className={styles['info']} key={id}>
+                                    <div className={styles['info-title']}>
+                                        {title}
+                                    </div>
+                                    <div className={styles['description']}>
+                                        {description}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                         <PleaseRead fill={'#1F8395'}></PleaseRead>
                     </div>
                 </div>

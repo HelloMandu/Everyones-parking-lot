@@ -4,12 +4,38 @@
     border-radius: 2px;
     .image {
         width: 100%;
+        padding-top: 36.58536%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
     .wrapper {
         padding: 14px 18px;
         .title {
             font-size: 18px;
             font-weight: bold;
+        }
+    }
+    .infolist {
+        .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            font-size: 14px;
+            font-weight: bold;
+            .info-title {
+                color: #aaaaaa;
+                min-width: 60px;
+            }
+            &:first-child .description {
+                font-weight: normal;
+                text-align: right;
+            }
+            &:last-child {
+                padding-bottom: 16px;
+                border-bottom: 1px solid #e9ebed;
+            }
         }
     }
 }

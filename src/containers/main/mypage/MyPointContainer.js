@@ -10,7 +10,6 @@ import BasicButton from '../../../components/button/BasicButton';
 
 import styles from './MyPointContainer.module.scss';
 import XIcon from '../../../static/asset/svg/X_button';
-import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 /* stylesheets */
 
 import useInput from '../../../hooks/useInput';
@@ -62,7 +61,6 @@ const WithdrawModal = ({ click, setClick }) => {
                                     <option key={item}>{item}</option>
                                 ))}
                             </select>
-                            <ArrowSmall rotate={180} />
                         </div>
                         <div className={styles['account-text']}>
                             <InputBox
