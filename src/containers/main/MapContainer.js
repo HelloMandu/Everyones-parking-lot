@@ -47,7 +47,7 @@ import { set_position, set_level } from '../../store/main/position';
 //api
 
 import { getCoordinates } from '../../api/address';
-import {requsetGetSampleDate} from '../../api/place';
+import {requsetGetSampleDate,requestGetParkingList} from '../../api/place';
 
 const cx = cn.bind(styles);
 
@@ -69,6 +69,7 @@ const MapContainer = ({ modal }) => {
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
     const [slide_list,setSlideList] = useState([]);
+    const [parking_list,setParkingList] =useState([]);
     // 모달을 제어하는 리듀서
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -168,6 +169,18 @@ const MapContainer = ({ modal }) => {
         kakao_map.current.setCenter(moveLatLon);
     }, []);
 
+    const callGetParkingList = async ()=>{
+        try{
+            
+            const res = await requestGetParkingList(35.1158949746728,128.966901860943);
+            console.log(res);
+            setParkingList(res.data.places);
+        }
+        catch(e){
+            console.error(e);
+        }
+    }
+
     // 지도와 마커를 렌더하는 함수
     const mapRender = () => {
         let container = document.getElementById('map');
@@ -228,10 +241,10 @@ const MapContainer = ({ modal }) => {
             }
         });
 
-        let markerdata = requsetGetSampleDate();
         // 주차장 마커 생성
-        const data = markerdata.map((el) => {
-            let content = `<span class="custom-overlay">${el.distance}m</span>`;
+        const data = parking_list.map((el) => {
+            const distance = getDistanceFromLatLonInKm(el.lat,el.lng,position_ref.current.lat,position_ref.current.lng);
+            let content = `<span class="custom-overlay">${distance}Km</span>`;
             const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
@@ -269,10 +282,14 @@ const MapContainer = ({ modal }) => {
         });
     };
 
+    useEffect(()=>{
+        callGetParkingList();
+
+    },[])
+
     useEffect(() => {
         mapRender();
-        // requsetGetSampleDate();
-    }, []);
+    }, [parking_list]);
 
     useEffect(() => {
         if (address) createArriveMarker();

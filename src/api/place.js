@@ -3,7 +3,7 @@ import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requsetGetSampleDate =()=>{
+export const requsetGetSampleDate =async ()=>{
     // const url ='http://apis.map.kakao.com/download/web/data/chicken.json';
     // const res = await axios.get(url);
     // console.log(res);
@@ -34,7 +34,7 @@ export const requsetGetSampleDate =()=>{
         },
     ];
 
-    return markerdata;
+    return await markerdata;
     
 }
 
@@ -60,7 +60,10 @@ export const requestGetParkingList = async (
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place';
-    const response = await axios.get(URL);
+    const params={
+        lat,lng,range:3000,
+    }
+    const response = await axios.get(URL,{params});
 
     return response;
 };
