@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -15,6 +16,9 @@ import { useDialog } from '../../../../hooks/useDialog';
 import { Paths } from '../../../../paths';
 /* Paths */
 
+import { updateUser } from '../../../../store/user';
+/* Store */
+
 import { requestPutReName } from '../../../../api/user';
 /* API */
 
@@ -23,6 +27,9 @@ const UpdateNameContainer = () => {
     const history = useHistory();
     const openDialog = useDialog();
     const [name, setName] = useState('');
+
+    const getUserInfo = useSelector(state => state.user);
+    const reduxDispatch = useDispatch();
 
     const onChangeName = e => setName(e.target.value);
     const onClickName = () => setName('');
@@ -33,11 +40,12 @@ const UpdateNameContainer = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPutReName(JWT_TOKEN, name);
         if (response.msg === 'success') {
+            reduxDispatch(updateUser('name', name));
             openDialog("이름변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
             openDialog(response.msg);
         }
-    }, [history, name, openDialog]);
+    }, [history, name, openDialog, reduxDispatch]);
 
     return (
         <>
@@ -51,7 +59,7 @@ const UpdateNameContainer = () => {
                             value={name}
                             onChange={onChangeName}
                             onKeyPress={onKeyPressEnter}
-                            placeholder="김종완"
+                            placeholder={getUserInfo.name}
                         />
                         <button className={styles['x-button']} onClick={onClickName}><XButton /></button>
                     </div>

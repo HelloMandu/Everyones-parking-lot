@@ -30,10 +30,10 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                                 {y}년
                             </option>
                         ) : (
-                            <option key={y} value={y} selected>
-                                {y}년
-                            </option>
-                        ),
+                                <option key={y} value={y} selected>
+                                    {y}년
+                                </option>
+                            ),
                     )}
                 </select>
             </div>
@@ -50,10 +50,10 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                                 {m}월
                             </option>
                         ) : (
-                            <option key={m} value={m} selected>
-                                {m}월
-                            </option>
-                        ),
+                                <option key={m} value={m} selected>
+                                    {m}월
+                                </option>
+                            ),
                     )}
                 </select>
             </div>
@@ -70,10 +70,10 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                                 {d}일
                             </option>
                         ) : (
-                            <option key={d} value={d} selected>
-                                {d}일
-                            </option>
-                        ),
+                                <option key={d} value={d} selected>
+                                    {d}일
+                                </option>
+                            ),
                     )}
                 </select>
             </div>
