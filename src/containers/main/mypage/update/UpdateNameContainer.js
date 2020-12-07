@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -8,17 +9,35 @@ import styles from './UpdateNameContainer.module.scss';
 import XButton from '../../../../static/asset/svg/X_button';
 /* stylesheets */
 
+import { useDialog } from '../../../../hooks/useDialog';
+/* Hooks */
+
+import { Paths } from '../../../../paths';
+/* Paths */
+
+import { requestPutReName } from '../../../../api/user';
+/* API */
+
 const UpdateNameContainer = () => {
 
+    const history = useHistory();
+    const openDialog = useDialog();
     const [name, setName] = useState('');
 
     const onChangeName = e => setName(e.target.value);
     const onClickName = () => setName('');
     const onKeyPressEnter = e => { if (e.key === 'Enter') onClickButton(); };
-    const onClickButton = () => {
+
+    const onClickButton = useCallback(async () => {
         // 업데이트 요청
-        alert('이름 업데이트')
-    }
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPutReName(JWT_TOKEN, name);
+        if (response.msg === 'success') {
+            openDialog("이름변경 완료", "", () => history.push(Paths.main.mypage.index));
+        } else {
+            openDialog(response.msg);
+        }
+    }, [history, name, openDialog]);
 
     return (
         <>

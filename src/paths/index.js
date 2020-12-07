@@ -1,5 +1,5 @@
 export const Paths = {
-    index :'/',
+    index: '/',
     main: {
         index: '/main',
         detail: '/detail',
@@ -23,7 +23,7 @@ export const Paths = {
             point: '/mypage/point',
             update: {
                 index: '/mypage/update',
-                name: '/mypage/update/name', 
+                name: '/mypage/update/name',
                 password: '/mypage/update/password',
                 hp: '/mypage/update/hp',
                 enrollment: '/mypage/update/enrollment',
@@ -39,21 +39,21 @@ export const Paths = {
             preview: '/parking/preview',
         },
         notification: '/notification',
-        setting:'/setting',
+        setting: '/setting',
         coupon: '/coupon',
         event: {
             index: '/event',
             list: '/event/list',
             detail: '/event/detail',
         },
-        support:{
-            index:'/support',
+        support: {
+            index: '/support',
             notice: '/support/notice',
-            notice_detail :'/support/notice_detail',
-            faq :'/support/faq',
-            qna:'/support/qna',
-            qna_detail:'/support/qna_detail',
-            qna_write:'/support/qna_write',
+            notice_detail: '/support/notice_detail',
+            faq: '/support/faq',
+            qna: '/support/qna',
+            qna_detail: '/support/qna_detail',
+            qna_write: '/support/qna_write',
         }
     },
     auth: {
@@ -71,7 +71,8 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/',    
+    api: 'http://localhost:8080/api/',
+    storage: 'http://localhost:8080/uploads/',
 };
 
 export const HeaderTitle = {
@@ -93,7 +94,7 @@ export const HeaderTitle = {
             write: '리뷰 쓰기',
             detail: '리뷰 상세보기',
         },
-        mypage:{
+        mypage: {
             index: '내 정보 수정',
             point: '',
             update: {
@@ -114,21 +115,21 @@ export const HeaderTitle = {
             preview: '/parking/preview',
         },
         notification: '알림함',
-        setting:'환경설정',
+        setting: '환경설정',
         coupon: '쿠폰',
         event: {
             index: '',
             list: '이벤트',
             detail: '이벤트',
         },
-        support:{
-            index:'',
+        support: {
+            index: '',
             notice: '고객센터',
-            notice_detail :'고객센터' ,
-            faq :'고객센터',
-            qna:'고객센터 ',
-            qna_detail:'고객센터',
-            qna_write:'1:1 문의 작성',
+            notice_detail: '고객센터',
+            faq: '고객센터',
+            qna: '고객센터 ',
+            qna_detail: '고객센터',
+            qna_write: '1:1 문의 작성',
         }
     },
     auth: {

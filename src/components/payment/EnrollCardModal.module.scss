@@ -11,8 +11,19 @@
     }
     .card-input{
         background-color: #F9F9F9;
-        display: flex;
         line-height: 48px;
+        height: 48px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        input{
+            padding: 0 10px;
+            background-color: inherit;
+            font-size: 1.167rem; // 14px;
+            font-weight: 400; // Regular
+            text-align: center;
+            width: 100%;
+        }
     }
     .card-period{
         display: flex;
@@ -21,9 +32,12 @@
             width: 80px;
         }
         span{
+            display: inline-block;
             width: 20px;
             text-align: center;
-            font-size: 14px;
+            font-size: 18px;
+            line-height: 48px;
+            margin-bottom: 12px;
         }
     }
 }

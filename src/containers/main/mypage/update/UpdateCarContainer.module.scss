@@ -52,28 +52,89 @@
                 color: #777;
             }
         }
-    }
-}
-
-html{
-    body{
-        .container{
-            .img-wrapper{
-                .button{
-                    width: 100%;
-                    height: 48px;
-                    margin-top: 18px;
-                    border: 1px solid #EBEBEB;
-                    font-size: 14px;
-
-                    .plus{
+        // 차량 정보 등록
+        .button {
+            width: 100%;
+            height: 48px;
+            margin-top: 18px;
+            text-align: center;
+            border: 1px solid #dbdbdb;
+            margin-bottom: 12px;
+            label {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                .button-text{
+                    display: flex;
+                    align-items: center;
+                    .plus {
                         font-size: 24px;
+                        font-weight: bold;
                         margin-right: 5px;
-                        position: relative;
-                        transform: translateY(-5%);
                     }
+                    .plus-text{
+                        color: #222222;
+                        font-size: 14px;
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+        .input-files {
+            display: none;
+        }
+        .file-list {
+            display: flex;
+            overflow-x: auto;
+            padding-top: 8px;
+            .file-item {
+                position: relative;
+                display: inline-block;
+                width: 88px;
+                height: 88px;
+                margin-left: 10px;
+                .file-image {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+                .file-delete {
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    padding: 0;
+                    margin: 0;
+                    top: -6px;
+                    right: -6px;
+                    background-color: #fff;
+                    border: solid 1px #DBDBDB;
                 }
             }
         }
     }
 }
+
+// html{
+//     body{
+//         .container{
+//             .img-wrapper{
+//                 .button{
+//                     width: 100%;
+//                     height: 48px;
+//                     margin-top: 18px;
+//                     border: 1px solid #EBEBEB;
+//                     font-size: 14px;
+
+//                     .plus{
+//                         font-size: 24px;
+//                         margin-right: 5px;
+//                         position: relative;
+//                         transform: translateY(-5%);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }

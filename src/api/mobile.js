@@ -7,7 +7,7 @@ export const requestPostAuth = async (phone_number) => {
     // phone_number: 유저 휴대폰 번호(String, 필수)
 
     // * 응답: success / failure
-    const URL = Paths.api + "api/mobile/auth";
+    const URL = Paths.api + "mobile/auth";
     const response = await axios.post(URL, {
         phone_number
     });
@@ -20,7 +20,7 @@ export const requestPostConfirm = async (phone_number, auth_number) => {
     // auth_number: 전달 받은 인증 번호(String, 필수)
 
     // * 응답: success / failure
-    const URL = Paths.api + "api/mobile/confirm";
+    const URL = Paths.api + "mobile/confirm";
     const response = await axios.post(URL,{
         phone_number,
         auth_number
