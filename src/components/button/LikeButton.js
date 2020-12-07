@@ -23,7 +23,7 @@ const LikeButton = ({ button_name, disable, like, count ,onClick}) => {
                     <Like />
                     <div className={styles['count']}> 122 </div>
                 </ButtonBase>
-                <ButtonBase className={cx('basic-button', { disable })} disableRipple={disable} onClick={onClick}>
+                <ButtonBase className={cx('basic-button', { disable })} disabled={disable} onClick={onClick}>
                     {button_name}
                 </ButtonBase>
             </div>

@@ -46,7 +46,7 @@ const QNAItems = ({ QNAList }) => {
                         <div className={styles['date']}>{getFormatDateNanTime(updatedAt)}</div>
                         <div className={styles['title']}>{subject}</div>
                         <div className={styles['bottom']}>
-                            <div className={styles['name']}>{user.name}</div>
+                            {/* <div className={styles['name']}>{user.name}</div> */}
                             <div className={styles['count']}>조회수 {hit}</div>
                         </div>
                         <div className={cn('button', { status: status })}>

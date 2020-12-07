@@ -48,7 +48,7 @@ export const requestGetDetailReview = async (review_id) => {
 
     // * 응답: review: 리뷰 상세 정보
 
-    const URL = Paths.api + "review/:review_id";
+    const URL = Paths.api + `review/${review_id}`;
     const response = await axios.get(URL);
 
     return response;

@@ -13,7 +13,7 @@ import { requestPostAuth } from '../../api/user';
 
 import useInput from '../../hooks/useInput';
 import useBirth from '../../hooks/useBirth';
-import { useDialog } from '../../hooks/useDialog'
+import { useDialog } from '../../hooks/useDialog';
 
 import InputBox from '../../components/inputbox/InputBox';
 import Birth from '../../components/birth/Birth';
@@ -72,18 +72,28 @@ const Name = forwardRef(({ setCheck, onKeyDown }, ref) => {
     );
 });
 
+const SAME_TEXT = '비밀번호가 일치합니다.';
+const DIFF_TEXT = '비밀번호가 일치하지 않습니다.';
+
 const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
-    const [password, onChangePassword, checkPasswordForm] = useInput('', isPasswordForm);
+    const [password, onChangePassword, checkPasswordForm] = useInput(
+        '',
+        isPasswordForm,
+    );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
+    const [apear, setApear] = useState(false);
+    const [same, setSame] = useState(false);
+
     useImperativeHandle(ref, () => ({
         password: password,
     }));
-    useEffect(() => setCheck(checkPasswordForm && password === passwordCheck), [
-        setCheck,
-        password,
-        passwordCheck,
-        checkPasswordForm
-    ]);
+
+    useEffect(() => {
+        setCheck(checkPasswordForm && password === passwordCheck);
+        setApear(password !== '' && passwordCheck !== '');
+        setSame(password === passwordCheck);
+    }, [setCheck, password, passwordCheck, checkPasswordForm]);
+
     return (
         <div className={cx('input-wrapper')}>
             <div className={cx('input-title')}>비밀번호</div>
@@ -103,17 +113,13 @@ const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 onChange={onChangePasswordCheck}
                 onKeyDown={onKeyDown}
             />
-            <div
-                className={cx(
-                    'password-check',
-                    { apear: password !== '' || passwordCheck !== '' },
-                    {
-                        same: password !== '' && password === passwordCheck,
-                    },
-                )}
-            >
-                비밀번호가 <span>불</span>일치합니다.
-            </div>
+            <p className={cx('password-check', { apear, same })}>
+                {apear
+                    && (same
+                        ? SAME_TEXT
+                        : DIFF_TEXT
+                    )}
+            </p>
         </div>
     );
 });
@@ -184,7 +190,7 @@ const SignUpContainer = () => {
     const passwordRef = useRef(null);
     const phoneRef = useRef(null);
 
-    const openDialog = useDialog()
+    const openDialog = useDialog();
 
     const onClickSignUp = useCallback(async () => {
         if (!signUp) {
@@ -195,14 +201,14 @@ const SignUpContainer = () => {
             nameRef.current.name,
             passwordRef.current.password,
             getBirth(),
-            phoneRef.current.phoneNumber
+            phoneRef.current.phoneNumber,
         );
 
-        console.log(response)
+        console.log(response);
         if (response.data.msg === 'success')
-            history.push(Paths.auth.sign_complete);
-        else{
-            openDialog(response.data.msg, "")
+            history.push(Paths.auth.enrollment);
+        else {
+            openDialog(response.data.msg, '');
             console.log(response.data.msg);
         }
     }, [history, signUp, getBirth, openDialog]);
@@ -228,6 +234,7 @@ const SignUpContainer = () => {
 
     return (
         <>
+        {console.log(getBirth())}
             <div className={cx('container')}>
                 <Email
                     setCheck={setCheckEmail}
@@ -244,9 +251,7 @@ const SignUpContainer = () => {
                     onKeyDown={onKeyDownSignUp}
                     ref={passwordRef}
                 ></Password>
-                <BirthSelector
-                    onChangeBirth={onChangeBirth}
-                ></BirthSelector>
+                <BirthSelector onChangeBirth={onChangeBirth}></BirthSelector>
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
                 <VerifyPhone setCheck={setCheckPhone} ref={phoneRef} />
                 <CheckList setCheck={setCheckAree}></CheckList>

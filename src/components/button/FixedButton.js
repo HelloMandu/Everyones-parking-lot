@@ -16,7 +16,7 @@ const FixedButton = ({ button_name, disable, onClick }) => {
         <div className={styles["fixed-button-container"]}>
             <ButtonBase
                 className={cx('fixed-button', { disable })}
-                disableRipple={disable}
+                disabled={disable}
                 onClick={onClick}
             >
                 {button_name}
