@@ -137,7 +137,7 @@ export const requestPutResetPassword = async (
     return response;
 };
 
-export const requestPutProfile = async (JWT_TOKEN, profile_img) => {
+export const requestPutProfile = async (JWT_TOKEN, profile_image) => {
     /*
         프로필 이미지 변경 요청 API(PUT): /api/user/profile_image
         { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -154,8 +154,7 @@ export const requestPutProfile = async (JWT_TOKEN, profile_img) => {
         },
     };
     const formData = new FormData();
-    console.log(profile_img)
-    formData.append('profile_img', profile_img);
+    formData.append('profile_image', profile_image);
     const response = await axios.put(URL, formData, config);
     return response.data;
 };
@@ -258,7 +257,6 @@ export const requestPutReBirth = async (JWT_TOKEN, birth) => {
 
         * 응답: success / failure
     */
-    console.log(birth);
     const URL = Paths.api + 'user/birth';
     const config = {
         headers: {
