@@ -22,67 +22,72 @@ import { requestPutProfile } from '../../../api/user';
 import { Paths } from '../../../paths'
 /* Paths */
 
-const FileItem = ({ file }) => {
+const FileItem = ({ file, image }) => {
 
     const [imgFile, setImgfile] = useState(null);
 
-    useEffect(() => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64 = reader.result;
-            if (base64) {
-                setImgfile(base64.toString());
+    const UpdateProfile = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPutProfile(JWT_TOKEN, file);
+        if (response.msg === 'success') {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64 = reader.result;
+                if (base64) {
+                    setImgfile(base64.toString());
+                }
+            };
+            if (file) {
+                reader.readAsDataURL(file);
             }
-        };
-        if (file) {
-            reader.readAsDataURL(file);
         }
-    }, [file]);
+    }, [file, setImgfile])
+
+    useEffect(() => {
+        try {
+            UpdateProfile();
+        } catch (e) {
+
+        }
+    }, [UpdateProfile]);
 
     return (
         <>
             {imgFile
-                ? <div className={styles['img-item']}>
-                    <img
-                        className={styles['item']}
-                        src={imgFile}
-                        alt="프로필 사진"
+                ? <div
+                    className={styles['img-item']}
+                    style={{ backgroundImage: `url(${imgFile})` }}
+                />
+                : image
+                    ? <div
+                        className={styles['img-item']}
+                        style={{ backgroundImage: `url(http://localhost:8080/${image})` }}
                     />
-                </div>
-                : <div className={styles['img-item']}>
-                    <img
-                        className={styles['item']}
-                        src={profile}
-                        alt="프로필 사진 없음"
+                    : <div
+                        className={styles['img-item']}
+                        style={{ backgroundImage: `url(${profile})` }}
                     />
-                </div>
-
             }
         </>
     )
 }
-const ProfileImg = () => {
+const ProfileImg = ({ image }) => {
 
     const fileRef = useRef();
     const [imgFile, setImgFile] = useState([]);
 
-    const UpdateProfile = useCallback(async (img) => {
-        const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestPutProfile(JWT_TOKEN, img);
-        console.log(response);
-    }, [])
     const onChangeImgFile = useCallback((e) => {
         const { files } = e.target;
         if (files) {
             setImgFile(files);
-            UpdateProfile(files[0]);
         }
-    }, [UpdateProfile]);
+    }, []);
 
     return (
         <div className={styles['img-wrap']}>
             <FileItem
                 file={imgFile[0]}
+                image={image}
             />
             <div className={styles['camera']} onClick={() => fileRef.current.click()}>
                 <input
@@ -108,7 +113,7 @@ const MyPageContainer = () => {
     return (
         <div className={styles['container']}>
             <div className={styles['user-area']}>
-                <ProfileImg />
+                <ProfileImg image={getUserInfo.profile_image} />
                 <div className={styles['right-wrap']}>
                     <Link to={Paths.main.mypage.update.name}>
                         <div className={styles['name-wrap']}>
