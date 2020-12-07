@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 /* Library */
 
@@ -17,20 +17,29 @@ import { useDialog } from '../../../../hooks/useDialog';
 import { Paths } from '../../../../paths';
 /* Paths */
 
-import { requestPutReBirth } from '../../../../api/user';
 import { updateUser } from '../../../../store/user';
+/* Store */
+
+import { getFormatDateNanTime } from '../../../../lib/calculateDate';
+/* Lib */
+
+import { requestPutReBirth } from '../../../../api/user';
 /* API */
 
 const UpdateBirthdayContiner = () => {
+
+    const location = useLocation();
+    const formatDate = getFormatDateNanTime(location.state);
+    const date = formatDate.split('/');
 
     const openDialog = useDialog();
     const history = useHistory();
     const reduxDispatch = useDispatch();
 
     const [onChangeBirth, getBirth] = useBirth({
-        year: '1980',
-        month: '12',
-        day: '1',
+        year: date[0],
+        month: date[1],
+        day: date[2],
     });
 
     const onClickButton = useCallback(async () => {
@@ -49,7 +58,7 @@ const UpdateBirthdayContiner = () => {
         <>
             <div className={styles['container']}>
                 <div className={styles['birth-area']}>
-                    <Birth onChangeBirth={onChangeBirth} />
+                    <Birth onChangeBirth={onChangeBirth} year={parseInt(date[0])} month={parseInt(date[1])} day={parseInt(date[2])} />
                 </div>
             </div>
             <FixedButton button_name="변경" disable={false} onClick={onClickButton} />

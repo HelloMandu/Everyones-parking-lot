@@ -258,6 +258,7 @@ export const requestPutReBirth = async (JWT_TOKEN, birth) => {
 
         * 응답: success / failure
     */
+    console.log(birth);
     const URL = Paths.api + 'user/birth';
     const config = {
         headers: {

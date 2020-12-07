@@ -162,7 +162,7 @@ const MyPageContainer = () => {
                         <span className={styles['user-text']}>{getUserInfo.email}</span>
                     </div>
                 </div>
-                <Link to={Paths.main.mypage.update.birthday}>
+                <Link to={{ pathname: Paths.main.mypage.update.birthday, state: getUserInfo.birth }}>
                     <div className={styles['birthday-wrap']}>
                         <div className={styles['text']} >
                             <span>생년월일</span>
