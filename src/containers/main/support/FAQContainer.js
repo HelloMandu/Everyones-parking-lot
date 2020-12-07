@@ -25,15 +25,23 @@ const cn = classnames.bind(styles);
 const Category = ({ type }) => {
 
     const history = useHistory();
+    const [onLoading, offLoading] = useLoading();
+
+    const onClickCategory = useCallback((type) => {
+        onLoading('category');
+        history.replace(Paths.main.support.faq + `?type=${type}`);
+        offLoading('category');
+        // eslint-disable-next-line 
+    }, [history]);
 
     return (
         <div className={styles['category-container']}>
-            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => history.replace(Paths.main.support.faq + '?type=0')}>회원가입</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => history.replace(Paths.main.support.faq + '?type=1')}>쿠폰</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => history.replace(Paths.main.support.faq + '?type=2')}>결제</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => history.replace(Paths.main.support.faq + '?type=3')}>포인트</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => history.replace(Paths.main.support.faq + '?type=4')}>주차공간</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => history.replace(Paths.main.support.faq + '?type=5')}>대여연장</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => onClickCategory(0)}>회원가입</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => onClickCategory(1)}>쿠폰</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => onClickCategory(2)}>결제</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => onClickCategory(3)}>포인트</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => onClickCategory(4)}>주차공간</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => onClickCategory(5)}>대여연장</ButtonBase>
         </div>
     );
 };
@@ -107,25 +115,20 @@ const FAQContainer = () => {
         } catch (e) {
             openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
         }
+        // eslint-disable-next-line 
     }, [getFAQList, openDialog, history])
 
-    if (FAQList.length !== 0) {
-        return (
-            <>
-                <Category type={type} />
-                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
-            </>
-        );
-    };
     return (
         <>
             <Category type={type} />
-            <div className={styles['non-faq']}>
-                <div className={styles['non-container']}>
-                    <Notice />
-                    <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
-                </div>
-            </div>
+            {FAQList.length !== 0 ?
+                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
+                : <div className={styles['non-faq']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
+                    </div>
+                </div>}
         </>
     );
 };

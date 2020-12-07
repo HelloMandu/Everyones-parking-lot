@@ -137,7 +137,7 @@ const UseListContainer = () => {
         <div className={cx('container')}>
             {list.map((item) => (
                 <Link
-                    to={Paths.main.use.detail + `?id=${item.id}`}
+                    to={Paths.main.use.detail + `?id=${item.rental_id}`}
                     className={cx('list-item')}
                     key={item.rental_id}
                 >
@@ -149,7 +149,7 @@ const UseListContainer = () => {
                         {item.rental_start_time} ~ {item.rental_end_time}
                     </div>
                     <div className={cx('status')}>
-                        {current - Date(item.srental_start_time) < 0
+                        {current.getTime() - new Date(item.rental_start_time).getTime() < 0
                             ? USE_WAIT
                             : item.calculated_time
                             ? USE_FINISH

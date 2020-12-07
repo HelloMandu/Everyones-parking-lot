@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -16,18 +17,29 @@ import { useDialog } from '../../../../hooks/useDialog';
 import { Paths } from '../../../../paths';
 /* Paths */
 
+import { updateUser } from '../../../../store/user';
+/* Store */
+
+import { getFormatDateNanTime } from '../../../../lib/calculateDate';
+/* Lib */
+
 import { requestPutReBirth } from '../../../../api/user';
 /* API */
 
 const UpdateBirthdayContiner = () => {
 
+    const location = useLocation();
+    const formatDate = getFormatDateNanTime(location.state);
+    const date = formatDate.split('/');
+
     const openDialog = useDialog();
     const history = useHistory();
+    const reduxDispatch = useDispatch();
 
     const [onChangeBirth, getBirth] = useBirth({
-        year: '1970',
-        month: '1',
-        day: '1',
+        year: date[0],
+        month: date[1],
+        day: date[2],
     });
 
     const onClickButton = useCallback(async () => {
@@ -35,17 +47,18 @@ const UpdateBirthdayContiner = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPutReBirth(JWT_TOKEN, getBirth());
         if (response.msg === 'success') {
+            reduxDispatch(updateUser('birth', getBirth()));
             openDialog("생년월일변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
             openDialog(response.msg, response.sub);
         }
-    }, [history, openDialog, getBirth]);
+    }, [history, openDialog, getBirth, reduxDispatch]);
 
     return (
         <>
             <div className={styles['container']}>
                 <div className={styles['birth-area']}>
-                    <Birth onChangeBirth={onChangeBirth} />
+                    <Birth onChangeBirth={onChangeBirth} year={parseInt(date[0])} month={parseInt(date[1])} day={parseInt(date[2])} />
                 </div>
             </div>
             <FixedButton button_name="변경" disable={false} onClick={onClickButton} />

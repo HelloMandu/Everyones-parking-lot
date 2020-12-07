@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Paths } from '../../../paths';
-
 import { requestGetReviewList } from '../../../api/review';
+
+import { Paths } from '../../../paths';
 
 import className from 'classnames/bind';
 import styles from './ReviewListContainer.module.scss';
@@ -97,9 +97,8 @@ const ReviewListContainer = () => {
     // requestGetReviewList API
 
     const getReviewList = useCallback(async (token) => {
-        const response = await requestGetReviewList(token);
-        console.log(response);
-        return response;
+        const {data} = await requestGetReviewList(token);
+        console.log(data);
     }, []);
 
     useEffect(() => {
