@@ -23,18 +23,13 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                     className={cx('select')}
                     name="year"
                     onChange={onChangeBirth}
+                    defaultValue={year}
                 >
-                    {YEAR.map((y) =>
-                        y !== year ? (
-                            <option key={y} value={y}>
-                                {y}년
-                            </option>
-                        ) : (
-                                <option key={y} value={y} selected>
-                                    {y}년
-                                </option>
-                            ),
-                    )}
+                    {YEAR.map((y) => (
+                        <option key={y} value={y}>
+                            {y}년
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -43,18 +38,13 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                     className={cx('select')}
                     name="month"
                     onChange={onChangeBirth}
+                    defaultValue={month}
                 >
-                    {MONTH.map((m) =>
-                        m !== month ? (
-                            <option key={m} value={m}>
-                                {m}월
-                            </option>
-                        ) : (
-                                <option key={m} value={m} selected>
-                                    {m}월
-                                </option>
-                            ),
-                    )}
+                    {MONTH.map((m) => (
+                        <option key={m} value={m}>
+                            {m}월
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -63,18 +53,13 @@ const Birth = ({ onChangeBirth, year, month, day }) => {
                     className={cx('select')}
                     name="day"
                     onChange={onChangeBirth}
+                    defaultValue={day}
                 >
-                    {DAY.map((d) =>
-                        d !== day ? (
-                            <option key={d} value={d}>
-                                {d}일
-                            </option>
-                        ) : (
-                                <option key={d} value={d} selected>
-                                    {d}일
-                                </option>
-                            ),
-                    )}
+                    {DAY.map((d) => (
+                        <option key={d} value={d}>
+                            {d}일
+                        </option>
+                    ))}
                 </select>
             </div>
         </>
