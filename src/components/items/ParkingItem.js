@@ -7,14 +7,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import cn from 'classnames/bind';
 
 const cx = cn.bind(styles);
-const ParkingItem = ({onClick}) => {
+const ParkingItem = ({ onClick, title }) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
             <div className={styles['item-img']}>
-                <img src={ParkingImg} alt='parking-img'/>
+                <img src={ParkingImg} alt="parking-img" />
             </div>
             <div className={styles['item-info']}>
-                <div className={styles['item-name']}>길동이 주차공간</div>
+                <div className={styles['item-name']}>{title}</div>
                 <div className={styles['item-price']}>
                     <div className={styles['price']}>12,000원</div>
                     <div className={styles['price-to-time']}>
@@ -32,30 +32,25 @@ const ParkingItem = ({onClick}) => {
     );
 };
 
-const ParkingList = ({onClick,view}) => {
+const ParkingList = ({ onClick, view, slide_list }) => {
+    const list = slide_list.map((slide) => (
+        <SwiperSlide className={styles['swiper-slide']} key = {slide.title}>
+            <ParkingItem  title={slide.title} onClick={onClick} />
+        </SwiperSlide>
+    ));
     return (
-        <Swiper 
-        initialSlide={0} 
-        spaceBetween={15}
-        slidesPerView={1}
-        freeMode={true}
-        centeredSlides={true}
-        className={cx('swiper',{view}) } 
+        <Swiper
+            initialSlide={0}
+            spaceBetween={15}
+            slidesPerView={1}
+            freeMode={true}
+            centeredSlides={true}
+            className={cx('swiper', { view })}
         >
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-
+            {list}
         </Swiper>
     );
 };
 
-// const Test=()=>{
-//     return(
-//         <div className={styles['test']}>
-//                 gd
-//         </div>
-//     )
-// }
 
 export default ParkingList;

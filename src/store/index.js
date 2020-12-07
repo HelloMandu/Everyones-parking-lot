@@ -4,13 +4,15 @@ import { all } from "redux-saga/effects";
 import user, { userSaga } from './user';
 import dialog from './dialog';
 import loading from './loading';
-import user_position from './user_position';
+import position from './main/position';
+import filters from './main/filters';
 
 const rootReducer = combineReducers({
     loading,
     dialog,
     user,
-    user_position,
+    position,
+    filters,
 });
 
 export function* rootSaga() {
