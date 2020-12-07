@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 /* Library */
@@ -16,25 +16,99 @@ import { getFormatDateString } from '../../../lib/calculateDate';
 import { stringToTel } from '../../../lib/formatter';
 /* Lib */
 
+import { requestPutProfile } from '../../../api/user';
+/* API */
+
 import { Paths } from '../../../paths'
 /* Paths */
 
+const FileItem = ({ file }) => {
+
+    const [imgFile, setImgfile] = useState(null);
+
+    useEffect(() => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result;
+            if (base64) {
+                setImgfile(base64.toString());
+            }
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }, [file]);
+
+    return (
+        <>
+            {imgFile
+                ? <div className={styles['img-item']}>
+                    <img
+                        className={styles['item']}
+                        src={imgFile}
+                        alt="프로필 사진"
+                    />
+                </div>
+                : <div className={styles['img-item']}>
+                    <img
+                        className={styles['item']}
+                        src={profile}
+                        alt="프로필 사진 없음"
+                    />
+                </div>
+
+            }
+        </>
+    )
+}
+const ProfileImg = () => {
+
+    const fileRef = useRef();
+    const [imgFile, setImgFile] = useState([]);
+
+    const UpdateProfile = useCallback(async (img) => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPutProfile(JWT_TOKEN, img);
+        console.log(response);
+    }, [])
+    const onChangeImgFile = useCallback((e) => {
+        const { files } = e.target;
+        if (files) {
+            setImgFile(files);
+            UpdateProfile(files[0]);
+        }
+    }, [UpdateProfile]);
+
+    return (
+        <div className={styles['img-wrap']}>
+            <FileItem
+                file={imgFile[0]}
+            />
+            <div className={styles['camera']} onClick={() => fileRef.current.click()}>
+                <input
+                    type="file"
+                    className={styles['input-file']}
+                    ref={fileRef}
+                    onChange={onChangeImgFile}
+                    id="file-setter"
+                    accept="image/gif, image/jpeg, image/png, image/svg"
+                    formEncType="multipart/form-data"
+                />
+                <Camera />
+            </div>
+        </div>
+
+    )
+}
 
 const MyPageContainer = () => {
 
     const getUserInfo = useSelector(state => state.user);
-    const fileRef = useRef();
 
     return (
         <div className={styles['container']}>
             <div className={styles['user-area']}>
-                <div className={styles['img-wrap']}>
-                    {getUserInfo.profile_img ? <img src={getUserInfo.profile_img} alt="프로필 사진" /> : <img src={profile} alt="프로필 사진" />}
-                    <div className={styles['camera']} onClick={() => fileRef.current.click()}>
-                        <input type="file" className={styles['input-file']} ref={fileRef} />
-                        <Camera />
-                    </div>
-                </div>
+                <ProfileImg />
                 <div className={styles['right-wrap']}>
                     <Link to={Paths.main.mypage.update.name}>
                         <div className={styles['name-wrap']}>

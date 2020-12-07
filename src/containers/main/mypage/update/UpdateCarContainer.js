@@ -119,7 +119,6 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
                     id="file-setter"
                     className={styles['input-files']}
                     onChange={onChangeFileList}
-                    multiple="multiple"
                     type="file"
                     accept="image/gif, image/jpeg, image/png, image/svg"
                     formEncType="multipart/form-data"

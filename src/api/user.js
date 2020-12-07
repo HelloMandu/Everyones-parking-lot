@@ -137,6 +137,29 @@ export const requestPutResetPassword = async (
     return response;
 };
 
+export const requestPutProfile = async (JWT_TOKEN, profile_img) => {
+    /*
+        프로필 이미지 변경 요청 API(PUT): /api/user/profile_image
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
+
+        profile_image: 변경할 프로필 이미지(ImageFile, 필수)
+
+        * 응답: profile_image = 변경된 이미지 경로    
+    */
+    const URL = Paths.api + 'user/profile_image';
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+            ContentType: 'multipart/form-data',
+        },
+    };
+    const formData = new FormData();
+    console.log(profile_img)
+    formData.append('profile_img', profile_img);
+    const response = await axios.put(URL, formData, config);
+    return response.data;
+};
+
 export const requestPutReName = async (JWT_TOKEN, name) => {
     /*
         이름 변경 요청 API(PUT): /api/user/name
@@ -153,7 +176,6 @@ export const requestPutReName = async (JWT_TOKEN, name) => {
         },
     };
     const response = await axios.put(URL, { name }, config);
-    console.log(response);
     return response.data;
 };
 
@@ -218,6 +240,7 @@ export const requestPutReCarInfo = async (
             ContentType: 'multipart/form-data',
         },
     };
+
     const formData = makeFormData({ car_location, car_num });
     formData.append('car_image', car_image);
 
