@@ -61,7 +61,7 @@ export const requestGetParkingList = async (
 
     const URL = Paths.api + 'place';
     const params={
-        lat,lng,range:3000,
+        lat,lng,range:1000,
     }
     const response = await axios.get(URL,{params});
 

@@ -163,36 +163,9 @@ const MapContainer = ({ modal }) => {
         setCoordinates(lat, lng);
     };
 
-    // 맵 중심좌표를 설정하는 함수
-    const setCoordinates = useCallback((lat, lng) => {
-        const moveLatLon = new kakao.maps.LatLng(lat, lng);
-        kakao_map.current.setCenter(moveLatLon);
-    }, []);
+    const createParkingMarker =()=>{
 
-    const callGetParkingList = async ()=>{
-        try{
-            
-            const res = await requestGetParkingList(35.1158949746728,128.966901860943);
-            console.log(res);
-            setParkingList(res.data.places);
-        }
-        catch(e){
-            console.error(e);
-        }
-    }
-
-    // 지도와 마커를 렌더하는 함수
-    const mapRender = () => {
-        let container = document.getElementById('map');
-        let lat = position.lat !== 0 ? position.lat : position_ref.current.lat;
-        let lng = position.lng !== 0 ? position.lng : position_ref.current.lng;
-        let options = {
-            center: new kakao.maps.LatLng(lat, lng),
-            level: level !== 0 ? level : map_lev.current,
-        };
-
-        const map = new kakao.maps.Map(container, options);
-        kakao_map.current = map;
+        const map = kakao_map.current;
 
         var imageSrc = PARKING_MARKER,
             imageSize = new kakao.maps.Size(120, 70),
@@ -280,16 +253,49 @@ const MapContainer = ({ modal }) => {
             setSlideList(slides)
             setOnSlide(slide_view.current);
         });
+    }
+
+    // 맵 중심좌표를 설정하는 함수
+    const setCoordinates = useCallback((lat, lng) => {
+        const moveLatLon = new kakao.maps.LatLng(lat, lng);
+        kakao_map.current.setCenter(moveLatLon);
+    }, []);
+
+    const callGetParkingList = async ()=>{
+        try{
+            
+            const res = await requestGetParkingList(35.1158949746728,128.966901860943);
+            console.log(res);
+            setParkingList(res.data.places);
+        }
+        catch(e){
+            console.error(e);
+        }
+    }
+
+
+    // 지도와 마커를 렌더하는 함수
+    const mapRender = () => {
+        let container = document.getElementById('map');
+        let lat = position.lat !== 0 ? position.lat : position_ref.current.lat;
+        let lng = position.lng !== 0 ? position.lng : position_ref.current.lng;
+        let options = {
+            center: new kakao.maps.LatLng(lat, lng),
+            level: level !== 0 ? level : map_lev.current,
+        };
+
+        const map = new kakao.maps.Map(container, options);
+        kakao_map.current = map;
+
     };
 
     useEffect(()=>{
-        callGetParkingList();
-
+        // callGetParkingList();
     },[])
 
     useEffect(() => {
         mapRender();
-    }, [parking_list]);
+    }, []);
 
     useEffect(() => {
         if (address) createArriveMarker();

@@ -13,6 +13,5 @@ export const getDistanceFromLatLonInKm = (lat1, lng1, lat2, lng2) => {
             Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
-    console.log(d.toFixed(2));
     return d.toFixed(2);
 };
