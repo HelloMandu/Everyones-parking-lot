@@ -35,32 +35,6 @@ const CouponContainer = ({ match }) => {
         params.modal,
         'code',
     );
-    const onToggleConponCode = useCallback(() => {
-        if (isOpenCouponCodeModal) {
-            history.goBack();
-        } else {
-            OpenCouponModal();
-        }
-    }, [isOpenCouponCodeModal, OpenCouponModal, history]);
-
-    const onClickCouponBook = useCallback(
-        async (id) => {
-            const { msg, coupon } = await requestPostCouponCode(id);
-            console.log(msg, coupon);
-            if (msg === 'success') {
-                const newCouponList = couponBook.map((coupon) =>
-                    coupon.cp_id === id
-                        ? { ...coupon, checked: !coupon.checked }
-                        : { ...coupon, checked: false },
-                );
-                setCouponBook(newCouponList);
-                setMyCoupon((myCoupon) => myCoupon.concat(coupon));
-            } else {
-                openDialog('입력 실패', '네트워크상태를 확인하세요');
-            }
-        },
-        [couponBook, openDialog],
-    );
     const swiperRef = useRef(null);
     const [tabValue, setTabValue] = useState(0);
 
@@ -72,6 +46,34 @@ const CouponContainer = ({ match }) => {
         setTabValue(newValue);
         swiperRef.current.slideTo(newValue, 300);
     }, []);
+    const onToggleConponCode = useCallback(() => {
+        if (isOpenCouponCodeModal) {
+            history.goBack();
+        } else {
+            OpenCouponModal();
+        }
+    }, [isOpenCouponCodeModal, OpenCouponModal, history]);
+
+    const handleCouponEnroll = useCallback(
+        async (id, isInput) => {
+            const { msg, coupon } = await requestPostCouponCode(id);
+            if (msg === 'success') {
+                const newCouponList = couponBook.map((coupon) =>
+                    coupon.cz_id === id
+                        ? { ...coupon, checked: !coupon.checked }
+                        : coupon,
+                );
+                setCouponBook(newCouponList);
+                setMyCoupon((myCoupon) => myCoupon.concat(coupon));
+                if (isInput) {
+                    history.goBack();
+                }
+            } else {
+                openDialog('입력 실패', msg);
+            }
+        },
+        [couponBook, history, openDialog],
+    );
 
     useEffect(() => {
         const getCouponList = async () => {
@@ -80,15 +82,19 @@ const CouponContainer = ({ match }) => {
             const use = await requestGetCouponUse();
             if (book.msg === my.msg && my.msg === use.msg) {
                 const couponBook = book.coupons.map(
-                    ({
+                    (
+                        {
+                            cz_id,
+                            cz_subject,
+                            cz_start_date,
+                            cz_end_date,
+                            cz_price,
+                            down_status,
+                        },
+                        index,
+                    ) => ({
                         cz_id,
-                        cz_subject,
-                        cz_start_date,
-                        cz_end_date,
-                        cz_price,
-                        down_status,
-                    }) => ({
-                        cp_id: cz_id,
+                        cp_id: index,
                         cp_subject: cz_subject,
                         cp_start_date: cz_start_date,
                         cp_end_date: cz_end_date,
@@ -154,8 +160,9 @@ const CouponContainer = ({ match }) => {
                     <SwiperSlide>
                         <Coupon
                             list={couponBook}
-                            onClick={onClickCouponBook}
-                            book={SVGComponentTransferFunctionElement}
+                            onClick={handleCouponEnroll}
+                            clicked={true}
+                            book={true}
                         ></Coupon>
                     </SwiperSlide>
                     <SwiperSlide>
@@ -163,7 +170,10 @@ const CouponContainer = ({ match }) => {
                     </SwiperSlide>
                 </Swiper>
             </div>
-            <CouponCodeModal open={isOpenCouponCodeModal}></CouponCodeModal>
+            <CouponCodeModal
+                open={isOpenCouponCodeModal}
+                onClick={handleCouponEnroll}
+            ></CouponCodeModal>
         </>
     );
 };

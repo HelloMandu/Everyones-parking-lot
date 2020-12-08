@@ -44,22 +44,19 @@ const CouponItem = memo(({ subject, endDate, price, book, checked }) => {
     );
 });
 
-const Coupon = memo(({ list, onClick = () => {}, book = false }) => {
+const Coupon = memo(({ list, onClick = () => {}, clicked = false, book = false }) => {
     if (list !== undefined && list.length) {
         return (
             <ul className={styles['coupon-list']}>
                 {list.map(
-                    (
-                        { cp_id, cp_subject, cp_end_date, cp_price, checked },
-                        index,
-                    ) => (
+                    ({ cp_id, cz_id, cp_subject, cp_end_date, cp_price, checked }) => (
                         <ButtonBase
                             className={styles['coupon-item']}
                             component="li"
-                            key={index}
+                            key={cp_id}
                             onClick={() => {
-                                if (book) {
-                                    onClick(cp_id);
+                                if (clicked) {
+                                    onClick(cz_id);
                                 }
                             }}
                         >
