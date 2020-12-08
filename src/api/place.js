@@ -3,7 +3,7 @@ import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requsetGetSampleDate =async ()=>{
+export const requsetGetSampleDate  = ()=>{
     // const url ='http://apis.map.kakao.com/download/web/data/chicken.json';
     // const res = await axios.get(url);
     // console.log(res);
@@ -34,7 +34,7 @@ export const requsetGetSampleDate =async ()=>{
         },
     ];
 
-    return await markerdata;
+    return markerdata;
     
 }
 
@@ -260,3 +260,17 @@ export const requestGetAddressInfo = async (address) => {
     });
     return response;
 };
+
+export const requsetGetAreaInfo = async (lat,lng)=>{
+    const URL = 'https://dapi.kakao.com/v2/local/geo/coord2address.json';
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `KakaoAK d747c230bfd2f62cfcf8accd952285b8`,
+        },
+        params: {
+            y:lat,
+            x:lng
+        },
+    });
+    return response;
+}

@@ -42,20 +42,29 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
 //action
-import { set_position, set_level } from '../../store/main/position';
+import { set_position, set_level,get_area } from '../../store/main/position';
+import {get_list} from '../../store/main/parking';
 
 //api
 
 import { getCoordinates } from '../../api/address';
-import {requsetGetSampleDate,requestGetParkingList} from '../../api/place';
+import {requsetGetSampleDate,requestGetParkingList,requsetGetAreaInfo} from '../../api/place';
+//hooks
+import useLoading from '../../hooks/useLoading';
+
 
 const cx = cn.bind(styles);
 
 const MapContainer = ({ modal }) => {
     const dispatch = useDispatch();
-    const { position, level, address, arrive } = useSelector(
+    const { position, level, address, arrive,area } = useSelector(
         (state) => state.position,
     ); //마지막 좌표 및 레벨
+    const {parking} = useSelector((state)=>state.parking);
+
+    const [onLoading, offLoading] = useLoading();
+    
+
 
     let position_ref = useRef({
         lat: 35.1158949746728,
@@ -64,12 +73,13 @@ const MapContainer = ({ modal }) => {
     let map_lev = useRef(5); // 디폴트 레벨
     let slide_view = useRef(false); // 슬라이드 여부
     let arrive_markers = useRef([]); //도착지 마커
-    let user_location_marker = useRef([]); // 유저 위치 마커
+    let location_marker = useRef([]); // 유저 위치 마커
+    let parking_marker = useRef([]); //커스텀 오버레이 마커
+    let cluster_marker = useRef(null);
     const kakao_map = useRef(null); //카카오 맵
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
     const [slide_list,setSlideList] = useState([]);
-    const [parking_list,setParkingList] =useState([]);
     // 모달을 제어하는 리듀서
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -114,9 +124,9 @@ const MapContainer = ({ modal }) => {
     };
 
     const createMyLocationMarker =(lat,lng)=>{
-        if(user_location_marker.current.length!==0){
-            user_location_marker.current.map((marker) => marker.setMap(null));
-            user_location_marker.current = [];
+        if(location_marker.current.length!==0){
+            location_marker.current.map((marker) => marker.setMap(null));
+            location_marker.current = [];
         }
         const imageSrc = USER_LOCATION_MARKER;
         const imageSize = new kakao.maps.Size(22, 22); // 마커이미지의 크기입니다
@@ -132,7 +142,7 @@ const MapContainer = ({ modal }) => {
             image: markerImage,
         });
         marker.setMap(kakao_map.current);
-        user_location_marker.current.push(marker);
+        location_marker.current.push(marker);
 
     }
 
@@ -163,8 +173,18 @@ const MapContainer = ({ modal }) => {
         setCoordinates(lat, lng);
     };
 
+    //주차장 마커를 생성하는 함수
     const createParkingMarker =()=>{
 
+        onLoading('parking/GET_LIST');
+        if(cluster_marker.current!==null){
+            cluster_marker.current.clear();
+        };
+        if (parking_marker.current.length !== 0) {
+            console.log('마커 지우기');
+            parking_marker.current.map((marker) => marker.setMap(null));
+            parking_marker.current = [];
+        }
         const map = kakao_map.current;
 
         var imageSrc = PARKING_MARKER,
@@ -176,8 +196,7 @@ const MapContainer = ({ modal }) => {
             imageSize,
             imageOption,
         );
-        // 마커 클러스터러를 생성합니다
-        var clusterer = new kakao.maps.MarkerClusterer({
+        cluster_marker.current = new kakao.maps.MarkerClusterer({
             map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
             averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
             minLevel: 5, // 클러스터 할 최소 지도 레벨
@@ -197,13 +216,16 @@ const MapContainer = ({ modal }) => {
         ]
         });
 
+
         //마커의 중심좌표가 변경되었을 시 이벤트
-        kakao.maps.event.addListener(map, 'center_changed', function () {
+        kakao.maps.event.addListener(map, 'center_changed', async function  () {
             let level = map.getLevel();
             let latlng = map.getCenter();
             map_lev.current = level;
             position_ref.current.lat = latlng.getLat();
             position_ref.current.lng = latlng.getLng();
+            const {lat,lng} = position_ref.current;
+            dispatch(get_area({lat,lng}));
         });
 
         //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
@@ -213,37 +235,47 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-
+        console.log('필터링 시작'+area);
+        const markdata = parking.filter((item)=>item.addr.indexOf(area)!==-1);
         // 주차장 마커 생성
-        const data = parking_list.map((el) => {
-            const distance = getDistanceFromLatLonInKm(el.lat,el.lng,position_ref.current.lat,position_ref.current.lng);
+        const data = markdata.map((el) => {
+            // const distance ='300';
+            const distance = getDistanceFromLatLonInKm(
+                el.lat,
+                el.lng,
+                position_ref.current.lat,
+                position_ref.current.lng,
+            );
             let content = `<span class="custom-overlay">${distance}Km</span>`;
             const marker = new kakao.maps.Marker({
                 image: markerImage,
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
-                zIndex:1500,
-                
+                zIndex: 1500,
             });
-            new kakao.maps.CustomOverlay({
-                map: map,
-                position: new kakao.maps.LatLng(el.lat, el.lng),
-                content: content,
-                yAnchor: 1,
-                clickable:true,
-                zIndex : 1600,
-            });
+
+            // var customOverlay = new kakao.maps.CustomOverlay({
+            //     map: map,
+            //     position: new kakao.maps.LatLng(el.lat, el.lng),
+            //     content: content,
+            //     yAnchor: 1,
+            //     clickable:true,
+            //     zIndex : 1600,
+            // });
+            // overlay_marker.current.push(customOverlay);
 
             kakao.maps.event.addListener(marker, 'click', function () {
                 history.push(Paths.main.detail + `/${el.title}`);
             });
             const str = JSON.stringify(el);
+            parking_marker.current.push(marker);
             marker.setTitle(str);
             return marker;
         });
-        clusterer.addMarkers(data);
 
-        kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
+        cluster_marker.current.addMarkers(data);
+        kakao.maps.event.addListener(  cluster_marker.current, 'clusterclick', function(cluster) {
+            console.log('click');
             slide_view.current = !slide_view.current;
             const markers =cluster.getMarkers() ;
             const slides = markers.map((maker)=>{
@@ -253,6 +285,28 @@ const MapContainer = ({ modal }) => {
             setSlideList(slides)
             setOnSlide(slide_view.current);
         });
+
+        kakao.maps.event.addListener(   cluster_marker.current, 'clustered', function( clusters ) {
+
+            for(let i=0; i<clusters.length ;i++){
+                let cluster = clusters[i];
+                let markers =cluster.getMarkers() ;
+                let arr = markers.map((maker)=>{
+                    const data = maker.getTitle();
+                    return JSON.parse(data);
+                })
+                for(let j=0 ;j<arr.length;j++){
+                    const {lat, lng} = arr[j];
+                    // for(let z=0; z<overlay_marker.current.length; z++){
+                    //     console.log(overlay_marker.current[z].getPosition());
+                    // }
+                }
+                // console.log(arr);
+            }
+      
+        });
+        
+        offLoading('parking/GET_LIST');
     }
 
     // 맵 중심좌표를 설정하는 함수
@@ -261,20 +315,7 @@ const MapContainer = ({ modal }) => {
         kakao_map.current.setCenter(moveLatLon);
     }, []);
 
-    const callGetParkingList = async ()=>{
-        try{
-            
-            const res = await requestGetParkingList(35.1158949746728,128.966901860943);
-            console.log(res);
-            setParkingList(res.data.places);
-        }
-        catch(e){
-            console.error(e);
-        }
-    }
-
-
-    // 지도와 마커를 렌더하는 함수
+    //지도를 렌더하는 함수
     const mapRender = () => {
         let container = document.getElementById('map');
         let lat = position.lat !== 0 ? position.lat : position_ref.current.lat;
@@ -283,19 +324,21 @@ const MapContainer = ({ modal }) => {
             center: new kakao.maps.LatLng(lat, lng),
             level: level !== 0 ? level : map_lev.current,
         };
-
         const map = new kakao.maps.Map(container, options);
         kakao_map.current = map;
 
     };
 
-    useEffect(()=>{
-        // callGetParkingList();
-    },[])
-
     useEffect(() => {
         mapRender();
+        const {lat,lng} = position_ref.current;
+        console.log('시작');
+        dispatch(get_list({lat,lng,range :3000} ));
     }, []);
+
+    useEffect(()=>{
+        createParkingMarker();
+    },[parking,area])
 
     useEffect(() => {
         if (address) createArriveMarker();

@@ -7,14 +7,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import cn from 'classnames/bind';
 
 const cx = cn.bind(styles);
-const ParkingItem = ({ onClick, title }) => {
+const ParkingItem = ({ onClick, place_name }) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
             <div className={styles['item-img']}>
                 <img src={ParkingImg} alt="parking-img" />
             </div>
             <div className={styles['item-info']}>
-                <div className={styles['item-name']}>{title}</div>
+                <div className={styles['item-name']}>{place_name}</div>
                 <div className={styles['item-price']}>
                     <div className={styles['price']}>12,000원</div>
                     <div className={styles['price-to-time']}>
@@ -34,8 +34,8 @@ const ParkingItem = ({ onClick, title }) => {
 
 const ParkingList = ({ onClick, view, slide_list }) => {
     const list = slide_list.map((slide) => (
-        <SwiperSlide className={styles['swiper-slide']} key = {slide.title}>
-            <ParkingItem  title={slide.title} onClick={onClick} />
+        <SwiperSlide className={styles['swiper-slide']} key = {slide.place_name}>
+            <ParkingItem  place_name={slide.place_name} onClick={onClick} />
         </SwiperSlide>
     ));
     return (
