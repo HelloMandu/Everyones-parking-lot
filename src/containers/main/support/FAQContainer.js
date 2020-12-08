@@ -3,6 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 import classnames from 'classnames/bind';
 import qs from 'qs';
+import useSWR from 'swr';
 /* Library */
 
 import styles from './FAQContainer.module.scss';
@@ -28,9 +29,9 @@ const Category = ({ type }) => {
     const [onLoading, offLoading] = useLoading();
 
     const onClickCategory = useCallback((type) => {
-        onLoading('category');
+        onLoading('faq');
         history.replace(Paths.main.support.faq + `?type=${type}`);
-        offLoading('category');
+        offLoading('faq');
         // eslint-disable-next-line 
     }, [history]);
 
@@ -92,7 +93,6 @@ const FAQContainer = () => {
     const [FAQList, setFAQList] = useState([]);
 
     const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading();
     const location = useLocation();
     const history = useHistory();
     const query = qs.parse(location.search, {
@@ -101,22 +101,18 @@ const FAQContainer = () => {
     const t = query.type ? query.type : "0";
     const type = parseInt(t);
 
-    const getFAQList = useCallback(async () => {
-        onLoading('faq');
-        const response = await requestGetFAQList(type);
-        setFAQList(response.notices);
-        offLoading('faq');
-        // eslint-disable-next-line
-    }, [type])
+    const { data } = useSWR(['faq', type], requestGetFAQList);
 
     useEffect(() => {
-        try {
-            getFAQList();
-        } catch (e) {
-            openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
+        if (data !== undefined) {
+            if (data.msg === 'success') {
+                setFAQList(data.notices);
+            } else {
+                openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
+            }
         }
-        // eslint-disable-next-line 
-    }, [getFAQList, openDialog, history])
+        // eslint-disable-next-line
+    }, [data])
 
     return (
         <>
