@@ -47,62 +47,14 @@ const Category = ({ type }) => {
     );
 };
 
-const FAQItems = memo(({ FAQList, setFAQList }) => {
+const FAQItems = memo(({ type }) => {
 
-    const onClickItem = useCallback((e) => {
-        const newFAQList = FAQList.map(item => (
-            item.faq_id === parseInt(e.target.id) ? { ...item, faq_check: !item.faq_check } : item
-        ))
-        setFAQList(newFAQList);
-    }, [FAQList, setFAQList]);
-
-    return (
-        <ul className={styles['container']}>
-            {FAQList.map(({ faq_id, question, answer, faq_check }) => (
-                <div className={cn('border', { click: faq_check })} key={faq_id}>
-                    <ButtonBase
-                        component={"li"}
-                        className={styles['text-area']}
-                        id={faq_id}
-                        onClick={onClickItem}
-                    >
-                        <div className={styles['text-wrap']}>
-                            <div className={styles['question']}>Q</div>
-                            <div className={styles['text']}>
-                                <div className={styles['title']}>{question}</div>
-                                <div className={styles['bottom']}>
-                                    <div className={styles['name']}>운영자</div>
-                                </div>
-                            </div>
-                        </div>
-                        <IconButton
-                            className={styles['arrow']}
-                        >
-                            <ArrowSmall rotate={faq_check ? 0 : 180} />
-                        </IconButton>
-                    </ButtonBase>
-                    <div className={cn('sub-text', { click: faq_check })}>{answer}</div>
-                </div>
-            ))}
-        </ul>
-    );
-});
-
-const FAQContainer = () => {
+    const openDialog = useDialog();
+    const history = useHistory();
 
     const [FAQList, setFAQList] = useState([]);
 
-    const openDialog = useDialog();
-    const location = useLocation();
-    const history = useHistory();
-    const query = qs.parse(location.search, {
-        ignoreQueryPrefix: true,
-    });
-    const t = query.type ? query.type : "0";
-    const type = parseInt(t);
-
     const { data } = useSWR(['faq', type], requestGetFAQList);
-
     useEffect(() => {
         if (data !== undefined) {
             if (data.msg === 'success') {
@@ -114,17 +66,67 @@ const FAQContainer = () => {
         // eslint-disable-next-line
     }, [data])
 
+    const onClickItem = useCallback((e) => {
+        const newFAQList = FAQList.map(item => (
+            item.faq_id === parseInt(e.target.id) ? { ...item, faq_check: !item.faq_check } : item
+        ))
+        setFAQList(newFAQList);
+    }, [FAQList, setFAQList]);
+
     return (
         <>
-            <Category type={type} />
             {FAQList.length !== 0 ?
-                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
+                <ul className={styles['container']}>
+                    {FAQList.map(({ faq_id, question, answer, faq_check }) => (
+                        <div className={cn('border', { click: faq_check })} key={faq_id}>
+                            <ButtonBase
+                                component={"li"}
+                                className={styles['text-area']}
+                                id={faq_id}
+                                onClick={onClickItem}
+                            >
+                                <div className={styles['text-wrap']}>
+                                    <div className={styles['question']}>Q</div>
+                                    <div className={styles['text']}>
+                                        <div className={styles['title']}>{question}</div>
+                                        <div className={styles['bottom']}>
+                                            <div className={styles['name']}>운영자</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <IconButton
+                                    className={styles['arrow']}
+                                >
+                                    <ArrowSmall rotate={faq_check ? 0 : 180} />
+                                </IconButton>
+                            </ButtonBase>
+                            <div className={cn('sub-text', { click: faq_check })}>{answer}</div>
+                        </div>
+                    ))}
+                </ul>
                 : <div className={styles['non-faq']}>
                     <div className={styles['non-container']}>
                         <Notice />
                         <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
                     </div>
                 </div>}
+        </>
+    );
+});
+
+const FAQContainer = () => {
+
+    const location = useLocation();
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    const t = query.type ? query.type : "0";
+    const type = parseInt(t);
+
+    return (
+        <>
+            <Category type={type} />
+            <FAQItems type={type} />
         </>
     );
 };
