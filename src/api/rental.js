@@ -78,17 +78,22 @@ export const requestGetUseRental = async (JWT_TOKEN, filter) => {
     return response;
 };
 
-export const requestGetDetailUseRental = async (JWT_TOKEN, rental_id) => {
+export const requestGetDetailUseRental = async (rental_id) => {
     // 이용 내역 상세 정보 요청 API(GET): /api/rental/:rental_id
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // { params: rental_id }: 대여 주문 번호
 
     // * 응답: order: 주문 정보
 
-    const URL = Paths.api + "rental/:rental_id";
-    const response = await axios.get(URL);
-
-    return response;
+    const URL = Paths.api + `rental/${rental_id}`;
+    const JWT_TOKEN = localStorage.getItem('user_id');
+    const config = {
+        headers:{
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    }
+    const response = await axios.get(URL, config);
+    return response.data;
 };
 
 export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {

@@ -63,17 +63,26 @@ export const getDateRange = (start, end) => {
     return res_day;
 };
 
-export const getFormatDateTime = (formatted) => {
+export const getFormatNewDate = (formatted) =>{
     const formatDate = new Date(formatted);
     const month = formatDate.getMonth() + 1;
     let date = formatDate.getDate();
     date = date >= 10 ? date : `0${date}`;
     const day = formatDate.getDay();
+    return `${month}/${date}${week[day]}`
+}
+
+export const getFormatNewTime = (formatted) =>{
+    const formatDate = new Date(formatted);
     let hour = formatDate.getHours();
     hour = hour >= 10 ? hour : `0${hour}`;
     let minute = formatDate.getMinutes();
     minute = minute >= 10 ? minute : `0${minute}`;
-    return `${month}/${date}${week[day]} ${hour}:${minute}`;
+    return `${hour}:${minute}`
+}
+
+export const getFormatDateTime = (formatted) => {
+    return `${getFormatNewDate(formatted)} ${getFormatNewTime(formatted)}`
 };
 
 export const getFormatDateNanTime = (formatted) => {

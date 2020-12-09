@@ -4,9 +4,9 @@ import React from 'react';
 import PaymentCompleteContainer from '../../containers/main/PaymentCompleteContainer';
 /* Containers */
 
-const PaymentCompletePage = () => {
+const PaymentCompletePage = ({location}) => {
 
-    return <PaymentCompleteContainer />;
+    return <PaymentCompleteContainer location={location}/>;
 }
 
 export default PaymentCompletePage;
