@@ -1,17 +1,17 @@
 import axios from 'axios';
-import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requestPostRental = async (JWT_TOKEN,
+export const requestPostRental = async (
+    JWT_TOKEN,
     place_id,
     cp_id,
     rental_start_time,
     rental_end_time,
-    payment_type,
     rental_price,
-    deposit,
     point_price,
+    deposit,
+    payment_type,
     card_id,
     phone_number
 ) => {
@@ -38,21 +38,20 @@ export const requestPostRental = async (JWT_TOKEN,
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     }
-    const formData = makeFormData({
+    const data = {
         place_id,
         cp_id,
         rental_start_time,
         rental_end_time,
-        payment_type,
         rental_price,
-        deposit,
         point_price,
+        deposit,
+        payment_type,
         card_id,
         phone_number
-    });
-    const response = await axios.post(URL, formData, config);
-
-    return response;
+    }
+    const response = await axios.post(URL, data, config);
+    return response.data;
 };
 
 export const requestGetConfirmRental = async (JWT_TOKEN, rental_id) => {

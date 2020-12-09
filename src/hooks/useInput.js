@@ -7,6 +7,7 @@ const useInput = (initialValue = '', callback, limit, restrict) => {
         (e) => {
             if(e === undefined){
                 setState('');
+                setCheck(false);
                 return;
             }
             else if(restrict !== undefined){

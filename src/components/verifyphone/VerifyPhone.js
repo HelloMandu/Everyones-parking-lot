@@ -96,7 +96,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
             <div className={styles['send-verify']}>
                 <InputBox
                     className={'input-box'}
-                    type={'text'}
+                    type={'number'}
                     value={phoneNumber}
                     placeholder={'ex) 01012341234'}
                     onChange={handleChangePhoneNumber}
@@ -115,7 +115,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
             <div className={cx('verify-phone', { sent, isConfirm })}>
                 <InputBox
                     className={'input-box'}
-                    type={'text'}
+                    type={'number'}
                     value={verify}
                     placeholder={'인증번호 입력'}
                     onChange={handleChangeVerify}
