@@ -91,12 +91,12 @@ export const requestGetDetailUseRental = async (rental_id) => {
 
     const URL = Paths.api + `rental/${rental_id}`;
     const JWT_TOKEN = localStorage.getItem('user_id');
-    const response = await axios.get(URL, {
-        headers: {
+    const config = {
+        headers:{
             Authorization: `Bearer ${JWT_TOKEN}`
         }
-    });
-
+    }
+    const response = await axios.get(URL, config);
     return response.data;
 };
 
