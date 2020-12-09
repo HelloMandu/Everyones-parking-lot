@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import qs from 'qs';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -9,10 +9,11 @@ import { useDialog } from '../../../hooks/useDialog';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
-import { calculateDate, getFormatDateTime } from '../../../lib/calculateDate';
+import { getFormatDateTime } from '../../../lib/calculateDate';
 import { numberFormat } from '../../../lib/formatter';
 import { rentalStatus } from '../../../lib/rentalStatus';
 import { paymentType } from '../../../lib/paymentType';
+import { isEmpty } from '../../../lib/formatChecker';
 
 import { Paths } from '../../../paths';
 
@@ -47,7 +48,7 @@ const Button = ({ name, children }) => {
 const UseDetailContainer = ({ location }) => {
     const history = useHistory();
     const openDialog = useDialog();
-    const [detail, setDetail] = useState();
+    const [order, setOrder] = useState({});
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -65,33 +66,31 @@ const UseDetailContainer = ({ location }) => {
         { refund: false },
     );
 
-    useEffect(() => {
-        const getUseDetail = async () => {
-            const { msg, order, review } = await requestGetDetailUseRental(id);
-            if (msg === 'success') {
-                setDetail({
-                    order,
-                    review,
-                });
-            } else {
-                openDialog(msg);
-            }
+    const getUseDetail = useCallback(async () => {
+        const { msg, order, prev_order } = await requestGetDetailUseRental(id);
+
+        if (msg === 'success') {
+            setOrder(order, prev_order);
+        } else {
+            openDialog(msg);
         }
+    }, [id, openDialog]);
+
+    useEffect(() => {
         getUseDetail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        detail !== undefined && (
+        !isEmpty(order) && (
             <>
-            {console.log(detail)}
                 <div className={cx('container', 'top')}>
                     <div className={cx('title-area')}>
                         <div className={cx('title')}>
-                            {detail.order.place.place_name}
+                            {order.place.place_name}
                         </div>
                         <div className={cx('rendal-status')}>
-                            {rentalStatus(detail.order)}
+                            {rentalStatus(order)}
                         </div>
                     </div>
                     <div
@@ -108,40 +107,42 @@ const UseDetailContainer = ({ location }) => {
                         <div className={cx('content-area')}>
                             <Info
                                 attribute={'주차 공간 이름'}
-                                value={detail.order.place.place_name}
+                                value={order.place.place_name}
                             />
                             <Info
                                 attribute={'대여시간'}
                                 value={`${getFormatDateTime(
-                                    detail.order.rental_start_time,
+                                    order.rental_start_time,
                                 )} ~ ${getFormatDateTime(
-                                    detail.order.rental_end_time,
+                                    order.rental_end_time,
                                 )}`}
                                 black={true}
                             />
                             <Info
                                 attribute={'운영시간'}
                                 value={`${getFormatDateTime(
-                                    detail.order.place.oper_start_time,
+                                    order.place.oper_start_time,
                                 )} ~ ${getFormatDateTime(
-                                    detail.order.place.oper_end_time,
+                                    order.place.oper_end_time,
                                 )}`}
                             />
                             <Info
                                 attribute={'주차요금'}
                                 value={`30분당 ${numberFormat(
-                                    detail.order.place.place_fee,
+                                    order.place.place_fee,
                                 )}원`}
                                 black={true}
                             />
                             <Info
                                 attribute={'제공자 연락처'}
-                                value={`${detail.order.user.phone_number}`}
+                                value={order.user.phone_number}
                                 black={true}
                             />
                             <Info
                                 attribute={'이전 대여자 연락처'}
-                                value={'ㄱㄷ'}
+                                value={
+                                    order.user ? order.user.phone_number : '-'
+                                }
                             />
                         </div>
 
@@ -158,29 +159,43 @@ const UseDetailContainer = ({ location }) => {
                     </div>
                 </div>
 
-                <div className={cx('bar')} />
+                {order.coupon || order.point_price !== 0 ? (
+                    <>
+                        <div className={cx('bar')} />
+                        <div className={cx('container')}>
+                            <div className={cx('discount-area')}>
+                                <div className={cx('discount-title')}>
+                                    할인 정보
+                                </div>
+                                <div className={cx('content-area')}>
+                                    {order.coupon && (
+                                        <>
+                                            <Info
+                                                attribute={'사용 쿠폰'}
+                                                value={`${order.coupon.cp_subject}`}
+                                            />
+                                            <Info
+                                                attribute={'쿠폰 할인'}
+                                                value={`${numberFormat(order.coupon.cp_price)}원`}
+                                                black={true}
+                                            />
+                                        </>
+                                    )}
 
-                <div className={cx('container')}>
-                    <div className={cx('discount-area')}>
-                        <div className={cx('discount-title')}>할인 정보</div>
-                        <div className={cx('content-area')}>
-                            <Info
-                                attribute={'사용 쿠폰'}
-                                value={`useDetail.coupon.cp_subject`}
-                            />
-                            <Info
-                                attribute={'쿠폰 할인'}
-                                value={`useDetail.coupon.cp_price원`}
-                                black={true}
-                            />
-                            <Info
-                                attribute={'포인트 사용'}
-                                value={`useDetail.order.point_price원`}
-                                black={true}
-                            />
+                                    {order.point_price !== 0 && (
+                                        <Info
+                                            attribute={'포인트 사용'}
+                                            value={`${numberFormat(order.point_price)}원`}
+                                            black={true}
+                                        />
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                ) : (
+                    ''
+                )}
 
                 <div className={cx('bar')} />
 
@@ -190,16 +205,16 @@ const UseDetailContainer = ({ location }) => {
                         <div className={cx('content-area')}>
                             <Info
                                 attribute={'결제 일시'}
-                                value={calculateDate(detail.order.createdAt)}
+                                value={getFormatDateTime(order.createdAt)}
                             />
                             <Info
                                 attribute={'결제수단'}
-                                value={paymentType(detail.order.payment_type)}
+                                value={paymentType(order.payment_type)}
                                 black={true}
                             />
                             <Info
                                 attribute={'결제금액'}
-                                value={'원'}
+                                value={`${numberFormat(order.payment_price)}원`}
                                 black={true}
                             />
                         </div>
@@ -231,10 +246,11 @@ const UseDetailContainer = ({ location }) => {
                     handleClose={() =>
                         dispatchHandle({ type: 'refund', payload: false })
                     }
-                    paymentPrice={'useDetail.order.payment_price'}
-                    deposit={'useDetail.order.deposit'}
-                    couponPrice={'useDetail.coupon.cp_price'}
-                    pointPrice={'useDetail.order.point_price'}
+                    rentalID = {id}
+                    paymentPrice={order.total_price}
+                    deposit={order.deposit}
+                    couponPrice={order.coupon ? order.coupon.cp_price : '-'}
+                    pointPrice={order.point_price ? order.point_price : '-'}
                 />
             </>
         )

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { numberFormat } from '../../lib/formatter';
 
 import BasicButton from '../../components/button/BasicButton';
+
+import { useDialog } from '../../hooks/useDialog'
+
+import { requestPutCancelRental } from '../../api/rental'
 
 import classNames from 'classnames/bind';
 import { Backdrop } from '@material-ui/core';
@@ -24,25 +28,39 @@ const Info = ({ attribute, value, black }) => {
     );
 };
 
-const Refund = ({ open, handleClose, paymentPrice, deposit, couponPrice, pointPrice }) => {
+const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPrice, pointPrice }) => {
+    let price = paymentPrice + deposit
+    if(couponPrice !== '-') price -= couponPrice
+    if(pointPrice !== '-') price -= pointPrice
+
+    const openDialog = useDialog()
+
+    const cancelRental = useCallback(async() => {
+        const token = localStorage.getItem('user_id')
+        const {data} = await requestPutCancelRental(token, rentalID)
+
+        openDialog(data.msg)
+    }, [openDialog, rentalID])
+
     return (
         <>
             <div className={cx('bottom-modal', { on: open })}>
                 <div className={cx('title')}>대여 취소 신청</div>
-                <Info attribute={'대여비'} value={paymentPrice} />
-                <Info attribute={'보증금'} value={deposit} />
-                <Info attribute={'쿠폰 할인'} value={couponPrice} />
-                <Info attribute={'포인트 할인'} value={pointPrice} />
+                <Info attribute={'대여비'} value={numberFormat(paymentPrice)} />
+                <Info attribute={'보증금'} value={numberFormat(deposit)} />
+                <Info attribute={'쿠폰 할인'} value={numberFormat(couponPrice)} />
+                <Info attribute={'포인트 할인'} value={numberFormat(pointPrice)} />
                 <Info
                     attribute={'최종 환불금액'}
-                    value={numberFormat(68000)}
+                    value={numberFormat(price)}
                     black={true}
                 />
 
                 <div className={cx('button-area')}>
                     <BasicButton
-                        button_name={`${numberFormat(68000)}원 환불신청`}
+                        button_name={`${numberFormat(price)}원 환불신청`}
                         disable={false}
+                        onClick={cancelRental}
                     />
                 </div>
             </div>

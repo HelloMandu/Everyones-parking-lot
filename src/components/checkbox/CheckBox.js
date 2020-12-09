@@ -5,10 +5,10 @@ import styles from './CheckBox.module.scss';
 
 const cx = cn.bind(styles);
 
-const CheckBoxItem = memo(({ checked, description, onToggle }) => {
+const CheckBoxItem = memo(({ checked, description }) => {
     return (
         <>
-            <div className={styles['checkbox']} onClick={onToggle}>
+            <div className={styles['checkbox']}>
                 <div className={cx({ checked })}></div>
             </div>
             <div className={styles['description']}>{description}</div>
@@ -16,7 +16,13 @@ const CheckBoxItem = memo(({ checked, description, onToggle }) => {
     );
 });
 
-const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) => {
+const CheckBox = ({
+    allCheckTitle,
+    checkListProps,
+    box,
+    setterFunc,
+    setCheck,
+}) => {
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
     const onToggleAll = useCallback(() => {
@@ -27,13 +33,13 @@ const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) 
             })),
         );
 
-        if(setterFunc !== undefined){
+        if (setterFunc !== undefined) {
             setterFunc(
                 checkListProps.map((checkBox) => ({
                     ...checkBox,
                     checked: !allCheck,
-                }))
-            )
+                })),
+            );
         }
 
         setAllCheck(!allCheck);
@@ -49,14 +55,14 @@ const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) 
                 ),
             );
 
-            if(setterFunc !== undefined){
+            if (setterFunc !== undefined) {
                 setterFunc(
-                    checkListProps.map((checkBox) => 
+                    checkListProps.map((checkBox) =>
                         checkBox.id === id
-                        ? { ...checkBox, checked: !checkBox.checked }
-                        : checkBox,
-                    )
-                )
+                            ? { ...checkBox, checked: !checkBox.checked }
+                            : checkBox,
+                    ),
+                );
             }
         },
         [checkList, checkListProps, setterFunc],
@@ -67,34 +73,42 @@ const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) 
             true,
         );
         setAllCheck(result);
-        if(setCheck !== undefined){
+        if (setCheck !== undefined) {
             setCheck(result);
         }
     }, [checkList, checkListProps, setCheck]);
     return (
         <div>
-            <div className={cx('checkitem', 'allcheck', {box})}>
+            <div className={cx('checkitem', 'allcheck', { box })} onClick={onToggleAll}>
                 <CheckBoxItem
                     checked={allCheck}
                     description={allCheckTitle}
-                    onToggle={onToggleAll}
                 ></CheckBoxItem>
             </div>
             <ul className={styles['checklist']}>
-                {checkList.map(({ id, checked, description, subDescription }) => (
-                    <li className={styles['checkitem']} key={id}>
-                        <CheckBoxItem
-                            checked={checked}
-                            description={description}
-                            onToggle={() => {
+                {checkList.map(
+                    ({ id, checked, description, subDescription }) => (
+                        <li
+                            className={styles['checkitem']}
+                            key={id}
+                            onClick={() => {
                                 onToggle(id);
                             }}
-                        ></CheckBoxItem>
-                        {subDescription ?
-                            <div className={styles["sub-description"]}>{subDescription}</div> : ''
-                        }
-                    </li>
-                ))}
+                        >
+                            <CheckBoxItem
+                                checked={checked}
+                                description={description}
+                            ></CheckBoxItem>
+                            {subDescription ? (
+                                <div className={styles['sub-description']}>
+                                    {subDescription}
+                                </div>
+                            ) : (
+                                ''
+                            )}
+                        </li>
+                    ),
+                )}
             </ul>
         </div>
     );

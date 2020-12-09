@@ -3,13 +3,13 @@ const USE_USING = '이용중';
 const USE_FINISH = '이용완료';
 const USE_CANCEL = '이용취소';
 
-export const rentalStatus = (order) => {
-    const current = new Date().getTime();
-    const rentalStartTime = new Date(order.rental_start_time).getTime();
+export const rentalStatus = ({rental_start_time, total_price, cancel_time}) => {
+    const current = Date.now();
+    const rentalStartTime = new Date(rental_start_time).getTime();
 
-    return order.total_price
+    return total_price
         ? USE_FINISH
-        : order.cancel_time
+        : cancel_time
         ? USE_CANCEL
         : current < rentalStartTime
         ? USE_WAIT
