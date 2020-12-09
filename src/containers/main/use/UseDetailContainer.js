@@ -1,16 +1,18 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import qs from 'qs';
 import { Link, useHistory } from 'react-router-dom';
 
 import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
 
-// import { useDialog } from '../../../hooks/useDialog';
+import { useDialog } from '../../../hooks/useDialog';
 
-// import { requestGetDetailUseRental } from '../../../api/rental';
+import { requestGetDetailUseRental } from '../../../api/rental';
 
-import { getFormatDateTime } from '../../../lib/calculateDate';
+import { calculateDate, getFormatDateTime } from '../../../lib/calculateDate';
 import { numberFormat } from '../../../lib/formatter';
+import { rentalStatus } from '../../../lib/rentalStatus';
+import { paymentType } from '../../../lib/paymentType';
 
 import { Paths } from '../../../paths';
 
@@ -42,42 +44,11 @@ const Button = ({ name, children }) => {
     );
 };
 
-const useDetail = {
-    rental_id: 1,
-    total_price: 0,
-    term_price: 1000,
-    deposit: 10000,
-    point_price: 0,
-    payment_price: 60000,
-    cancle_price: 0,
-    calculated_price: 0,
-    payment_type: 0,
-    rental_start_time: '2020-12-02 16:41:01',
-    rental_end_time: '2020-12-02 20:59:37',
-    cancel_reason: '',
-    cancel_time: 0,
-    calculated_time: '',
-    deleted: 0,
-    created_at: 0,
-    updated_at: 0,
-    order_user_id: 0,
-    place_user_id: 0,
-    ppayment_id: 0,
-    place_id: 1,
-    cp_id: 0,
-};
-
-const USE_WAIT = '이용대기';
-const USE_USING = '이용중';
-const USE_FINISH = '이용완료';
-const USE_CANCEL = '이용취소';
-
 const UseDetailContainer = ({ location }) => {
     const history = useHistory();
-    // const openDialog = useDialog();
-    // const [useDetail, setUseDetail] = useState();
-    const current = new Date();
-    
+    const openDialog = useDialog();
+    const [detail, setDetail] = useState();
+
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
@@ -94,181 +65,179 @@ const UseDetailContainer = ({ location }) => {
         { refund: false },
     );
 
-    // const getUseDetail = useCallback(async () => {
-    //     const token = localStorage.getItem('user_id');
-    //     const { data } = await requestGetDetailUseRental(token, id);
-    //     const { msg, order, coupon, place_user } = data;
-    //     if (msg === 'success') {
-    //         setUseDetail({
-    //             order,
-    //             coupon,
-    //             place_user,
-    //         });
-    //     } else {
-    //         openDialog(msg);
-    //     }
-    // }, [id, openDialog]);
-
-    // useEffect(() => {
-    //     getUseDetail();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
+    useEffect(() => {
+        const getUseDetail = async () => {
+            const { msg, order, review } = await requestGetDetailUseRental(id);
+            if (msg === 'success') {
+                setDetail({
+                    order,
+                    review,
+                });
+            } else {
+                openDialog(msg);
+            }
+        }
+        getUseDetail();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
-        <>
-            <div className={cx('container', 'top')}>
-                <div className={cx('title-area')}>
-                    <div className={cx('title')}>
-                        {useDetail.place_id}.title
+        detail !== undefined && (
+            <>
+            {console.log(detail)}
+                <div className={cx('container', 'top')}>
+                    <div className={cx('title-area')}>
+                        <div className={cx('title')}>
+                            {detail.order.place.place_name}
+                        </div>
+                        <div className={cx('rendal-status')}>
+                            {rentalStatus(detail.order)}
+                        </div>
                     </div>
-                    <div className={cx('rendal-status')}>
-                        {current.getTime() -
-                            new Date(useDetail.rental_start_time).getTime() <
-                        0
-                            ? USE_WAIT
-                            : useDetail.calculated_time
-                            ? USE_FINISH
-                            : useDetail.cancel_time
-                            ? USE_CANCEL
-                            : USE_USING}
+                    <div
+                        className={cx('x-button')}
+                        onClick={() => history.goBack()}
+                    >
+                        <XButton />
+                    </div>
+                    <div className={cx('card')}>
+                        <img src={Parking} alt="" />
+
+                        <div className={cx('card-title')}>주차 대여 정보</div>
+
+                        <div className={cx('content-area')}>
+                            <Info
+                                attribute={'주차 공간 이름'}
+                                value={detail.order.place.place_name}
+                            />
+                            <Info
+                                attribute={'대여시간'}
+                                value={`${getFormatDateTime(
+                                    detail.order.rental_start_time,
+                                )} ~ ${getFormatDateTime(
+                                    detail.order.rental_end_time,
+                                )}`}
+                                black={true}
+                            />
+                            <Info
+                                attribute={'운영시간'}
+                                value={`${getFormatDateTime(
+                                    detail.order.place.oper_start_time,
+                                )} ~ ${getFormatDateTime(
+                                    detail.order.place.oper_end_time,
+                                )}`}
+                            />
+                            <Info
+                                attribute={'주차요금'}
+                                value={`30분당 ${numberFormat(
+                                    detail.order.place.place_fee,
+                                )}원`}
+                                black={true}
+                            />
+                            <Info
+                                attribute={'제공자 연락처'}
+                                value={`${detail.order.user.phone_number}`}
+                                black={true}
+                            />
+                            <Info
+                                attribute={'이전 대여자 연락처'}
+                                value={'ㄱㄷ'}
+                            />
+                        </div>
+
+                        <div className={cx('button-area')}>
+                            <Button name={'고객센터 연결'}>
+                                <Tel />
+                            </Button>
+                            <Link to={Paths.main.review.write + `?id=${id}`}>
+                                <Button name={'리뷰 작성 하기'}>
+                                    <MessageBox />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-                <div
-                    className={cx('x-button')}
-                    onClick={() => history.goBack()}
-                >
-                    <XButton />
+
+                <div className={cx('bar')} />
+
+                <div className={cx('container')}>
+                    <div className={cx('discount-area')}>
+                        <div className={cx('discount-title')}>할인 정보</div>
+                        <div className={cx('content-area')}>
+                            <Info
+                                attribute={'사용 쿠폰'}
+                                value={`useDetail.coupon.cp_subject`}
+                            />
+                            <Info
+                                attribute={'쿠폰 할인'}
+                                value={`useDetail.coupon.cp_price원`}
+                                black={true}
+                            />
+                            <Info
+                                attribute={'포인트 사용'}
+                                value={`useDetail.order.point_price원`}
+                                black={true}
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div className={cx('card')}>
-                    <img src={Parking} alt="" />
 
-                    <div className={cx('card-title')}>주차 대여 정보</div>
+                <div className={cx('bar')} />
 
-                    <div className={cx('content-area')}>
-                        <Info
-                            attribute={'주차 공간 이름'}
-                            value={useDetail.place_id + '.title'}
-                        />
-                        <Info
-                            attribute={'대여시간'}
-                            value={
-                                getFormatDateTime(useDetail.rental_start_time) +
-                                ' ~ ' +
-                                getFormatDateTime(useDetail.rental_end_time)
-                            }
-                            black={true}
-                        />
-                        <Info attribute={'운영시간'} value={'?'} />
-                        <Info
-                            attribute={'주차요금'}
-                            value={numberFormat(useDetail.term_price) + '원'}
-                            black={true}
-                        />
-                        <Info
-                            attribute={'제공자 연락처'}
-                            value={useDetail.place_user_id + '.phoneNumber'}
-                            black={true}
-                        />
-                        <Info attribute={'이전 대여자 연락처'} value={'?'} />
+                <div className={cx('container')}>
+                    <div className={cx('discount-area')}>
+                        <div className={cx('discount-title')}>결제 정보</div>
+                        <div className={cx('content-area')}>
+                            <Info
+                                attribute={'결제 일시'}
+                                value={calculateDate(detail.order.createdAt)}
+                            />
+                            <Info
+                                attribute={'결제수단'}
+                                value={paymentType(detail.order.payment_type)}
+                                black={true}
+                            />
+                            <Info
+                                attribute={'결제금액'}
+                                value={'원'}
+                                black={true}
+                            />
+                        </div>
                     </div>
 
                     <div className={cx('button-area')}>
-                        <Button name={'고객센터 연결'}>
-                            <Tel />
-                        </Button>
-                        <Link to={Paths.main.review.write + `?id=${id}`}>
-                            <Button name={'리뷰 작성 하기'}>
-                                <MessageBox />
-                            </Button>
+                        <BasicButton
+                            button_name={'대여 취소하기'}
+                            disable={false}
+                            color={'white'}
+                            onClick={() =>
+                                dispatchHandle({
+                                    type: 'refund',
+                                    payload: true,
+                                })
+                            }
+                        />
+                        <Link to={Paths.main.use.extend + `?id=${id}`}>
+                            <BasicButton
+                                button_name={'연장 하기'}
+                                disable={false}
+                            />
                         </Link>
                     </div>
                 </div>
-            </div>
 
-            <div className={cx('bar')} />
-
-            <div className={cx('container')}>
-                <div className={cx('discount-area')}>
-                    <div className={cx('discount-title')}>할인 정보</div>
-                    <div className={cx('content-area')}>
-                        <Info
-                            attribute={'사용 쿠폰'}
-                            value={`useDetail.coupon.cp_subject`}
-                        />
-                        <Info
-                            attribute={'쿠폰 할인'}
-                            value={`useDetail.coupon.cp_price원`}
-                            black={true}
-                        />
-                        <Info
-                            attribute={'포인트 사용'}
-                            value={`useDetail.order.point_price원`}
-                            black={true}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className={cx('bar')} />
-
-            <div className={cx('container')}>
-                <div className={cx('discount-area')}>
-                    <div className={cx('discount-title')}>결제 정보</div>
-                    <div className={cx('content-area')}>
-                        <Info
-                            attribute={'결제 일시'}
-                            value={'useDetail.order.caculated_time'}
-                        />
-                        <Info
-                            attribute={'결제수단'}
-                            value={
-                                useDetail.payment_type === 0
-                                    ? '카드결제'
-                                    : useDetail.payment_type === 1
-                                    ? '카카오페이'
-                                    : useDetail.payment_type === 2
-                                    ? '네이버페이'
-                                    : '페이코결제'
-                            }
-                            black={true}
-                        />
-                        <Info
-                            attribute={'결제금액'}
-                            value={numberFormat(useDetail.payment_price) + '원'}
-                            black={true}
-                        />
-                    </div>
-                </div>
-
-                <div className={cx('button-area')}>
-                    <BasicButton
-                        button_name={'대여 취소하기'}
-                        disable={false}
-                        color={'white'}
-                        onClick={() =>
-                            dispatchHandle({ type: 'refund', payload: true })
-                        }
-                    />
-                    <Link to={Paths.main.use.extend + `?id=${id}`}>
-                        <BasicButton
-                            button_name={'연장 하기'}
-                            disable={false}
-                        />
-                    </Link>
-                </div>
-            </div>
-
-            <Refund
-                open={modalState.refund}
-                handleClose={() =>
-                    dispatchHandle({ type: 'refund', payload: false })
-                }
-                paymentPrice={'useDetail.order.payment_price'}
-                deposit={'useDetail.order.deposit'}
-                couponPrice={'useDetail.coupon.cp_price'}
-                pointPrice={'useDetail.order.point_price'}
-            />
-        </>
+                <Refund
+                    open={modalState.refund}
+                    handleClose={() =>
+                        dispatchHandle({ type: 'refund', payload: false })
+                    }
+                    paymentPrice={'useDetail.order.payment_price'}
+                    deposit={'useDetail.order.deposit'}
+                    couponPrice={'useDetail.coupon.cp_price'}
+                    pointPrice={'useDetail.order.point_price'}
+                />
+            </>
+        )
     );
 };
 
