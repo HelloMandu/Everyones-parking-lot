@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import {useHistory} from 'react-router-dom';
 
 //styles
 import cn from 'classnames/bind';
@@ -17,6 +18,7 @@ import FixedButton from '../button/FixedButton';
 
 //lib
 import { getDateRange ,calculateDate} from '../../lib/calculateDate';
+import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
@@ -87,7 +89,8 @@ const DatePickerModal = (props) => {
     for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
     const classes = useStyles();
-
+    const history = useHistory();
+    
     const [date_index, dispatchDateIndex] = useReducer(dateReducer, initState);
     const [date_list, setDateList] = useState([]);
     const [start_open, setStartOpen] = useState(false);
@@ -98,18 +101,18 @@ const DatePickerModal = (props) => {
     const [possible ,setPossible] = useState(false);
 
 
-    const day_list = date_list.map((data) => (
-        <SwiperSlide className={styles['swiper-slide']} key={data}>
-            <DateItem value={data} />
+    const day_list = date_list.map((data,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
+            <DateItem value={data.DAY} />
         </SwiperSlide>
     ));
-    const hour_list = hour.map((h) => (
-        <SwiperSlide className={styles['swiper-slide']} key={h}>
+    const hour_list = hour.map((h,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={h + '시'} />
         </SwiperSlide>
     ));
-    const minute_list = minute.map((min) => (
-        <SwiperSlide className={styles['swiper-slide']} key={min}>
+    const minute_list = minute.map((min,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={min + '분'} />
         </SwiperSlide>
     ));
@@ -122,6 +125,7 @@ const DatePickerModal = (props) => {
         end.setDate(start.getDate());
         const res = getDateRange(start, end);
         setDateList(res);
+        console.log('속성');
     }, []);
 
 
@@ -326,7 +330,11 @@ const DatePickerModal = (props) => {
                     </div>
                 </div>
             </DialogContent>
-            <FixedButton disable={!possible} button_name={"시간 설정 완료"} />
+            <FixedButton disable={!possible} button_name={"시간 설정 완료"} onClick={()=>{
+                props.onClick(start_date,end_date)
+                history.goBack();
+                }
+            }/>
         </Dialog>
 
     );

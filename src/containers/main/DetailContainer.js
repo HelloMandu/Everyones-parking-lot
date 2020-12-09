@@ -32,8 +32,9 @@ import {getFormatDay} from '../../lib/calculateDate';
 const cx = cn.bind(styles);
 const DetailContainer = ({ modal, place_id }) => {
 
-    const [index, setIndex] = useState(0);
     const history = useHistory();
+
+    const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(0);
     const [end_date, setEndDate] = useState(0);
     
@@ -41,12 +42,15 @@ const DetailContainer = ({ modal, place_id }) => {
     const callGetDetailParking = async ()=>{
         try{
             const res = await requestGetDetailParking(place_id);
-
         }
         catch(e){
             console.error(e);
         }
 
+    }
+    const onClickSetDate =(start_date,end_date)=>{
+        setStartDate(start_date);
+        setEndDate(end_date);
     }
 
     // 카카오 내비게이션 실행
@@ -73,6 +77,10 @@ const DetailContainer = ({ modal, place_id }) => {
         console.log(start_date);
         console.log(end_date);
     },[start_date,end_date])
+    useEffect(()=>{
+        console.log('아이디');
+        console.log(place_id);
+    },[])
 
 
     // const createKakaoButton = () => {
@@ -222,6 +230,7 @@ const DetailContainer = ({ modal, place_id }) => {
             handleClose={() => history.goBack()}
             start_date = {start_date}
             end_date= {end_date}
+            onClick={onClickSetDate}
             />
             <LikeButton button_name={'12,000원 대여신청'} disable={false}  onClick= {()=>history.push(Paths.main.payment)} />
             <RoadviewModal open={modal === "roadview"} handleClose={() => history.goBack()} title={"길동이 주차장"} />

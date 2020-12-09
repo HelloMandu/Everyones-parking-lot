@@ -33,8 +33,9 @@ const ParkingItem = ({ onClick, place_name }) => {
 };
 
 const ParkingList = ({ onClick, view, slide_list }) => {
+    console.log(slide_list);
     const list = slide_list.map((slide) => (
-        <SwiperSlide className={styles['swiper-slide']} key = {slide.place_name}>
+        <SwiperSlide className={styles['swiper-slide']} key = {slide.place_id}>
             <ParkingItem  place_name={slide.place_name} onClick={onClick} />
         </SwiperSlide>
     ));
