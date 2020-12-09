@@ -143,8 +143,6 @@ const CouponContainer = ({ match }) => {
                     </div>
                 </div>
                 <Swiper
-                    id="category-swiper"
-                    className={styles['coupon-swiper']}
                     spaceBetween={50}
                     slidesPerView={1}
                     onSlideChange={(swiper) =>

@@ -1,8 +1,7 @@
-import React, { lazy, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { lazy, useCallback, useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
-import useSWR from 'swr';
 
 import { requestGetMyParkingList } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
@@ -47,33 +46,48 @@ const ParkingItem = ({ status, image, title, start, end, price }) => {
 };
 
 const ParkingManageContainer = () => {
-    const history = useHistory();
-    const { data, error } = useSWR(
-        localStorage.getItem('user_id'),
-        requestGetMyParkingList,
-    );
+    const allParkingList = useRef(null);
+    const dataLength = useRef(0);
+    const [parkingList, setParkingList] = useState([]);
+    const fetchParkingList = () => {
+        const allLength = allParkingList.current.length;
+        const length = dataLength.current;
+        if (length >= allLength) {
+            return;
+        }
+        const fetchData = allParkingList.current.slice(length, length + 3);
+        setParkingList((parkingList) => parkingList.concat(fetchData));
+        if(dataLength.current + 3 >= allLength){
+            dataLength.current = allLength;
+        } else{
+            dataLength.current += 3;
+        }
+    };
+
     useEffect(() => {
         const handleScroll = () => {
-            if (
+            const endPoint =
                 Math.ceil(
                     window.innerHeight + document.documentElement.scrollTop,
-                ) === document.documentElement.offsetHeight
-            ) {
-                console.log('endpoint');
+                ) === document.documentElement.offsetHeight;
+            if (endPoint) {
+                console.log(endPoint);
+                fetchParkingList();
             }
         };
         window.addEventListener('scroll', handleScroll);
+        const getParkingList = async () => {
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            const { places } = await requestGetMyParkingList(JWT_TOKEN);
+            allParkingList.current = places;
+            fetchParkingList();
+        };
+        getParkingList();
         return () => window.removeEventListener('scroll', handleScroll);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    if (error) {
-        history.goBack(); // 에러페이지
-        return null;
-    } else if (!data) {
-        return null;
-    }
-    const parkingList = data.data.places;
     return (
-        <div className={styles['parking-management-container']}>
+        <main className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>
                 <ButtonBase className={styles['enroll-button']}>
                     <span className={styles['plus']}>+</span>주차공간 등록하기
@@ -111,7 +125,7 @@ const ParkingManageContainer = () => {
                     ),
                 )}
             </ul>
-        </div>
+        </main>
     );
 };
 

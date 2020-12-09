@@ -42,7 +42,7 @@ const enroll = [
 ];
 
 const getRentalPrice = (parkingInfo) => {
-    if(!parkingInfo){
+    if (!parkingInfo) {
         return 0;
     }
     const { price, deposit } = parkingInfo;
@@ -52,13 +52,20 @@ const getRentalPrice = (parkingInfo) => {
 const getSalePoint = (coupon, point) => {
     const pointInt = point === '' ? 0 : parseInt(point);
     return coupon + pointInt;
-}
+};
 
-const Point = ({ totalPrice, point, usePoint, setUsePoint, onChange }) => {
+const Point = ({
+    totalPrice,
+    maxPrice,
+    point,
+    usePoint,
+    setUsePoint,
+    onChange,
+}) => {
     const [isTotal, setIsTotal] = useState(false);
-    const handleTotalPoint = useCallback(() => setUsePoint(totalPrice), [
+    const handleTotalPoint = useCallback(() => setUsePoint(maxPrice), [
         setUsePoint,
-        totalPrice,
+        maxPrice,
     ]);
     useEffect(
         () =>
@@ -175,17 +182,17 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const [selectedCoupon, setSelectedCoupon] = useState({
         cp_subject: '쿠폰 선택',
         cp_price: 0,
-        cp_id: 0
+        cp_id: 0,
     });
 
     const onChangeUsePoint = useCallback(
         (e) => {
             const value = e.target.value;
             const { cp_price } = selectedCoupon;
-            if(value < 0){
+            const { price } = parkingInfo;
+            if (value < 0) {
                 return;
-            }
-            else if ( value > point || value > (getRentalPrice(parkingInfo) - cp_price)) {
+            } else if (value > point || value > price - cp_price) {
                 openDialog(
                     '사용 불가',
                     '보유 포인트 이상의 금액은 사용하실 수 없습니다',
@@ -237,12 +244,24 @@ const ParkingEnrollContainer = ({ location, match }) => {
             card_id,
             phoneRef.current.phoneNumber,
         );
-        if(msg === 'success'){
-            history.push(`${Paths.main.payment_complete}?rental_id=${rental_id}`)
-        } else{
-            openDialog('결제실패', msg)
+        if (msg === 'success') {
+            history.push(
+                `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+            );
+        } else {
+            openDialog('결제실패', msg);
         }
-    }, [end_time, history, openDialog, parkingInfo, paymentType, place_id, selectedCoupon, start_time, usePoint]);
+    }, [
+        end_time,
+        history,
+        openDialog,
+        parkingInfo,
+        paymentType,
+        place_id,
+        selectedCoupon,
+        start_time,
+        usePoint,
+    ]);
 
     const [onLoading, offLoading] = useLoading();
     useEffect(() => {
@@ -271,7 +290,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 });
                 setTotalPrice(price + deposit);
             } else {
-                openDialog('결제정보를 불러오는데 실패했습니다', '', () =>
+                openDialog('결제정보를 불러오는데 실패했습니다.', '', () =>
                     history.goBack(),
                 );
             }
@@ -302,7 +321,11 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         </ButtonBase>
                     </div>
                     <Point
-                        totalPrice={getRentalPrice(parkingInfo) - selectedCoupon.cp_price}
+                        totalPrice={
+                            getRentalPrice(parkingInfo) -
+                            selectedCoupon.cp_price
+                        }
+                        maxPrice={parkingInfo.price - selectedCoupon.cp_price}
                         point={point}
                         usePoint={usePoint}
                         setUsePoint={setUsePoint}
@@ -337,7 +360,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 open={isOpenCouponModal}
                 setCoupon={setSelectedCoupon}
                 placeId={place_id}
-                totalPrice={totalPrice}
+                price={parkingInfo.price}
             ></EnrollCouponModal>
             <PaymentTypeModal
                 open={isOpenTypeModal}

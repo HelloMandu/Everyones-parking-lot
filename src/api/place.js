@@ -82,7 +82,7 @@ export const requestGetMyParkingList = async (JWT_TOKEN) => {
     };
     const response = await axios.get(URL, config);
 
-    return response;
+    return response.data;
 };
 
 export const requestPostEnrollParking = async (

@@ -42,8 +42,9 @@ const PaymentCompleteContainer = ({ location }) => {
         place,
         user,
     } = order;
-    const { place_images, place_fee } = place;
+    const { place_name, place_images, place_fee } = place;
     const { phone_number } = user;
+    console.log(data);
     return (
         <>
             <div className={styles['gradient']}></div>
@@ -58,7 +59,7 @@ const PaymentCompleteContainer = ({ location }) => {
                         대여 결제가 완료되었습니다
                     </p>
                     <div className={styles['parking-status']}>
-                        <h2 className={styles['title']}>{place.place_name}</h2>
+                        <h2 className={styles['title']}>{place_name}</h2>
                         <span className={styles['status']}>이용대기</span>
                     </div>
                 </header>
