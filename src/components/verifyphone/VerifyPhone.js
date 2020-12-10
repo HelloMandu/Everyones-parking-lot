@@ -5,6 +5,7 @@ import React, {
     useState,
 } from 'react';
 import cn from 'classnames/bind';
+import { useSnackbar } from 'notistack';
 
 import { requestPostAuth, requestPostConfirm } from '../../api/mobile';
 
@@ -30,6 +31,7 @@ const getTime = (timer) =>
 const VerifyPhone = ({ setCheck }, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
     const [
         phoneNumber,
         handleChangePhoneNumber,
@@ -43,7 +45,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
     );
     const [buttonTitle, setButtonTitle] = useState('인증번호 발송');
     const openDialog = useDialog();
-    
+
     const onClickSendVerify = useCallback(async () => {
         if (sendCheck) {
             const response = await requestPostAuth(phoneNumber);
@@ -70,20 +72,12 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 if (setCheck !== undefined) {
                     setCheck(true);
                 }
+                enqueueSnackbar('인증에 성공하였습니다.', { variant: 'success' } );
             } else {
-                openDialog('인증실패', '인증번호가 다릅니다');
+                enqueueSnackbar('인증번호가 다릅니다.', { variant: 'error' } );
             }
         }
-    }, [
-        verifyCheck,
-        setIsConfirm,
-        sendCheck,
-        setSendCheck,
-        phoneNumber,
-        verify,
-        openDialog,
-        setCheck,
-    ]);
+    }, [verifyCheck, setIsConfirm, sendCheck, setSendCheck, phoneNumber, verify, setCheck, enqueueSnackbar]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
     useInterval(() => setTimer(timer - 1000), sent && timer > 0 ? 1000 : 0);
@@ -92,7 +86,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
         phoneNumber: phoneNumber,
     }));
     return (
-        <>
+        <section>
             <div className={styles['send-verify']}>
                 <InputBox
                     className={'input-box'}
@@ -133,7 +127,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
                     ></ConfirmButton>
                 </div>
             </div>
-        </>
+        </section>
     );
 };
 

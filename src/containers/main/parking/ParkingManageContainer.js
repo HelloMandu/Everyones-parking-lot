@@ -12,7 +12,7 @@ import styles from './ParkingManageContainer.module.scss';
 
 const cx = cn.bind(styles);
 
-const Image = ({ className, src, threshold = 0.5 }) => {
+const Image = ({ src, threshold = 0.5 }) => {
     const imgRef = useRef(null);
     const observerRef = useRef(null);
     const [isLoad, setIsLoad] = useState(false);
@@ -34,9 +34,9 @@ const Image = ({ className, src, threshold = 0.5 }) => {
     }, [threshold]);
     return (
         <div
-            className={className}
+            className={cx('parking-image', { isLoad })}
             ref={imgRef}
-            style={{ backgroundImage: `url(${isLoad ? src : ''})` }}
+            style={{ backgroundImage: `url(${src})` }}
         />
     );
 };
@@ -44,7 +44,7 @@ const Image = ({ className, src, threshold = 0.5 }) => {
 const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     return (
         <>
-            <Image className={styles['parking-image']} src={`${Paths.storage}${image}`} threshold={0.3}></Image>
+            <Image src={`${Paths.storage}${image}`} threshold={0.3}></Image>
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <span className={cx('status', { status })}>

@@ -35,6 +35,11 @@
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
+                opacity: 0;
+                transition: opacity .3s ease-in;
+            }
+            .isLoad{
+                opacity: 1;
             }
             .parking-info {
                 width: 100%;
