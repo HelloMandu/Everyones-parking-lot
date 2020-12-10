@@ -120,8 +120,8 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
     }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
 
     return (
-        <div className={styles['parking-enroll-area']}>
-            <div className={styles['title']}>주차장 기본 정보</div>
+        <section className={styles['parking-enroll-area']}>
+            <h3 className={styles['title']}>주차장 기본 정보</h3>
             <InputBox
                 className={'input-box'}
                 type={'text'}
@@ -172,14 +172,14 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                     <span>원</span>
                 </div>
             </div>
-        </div>
+        </section>
     );
 });
 
 const TimeSelector = ({ title, date, hour, minute, onChange }) => {
     return (
-        <div className={styles['schedule-wrapper']}>
-            <div className={styles['schedule-title']}>{title}</div>
+        <section className={styles['schedule-wrapper']}>
+            <h3 className={styles['schedule-title']}>{title}</h3>
             <div className={styles['select-time']}>
                 <select
                     className={styles['select-list']}
@@ -203,7 +203,7 @@ const TimeSelector = ({ title, date, hour, minute, onChange }) => {
                     {minute}
                 </select>
             </div>
-        </div>
+        </section>
     );
 };
 
@@ -277,8 +277,8 @@ const OperatingTime = forwardRef((props, ref) => {
         setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
     }, [endTime]);
     return (
-        <div className={styles['parking-enroll-area']}>
-            <div className={styles['title']}>운영시간</div>
+        <section className={styles['parking-enroll-area']}>
+            <h3 className={styles['title']}>운영시간</h3>
             <TimeSelector
                 title={'운영 시작 시간'}
                 date={perSelectList}
@@ -293,7 +293,7 @@ const OperatingTime = forwardRef((props, ref) => {
                 minute={minuteSelectList}
                 onChange={onChangeEndTime}
             />
-        </div>
+        </section>
     );
 });
 
@@ -303,8 +303,8 @@ const ExtraInfo = forwardRef((props, ref) => {
         extraInfo,
     }));
     return (
-        <div className={styles['parking-enroll-area']}>
-            <div className={styles['title']}>추가정보</div>
+        <section className={styles['parking-enroll-area']}>
+            <h3 className={styles['title']}>추가정보</h3>
             <InputBox
                 className={'input-box'}
                 type={'text'}
@@ -313,7 +313,7 @@ const ExtraInfo = forwardRef((props, ref) => {
                 placeholder={'주차 공간에 대한 추가적인 설명을 작성해주세요'}
                 onChange={onChangeExtraInfo}
             ></InputBox>
-        </div>
+        </section>
     );
 });
 
@@ -375,9 +375,9 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
         setCheck(fileList.length >= 2);
     }, [setCheck, fileList]);
     return (
-        <div className={styles['parking-enroll-area']}>
+        <section className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
-                <div className={styles['title']}>주차공간 사진</div>
+                <h3 className={styles['title']}>주차공간 사진</h3>
                 <div className={styles['important-wrapper']}>
                     <div className={styles['important']}>
                         <Information></Information>
@@ -419,7 +419,7 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
                     ))}
                 </ul>
             </div>
-        </div>
+        </section>
     );
 });
 
@@ -467,7 +467,7 @@ const ParkingEnrollContainer = () => {
     }, [checkBasicInfo, checkParkingPicture]);
     return (
         <>
-            <div className={styles['parking-enroll-container']}>
+            <main className={styles['parking-enroll-container']}>
                 <BasicInfo
                     setCheck={setCheckBasicInfo}
                     ref={basicInfo}
@@ -480,7 +480,7 @@ const ParkingEnrollContainer = () => {
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
                 ></ParkingPicture>
-            </div>
+            </main>
             <FixedButton
                 button_name={'작성완료'}
                 disable={!checkAll}

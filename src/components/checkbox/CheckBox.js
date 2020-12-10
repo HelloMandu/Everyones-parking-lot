@@ -72,7 +72,7 @@ const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) 
         }
     }, [checkList, checkListProps, setCheck]);
     return (
-        <div>
+        <section>
             <div className={cx('checkitem', 'allcheck', {box})}>
                 <CheckBoxItem
                     checked={allCheck}
@@ -96,7 +96,7 @@ const CheckBox = ({ allCheckTitle, checkListProps, box, setterFunc, setCheck }) 
                     </li>
                 ))}
             </ul>
-        </div>
+        </section>
     );
 };
 

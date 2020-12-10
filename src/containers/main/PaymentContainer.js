@@ -76,8 +76,8 @@ const Point = ({
         [point, totalPrice, usePoint],
     );
     return (
-        <div className={styles['parking-payment-wrapper']}>
-            <div className={styles['title']}>{'포인트 할인'}</div>
+        <section className={styles['parking-payment-wrapper']}>
+            <h3 className={styles['title']}>{'포인트 할인'}</h3>
             <div className={styles['point-wrapper']}>
                 <InputBox
                     className={'input-box'}
@@ -99,15 +99,15 @@ const Point = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
 const PaymentType = ({ paymentType, openTypeModal }) => {
     return (
-        <div className={styles['parking-payment-area']}>
+        <section className={styles['parking-payment-area']}>
             <div className={styles['parking-payment-wrapper']}>
-                <div className={styles['title']}>결제수단</div>
+                <h3 className={styles['title']}>결제수단</h3>
                 <ButtonBase
                     className={styles['payment']}
                     name="payment"
@@ -116,7 +116,7 @@ const PaymentType = ({ paymentType, openTypeModal }) => {
                     {paymentType.title}
                 </ButtonBase>
             </div>
-        </div>
+        </section>
     );
 };
 
@@ -126,7 +126,7 @@ const Price = ({ parkingInfo, totalPrice, coupon, usePoint }) => {
     }
     const { price, deposit } = parkingInfo;
     return (
-        <div className={styles['final-payment']}>
+        <section className={styles['final-payment']}>
             <div className={styles['total-payment']}>
                 <div className={styles['title']}>최종 결제금액</div>
                 <div className={styles['price']}>
@@ -151,7 +151,7 @@ const Price = ({ parkingInfo, totalPrice, coupon, usePoint }) => {
                     {numberFormat(usePoint === '' ? 0 : usePoint)}원
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
@@ -301,25 +301,25 @@ const ParkingEnrollContainer = ({ location, match }) => {
     }, []);
     return (
         <>
-            <div className={styles['parking-payment-container']}>
+            <main className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
                     <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
-                    <div className={styles['parking-payment-wrapper']}>
-                        <div className={styles['title']}>{'대여자 연락처'}</div>
+                    <section className={styles['parking-payment-wrapper']}>
+                        <h3 className={styles['title']}>{'대여자 연락처'}</h3>
                         <VerifyPhone
                             ref={phoneRef}
                             setCheck={setPhoneCheck}
                         ></VerifyPhone>
-                    </div>
-                    <div className={styles['parking-payment-wrapper']}>
-                        <div className={styles['title']}>{'쿠폰 할인'}</div>
+                    </section>
+                    <section className={styles['parking-payment-wrapper']}>
+                        <h3 className={styles['title']}>{'쿠폰 할인'}</h3>
                         <ButtonBase
                             className={styles['coupon']}
                             onClick={openCouponModal}
                         >
                             {selectedCoupon.cp_subject}
                         </ButtonBase>
-                    </div>
+                    </section>
                     <Point
                         totalPrice={
                             getRentalPrice(parkingInfo) -
@@ -350,7 +350,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         setCheck={setAgreeCheck}
                     ></CheckBox>
                 </div>
-            </div>
+            </main>
             <FixedButton
                 button_name={`${numberFormat(totalPrice)}원 결제`}
                 disable={!finalCheck}

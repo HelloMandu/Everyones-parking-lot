@@ -22,19 +22,19 @@ const ParkingItem = ({ status, image, title, start, end, price }) => {
             />
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
-                    <div className={cx('status', { status })}>
+                    <span className={cx('status', { status })}>
                         {status === 0 ? '대여중' : '대여종료'}
-                    </div>
-                    <div className={styles['title']}>{title}</div>
+                    </span>
+                    <h3 className={styles['title']}>{title}</h3>
                 </div>
                 <div className={styles['description']}>
-                    <div className={styles['schedule']}>
+                    <span className={styles['schedule']}>
                         {getFormatDateTime(start)}
                         <span>부터</span>
                         <br />
                         {getFormatDateTime(end)}
                         <span>까지 운영</span>
-                    </div>
+                    </span>
                     <div className={styles['per-price']}>
                         <div className={styles['per']}>30분당</div>
                         <div className={styles['price']}>{price}원</div>
@@ -49,7 +49,7 @@ const ParkingManageContainer = () => {
     const allParkingList = useRef(null);
     const dataLength = useRef(0);
     const [parkingList, setParkingList] = useState([]);
-    const fetchParkingList = () => {
+    const fetchParkingList = useCallback(() => {
         const allLength = allParkingList.current.length;
         const length = dataLength.current;
         if (length >= allLength) {
@@ -57,12 +57,8 @@ const ParkingManageContainer = () => {
         }
         const fetchData = allParkingList.current.slice(length, length + 3);
         setParkingList((parkingList) => parkingList.concat(fetchData));
-        if(dataLength.current + 3 >= allLength){
-            dataLength.current = allLength;
-        } else{
-            dataLength.current += 3;
-        }
-    };
+        dataLength.current += 3;
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -71,7 +67,6 @@ const ParkingManageContainer = () => {
                     window.innerHeight + document.documentElement.scrollTop,
                 ) === document.documentElement.offsetHeight;
             if (endPoint) {
-                console.log(endPoint);
                 fetchParkingList();
             }
         };

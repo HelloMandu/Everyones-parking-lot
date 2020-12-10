@@ -44,7 +44,6 @@ const PaymentCompleteContainer = ({ location }) => {
     } = order;
     const { place_name, place_images, place_fee } = place;
     const { phone_number } = user;
-    console.log(data);
     return (
         <>
             <div className={styles['gradient']}></div>

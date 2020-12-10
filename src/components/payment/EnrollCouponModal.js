@@ -64,7 +64,7 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'적용쿠폰선택'}></Header>
-            <div className={styles['enroll-coupon']}>
+            <main className={styles['enroll-coupon']}>
                 <Coupon
                     list={couponList}
                     onClick={handleCouponApply}
@@ -75,7 +75,7 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
                     disable={!useCoupon}
                     onClick={handleEnrollCoupon}
                 ></FixedButton>
-            </div>
+            </main>
         </Dialog>
     );
 };
