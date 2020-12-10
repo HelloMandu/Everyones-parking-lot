@@ -1,72 +1,98 @@
 @import '../../../static/stylesheets/Root.scss';
 
 .container{
-    @include container(0px);
-    padding-bottom: 80px;
-    .show-area{
-        position: relative;
-        width: 100%; height: 196px;
-        background: url(../../../static/asset/png/point_background.png);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        .button{
-            padding-top: $pd-top;
-            height: 96px;
+    // @include container(0px);
+    max-width: $max-width;
+    min-width: $min-width;
+    margin: 0 auto;
+    .fixed{
+        max-width: $max-width;
+        min-width: $min-width;
+        width: 100%;
+        height: 196px;
+        position: fixed;
+        z-index: 1000;
+        .show-area{
             position: relative;
-            svg{
-                position: absolute;
-                right: $padding;
-                width: 12px; height: 12px;
-                g{
-                    line{
-                        stroke: #fff;
-                        stroke-width: 2;
+            width: 100%; height: 100%;
+            background: url(../../../static/asset/png/point_background.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            .button{
+                padding-top: $pd-top;
+                height: 96px;
+                position: relative;
+                .btn{
+                    display: block;
+                }
+                svg{
+                    position: absolute;
+                    right: $padding;
+                    width: 12px; height: 12px;
+                    g{
+                        line{
+                            stroke: #fff;
+                            stroke-width: 2;
+                        }
                     }
                 }
             }
-        }
-        .content{
-            position: absolute;
-            bottom: 35px;
-            padding: 0 $padding;
-            color: white;
-            .mypoint{
-                font-size: 1.333rem; // 16px;
-                font-weight: 400; // Regular
+            .content{
+                position: absolute;
+                bottom: 35px;
+                padding: 0 $padding;
+                color: white;
+                .mypoint{
+                    font-size: 1.333rem; // 16px;
+                    font-weight: 400; // Regular
+                }
+                .total_point{
+                    margin-top: 10px;
+                    font-size: 2.667rem; // 32px;
+                    font-weight: bold;
+                }
             }
-            .total_point{
-                margin-top: 10px;
-                font-size: 2.667rem; // 32px;
-                font-weight: bold;
+            .withdraw{
+                width: 80px; height: 32px;
+                position: absolute;
+                bottom: 38px; right: $padding;
+                color: #fff;
+                background-color: inherit;
+                font-size: 1.167rem; // 14px;
+                font-weight: 500; // Medium
+                border: 1px solid #C9C9C9;
+                border-radius: 24px;
             }
-        }
-        .withdraw{
-            width: 80px; height: 32px;
-            position: absolute;
-            bottom: 38px; right: $padding;
-            color: #fff;
-            background-color: inherit;
-            font-size: 1.167rem; // 14px;
-            font-weight: 500; // Medium
-            border: 1px solid #C9C9C9;
-            border-radius: 24px;
         }
     }
     .point-area{
-        padding: 0 $padding;
+        padding-top: 196px;
+        padding-bottom: 80px;
         .point-text{
+            max-width: $max-width;
+            min-width: $min-width;
+            padding: 0 $padding;
+            background-color: #FFF;
             width: 100%;
-            margin-top: 32px; margin-bottom: 25px;
+            padding-top: 32px; margin-bottom: 25px;
             font-size: 1.5rem; // 18px;
             font-weight: bold;
-            padding-bottom: 22px;
-            border-bottom: 1px solid #E9EBED;
+            position: fixed;
+            z-index: 1000;
+            .under-line{
+                padding-top: 22px;
+                border-bottom: 1px solid #E9EBED;
+            }
+        }
+        & > ul {
+            padding-top: 101px;
         }
     }
 }
 
 .point-item{
+    padding: 0 $padding;
     .point-wrap{
         width: 100%; height: 80px;
         margin: 0 auto;
