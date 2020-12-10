@@ -18,7 +18,7 @@ export const requestPostWirteFAQ = async (question, answer, faq_type) => {
     return response.data;
 }
 
-export const requestGetFAQList = async (faq_type) => {
+export const requestGetFAQList = async (URL, faq_type) => {
     /*
         자주 묻는 질문 리스트 요청 API(GET): /api/faq
 
@@ -26,8 +26,7 @@ export const requestGetFAQList = async (faq_type) => {
 
         * 응답: faqs = [자주 묻는 질문 Array...]
     */
-    const URL = Paths.api + 'faq';
-    const response = await axios.get(URL, { params: { faq_type } });
+    const response = await axios.get(Paths.api + URL, { params: { faq_type } });
 
     return response.data;
 }

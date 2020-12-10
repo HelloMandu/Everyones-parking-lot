@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { lazy, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
+import useSWR from 'swr';
 
-import useLoading from '../../../hooks/useLoading';
-import { useDialog } from '../../../hooks/useDialog';
 import { requestGetMyParkingList } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
@@ -15,11 +14,12 @@ import styles from './ParkingManageContainer.module.scss';
 const cx = cn.bind(styles);
 
 const ParkingItem = ({ status, image, title, start, end, price }) => {
+    const lazyImage = lazy(() => import(`${Paths.storage}${image}`));
     return (
         <>
             <div
                 className={styles['parking-image']}
-                style={{ backgroundImage: `url(${Paths.storage}${image})` }}
+                style={{ backgroundImage: `${lazyImage}` }}
             />
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
@@ -47,24 +47,31 @@ const ParkingItem = ({ status, image, title, start, end, price }) => {
 };
 
 const ParkingManageContainer = () => {
-    const [parkingList, setParkingList] = useState([]);
-    const [onLoading, offLoading] = useLoading();
-    const openModal = useDialog();
+    const history = useHistory();
+    const { data, error } = useSWR(
+        localStorage.getItem('user_id'),
+        requestGetMyParkingList,
+    );
     useEffect(() => {
-        const getParkingList = async () => {
-            onLoading('parking/manage');
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            const { data } = await requestGetMyParkingList(JWT_TOKEN);
-            if (data.msg === 'success') {
-                setParkingList(data.places);
-            } else {
-                openModal('요청 실패', '정보를 불러오는데 실패했습니다');
+        const handleScroll = () => {
+            if (
+                Math.ceil(
+                    window.innerHeight + document.documentElement.scrollTop,
+                ) === document.documentElement.offsetHeight
+            ) {
+                console.log('endpoint');
             }
-            offLoading('parking/manage');
         };
-        getParkingList();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+    if (error) {
+        history.goBack(); // 에러페이지
+        return null;
+    } else if (!data) {
+        return null;
+    }
+    const parkingList = data.data.places;
     return (
         <div className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>
