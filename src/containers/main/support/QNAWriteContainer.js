@@ -146,7 +146,7 @@ const QNAWriteContainer = () => {
                         <div className={styles['text']}>이메일</div>
                         <InputBox
                             className={'input-bar'}
-                            type={'text'}
+                            type={'email'}
                             value={email}
                             placeholder={'이메일을 입력해주세요.'}
                             onChange={onChangeEmail}

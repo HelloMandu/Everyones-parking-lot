@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import classnames from 'classnames/bind';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import classnames from 'classnames/bind';
 import { ButtonBase, Backdrop, makeStyles } from '@material-ui/core';
 /* Library */
 
@@ -19,12 +20,23 @@ import { useDialog } from '../../../hooks/useDialog';
 import { Paths } from '../../../paths';
 /* Paths */
 
+import { numberFormat } from '../../../lib/formatter';
+/* Lib */
+
 import { requestGetMyPoint } from '../../../api/point';
+import { requestPostWithdraw } from '../../../api/withdraw';
 /* api */
 
 const cn = classnames.bind(styles);
 const card = [
-    '은행선택',
+    'KB국민은행',
+    '신한은행',
+    '하나은행',
+    '우리은행',
+    'IBK기업은행',
+    'NH농협은행',
+    'KDB산업은행',
+    'SC제일은행',
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -37,14 +49,32 @@ const useStyles = makeStyles((theme) => ({
 
 const WithdrawModal = ({ click, setClick }) => {
 
+    const classes = useStyles();
+    const openDialog = useDialog();
+
+    // const [bank, onChangeBank] = useInput('');
     const [account, onChangeAccount] = useInput('');
     const [price, onChangePrice] = useInput('');
-    const classes = useStyles();
 
-    const onClickButton = () => {
-        alert("출금 신청")
-        setClick(false);
-    }
+    const [check, setCheck] = useState(false);
+
+    const onClickButton = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (parseInt(price) <= 0) {
+            openDialog("0포인트 이하 액수를 출금할 수 없습니다.");
+        }
+        const response = await requestPostWithdraw(JWT_TOKEN, account, price);
+        if (response.msg === 'success') {
+            openDialog("출금이 완료되었습니다.", "", () => { setClick(false); onChangeAccount(); onChangePrice(); });
+        } else {
+            openDialog(response.msg);
+        }
+    }, [account, price, openDialog, setClick, onChangeAccount, onChangePrice]);
+
+    useEffect(() => {
+        if (account && price) setCheck(true);
+        else setCheck(false);
+    }, [account, price])
 
     return (
         <>
@@ -56,7 +86,8 @@ const WithdrawModal = ({ click, setClick }) => {
                     <div className={styles['account-text']}>계좌 정보</div>
                     <div className={styles['account-area']}>
                         <div className={styles['account-select']}>
-                            <select className={styles['select']}>
+                            <select className={styles['select']} defaultValue={'defalut'}>
+                                <option disabled value='defalut'>은행 선택</option>
                                 {card.map((item) => (
                                     <option key={item}>{item}</option>
                                 ))}
@@ -65,7 +96,7 @@ const WithdrawModal = ({ click, setClick }) => {
                         <div className={styles['account-text']}>
                             <InputBox
                                 className={'input-box'}
-                                type={'text'}
+                                type={'number'}
                                 value={account}
                                 placeholder={'계좌번호 입력'}
                                 onChange={onChangeAccount}
@@ -78,16 +109,16 @@ const WithdrawModal = ({ click, setClick }) => {
                     <div className={styles['price-area']}>
                         <InputBox
                             className={'input-box'}
-                            type={'text'}
+                            type={'number'}
                             value={price}
                             onChange={onChangePrice}
                         />
                         <span>원</span>
                     </div>
                 </div>
-                <BasicButton button_name="출금 신청" disable={false} onClick={onClickButton} />
+                <BasicButton button_name="출금 신청" disable={!check} onClick={onClickButton} />
             </div>
-            <Backdrop className={classes.backdrop} open={click} onClick={() => setClick(!click)} />
+            <Backdrop className={classes.backdrop} open={click} onClick={() => { setClick(!click); onChangeAccount(); onChangePrice(); }} />
         </>
     )
 }
@@ -108,25 +139,23 @@ const MyPointContainer = () => {
 
     const history = useHistory();
     const openDialog = useDialog();
+    const getUserInfo = useSelector(state => state.user);
+
     const [click, setClick] = useState(false);
 
     const getPointList = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
-        if (JWT_TOKEN) {
-            const response = await requestGetMyPoint(JWT_TOKEN);
-            console.log(response);
-        } else {
-            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
-        }
-    }, [history, openDialog])
+        const response = await requestGetMyPoint(JWT_TOKEN);
+        console.log(response);
+    }, [])
 
     useEffect(() => {
         try {
             getPointList();
         } catch (e) {
-            console.log('pointList 오류')
+            openDialog("수익금 오류", "", () => history.goBack());
         }
-    }, [getPointList]);
+    }, [getPointList, history, openDialog, click]);
 
     return (
         <>
@@ -135,7 +164,7 @@ const MyPointContainer = () => {
                     <div className={styles['button']}><XIcon /></div>
                     <div className={styles['content']}>
                         <div className={styles['mypoint']}>나의 수익금</div>
-                        <div className={styles['total_point']}>35,000 P</div>
+                        <div className={styles['total_point']}>{numberFormat(getUserInfo.point)} P</div>
                     </div>
                     <ButtonBase className={styles['withdraw']} onClick={() => setClick(true)}>출금 신청</ButtonBase>
                 </div>
