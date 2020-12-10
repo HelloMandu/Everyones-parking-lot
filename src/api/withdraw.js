@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { Paths } from '../paths';
 
-export const requestPostWithdraw = async (JWT_TOKEN, account_number, withdraw_point) => {
+export const requestPostWithdraw = async (JWT_TOKEN, bank_name, account_number, withdraw_point) => {
     /*
         출금 신청 API(POST): /api/withdraw
         { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -18,7 +18,7 @@ export const requestPostWithdraw = async (JWT_TOKEN, account_number, withdraw_po
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     };
-    const response = await axios.post(URL, { account_number, withdraw_point }, config);
+    const response = await axios.post(URL, { bank_name, account_number, withdraw_point }, config);
 
     return response.data;
 }
