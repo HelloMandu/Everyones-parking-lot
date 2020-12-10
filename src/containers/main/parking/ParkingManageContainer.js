@@ -1,4 +1,4 @@
-import React, { lazy, useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
@@ -12,29 +12,54 @@ import styles from './ParkingManageContainer.module.scss';
 
 const cx = cn.bind(styles);
 
-const ParkingItem = ({ status, image, title, start, end, price }) => {
-    const lazyImage = lazy(() => import(`${Paths.storage}${image}`));
+const Image = ({ className, src, threshold = 0.5 }) => {
+    const imgRef = useRef(null);
+    const observerRef = useRef(null);
+    const [isLoad, setIsLoad] = useState(false);
+    const onIntersection = (entries, io) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                io.unobserve(entry.target);
+                setIsLoad(true);
+            }
+        });
+    };
+    useEffect(() => {
+        if (!observerRef.current) {
+            observerRef.current = new IntersectionObserver(onIntersection, {
+                threshold: threshold,
+            });
+        }
+        imgRef.current && observerRef.current.observe(imgRef.current);
+    }, [threshold]);
+    return (
+        <div
+            className={className}
+            ref={imgRef}
+            style={{ backgroundImage: `url(${isLoad ? src : ''})` }}
+        />
+    );
+};
+
+const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     return (
         <>
-            <div
-                className={styles['parking-image']}
-                style={{ backgroundImage: `${lazyImage}` }}
-            />
+            <Image className={styles['parking-image']} src={`${Paths.storage}${image}`} threshold={0.3}></Image>
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <span className={cx('status', { status })}>
                         {status === 0 ? '대여중' : '대여종료'}
                     </span>
-                    <h3 className={styles['title']}>{title}</h3>
+                    <h2 className={styles['title']}>{title}</h2>
                 </div>
                 <div className={styles['description']}>
-                    <span className={styles['schedule']}>
+                    <div className={styles['schedule']}>
                         {getFormatDateTime(start)}
                         <span>부터</span>
                         <br />
                         {getFormatDateTime(end)}
                         <span>까지 운영</span>
-                    </span>
+                    </div>
                     <div className={styles['per-price']}>
                         <div className={styles['per']}>30분당</div>
                         <div className={styles['price']}>{price}원</div>
@@ -43,10 +68,10 @@ const ParkingItem = ({ status, image, title, start, end, price }) => {
             </div>
         </>
     );
-};
+});
 
 const ParkingManageContainer = () => {
-    const allParkingList = useRef(null);
+    const allParkingList = useRef([]);
     const dataLength = useRef(0);
     const [parkingList, setParkingList] = useState([]);
     const fetchParkingList = useCallback(() => {
