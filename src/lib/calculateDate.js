@@ -85,6 +85,24 @@ export const getFormatDateTime = (formatted) => {
     return `${getFormatNewDate(formatted)} ${getFormatNewTime(formatted)}`
 };
 
+// 2020-00-00 00:00:00
+export const getFormatDateDetailTime = (formatted) => {
+    const formatDate = new Date(formatted);
+    const year = formatDate.getFullYear();
+    let month = formatDate.getMonth() + 1;
+    month = month >= 10 ? month : `0${month}`;
+    let date = formatDate.getDate();
+    date = date >= 10 ? date : `0${date}`;
+    let hour = formatDate.getHours();
+    hour = hour >= 10 ? hour : `0${hour}`;
+    let minute = formatDate.getMinutes();
+    minute = minute >= 10 ? minute : `0${minute}`;
+    let second = formatDate.getSeconds();
+    second = second >= 10 ? second : `0${second}`;
+    return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+};
+
+// 2020/00/00
 export const getFormatDateNanTime = (formatted) => {
     const formatDate = new Date(formatted);
     const year = formatDate.getFullYear();
@@ -94,6 +112,7 @@ export const getFormatDateNanTime = (formatted) => {
     return `${year}/${month}/${date}`;
 };
 
+// 2020년 0월 0일
 export const getFormatDateString = (formatted) => {
     const formatDate = new Date(formatted);
     const year = formatDate.getFullYear();
