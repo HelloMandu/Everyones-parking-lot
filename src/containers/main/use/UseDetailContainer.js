@@ -49,6 +49,7 @@ const UseDetailContainer = ({ location }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const [order, setOrder] = useState({});
+    const [review, setReview] = useState()
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -67,10 +68,11 @@ const UseDetailContainer = ({ location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
-        const { msg, order, prev_order } = await requestGetDetailUseRental(id);
+        const { msg, order, review, prev_order } = await requestGetDetailUseRental(id);
 
         if (msg === 'success') {
             setOrder(order, prev_order);
+            setReview(review)
         } else {
             openDialog(msg);
         }
@@ -151,7 +153,7 @@ const UseDetailContainer = ({ location }) => {
                                 <Tel />
                             </Button>
                             <Link to={Paths.main.review.write + `?id=${id}`}>
-                                <Button name={'리뷰 작성 하기'}>
+                                <Button name={`리뷰 ${review ? '수정' : '작성'} 하기`}>
                                     <MessageBox />
                                 </Button>
                             </Link>

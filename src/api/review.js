@@ -16,7 +16,16 @@ export const requestPostWriteReview = async (
     // review_rating: 리뷰 평점
 
     const URL = Paths.api + 'review';
-    const response = await axios.post(URL);
+    const response = await axios.post(URL, {
+        rental_id,
+        place_id,
+        review_body,
+        review_rating
+    }, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
@@ -32,8 +41,15 @@ export const requestPutModifyReview = async (
     // review_body: 수정할 리뷰 내용
     // review_rating: 수정할 리뷰 평점
 
-    const URL = Paths.api + 'review/:review_id';
-    const response = await axios.put(URL);
+    const URL = Paths.api + `review/${review_id}`;
+    const response = await axios.put(URL, {
+        review_body,
+        review_rating
+    },{
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
