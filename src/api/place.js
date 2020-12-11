@@ -3,6 +3,41 @@ import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
+export const requsetGetSampleDate  = ()=>{
+    // const url ='http://apis.map.kakao.com/download/web/data/chicken.json';
+    // const res = await axios.get(url);
+    // console.log(res);
+    const markerdata = [
+        {
+            title: '승학주차장',
+            distance: 300,
+            lat: 35.1158949746728,
+            lng: 128.966901860943,
+        },
+        {
+            title: '하남돼지집',
+            distance: 300,
+            lat: 37.620842424005616,
+            lng: 127.1583774403176,
+        },
+        {
+            title: '수유리우동',
+            distance: 300,
+            lat: 37.624915253753194,
+            lng: 127.15122688059974,
+        },
+        {
+            title: '맛닭꼬',
+            distance: 300,
+            lat: 37.62456273069659,
+            lng: 127.15211256646381,
+        },
+    ];
+
+    return markerdata;
+    
+}
+
 export const requestGetParkingList = async (
     lat,
     lng,
@@ -25,7 +60,10 @@ export const requestGetParkingList = async (
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place';
-    const response = await axios.get(URL);
+    const params={
+        lat,lng,range:1000,
+    }
+    const response = await axios.get(URL,{params});
 
     return response;
 };
@@ -47,8 +85,10 @@ export const requestGetDetailParking = async (place_id) => {
 
     // * 응답: place: 주차공간 데이터 Object(리뷰 리스트 데이터도 포함)
 
-    const URL = Paths.api + 'place/:place_id';
+    const URL = Paths.api + `place/${place_id}`;
+
     const response = await axios.get(URL);
+    console.log(response)
 
     return response;
 };
@@ -222,3 +262,17 @@ export const requestGetAddressInfo = async (address) => {
     });
     return response;
 };
+
+export const requsetGetAreaInfo = async (lat,lng)=>{
+    const URL = 'https://dapi.kakao.com/v2/local/geo/coord2address.json';
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `KakaoAK d747c230bfd2f62cfcf8accd952285b8`,
+        },
+        params: {
+            y:lat,
+            x:lng
+        },
+    });
+    return response;
+}
