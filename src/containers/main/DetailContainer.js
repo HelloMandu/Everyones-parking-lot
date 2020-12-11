@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory,useLocation } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
@@ -29,21 +29,42 @@ import { requestGetDetailParking } from '../../api/place';
 
 //lib
 import { getFormatDay } from '../../lib/calculateDate';
-import { getFormatDateTime } from '../../lib/calculateDate';
+import { getFormatDateTime,calculatePrice } from '../../lib/calculateDate';
 import { numberFormat } from '../../lib/formatter';
 
 //hooks
 import useLoading from '../../hooks/useLoading';
+import useModal from '../../hooks/useModal';
 
 const cx = cn.bind(styles);
 const DetailContainer = ({ modal, place_id }) => {
 
     const history = useHistory();
+    const location = useLocation();
+  
+    const [openDatePicker, onClickDatePicker] = useModal(
+        location.pathname,
+        modal,
+        `datapicker?place_id=${place_id}`,
+    );
+    const [openLoadview, onClickRoadview] = useModal(
+        location.pathname,
+        modal,
+        `roadview?place_id=${place_id}`,
+    );
+    const [openNav, onClickNav] = useModal(
+        location.pathname,
+        modal,
+        `nav?place_id=${place_id}`,
+    );
+
     const [loading, setLoading] = useState(false);
     const [onLoading, offLoading] = useLoading();
     const [index, setIndex] = useState(0);
-    const [start_date, setStartDate] = useState(0);
-    const [end_date, setEndDate] = useState(0);
+    const [start_date, setStartDate] = useState(null);
+    const [end_date, setEndDate] = useState(null);
+    const [total_date , setTotalDate] = useState(0);
+    const [price,setPrice] = useState(0);
     const [place, setPlace] = useState(null);
     const [likes, setLike] = useState(0);
     const [reviews, setReviews] = useState([]);
@@ -67,9 +88,11 @@ const DetailContainer = ({ modal, place_id }) => {
         offLoading('detail');
         setLoading(false);
     }
-    const onClickSetDate = (start_date, end_date) => {
+    const onClickSetDate = (start_date, end_date,total_date) => {
         setStartDate(start_date);
         setEndDate(end_date);
+        setTotalDate(total_date);
+        console.log(total_date);
     }
 
     // 카카오 내비게이션 실행
@@ -87,21 +110,15 @@ const DetailContainer = ({ modal, place_id }) => {
         callGetDetailParking();
     }, [])
 
-    useEffect(() => {
-        let start = new Date();
-        let end = new Date();
-        end.setFullYear(start.getFullYear());
-        end.setMonth(start.getMonth());
-        end.setDate(start.getDate() + 1);
-        setStartDate(getFormatDay(start));
-        setEndDate(getFormatDay(end));
-    }, [])
+    useEffect(()=>{
+        if(total_date){
+            setPrice(calculatePrice(total_date,place.place_fee));
+        }
+    },[total_date,place])
 
-    useEffect(() => {
+    useEffect(()=>{
         console.log(start_date);
-        console.log(end_date);
-    }, [start_date, end_date])
-
+    },[start_date])
 
 
     // const createKakaoButton = () => {
@@ -174,11 +191,11 @@ const DetailContainer = ({ modal, place_id }) => {
                             <CircleButton src={shared_icon} txt={"공유"} />
                             <CircleButton src={guid_icon} txt={"안내"} onClick={
                                 () => {
-                                    history.push(Paths.main.detail + '/nav');
+                                    // history.push(Paths.main.detail + '/nav');
                                     onClickKakaoNavi();
                                 }
                             } />
-                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={() => history.push(Paths.main.detail + '/roadview')} />
+                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={onClickRoadview} />
                         </div>
                     </div>
                 </div>
@@ -195,8 +212,8 @@ const DetailContainer = ({ modal, place_id }) => {
                     <div className={cx('shared-time', 'space-between')}>
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
-                            {start_date.DAY} ~ {end_date.DAY}
-                            <ButtonBase className={styles['date-picker']} onClick={() => history.push(Paths.main.detail + '/datepicker')}>
+                            { (start_date&& end_date) ? start_date.DAY +' ~ ' +end_date.DAY : '대여시간을 설정해주세요'} 
+                            <ButtonBase className={styles['date-picker']} onClick={onClickDatePicker}>
                                 <img src={datepicker_icon} alt="date" />
                             </ButtonBase>
                         </div>
@@ -250,19 +267,26 @@ const DetailContainer = ({ modal, place_id }) => {
                 </div>
             </div>
             <DatePickerModal
-                open={modal === "datepicker"}
+                open={openDatePicker}
                 handleClose={() => history.goBack()}
                 start_date={start_date}
                 end_date={end_date}
+                oper_start={place && place.oper_start_time}
+                oper_end={place && place.oper_end_time}
                 onClick={onClickSetDate}
             />
-            <LikeButton like={likes} button_name={'12,000원 대여신청'} disable={false} onClick={() => history.push(Paths.main.payment)} />
+            <LikeButton 
+                like={likes} 
+                button_name={(start_date && end_date) ? `${numberFormat(price)}원 대여신청` : '대여시간을 설정해주세요'} 
+                disable={start_date ? false : true} 
+                onClick={() => history.push(Paths.main.payment +`?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`)} 
+            />
             <RoadviewModal
-             open={modal === "roadview"} 
-             handleClose={() => history.goBack()} 
-             title={place && place.place_name} 
-             lat ={place && place.lat}
-             lng = {place && place.lng}
+                open={openLoadview} 
+                handleClose={() => history.goBack()} 
+                title={place && place.place_name} 
+                lat ={place && place.lat}
+                lng = {place && place.lng}
              />
         </div>
     );

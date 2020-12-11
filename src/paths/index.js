@@ -1,3 +1,5 @@
+// const API_SERVER ='http://localhost:8080';
+const API_SERVER= 'https://intospace.kr';
 export const Paths = {
     index: '/',
     main: {
@@ -70,8 +72,8 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/api/',
-    storage: 'http://localhost:8080/uploads/',
+    api: API_SERVER +'/api/',
+    storage: API_SERVER+'/uploads/',
 };
 
 export const HeaderTitle = {

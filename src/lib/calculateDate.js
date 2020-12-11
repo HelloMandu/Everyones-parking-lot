@@ -20,6 +20,14 @@ export const calculateDate = (start_date, end_date, start_time , end_time)  => {
 
 };
 
+export const calculatePrice=(total_date,place_fee)=>{
+    const {day,hour,minute} = total_date;
+    const day_price = day * 24 * 2 *place_fee;
+    const hour_price = hour * 2 * place_fee;
+    const minute_price = Math.ceil(minute/30) * place_fee;
+    return (day_price + hour_price + minute_price);
+}
+
 // yyyy/mm/dd hh:mm  -> yyyy/mm/dd(화) hh:mm 로 포멧팅
 export const calculateDay = (date) => {
     date = date.replace(/-/gi, '/');
