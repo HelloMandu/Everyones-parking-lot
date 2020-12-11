@@ -7,21 +7,16 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 
-import { Paths } from '../../../paths';
-
-import {
-    requestGetAddressInfo,
-    requestPostEnrollParking,
-} from '../../../api/place';
+import { requestGetAddressInfo } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
-import { useDialog } from '../../../hooks/useDialog';
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
+import useModal from '../../../hooks/useModal';
 
+import ParkingPreviewModal from './ParkingPreviewModal';
 import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
@@ -268,11 +263,11 @@ const OperatingTime = forwardRef((props, ref) => {
         }
         setMinuteList(newMinuteList);
     }, []);
-    useEffect(()=>{
+    useEffect(() => {
         setStartTimeFormat(
             `${startTime.day} ${startTime.hour}:${startTime.minute}`,
         );
-    }, [startTime])
+    }, [startTime]);
     useEffect(() => {
         setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
     }, [endTime]);
@@ -423,7 +418,8 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
     );
 });
 
-const ParkingEnrollContainer = () => {
+const ParkingEnrollContainer = ({ match }) => {
+    const { url, params } = match;
     const [checkAll, setCheckAll] = useState(false);
     const [checkBasicInfo, setCheckBasicInfo] = useState(false);
     const [checkParkingPicture, setCheckParkingPicture] = useState(false);
@@ -433,38 +429,16 @@ const ParkingEnrollContainer = () => {
     const extraInfo = useRef(null);
     const parkingPicture = useRef(null);
 
-    const openDialog = useDialog();
-    const history = useHistory();
+    const [isOpenPreview, openPreviewModal] = useModal(
+        url,
+        params.modal,
+        `preview`,
+    );
 
-    const onClickEnrollParking = useCallback(async () => {
-        if (checkAll) {
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestPostEnrollParking(JWT_TOKEN, {
-                addr: basicInfo.current.address,
-                addr_detail: basicInfo.current.addressDetail,
-                post_num: basicInfo.current.postNum,
-                place_type: basicInfo.current.type,
-                lat: basicInfo.current.lat,
-                lng: basicInfo.current.lng,
-                place_name: basicInfo.current.name,
-                place_comment: extraInfo.current.extraInfo,
-                place_images: parkingPicture.current.fileList,
-                place_fee: basicInfo.current.price,
-                oper_start_time: operatingTime.current.startTimeFormat,
-                oper_end_time: operatingTime.current.endTimeFormat,
-            });
-            if (response.data.msg === 'success') {
-                openDialog('등록완료', '주차공간 등록을 완료했습니다');
-                history.replace(Paths.main.parking.manage);
-            } else {
-                openDialog('등록실패', '주차공간 등록에 실패했습니다');
-            }
-        }
-    }, [checkAll, history, openDialog]);
-
-    useEffect(() => {
-        setCheckAll(checkBasicInfo && checkParkingPicture);
-    }, [checkBasicInfo, checkParkingPicture]);
+    useEffect(() => setCheckAll(checkBasicInfo && checkParkingPicture), [
+        checkBasicInfo,
+        checkParkingPicture,
+    ]);
     return (
         <>
             <main className={styles['parking-enroll-container']}>
@@ -481,11 +455,32 @@ const ParkingEnrollContainer = () => {
                     ref={parkingPicture}
                 ></ParkingPicture>
             </main>
-            <FixedButton
-                button_name={'작성완료'}
-                disable={!checkAll}
-                onClick={onClickEnrollParking}
-            ></FixedButton>
+            {!isOpenPreview && (
+                <FixedButton
+                    button_name={'작성완료'}
+                    disable={!checkAll}
+                    onClick={openPreviewModal}
+                ></FixedButton>
+            )}
+            <ParkingPreviewModal
+                open={isOpenPreview}
+                parkingInfo={
+                    checkAll && {
+                        addr: basicInfo.current.address,
+                        addr_detail: basicInfo.current.addressDetail,
+                        post_num: basicInfo.current.postNum,
+                        place_type: basicInfo.current.type,
+                        lat: basicInfo.current.lat,
+                        lng: basicInfo.current.lng,
+                        place_name: basicInfo.current.name,
+                        place_comment: extraInfo.current.extraInfo,
+                        place_images: parkingPicture.current.fileList,
+                        place_fee: basicInfo.current.price,
+                        oper_start_time: operatingTime.current.startTimeFormat,
+                        oper_end_time: operatingTime.current.endTimeFormat,
+                    }
+                }
+            ></ParkingPreviewModal>
         </>
     );
 };

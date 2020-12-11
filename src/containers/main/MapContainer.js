@@ -413,7 +413,7 @@ const MapContainer = ({ modal }) => {
                     }}
                 />
                 <ParkingItem
-                    onClick={() => history.push(Paths.main.detail + '?id=1')}
+                    onClick={() => history.push(Paths.main.detail + '?place_id=1')}
                     view={on_slide}
                     slide_list={slide_list}
                 />
