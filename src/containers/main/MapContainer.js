@@ -99,6 +99,7 @@ const MapContainer = ({ modal }) => {
                 duration: 300,
             },
         });
+        console.log(level);
         dispatch(set_level(level));
     };
 
@@ -234,9 +235,7 @@ const MapContainer = ({ modal }) => {
                 position_ref.current.lat,
                 position_ref.current.lng,
             );
-            // let content = `<div onClick ={()=>${history.push('/')} class="custom-overlay" title=${JSON.stringify(el)} ><span>${distance}Km</span></div>`;
-
-            let content = `<a href="${Paths.main.detail}?place_id=${el.place_id}" class="custom-overlay" title=${JSON.stringify(el)} ><span>${distance}Km</span></a>`;
+            let content = `<div onclick="onClickOverlay(${el.place_id})" class="custom-overlay" title=${JSON.stringify(el)} ><span>${distance}Km</span></div>`;
             var customOverlay = new kakao.maps.CustomOverlay({
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
@@ -252,6 +251,7 @@ const MapContainer = ({ modal }) => {
         cluster_marker.current.addMarkers(data);
         kakao.maps.event.addListener(  cluster_marker.current, 'clusterclick', function(cluster) {
             const overlays = cluster.getMarkers();
+            console.log(overlays);
 
             if(overlays.length > 10){
                 var level = map.getLevel()-1;
@@ -262,17 +262,21 @@ const MapContainer = ({ modal }) => {
            
                 const slides = overlays.map((overlay) => {
                     const data = overlay.getContent();
-                    const t_index = data.indexOf('title');
+                    console.log(data);
+                    const t_index = data.indexOf('title=');
+                    console.log(t_index);
                     const close_index = data.indexOf('>');
-                    const str = data.substring(t_index, close_index);
-                    const return_data = str.substring(data.indexOf('=') - 1);
-                    return JSON.parse(return_data);
+                    const str = data.substring(t_index+6, close_index);
+                    return JSON.parse(str);
                 });
                 setSlideList(slides);
                 setOnSlide(slide_view.current);
             }
 
         });
+        window.onClickOverlay = (place_id) => {
+            history.push(Paths.main.detail+'?place_id='+place_id);
+        }
 
         offLoading('parking/GET_LIST');
     }
@@ -293,13 +297,16 @@ const MapContainer = ({ modal }) => {
             level: level !== 0 ? level : map_lev.current,
         };
         const map = new kakao.maps.Map(container, options);
+        map.setMaxLevel(10);
         kakao_map.current = map;
 
     };
 
+ 
     useEffect(() => {
+        const {lat,lng} = position_ref.current; 
         mapRender();
-        const {lat,lng} = position_ref.current;
+        createParkingMarker();
         dispatch(get_list({lat,lng,range :3000} ));
         dispatch(get_area({lat,lng}));
     }, []);

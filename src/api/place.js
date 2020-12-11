@@ -85,8 +85,10 @@ export const requestGetDetailParking = async (place_id) => {
 
     // * 응답: place: 주차공간 데이터 Object(리뷰 리스트 데이터도 포함)
 
-    const URL = Paths.api + 'place/:place_id';
+    const URL = Paths.api + `place/${place_id}`;
+
     const response = await axios.get(URL);
+    console.log(response)
 
     return response;
 };
