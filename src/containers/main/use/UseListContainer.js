@@ -13,6 +13,7 @@ import { rentalStatus } from '../../../lib/rentalStatus';
 
 import classNames from 'classnames/bind';
 import styles from './UseListContainer.module.scss';
+import Notice from '../../../static/asset/svg/Notice';
 
 const cx = classNames.bind(styles);
 
@@ -33,7 +34,8 @@ const UseListContainer = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
+    return(
+    list.length !== 0 ? 
         <div className={cx('container')}>
             {list.map((item) => (
                 <Link
@@ -53,7 +55,16 @@ const UseListContainer = () => {
                 </Link>
             ))}
         </div>
-    );
+     : 
+        <div className={styles['non-qna']}>
+            <div className={styles['non-container']}>
+                <Notice />
+                <div className={styles['explain']}>
+                    이용내역이 없습니다.
+                </div>
+            </div>
+        </div>
+    )
 };
 
 export default UseListContainer;

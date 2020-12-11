@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import qs from 'qs';
+import { useHistory } from 'react-router-dom'
 
 import BasicButton from '../../../components/button/BasicButton';
 import PaymentTypeModal from '../../../components/payment/PaymentTypeModal';
@@ -20,6 +21,7 @@ import classNames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 import styles from './UseExtendContainer.module.scss';
 import Information from '../../../static/asset/svg/Information';
+import { Paths } from '../../../paths';
 
 const cx = classNames.bind(styles);
 
@@ -75,6 +77,7 @@ const UseExtendContainer = ({ match, location }) => {
     });
 
     const { id } = query;
+    const history = useHistory()
 
     const [isOpenTypeModal, openTypeModal] = useModal(
         url,
@@ -121,14 +124,11 @@ const UseExtendContainer = ({ match, location }) => {
 
     const onClickExtendPayment = useCallback(
         async (rental_id, extensionPrice, type, endTime, card_id) => {
-            console.log(checkPhone)
-            console.log(type !== -1)
-            console.log(checked)
             if (!(checkPhone && type !== -1 && checked))
                 return;
             else {
                 const token = localStorage.getItem('user_id');
-                const data = await requestPostExtension(
+                const {data} = await requestPostExtension(
                     token,
                     rental_id,
                     extensionPrice,
@@ -137,7 +137,10 @@ const UseExtendContainer = ({ match, location }) => {
                     card_id,
                 );
 
-                console.log(data);
+                if(data.msg === 'success') {
+                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`)
+                    history.push(Paths.main.use.list)
+                }
             }
         },
         [order, checkPhone, paymentType, checked],

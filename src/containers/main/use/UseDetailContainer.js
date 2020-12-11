@@ -50,6 +50,7 @@ const UseDetailContainer = ({ location }) => {
     const openDialog = useDialog();
     const [order, setOrder] = useState({});
     const [review, setReview] = useState()
+    const [status, setStatus] = useState(false)
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -73,6 +74,7 @@ const UseDetailContainer = ({ location }) => {
         if (msg === 'success') {
             setOrder(order, prev_order);
             setReview(review)
+            if(rentalStatus(order) === '이용완료' || rentalStatus(order) === '이용취소') setStatus(true)
         } else {
             openDialog(msg);
         }
@@ -161,7 +163,7 @@ const UseDetailContainer = ({ location }) => {
                     </div>
                 </div>
 
-                {order.coupon || order.point_price !== 0 ? (
+                {(order.coupon || order.point_price !== 0) && (
                     <>
                         <div className={cx('bar')} />
                         <div className={cx('container')}>
@@ -195,8 +197,6 @@ const UseDetailContainer = ({ location }) => {
                             </div>
                         </div>
                     </>
-                ) : (
-                    ''
                 )}
 
                 <div className={cx('bar')} />
@@ -222,24 +222,29 @@ const UseDetailContainer = ({ location }) => {
                         </div>
                     </div>
 
+                    
+
                     <div className={cx('button-area')}>
                         <BasicButton
-                            button_name={'대여 취소하기'}
-                            disable={false}
-                            color={'white'}
+                            button_name={status ? rentalStatus(order) : '대여 취소하기'}
+                            disable={status}
+                            color={status ? 'black' : 'white'}
                             onClick={() =>
+                                !status &&
                                 dispatchHandle({
                                     type: 'refund',
                                     payload: true,
                                 })
                             }
                         />
+                        {!status && 
                         <Link to={Paths.main.use.extend + `?id=${id}`}>
-                            <BasicButton
-                                button_name={'연장 하기'}
-                                disable={false}
-                            />
-                        </Link>
+                        <BasicButton
+                            button_name={'연장 하기'}
+                            disable={status}
+                        />
+                    </Link>}
+                        
                     </div>
                 </div>
 

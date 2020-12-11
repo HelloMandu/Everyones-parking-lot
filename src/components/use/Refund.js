@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom'
 
 import { numberFormat } from '../../lib/formatter';
 
@@ -7,6 +8,8 @@ import BasicButton from '../../components/button/BasicButton';
 import { useDialog } from '../../hooks/useDialog'
 
 import { requestPutCancelRental } from '../../api/rental'
+
+import {Paths} from '../../paths'
 
 import classNames from 'classnames/bind';
 import { Backdrop } from '@material-ui/core';
@@ -34,13 +37,15 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
     if(pointPrice !== '-') price -= pointPrice
 
     const openDialog = useDialog()
+    const history = useHistory()
 
     const cancelRental = useCallback(async() => {
         const token = localStorage.getItem('user_id')
         const {data} = await requestPutCancelRental(token, rentalID)
 
         openDialog(data.msg)
-    }, [openDialog, rentalID])
+        history.push(Paths.main.use.list)
+    }, [history, openDialog, rentalID])
 
     return (
         <>
