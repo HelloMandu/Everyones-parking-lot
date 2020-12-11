@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
 
-import { requestGetDetailReview } from '../../../api/review'
+import {
+    requestGetDetailReview,
+    requestPostWriteComment,
+} from '../../../api/review';
 
 import { Paths } from '../../../paths';
 
@@ -58,22 +62,31 @@ const ReviewDetailContainer = ({ location }) => {
     const { id } = query;
 
     const [comment, onChangeComment] = useInput();
+    const openDialog = useDialog();
 
-    const onClickSubmit = () => {
-        console.log('submit');
-    };
+    const onClickSubmit = useCallback(async () => {
+        const token = localStorage.getItem('user_id');
+        const { data } = await requestPostWriteComment(token, id, comment);
 
-    const getReview = useCallback(async() => {
-        const {data} = await requestGetDetailReview(id)
-        console.log(data)
-    }, [id])
+        if(data.msg === 'success'){
+
+        } else {
+            openDialog(data.msg);
+        }
+    }, [comment, id, openDialog]);
+
+    const getReview = useCallback(async () => {
+        const { data } = await requestGetDetailReview(id);
+
+        if (data.msg === 'success') {
+        } else {
+            openDialog(data.msg);
+        }
+    }, [id, openDialog]);
 
     useEffect(() => {
-        getReview()
-    }, [getReview])
-
-    // requestGetDetailReview API
-    // requestPostWriteComment API
+        getReview();
+    }, [getReview]);
 
     return (
         <>
