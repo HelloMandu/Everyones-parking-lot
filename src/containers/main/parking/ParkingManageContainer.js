@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
+import useScrollEnd from '../../../hooks/useScrollEnd'
 import { requestGetMyParkingList } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
@@ -75,27 +76,18 @@ const ParkingManageContainer = () => {
     const dataLength = useRef(0);
     const [parkingList, setParkingList] = useState([]);
     const fetchParkingList = useCallback(() => {
+        const LIMIT = 3;
         const allLength = allParkingList.current.length;
         const length = dataLength.current;
         if (length >= allLength) {
             return;
         }
-        const fetchData = allParkingList.current.slice(length, length + 3);
+        const fetchData = allParkingList.current.slice(length, length + LIMIT);
         setParkingList((parkingList) => parkingList.concat(fetchData));
-        dataLength.current += 3;
+        dataLength.current += LIMIT;
     }, []);
-
+    useScrollEnd(fetchParkingList)
     useEffect(() => {
-        const handleScroll = () => {
-            const endPoint =
-                Math.ceil(
-                    window.innerHeight + document.documentElement.scrollTop,
-                ) === document.documentElement.offsetHeight;
-            if (endPoint) {
-                fetchParkingList();
-            }
-        };
-        window.addEventListener('scroll', handleScroll);
         const getParkingList = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
@@ -103,8 +95,7 @@ const ParkingManageContainer = () => {
             fetchParkingList();
         };
         getParkingList();
-        return () => window.removeEventListener('scroll', handleScroll);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <main className={styles['parking-management-container']}>
