@@ -108,7 +108,7 @@ const UseExtendContainer = ({ match, location }) => {
 
     const getUseDetail = useCallback(async () => {
         const resOrder = await requestGetDetailUseRental(id);
-        console.log(resOrder);
+        
         if (resOrder.msg === 'success') {
             setOrder(resOrder);
             setEndTime(new Date(resOrder.order.rental_end_time).getTime());
@@ -139,7 +139,7 @@ const UseExtendContainer = ({ match, location }) => {
 
                 if(data.msg === 'success') {
                     openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`)
-                    history.push(Paths.main.use.list)
+                    history.push(Paths.main.index)
                 }
             }
         },

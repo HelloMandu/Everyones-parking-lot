@@ -34,7 +34,6 @@ const FindPasswordCompleteContainer = () => {
         const token = localStorage.getItem('user_id')
         const resetPW = await requestPutRePassword(token, password)
 
-        console.log(resetPW)
         if(resetPW.msg === "success"){
             history.push(Paths.auth.signin)
         } else {

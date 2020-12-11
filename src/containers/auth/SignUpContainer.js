@@ -233,7 +233,6 @@ const SignUpContainer = () => {
 
     return (
         <>
-        {console.log(getBirth())}
             <div className={cx('container')}>
                 <Email
                     setCheck={setCheckEmail}

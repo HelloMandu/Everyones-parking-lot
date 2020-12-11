@@ -20,7 +20,7 @@ import { getUser } from './store/user';
 const App = () => {
     const location = useLocation();
     useEffect(() => {
-        Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+        // Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
     }, []);
 
     const dispatch = useDispatch()

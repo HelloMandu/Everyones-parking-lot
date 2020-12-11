@@ -44,7 +44,7 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
         const {data} = await requestPutCancelRental(token, rentalID)
 
         openDialog(data.msg)
-        history.push(Paths.main.use.list)
+        history.push(Paths.main.index)
     }, [history, openDialog, rentalID])
 
     return (
