@@ -5,7 +5,7 @@ import React, {
     useState,
 } from 'react';
 import cn from 'classnames/bind';
-import { useSnackbar } from 'notistack';
+// import { useSnackbar } from 'notistack';
 
 import { requestPostAuth, requestPostConfirm } from '../../api/mobile';
 
@@ -31,7 +31,7 @@ const getTime = (timer) =>
 const VerifyPhone = ({ setCheck }, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
+    // const { enqueueSnackbar } = useSnackbar();
     const [
         phoneNumber,
         handleChangePhoneNumber,
@@ -72,18 +72,26 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 if (setCheck !== undefined) {
                     setCheck(true);
                 }
-                enqueueSnackbar('인증에 성공하였습니다.', { variant: 'success' } );
             } else {
-                enqueueSnackbar('인증번호가 다릅니다.', { variant: 'error' } );
+                openDialog('인증실패', '인증번호 전송에 실패했습니다');
+                // enqueueSnackbar('인증번호가 다릅니다.', { variant: 'error' } );
             }
         }
-    }, [verifyCheck, setIsConfirm, sendCheck, setSendCheck, phoneNumber, verify, setCheck, enqueueSnackbar]);
+    }, [
+        verifyCheck,
+        phoneNumber,
+        verify,
+        setSendCheck,
+        sendCheck,
+        setCheck,
+        openDialog,
+    ]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
     useInterval(() => setTimer(timer - 1000), sent && timer > 0 ? 1000 : 0);
 
     useImperativeHandle(ref, () => ({
-        phoneNumber: phoneNumber,
+        phoneNumber,
     }));
     return (
         <section>
