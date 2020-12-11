@@ -1,20 +1,20 @@
 import React from 'react';
-import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 /* Library */
 
 import BasicButton from '../../../components/button/BasicButton';
 
 import { Paths } from '../../../paths'
 
+import classNames from 'classnames/bind';
 import styles from './FindEmailCompleteContainer.module.scss';
-
 import EmailComplete from '../../../static/asset/svg/auth/EmailComplete';
 
 const cx = classNames.bind(styles);
 
 const FindEmailCompleteContainer = () => {
-    const email = 'k557330@naver.com';
+    const location = useLocation()
+    const email = location.state;
     const emailSplite = email.split('@');
     const userID = emailSplite[0].toString();
 
@@ -35,7 +35,7 @@ const FindEmailCompleteContainer = () => {
             </div>
 
             <Link to={Paths.auth.signin} ><BasicButton button_name={'로그인'} disable={false} /></Link>
-            <Link to={Paths.auth.find.password} ><BasicButton button_name={'비밀번호 찾기'} disable={false} /></Link>
+            <Link to={Paths.auth.find.password} ><BasicButton button_name={'비밀번호 찾기'} disable={false} color={'gray'} /></Link>
         </div>
     );
 };

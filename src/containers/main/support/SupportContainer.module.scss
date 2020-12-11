@@ -2,15 +2,23 @@
 
 .container{
     @include container(96px);
+    :global .MuiTab-textColorInherit.Mui-selected{
+        color: #222;
+        font-weight: bold;
+    }
 }
 
+
 .tabs {
+    z-index: 3000;
     position: fixed;
     top:$header;
     left:0;
+    background-color: #FFF;
+    width: 100%;
     .tab {
         min-width: 50px;
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 400; // Reqular
     }
 }

@@ -1,20 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
-import { ButtonBase } from '@material-ui/core'
-import classNames from 'classnames/bind'
+import { Link, useHistory } from 'react-router-dom'
 /* Library */
 
 import { Paths } from '../../paths'
 
+import classNames from 'classnames/bind'
 import styles from './LoginContainer.module.scss'
-
-import logo from '../../static/asset/png/logo.png'
-import background from '../../static/asset/png/auth_background.png'
-
+import Logo from '../../static/asset/svg/Logo'
 import Naver from '../../static/asset/svg/auth/naver'
 import Kakao from '../../static/asset/svg/auth/kakao'
 import Facebook from '../../static/asset/svg/auth/facebook'
 import Email from '../../static/asset/svg/auth/mail'
+import XButton from '../../static/asset/svg/auth/XButton'
+import { ButtonBase } from '@material-ui/core'
 
 const cx = classNames.bind(styles)
 
@@ -28,16 +26,17 @@ const Button = ({ name, color, backgroundColor, children }) => {
 }
 
 const LoginContainer = () => {
+    const history = useHistory()
+    
+    const onClickBack = () => history.push(Paths.main.index)
 
     return (
         <div className={cx('container')}>
             <div className={cx("logo")}>
-                <img src={logo} alt="" />
+                <Logo />
             </div>
 
-            <div className={cx("background")}>
-                <img src={background} alt="" />
-            </div>
+            <ButtonBase onClick={onClickBack} ><XButton /></ButtonBase>
 
             <div className={cx("area")}>
                 <Button name={"네이버로 주차하기"} color={"#EBEBEB"} backgroundColor={"#00BF19"}><Naver /></Button>

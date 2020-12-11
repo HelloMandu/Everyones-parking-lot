@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import {useHistory} from 'react-router-dom';
 
 //styles
 import cn from 'classnames/bind';
@@ -17,6 +18,7 @@ import FixedButton from '../button/FixedButton';
 
 //lib
 import { getDateRange ,calculateDate} from '../../lib/calculateDate';
+import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 const useStyles = makeStyles((theme) => ({
@@ -87,28 +89,30 @@ const DatePickerModal = (props) => {
     for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
     const classes = useStyles();
-
+    const history = useHistory();
+    
     const [date_index, dispatchDateIndex] = useReducer(dateReducer, initState);
     const [date_list, setDateList] = useState([]);
     const [start_open, setStartOpen] = useState(false);
     const [end_open, setEndOpen] = useState(false);
-    const [start_date, setStateDate] = useState(0);
-    const [end_date, setEndDate] = useState(0);
+    const [start_date, setStateDate] = useState(props.start_date);
+    const [end_date, setEndDate] = useState(props.end_date);
     const [total_date ,setTotalDate] = useState(0);
+    const [possible ,setPossible] = useState(false);
 
 
-    const day_list = date_list.map((data) => (
-        <SwiperSlide className={styles['swiper-slide']} key={data.DAY}>
+    const day_list = date_list.map((data,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={data.DAY} />
         </SwiperSlide>
     ));
-    const hour_list = hour.map((h) => (
-        <SwiperSlide className={styles['swiper-slide']} key={h}>
+    const hour_list = hour.map((h,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={h + '시'} />
         </SwiperSlide>
     ));
-    const minute_list = minute.map((min) => (
-        <SwiperSlide className={styles['swiper-slide']} key={min}>
+    const minute_list = minute.map((min,index) => (
+        <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={min + '분'} />
         </SwiperSlide>
     ));
@@ -121,13 +125,13 @@ const DatePickerModal = (props) => {
         end.setDate(start.getDate());
         const res = getDateRange(start, end);
         setDateList(res);
+        console.log('속성');
     }, []);
 
 
     useEffect(() => {
         const { start_day, start_hour, start_minute } = date_index;
         const { end_day, end_hour, end_minute } = date_index;
- 
         if (date_list.length !== 0) {
             const newStartState ={
                 DAY: date_list[start_day].DAY + ' ' + hour[start_hour] + ':' + minute[start_minute],
@@ -146,12 +150,17 @@ const DatePickerModal = (props) => {
 
     useEffect(()=>{
         if(start_date!==0 && end_date !==0){
-            setTotalDate(calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME));
+            const res = calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME);
+            console.log(res);
+            setPossible(res.possible);
+            if(res.possible){
+                setTotalDate(calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME));
+            }
         }
     },[start_date,end_date])
 
     useEffect(()=>{
-        console.log(total_date);
+        console.log('토탈 바뀜',total_date);
     },[total_date])
 
 
@@ -167,7 +176,17 @@ const DatePickerModal = (props) => {
             <DialogContent className={classes.content}>
                 <div className={styles['container']}>
                     <div className={styles['total-date']}>
-                        <h1>총 1일 2시간 대여</h1>
+                        <h1>
+                            {!possible ? '대여 시간을 확인해주세요.':
+                            <>
+                           {'총 '}
+                            {total_date.day > 0 && `${total_date.day}일 `}
+                            {total_date.hour > 0 && `${total_date.hour}시간 `}
+                            {total_date.minute > 0 && `${total_date.minute}분`}
+                            </>
+                            }
+                     
+                        </h1>
                         <p>{start_date.DAY} ~ {end_date.DAY}</p>
                     </div>
                     <div className={cx('date-box', { open: start_open })}>
@@ -184,7 +203,7 @@ const DatePickerModal = (props) => {
                         <div className={styles['swiper']}>
                             <Swiper
                                 direction={'vertical'}
-                                initialSlide={1}
+                                initialSlide={0}
                                 spaceBetween={5}
                                 slidesPerView={3}
                                 centeredSlides={true}
@@ -200,7 +219,7 @@ const DatePickerModal = (props) => {
                             </Swiper>
                             <Swiper
                                 direction={'vertical'}
-                                initialSlide={1}
+                                initialSlide={0}
                                 spaceBetween={5}
                                 slidesPerView={3}
                                 centeredSlides={true}
@@ -216,7 +235,7 @@ const DatePickerModal = (props) => {
                             </Swiper>
                             <Swiper
                                 direction={'vertical'}
-                                initialSlide={1}
+                                initialSlide={0}
                                 spaceBetween={5}
                                 slidesPerView={3}
                                 centeredSlides={true}
@@ -311,7 +330,11 @@ const DatePickerModal = (props) => {
                     </div>
                 </div>
             </DialogContent>
-            <FixedButton disable={false} button_name={"시간 설정 완료"} />
+            <FixedButton disable={!possible} button_name={"시간 설정 완료"} onClick={()=>{
+                props.onClick(start_date,end_date)
+                history.goBack();
+                }
+            }/>
         </Dialog>
 
     );
