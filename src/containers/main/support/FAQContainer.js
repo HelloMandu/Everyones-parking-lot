@@ -3,6 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 import classnames from 'classnames/bind';
 import qs from 'qs';
+import useSWR from 'swr';
 /* Library */
 
 import styles from './FAQContainer.module.scss';
@@ -25,20 +26,45 @@ const cn = classnames.bind(styles);
 const Category = ({ type }) => {
 
     const history = useHistory();
+    const [onLoading, offLoading] = useLoading();
+
+    const onClickCategory = useCallback((type) => {
+        onLoading('faq');
+        history.replace(Paths.main.support.faq + `?type=${type}`);
+        offLoading('faq');
+        // eslint-disable-next-line 
+    }, [history]);
 
     return (
         <div className={styles['category-container']}>
-            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => history.replace(Paths.main.support.faq + '?type=0')}>회원가입</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => history.replace(Paths.main.support.faq + '?type=1')}>쿠폰</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => history.replace(Paths.main.support.faq + '?type=2')}>결제</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => history.replace(Paths.main.support.faq + '?type=3')}>포인트</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => history.replace(Paths.main.support.faq + '?type=4')}>주차공간</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => history.replace(Paths.main.support.faq + '?type=5')}>대여연장</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => onClickCategory(0)}>회원가입</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => onClickCategory(1)}>쿠폰</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => onClickCategory(2)}>결제</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => onClickCategory(3)}>포인트</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => onClickCategory(4)}>주차공간</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => onClickCategory(5)}>대여연장</ButtonBase>
         </div>
     );
 };
 
-const FAQItems = memo(({ FAQList, setFAQList }) => {
+const FAQItems = memo(({ type }) => {
+
+    const openDialog = useDialog();
+    const history = useHistory();
+
+    const [FAQList, setFAQList] = useState([]);
+
+    const { data } = useSWR(['faq', type], requestGetFAQList);
+    useEffect(() => {
+        if (data !== undefined) {
+            if (data.msg === 'success') {
+                setFAQList(data.notices);
+            } else {
+                openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
+            }
+        }
+        // eslint-disable-next-line
+    }, [data])
 
     const onClickItem = useCallback((e) => {
         const newFAQList = FAQList.map(item => (
@@ -48,84 +74,59 @@ const FAQItems = memo(({ FAQList, setFAQList }) => {
     }, [FAQList, setFAQList]);
 
     return (
-        <ul className={styles['container']}>
-            {FAQList.map(({ faq_id, question, answer, faq_check }) => (
-                <div className={cn('border', { click: faq_check })} key={faq_id}>
-                    <ButtonBase
-                        component={"li"}
-                        className={styles['text-area']}
-                        id={faq_id}
-                        onClick={onClickItem}
-                    >
-                        <div className={styles['text-wrap']}>
-                            <div className={styles['question']}>Q</div>
-                            <div className={styles['text']}>
-                                <div className={styles['title']}>{question}</div>
-                                <div className={styles['bottom']}>
-                                    <div className={styles['name']}>운영자</div>
+        <>
+            {FAQList.length !== 0 ?
+                <ul className={styles['container']}>
+                    {FAQList.map(({ faq_id, question, answer, faq_check }) => (
+                        <div className={cn('border', { click: faq_check })} key={faq_id}>
+                            <ButtonBase
+                                component={"li"}
+                                className={styles['text-area']}
+                                id={faq_id}
+                                onClick={onClickItem}
+                            >
+                                <div className={styles['text-wrap']}>
+                                    <div className={styles['question']}>Q</div>
+                                    <div className={styles['text']}>
+                                        <div className={styles['title']}>{question}</div>
+                                        <div className={styles['bottom']}>
+                                            <div className={styles['name']}>운영자</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <IconButton
+                                    className={styles['arrow']}
+                                >
+                                    <ArrowSmall rotate={faq_check ? 0 : 180} />
+                                </IconButton>
+                            </ButtonBase>
+                            <div className={cn('sub-text', { click: faq_check })}>{answer}</div>
                         </div>
-                        <IconButton
-                            className={styles['arrow']}
-                        >
-                            <ArrowSmall rotate={faq_check ? 0 : 180} />
-                        </IconButton>
-                    </ButtonBase>
-                    <div className={cn('sub-text', { click: faq_check })}>{answer}</div>
-                </div>
-            ))}
-        </ul>
+                    ))}
+                </ul>
+                : <div className={styles['non-faq']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
+                    </div>
+                </div>}
+        </>
     );
 });
 
 const FAQContainer = () => {
 
-    const [FAQList, setFAQList] = useState([]);
-
-    const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading();
     const location = useLocation();
-    const history = useHistory();
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
     const t = query.type ? query.type : "0";
     const type = parseInt(t);
 
-    const getFAQList = useCallback(async () => {
-        onLoading('faq');
-        const response = await requestGetFAQList(type);
-        setFAQList(response.notices);
-        offLoading('faq');
-        // eslint-disable-next-line
-    }, [type])
-
-    useEffect(() => {
-        try {
-            getFAQList();
-        } catch (e) {
-            openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
-        }
-    }, [getFAQList, openDialog, history])
-
-    if (FAQList.length !== 0) {
-        return (
-            <>
-                <Category type={type} />
-                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
-            </>
-        );
-    };
     return (
         <>
             <Category type={type} />
-            <div className={styles['non-faq']}>
-                <div className={styles['non-container']}>
-                    <Notice />
-                    <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
-                </div>
-            </div>
+            <FAQItems type={type} />
         </>
     );
 };

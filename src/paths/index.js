@@ -36,7 +36,6 @@ export const Paths = {
             index: '/parking',
             manage: '/parking/manage',
             enrollment: '/parking/enrollment',
-            preview: '/parking/preview',
         },
         notification: '/notification',
         setting: '/setting',

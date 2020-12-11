@@ -1,0 +1,181 @@
+@import '../../../static/stylesheets/Root.scss';
+
+html{
+    body{
+        .back{
+            width: 48px;
+            height: 48px;
+            position: absolute;
+            top:0;
+            left:0;
+        }
+    }
+}
+.parking-img{
+    max-width: $max-width;
+    background-color: #fff;
+    width: 100%;
+    min-height: 260px;
+    margin: 0 auto;
+    img{
+        min-height: 260px;
+        width: 100%;
+        height: 100%;
+    }
+}
+.wrapper{
+    width: 100%;
+    margin: 0 auto;
+    max-width:  $max-width;
+    // transform: translateX(-500px);
+}
+
+.container{
+  @include container(0);
+  min-height: calc(100vh - 260px);
+  background-color: #F4F4F4;
+  padding-bottom: 120px;
+  .pd-box{  
+    padding : $padding;
+      background-color: #fff;
+      border-bottom: 1px solid #EBEBEB;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .item-table{
+          display: flex;
+          flex-direction: column;
+          .item-name{
+              width: 100%;
+              display: flex;
+              align-items: center;
+              position: relative;
+              padding: 5px 0;
+              h1{
+                  font-size: 22px;
+                  font-weight: bold;
+                  color:#222;
+              }
+              .item-state{
+                  text-align: center;
+                  margin: 0 5px;
+                  width: 56px;
+                  height: 20px;
+                  background-color:#222;
+                  font-size: 12px;
+                  color:#fff;
+                  line-height: 20px;
+              }
+          }
+      }
+      .item-rating{
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .item-review{
+                font-size: 14px;
+                color:#999;
+            }
+      }
+      .function-box{
+          margin:40px 0;
+          display: flex;
+          justify-content: space-around;
+          :global(.MuiButtonBase-root){
+
+          }
+      }
+  }
+  .parking-detail-info{
+      background-color: #fff;
+      width: 100%;
+      padding: $padding;
+      display: flex;
+      flex-direction: column;
+      .space-between{
+          width: 100%;
+          display: flex;
+          padding :5px 0;
+          justify-content: space-between;
+          .txt{
+              word-break: keep-all;
+              font-size: 14px;
+              color:#777;
+              font-weight: 500;
+              line-height: 1.5;
+              letter-spacing: -0.5px;
+          }
+          .value{
+            word-break: keep-all;
+            color:#333;
+            font-size: 14px;
+        }
+          &.shared-time{
+              .value{
+                  display: flex;
+                  align-items: center;
+                  .date-picker{
+                      margin-left: 5px;
+                      width: 24px; height: 24px;
+                      background-color: #fff;
+                      border: 1px solid #DBDBDB;
+                      padding : 3px;
+                      img{
+                          width: 100%;
+                      }
+
+                  }
+              }
+          }
+          &.price{
+              .value{
+            word-break: keep-all;
+                  display: flex;
+                  align-items: center;
+                .item-price{
+                    padding-right:5px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    color:#222;
+                }
+                .item-base-time{
+                    font-size: 14px;
+                    color:#999;
+                }
+              }
+          }
+      }
+  }
+  .tab-wrapper{
+      margin-top: 15px;
+      .detail-info{
+          background-color: #fff;
+          padding : 15px 24px;
+          display: flex;
+          flex-direction: column;
+          .info-item{
+              display: flex;
+              justify-content: space-between;
+              font-size: 14px;
+              padding :2.5px 0;
+              .txt{
+                  font-weight: bold;
+                  color:#aaa;
+                  min-width: 100px;
+              }
+              .value{
+                  text-align: right;
+                word-break: keep-all;
+
+                  color:#333
+              }
+
+          }
+      }
+      .review-list{
+
+      }
+  }
+}

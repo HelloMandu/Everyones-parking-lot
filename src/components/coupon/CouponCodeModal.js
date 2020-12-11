@@ -12,12 +12,15 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CouponCodeModal = ({ open }) => {
-    const [couponCode, onChangeCouponCode] = useInput('');
+const CouponCodeModal = ({ open, onClick }) => {
+    const [couponCode, onChangeCouponCode, couponCheck] = useInput(
+        '',
+        (state) => state.length,
+    );
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
-            <div className={styles['coupon-code']}>
-                <div className={styles['code-input']}>쿠폰 코드 입력</div>
+            <main className={styles['coupon-code']}>
+                <h2 className={styles['code-input']}>쿠폰 코드 입력</h2>
                 <InputBox
                     className={'input-box'}
                     type={'text'}
@@ -25,8 +28,15 @@ const CouponCodeModal = ({ open }) => {
                     onChange={onChangeCouponCode}
                     placeholder={'쿠폰 코드를 입력하세요'}
                 ></InputBox>
-            </div>
-            <FixedButton button_name={'쿠폰 입력'}></FixedButton>
+            </main>
+            <FixedButton
+                button_name={'쿠폰 입력'}
+                disable={!couponCheck}
+                onClick={() => {
+                    onClick(couponCode, true);
+                    onChangeCouponCode();
+                }}
+            ></FixedButton>
         </Dialog>
     );
 };

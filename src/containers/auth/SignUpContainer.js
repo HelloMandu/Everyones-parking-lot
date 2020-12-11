@@ -196,7 +196,7 @@ const SignUpContainer = () => {
         if (!signUp) {
             return;
         }
-        const response = await requestPostAuth(
+        const { data } = await requestPostAuth(
             emailRef.current.email,
             nameRef.current.name,
             passwordRef.current.password,
@@ -204,12 +204,11 @@ const SignUpContainer = () => {
             phoneRef.current.phoneNumber,
         );
 
-        console.log(response);
-        if (response.data.msg === 'success')
+        if (data.msg === 'success'){
+            localStorage.setItem('user_id', data.token)
             history.push(Paths.auth.enrollment);
-        else {
-            openDialog(response.data.msg, '');
-            console.log(response.data.msg);
+        } else {
+            openDialog(data.msg);
         }
     }, [history, signUp, getBirth, openDialog]);
 
@@ -234,6 +233,7 @@ const SignUpContainer = () => {
 
     return (
         <>
+        {console.log(getBirth())}
             <div className={cx('container')}>
                 <Email
                     setCheck={setCheckEmail}

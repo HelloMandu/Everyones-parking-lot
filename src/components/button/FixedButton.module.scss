@@ -3,7 +3,8 @@ html{
     body{
         .fixed-button-container{
             position: fixed;
-            z-index: $level3;
+            z-index: 5000;
+            // z-index: $level3;
             width: 100%;
             padding: 10px 20px;
             bottom: 0;

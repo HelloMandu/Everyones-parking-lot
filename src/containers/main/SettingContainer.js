@@ -64,21 +64,21 @@ const SettingContainer = () => {
         [dispatch, openDialog],
     );
     return (
-        <div className={styles['setting-container']}>
-            <div className={styles['wrapper']}>
+        <article className={styles['setting-container']}>
+            <section className={styles['wrapper']}>
                 <SettingItem />
-            </div>
-            <div className={styles['wrapper']}>
+            </section>
+            <section className={styles['wrapper']}>
                 <SettingItem type={'arrow'} title={'이용약관'} bottom={true} />
                 <SettingItem type={'arrow'} title={'개인정보처리방침'} />
-            </div>
-            <div className={styles['selector-wrapper']}>
-                <div className={styles['selector-agree']}>
+            </section>
+            <section className={styles['selector-wrapper']}>
+                <p className={styles['selector-agree']}>
                     <div className={styles['title']}>마케팅 정보 수신 동의</div>
                     <div className={styles['description']}>
                         이벤트 및 할인 혜택에 대한 정보를 받으실 수 있습니다.
                     </div>
-                </div>
+                </p>
                 <Selector
                     name={'메일 수신 동의'}
                     checked={agree_mail}
@@ -98,8 +98,8 @@ const SettingContainer = () => {
                         handleAgreeToggle(agree_push, 'agree_push')
                     }
                 ></Selector>
-            </div>
-        </div>
+            </section>
+        </article>
     );
 };
 

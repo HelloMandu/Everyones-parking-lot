@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
 import useModal from '../../hooks/useModal';
 import useLoading from '../../hooks/useLoading';
 import { useDialog } from '../../hooks/useDialog';
-import { numberFormat } from '../../lib/formatter';
 
+import { numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
+import { requestPostRental } from '../../api/rental';
 
 import { Paths } from '../../paths/index';
 
@@ -22,22 +25,59 @@ import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
 
 import styles from './PaymentContainer.module.scss';
-import { ButtonBase } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 
-const Point = ({ point, usePoint, setUsePoint, onChange }) => {
+const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
+
+const enroll = [
+    {
+        id: 1,
+        checked: false,
+        description: '개인정보취급방침',
+    },
+    {
+        id: 2,
+        checked: false,
+        description: '이용약관',
+    },
+];
+
+const getRentalPrice = (parkingInfo) => {
+    if (!parkingInfo) {
+        return 0;
+    }
+    const { price, deposit } = parkingInfo;
+    return price + deposit;
+};
+
+const getSalePoint = (coupon, point) => {
+    const pointInt = point === '' ? 0 : parseInt(point);
+    return coupon + pointInt;
+};
+
+const Point = ({
+    totalPrice,
+    maxPrice,
+    point,
+    usePoint,
+    setUsePoint,
+    onChange,
+}) => {
     const [isTotal, setIsTotal] = useState(false);
-    const handleTotalPoint = useCallback(() => setUsePoint(point), [
-        point,
+    const handleTotalPoint = useCallback(() => setUsePoint(maxPrice), [
         setUsePoint,
+        maxPrice,
     ]);
-    useEffect(() => setIsTotal(parseInt(point) === parseInt(usePoint)), [
-        point,
-        usePoint,
-    ]);
+    useEffect(
+        () =>
+            setIsTotal(
+                parseInt(point) === parseInt(usePoint) ||
+                    parseInt(totalPrice) === 0,
+            ),
+        [point, totalPrice, usePoint],
+    );
     return (
-        <div className={styles['parking-payment-wrapper']}>
-            <div className={styles['title']}>{'포인트 할인'}</div>
+        <section className={styles['parking-payment-wrapper']}>
+            <h3 className={styles['title']}>{'포인트 할인'}</h3>
             <div className={styles['point-wrapper']}>
                 <InputBox
                     className={'input-box'}
@@ -53,40 +93,40 @@ const Point = ({ point, usePoint, setUsePoint, onChange }) => {
                     <div className={styles['confirm-button']}>
                         <ConfirmButton
                             button_name={'전체사용'}
-                            disable={!isTotal}
+                            disable={isTotal}
                             onClick={handleTotalPoint}
                         ></ConfirmButton>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
 const PaymentType = ({ paymentType, openTypeModal }) => {
     return (
-        <div className={styles['parking-payment-area']}>
+        <section className={styles['parking-payment-area']}>
             <div className={styles['parking-payment-wrapper']}>
-                <div className={styles['title']}>결제수단</div>
+                <h3 className={styles['title']}>결제수단</h3>
                 <ButtonBase
                     className={styles['payment']}
                     name="payment"
                     onClick={openTypeModal}
                 >
-                    {paymentType}
+                    {paymentType.title}
                 </ButtonBase>
             </div>
-        </div>
+        </section>
     );
 };
 
-const Price = ({ parkingInfo, totalPrice = 0, coupon = 0, usePoint }) => {
+const Price = ({ parkingInfo, totalPrice, coupon, usePoint }) => {
     if (!parkingInfo) {
         return null;
     }
     const { price, deposit } = parkingInfo;
     return (
-        <div className={styles['final-payment']}>
+        <section className={styles['final-payment']}>
             <div className={styles['total-payment']}>
                 <div className={styles['title']}>최종 결제금액</div>
                 <div className={styles['price']}>
@@ -111,24 +151,9 @@ const Price = ({ parkingInfo, totalPrice = 0, coupon = 0, usePoint }) => {
                     {numberFormat(usePoint === '' ? 0 : usePoint)}원
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
-
-const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
-
-const enroll = [
-    {
-        id: 1,
-        checked: false,
-        description: '개인정보취급방침',
-    },
-    {
-        id: 2,
-        checked: false,
-        description: '이용약관',
-    },
-];
 
 const ParkingEnrollContainer = ({ location, match }) => {
     const query = qs.parse(location.search, {
@@ -137,6 +162,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const { place_id, start_time, end_time } = query;
     const { url, params } = match;
     const history = useHistory();
+    const openDialog = useDialog();
     const [isOpenCouponModal, openCouponModal] = useModal(
         url,
         params.modal,
@@ -148,26 +174,96 @@ const ParkingEnrollContainer = ({ location, match }) => {
         `type${location.search}`,
     );
 
-    const [parkingInfo, setParkingInfo] = useState();
+    const [parkingInfo, setParkingInfo] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
 
     const { point } = useSelector((state) => state.user);
     const [usePoint, setUsePoint] = useState('');
-    const handleUsePoint = useCallback(
+    const [selectedCoupon, setSelectedCoupon] = useState({
+        cp_subject: '쿠폰 선택',
+        cp_price: 0,
+        cp_id: 0,
+    });
+
+    const onChangeUsePoint = useCallback(
         (e) => {
-            if (e.target.value > point) {
-                alert('보유 포인트 이상의 금액은 사용하실 수 없습니다');
+            const value = e.target.value;
+            const { cp_price } = selectedCoupon;
+            const { price } = parkingInfo;
+            if (value < 0) {
+                return;
+            } else if (value > point || value > price - cp_price) {
+                openDialog(
+                    '사용 불가',
+                    '보유 포인트 이상의 금액은 사용하실 수 없습니다',
+                );
             } else {
-                setUsePoint(e.target.value);
+                setUsePoint(parseInt(value) || '');
             }
         },
-        [point],
+        [openDialog, parkingInfo, point, selectedCoupon],
     );
+    const [paymentType, setPaymentType] = useState({
+        title: '결제수단 선택',
+        type: -1,
+        card_id: 0,
+    });
+    const phoneRef = useRef(null);
+    const [phoneCheck, setPhoneCheck] = useState(false);
+    const [agreeCheck, setAgreeCheck] = useState(false);
+    const [finalCheck, setFinalCheck] = useState(false);
+    useEffect(
+        () => setFinalCheck(phoneCheck && agreeCheck && paymentType.type >= 0),
+        [agreeCheck, paymentType, phoneCheck],
+    );
+    useEffect(() => {
+        if (!parkingInfo) {
+            return;
+        }
+        const { cp_price } = selectedCoupon;
+        const rentalPrice = getRentalPrice(parkingInfo);
+        const salePrice = getSalePoint(cp_price, usePoint);
+        setTotalPrice(rentalPrice - salePrice);
+    }, [parkingInfo, selectedCoupon, usePoint]);
 
-    const [paymentType, setPaymentType] = useState('결제수단 선택');
+    const handlePayment = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const { price, deposit } = parkingInfo;
+        const { type, card_id } = paymentType;
+        const { cp_id } = selectedCoupon;
+        const { msg, rental_id } = await requestPostRental(
+            JWT_TOKEN,
+            place_id,
+            cp_id,
+            start_time,
+            end_time,
+            price,
+            usePoint,
+            deposit,
+            type,
+            card_id,
+            phoneRef.current.phoneNumber,
+        );
+        if (msg === 'success') {
+            history.push(
+                `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+            );
+        } else {
+            openDialog('결제실패', msg);
+        }
+    }, [
+        end_time,
+        history,
+        openDialog,
+        parkingInfo,
+        paymentType,
+        place_id,
+        selectedCoupon,
+        start_time,
+        usePoint,
+    ]);
 
     const [onLoading, offLoading] = useLoading();
-    const openDialog = useDialog();
     useEffect(() => {
         const getPaymentInfo = async (place_id, start_time, end_time) => {
             onLoading('payment');
@@ -194,7 +290,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 });
                 setTotalPrice(price + deposit);
             } else {
-                openDialog('결제정보를 불러오는데 실패했습니다', '', () =>
+                openDialog('결제정보를 불러오는데 실패했습니다.', '', () =>
                     history.goBack(),
                 );
             }
@@ -203,41 +299,37 @@ const ParkingEnrollContainer = ({ location, match }) => {
         getPaymentInfo(place_id, start_time, end_time);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const [phoneCheck, setPhoneCheck] = useState(false);
-    const [agreeCheck, setAgreeCheck] = useState(false);
-    const [finalCheck, setFinalCheck] = useState(false);
-    useEffect(
-        () =>
-            setFinalCheck(
-                phoneCheck && agreeCheck && paymentType !== '결제수단 선택',
-            ),
-        [agreeCheck, paymentType, phoneCheck],
-    );
-
     return (
         <>
-            <div className={styles['parking-payment-container']}>
+            <main className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
                     <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
-                    <div className={styles['parking-payment-wrapper']}>
-                        <div className={styles['title']}>{'대여자 연락처'}</div>
-                        <VerifyPhone setCheck={setPhoneCheck}></VerifyPhone>
-                    </div>
-                    <div className={styles['parking-payment-wrapper']}>
-                        <div className={styles['title']}>{'쿠폰 할인'}</div>
+                    <section className={styles['parking-payment-wrapper']}>
+                        <h3 className={styles['title']}>{'대여자 연락처'}</h3>
+                        <VerifyPhone
+                            ref={phoneRef}
+                            setCheck={setPhoneCheck}
+                        ></VerifyPhone>
+                    </section>
+                    <section className={styles['parking-payment-wrapper']}>
+                        <h3 className={styles['title']}>{'쿠폰 할인'}</h3>
                         <ButtonBase
                             className={styles['coupon']}
                             onClick={openCouponModal}
                         >
-                            쿠폰을 선택해주세요
+                            {selectedCoupon.cp_subject}
                         </ButtonBase>
-                    </div>
+                    </section>
                     <Point
+                        totalPrice={
+                            getRentalPrice(parkingInfo) -
+                            selectedCoupon.cp_price
+                        }
+                        maxPrice={parkingInfo.price - selectedCoupon.cp_price}
                         point={point}
                         usePoint={usePoint}
                         setUsePoint={setUsePoint}
-                        onChange={handleUsePoint}
+                        onChange={onChangeUsePoint}
                     ></Point>
                 </div>
                 <div className={styles['bar']}></div>
@@ -249,6 +341,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     totalPrice={totalPrice}
                     parkingInfo={parkingInfo}
                     usePoint={usePoint}
+                    coupon={selectedCoupon.cp_price}
                 ></Price>
                 <div className={styles['parking-payment-area']}>
                     <CheckBox
@@ -257,13 +350,18 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         setCheck={setAgreeCheck}
                     ></CheckBox>
                 </div>
-            </div>
+            </main>
             <FixedButton
                 button_name={`${numberFormat(totalPrice)}원 결제`}
                 disable={!finalCheck}
-                onClick={() => history.push(Paths.main.payment_complete)}
+                onClick={handlePayment}
             ></FixedButton>
-            <EnrollCouponModal open={isOpenCouponModal}></EnrollCouponModal>
+            <EnrollCouponModal
+                open={isOpenCouponModal}
+                setCoupon={setSelectedCoupon}
+                placeId={place_id}
+                price={parkingInfo.price}
+            ></EnrollCouponModal>
             <PaymentTypeModal
                 open={isOpenTypeModal}
                 match={match}

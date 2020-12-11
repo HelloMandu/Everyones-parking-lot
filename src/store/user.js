@@ -22,7 +22,7 @@ export const updateUser = createAction(UPDATE_USER, (target, value) => ({
 }));
 export const deleteUser = createAction(DELETE_USER);
 
-function *getUserSaga(action) {
+function* getUserSaga(action) {
     yield put(startLoading(GET_USER));
     try {
         const { payload: JWT_TOKEN } = action;
@@ -41,11 +41,11 @@ function *getUserSaga(action) {
     yield put(finishLoading(GET_USER));
 };
 
-function *deleteUserSaga(action) {
+function* deleteUserSaga(action) {
     yield put(startLoading(DELETE_USER));
     try {
         const { payload: JWT_TOKEN } = action;
-        yield call(() => {}, JWT_TOKEN);
+        yield call(() => { }, JWT_TOKEN);
         yield put({
             type: DELETE_USER_SUCCESS,
         });
@@ -59,7 +59,7 @@ function *deleteUserSaga(action) {
     yield put(finishLoading(DELETE_USER));
 };
 
-export function *userSaga() {
+export function* userSaga() {
     yield takeLatest(GET_USER, getUserSaga);
     yield takeLatest(DELETE_USER, deleteUserSaga);
 };

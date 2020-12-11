@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 /* Library */
 
 import profile from '../../../static/asset/png/profile.png';
@@ -11,36 +12,117 @@ import Car from '../../../static/asset/svg/Car';
 import Camera from '../../../static/asset/svg/Camera';
 /* StyleSheets */
 
+import { getFormatDateString } from '../../../lib/calculateDate';
+import { stringToTel } from '../../../lib/formatter';
+/* Lib */
+
 import { useDialog } from '../../../hooks/useDialog';
 /* Hooks */
 
+import { requestPutProfile } from '../../../api/user';
+/* API */
+
 import { Paths } from '../../../paths'
-import { useSelector } from 'react-redux';
 /* Paths */
 
+const FileItem = ({ file, image }) => {
+
+    const openDialog = useDialog();
+    const [imgFile, setImgfile] = useState(null);
+
+    const UpdateProfile = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPutProfile(JWT_TOKEN, file);
+        if (response.msg === 'success') {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64 = reader.result;
+                if (base64) {
+                    setImgfile(base64.toString());
+                }
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    }, [file, setImgfile])
+
+    useEffect(() => {
+        try {
+            UpdateProfile();
+        } catch (e) {
+            openDialog("프로필 사진 업로드 오류");
+        }
+    }, [UpdateProfile, openDialog]);
+
+    return (
+        <>
+            {imgFile
+                ? <div
+                    className={styles['img-item']}
+                    style={{ backgroundImage: `url(${imgFile})` }}
+                />
+                : image
+                    ? <div
+                        className={styles['img-item']}
+                        style={{ backgroundImage: `url(http://localhost:8080/${image})` }}
+                    />
+                    : <div
+                        className={styles['img-item']}
+                        style={{ backgroundImage: `url(${profile})` }}
+                    />
+            }
+        </>
+    )
+}
+const ProfileImg = ({ image }) => {
+
+    const fileRef = useRef();
+    const [imgFile, setImgFile] = useState([]);
+
+    const onChangeImgFile = useCallback((e) => {
+        const { files } = e.target;
+        if (files) {
+            setImgFile(files);
+        }
+    }, []);
+
+    return (
+        <div className={styles['img-wrap']}>
+            <FileItem
+                file={imgFile[0]}
+                image={image}
+            />
+            <div className={styles['camera']} onClick={() => fileRef.current.click()}>
+                <input
+                    type="file"
+                    className={styles['input-file']}
+                    ref={fileRef}
+                    onChange={onChangeImgFile}
+                    id="file-setter"
+                    accept="image/gif, image/jpeg, image/png, image/svg"
+                    formEncType="multipart/form-data"
+                />
+                <Camera />
+            </div>
+        </div>
+
+    )
+}
 
 const MyPageContainer = () => {
 
-    const history = useHistory();
-    const openDialog = useDialog();
     const getUserInfo = useSelector(state => state.user);
-    const fileRef = useRef();
 
     return (
         <div className={styles['container']}>
             <div className={styles['user-area']}>
-                <div className={styles['img-wrap']}>
-                    <img src={profile} alt="프로필 사진" />
-                    <div className={styles['camera']} onClick={() => fileRef.current.click()}>
-                        <input type="file" className={styles['input-file']} ref={fileRef} />
-                        <Camera />
-                    </div>
-                </div>
+                <ProfileImg image={getUserInfo.profile_image} />
                 <div className={styles['right-wrap']}>
                     <Link to={Paths.main.mypage.update.name}>
                         <div className={styles['name-wrap']}>
                             <div className={styles['user-name']}>
-                                <span>스페이스</span>
+                                <span>{getUserInfo.name}</span>
                             </div>
                             <ArrowSmall rotate={90} />
                         </div>
@@ -78,7 +160,7 @@ const MyPageContainer = () => {
                     <div className={styles['hp-wrap']}>
                         <div className={styles['text']} >
                             <span>휴대폰번호</span>
-                            <span className={styles['user-text']}>010-8885-7406</span>
+                            <span className={styles['user-text']}>{stringToTel(getUserInfo.phone_number)}</span>
                             <ArrowSmall rotate={90} />
                         </div>
                     </div>
@@ -86,14 +168,14 @@ const MyPageContainer = () => {
                 <div className={styles['email-wrap']}>
                     <div className={styles['text']} >
                         <span>이메일 주소</span>
-                        <span className={styles['user-text']}>space@naver.com</span>
+                        <span className={styles['user-text']}>{getUserInfo.email}</span>
                     </div>
                 </div>
-                <Link to={Paths.main.mypage.update.birthday}>
+                <Link to={{ pathname: Paths.main.mypage.update.birthday, state: getUserInfo.birth }}>
                     <div className={styles['birthday-wrap']}>
                         <div className={styles['text']} >
                             <span>생년월일</span>
-                            <span className={styles['user-text']}>1992년 6월 25일</span>
+                            <span className={styles['user-text']}>{getFormatDateString(getUserInfo.birth)}</span>
                             <ArrowSmall rotate={90} />
                         </div>
                     </div>

@@ -46,15 +46,15 @@ const ParkingInfo = ({ parkingInfo }) => {
     infos[1].description = `${numberFormat(price)}원`;
     infos[2].description = `${numberFormat(deposit)}원`;
     return (
-        <div className={styles['parkinginfo']}>
+        <article className={styles['parkinginfo']}>
             <div
                 className={styles['image']}
                 style={{
                     backgroundImage: `url(${Paths.storage}${image})`,
                 }}
             />
-            <div className={styles['wrapper']}>
-                <div className={styles['title']}>{title}</div>
+            <section className={styles['wrapper']}>
+                <h3 className={styles['title']}>{title}</h3>
                 <ul className={styles['infolist']}>
                     {infos.map(({ id, title, description }) => (
                         <li className={styles['info']} key={id}>
@@ -66,8 +66,8 @@ const ParkingInfo = ({ parkingInfo }) => {
                     ))}
                 </ul>
                 <PleaseRead></PleaseRead>
-            </div>
-        </div>
+            </section>
+        </article>
     );
 };
 

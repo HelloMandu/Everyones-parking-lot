@@ -37,16 +37,19 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
 
     const [payList, setPayList] = useState([
         {
+            id: 1,
             src: KakaoPay,
             title: '카카오페이',
             checked: false,
         },
         {
+            id: 2,
             src: NaverPay,
             title: '네이버페이',
             checked: false,
         },
         {
+            id: 3,
             src: Payco,
             title: '페이코',
             checked: false,
@@ -57,9 +60,9 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
 
     const handlePayList = useCallback(
         (e) => {
-            const key = parseInt(e.target.dataset.key);
+            const { key, title, type } = e.target.dataset;
             const newPayList = payList.map((pay, index) =>
-                index === key
+                index === parseInt(key)
                     ? { ...pay, checked: !pay.checked }
                     : { ...pay, checked: false },
             );
@@ -69,7 +72,7 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                 checked: false,
             }));
             setCardList(newCardList);
-            setPaymentType(e.target.dataset.pay);
+            setPaymentType({ title: title, type: type, card_id: 0 });
         },
         [payList, cardList, setPaymentType],
     );
@@ -87,14 +90,26 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                 checked: false,
             }));
             setPayList(newPayList);
-            setPaymentType('등록카드결제');
+            const seletedCard = newCardList.find(
+                ({ checked }) => checked === true,
+            );
+            if (seletedCard) {
+                const { card_id } = seletedCard;
+                setPaymentType({ title: '등록카드결제', type: 0, card_id });
+            } else {
+                setPaymentType({
+                    title: '결제수단 선택',
+                    type: -1,
+                    card_id: -1,
+                });
+            }
         },
         [payList, cardList, setPaymentType],
     );
 
     const openDialog = useDialog();
 
-    const onDeleteCard = useCallback(
+    const handleDeleteCard = useCallback(
         async (id) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const response = await requestDeleteCard(JWT_TOKEN, id);
@@ -109,16 +124,16 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
         [cardList],
     );
 
-    const handleDeleteCard = useCallback(
+    const handleDeleteCardConfirm = useCallback(
         (id) => {
             openDialog(
                 '정말 삭제 하시겠습니까?',
                 '',
-                () => onDeleteCard(id),
+                () => handleDeleteCard(id),
                 true,
             );
         },
-        [openDialog, onDeleteCard],
+        [openDialog, handleDeleteCard],
     );
 
     const [activeCard, setActiveCard] = useState(0);
@@ -157,12 +172,12 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
             setCardList(newCardList);
         };
         requestCardInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제 수단 선택'}></Header>
-            <div className={styles['payment-container']}>
+            <main className={styles['payment-container']}>
                 <h2 className={styles['payment-title']}>등록카드 결제</h2>
                 <Swiper
                     className={styles['card-swiper']}
@@ -184,7 +199,7 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                             index,
                         ) => (
                             <SwiperSlide key={index}>
-                                <div className={styles['card-wrapper']}>
+                                <section className={styles['card-wrapper']}>
                                     <img
                                         className={cx('card-image', {
                                             checked,
@@ -204,47 +219,46 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                                         </div>
                                         <ButtonBase
                                             onClick={() =>
-                                                handleDeleteCard(card_id)
+                                                handleDeleteCardConfirm(card_id)
                                             }
                                         >
                                             삭제
                                         </ButtonBase>
                                     </div>
-                                </div>
+                                </section>
                             </SwiperSlide>
                         ),
                     )}
                     <SwiperSlide>
-                        <div
+                        <section
                             className={styles['card-register']}
                             onClick={openCardEnrollment}
                         >
                             <RegisterIcon></RegisterIcon>
                             <div>카드등록</div>
-                        </div>
+                        </section>
                     </SwiperSlide>
                 </Swiper>
-                <div className={styles['card-info']}>
-                    <div className={styles['card-name']}></div>
-                    <div className={styles['card-delete']}></div>
-                </div>
-                <h2 className={cx(['payment-title', 'type'])}>일반결제</h2>
-                <ul className={styles['pay-list']}>
-                    {payList.map(({ src, title, checked }, index) => (
-                        <li key={index}>
-                            <img
-                                className={cx({ checked })}
-                                data-key={index}
-                                data-pay={title}
-                                src={src}
-                                alt="card"
-                                onClick={handlePayList}
-                            ></img>
-                            <div className={cx('pay-name')}>{title}</div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                <section>
+                    <h2 className={cx(['payment-title', 'type'])}>일반결제</h2>
+                    <ul className={styles['pay-list']}>
+                        {payList.map(({ id, src, title, checked }, index) => (
+                            <li key={index}>
+                                <img
+                                    className={cx({ checked })}
+                                    data-key={index}
+                                    data-title={title}
+                                    data-type={id}
+                                    src={src}
+                                    alt="card"
+                                    onClick={handlePayList}
+                                ></img>
+                                <div className={cx('pay-name')}>{title}</div>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            </main>
             <FixedButton
                 button_name={'결제하기'}
                 disable={!check}

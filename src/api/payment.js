@@ -32,7 +32,14 @@ export const requestGetCoupon = async (JWT_TOKEN, place_id) => {
     // * 응답: coupons: [사용가능한 쿠폰 Array…]
 
     const URL = Paths.api + "coupon";
-    const response = await axios.get(URL);
+    const response = await axios.get(URL, {
+        headers:{
+            Authorization: `Bearer ${JWT_TOKEN}`,
+         },
+         params:{
+             place_id,
+         },
+    });
 
-    return response;
+    return response.data;
 };

@@ -19,6 +19,7 @@ export const requestPostCardEnroll = async (
             card_num,
             valid_term,
             card_password,
+            cvc: 123
         },
         config,
     );
