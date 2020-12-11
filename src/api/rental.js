@@ -1,17 +1,17 @@
 import axios from 'axios';
-import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requestPostRental = async (JWT_TOKEN,
+export const requestPostRental = async (
+    JWT_TOKEN,
     place_id,
     cp_id,
     rental_start_time,
     rental_end_time,
-    payment_type,
     rental_price,
-    deposit,
     point_price,
+    deposit,
+    payment_type,
     card_id,
     phone_number
 ) => {
@@ -38,21 +38,20 @@ export const requestPostRental = async (JWT_TOKEN,
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     }
-    const formData = makeFormData({
+    const data = {
         place_id,
         cp_id,
         rental_start_time,
         rental_end_time,
-        payment_type,
         rental_price,
-        deposit,
         point_price,
+        deposit,
+        payment_type,
         card_id,
         phone_number
-    });
-    const response = await axios.post(URL, formData, config);
-
-    return response;
+    }
+    const response = await axios.post(URL, data, config);
+    return response.data;
 };
 
 export const requestGetConfirmRental = async (JWT_TOKEN, rental_id) => {
@@ -74,22 +73,31 @@ export const requestGetUseRental = async (JWT_TOKEN, filter) => {
     // * orders:  [주문 정보 Array…]
 
     const URL = Paths.api + "rental";
-    const response = await axios.get(URL);
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
 
-export const requestGetDetailUseRental = async (JWT_TOKEN, rental_id) => {
+export const requestGetDetailUseRental = async (rental_id) => {
     // 이용 내역 상세 정보 요청 API(GET): /api/rental/:rental_id
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // { params: rental_id }: 대여 주문 번호
 
     // * 응답: order: 주문 정보
 
-    const URL = Paths.api + "rental/:rental_id";
-    const response = await axios.get(URL);
-
-    return response;
+    const URL = Paths.api + `rental/${rental_id}`;
+    const JWT_TOKEN = localStorage.getItem('user_id');
+    const config = {
+        headers:{
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    }
+    const response = await axios.get(URL, config);
+    return response.data;
 };
 
 export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {
@@ -99,8 +107,12 @@ export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: success / failure
 
-    const URL = Paths.api + 'rental/:rental_id';
-    const response = await axios.put(URL);
+    const URL = Paths.api + `rental/${rental_id}`;
+    const response = await axios.put(URL, {}, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };

@@ -161,7 +161,9 @@ const UpdateCar = () => {
                 car_image: parkingPicture.current.fileList[0],
             });
             if (response.msg === 'success') {
-                openDialog("차량정보변경 완료", "", () => history.push(Paths.main.mypage.index));
+                localStorage.removeItem('user_id')
+                openDialog("차량정보등록 완료");
+                history.push(Paths.auth.sign_complete)
             } else {
                 openDialog(response.msg, response.sub);
             }

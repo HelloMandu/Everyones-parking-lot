@@ -1,4 +1,5 @@
 import React from 'react';
+import { Skeleton } from '@material-ui/lab';
 
 import { getFormatDateTime } from '../../lib/calculateDate';
 import { numberFormat } from '../../lib/formatter';
@@ -29,7 +30,14 @@ const infos = [
 
 const ParkingInfo = ({ parkingInfo }) => {
     if (!parkingInfo) {
-        return null;
+        return (
+            <>
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50}/>
+            </>
+        );
     }
     const { title, image, price, deposit, start_time, end_time } = parkingInfo;
     infos[0].description = `${getFormatDateTime(

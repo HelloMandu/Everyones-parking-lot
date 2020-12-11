@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -15,6 +16,9 @@ import { useDialog } from '../../../../hooks/useDialog';
 import { Paths } from '../../../../paths';
 /* Paths */
 
+import { updateUser } from '../../../../store/user';
+/* Store */
+
 import { requestPutRePhoneNumber } from '../../../../api/user';
 /* API */
 
@@ -22,23 +26,21 @@ const UpdateHpContainer = () => {
     const phoneRef = useRef();
     const history = useHistory();
     const openDialog = useDialog();
+    const reduxDispatch = useDispatch();
 
     const [phoneCheck, setPhoneCheck] = useState(false);
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
         const JWT_TOKEN = localStorage.getItem('user_id');
-        if (JWT_TOKEN) {
-            const response = await requestPutRePhoneNumber(JWT_TOKEN, phoneRef.current.phoneNumber);
-            if (response.msg === 'success') {
-                openDialog("연락처변경 완료", "", () => history.push(Paths.main.mypage.index));
-            } else {
-                openDialog(response.msg, response.sub);
-            }
+        const response = await requestPutRePhoneNumber(JWT_TOKEN, phoneRef.current.phoneNumber);
+        if (response.msg === 'success') {
+            reduxDispatch(updateUser('phone_number', phoneRef.current.phoneNumber));
+            openDialog("연락처변경 완료", "", () => history.push(Paths.main.mypage.index));
         } else {
-            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+            openDialog(response.msg, response.sub);
         }
-    }, [history, openDialog]);
+    }, [history, openDialog, reduxDispatch]);
 
     return (
         <>

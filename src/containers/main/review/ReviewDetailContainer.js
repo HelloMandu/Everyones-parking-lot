@@ -1,12 +1,18 @@
-import React from 'react';
-import classNames from 'classnames/bind';
+import React, { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
+
+import {
+    requestGetDetailReview,
+    requestPostWriteComment,
+} from '../../../api/review';
 
 import { Paths } from '../../../paths';
 
+import classNames from 'classnames/bind';
 import styles from './ReviewDetailContainer.module.scss';
 import Parking from '../../../static/asset/png/parking.png';
 import Profile from '../../../static/asset/png/profile.png';
@@ -27,7 +33,7 @@ const list = [
         user_id: 1,
     },
     {
-        comment_id: 1,
+        comment_id: 2,
         comment_body:
             '주차장이 꽤 넓어서 너무 좋았습니다~!! 다음에도 다시 이용할거 같아요!! 추천드려요~~',
         deleted: 0,
@@ -37,7 +43,7 @@ const list = [
         user_id: 1,
     },
     {
-        comment_id: 1,
+        comment_id: 3,
         comment_body:
             '주차장이 꽤 넓어서 너무 좋았습니다~!! 다음에도 다시 이용할거 같아요!! 추천드려요~~',
         deleted: 0,
@@ -56,13 +62,31 @@ const ReviewDetailContainer = ({ location }) => {
     const { id } = query;
 
     const [comment, onChangeComment] = useInput();
+    const openDialog = useDialog();
 
-    const onClickSubmit = () => {
-        console.log('submit');
-    };
+    const onClickSubmit = useCallback(async () => {
+        const token = localStorage.getItem('user_id');
+        const { data } = await requestPostWriteComment(token, id, comment);
 
-    // requestGetDetailReview API
-    // requestPostWriteComment API
+        if(data.msg === 'success'){
+
+        } else {
+            openDialog(data.msg);
+        }
+    }, [comment, id, openDialog]);
+
+    const getReview = useCallback(async () => {
+        const { data } = await requestGetDetailReview(id);
+
+        if (data.msg === 'success') {
+        } else {
+            openDialog(data.msg);
+        }
+    }, [id, openDialog]);
+
+    useEffect(() => {
+        getReview();
+    }, [getReview]);
 
     return (
         <>

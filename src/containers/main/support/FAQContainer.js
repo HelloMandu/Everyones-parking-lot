@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
 import classnames from 'classnames/bind';
@@ -10,6 +10,13 @@ import Notice from '../../../static/asset/svg/Notice';
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 /* StyleSheets */
 
+import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading';
+/* Hooks */
+
+import { requestGetFAQList } from '../../../api/faq';
+/* API */
+
 import { Paths } from '../../../paths';
 /* Paths */
 
@@ -18,15 +25,23 @@ const cn = classnames.bind(styles);
 const Category = ({ type }) => {
 
     const history = useHistory();
+    const [onLoading, offLoading] = useLoading();
+
+    const onClickCategory = useCallback((type) => {
+        onLoading('category');
+        history.replace(Paths.main.support.faq + `?type=${type}`);
+        offLoading('category');
+        // eslint-disable-next-line 
+    }, [history]);
 
     return (
         <div className={styles['category-container']}>
-            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => history.push(Paths.main.support.faq + '?type=0')}>회원가입</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => history.push(Paths.main.support.faq + '?type=1')}>쿠폰</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => history.push(Paths.main.support.faq + '?type=2')}>결제</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => history.push(Paths.main.support.faq + '?type=3')}>포인트</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => history.push(Paths.main.support.faq + '?type=4')}>주차공간</ButtonBase>
-            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => history.push(Paths.main.support.faq + '?type=5')}>대여연장</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 0 })} onClick={() => onClickCategory(0)}>회원가입</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 1 })} onClick={() => onClickCategory(1)}>쿠폰</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 2 })} onClick={() => onClickCategory(2)}>결제</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 3 })} onClick={() => onClickCategory(3)}>포인트</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 4 })} onClick={() => onClickCategory(4)}>주차공간</ButtonBase>
+            <ButtonBase className={cn('category', { click: type === 5 })} onClick={() => onClickCategory(5)}>대여연장</ButtonBase>
         </div>
     );
 };
@@ -42,7 +57,7 @@ const FAQItems = memo(({ FAQList, setFAQList }) => {
 
     return (
         <ul className={styles['container']}>
-            {FAQList.map(({ faq_id, faq_title, faq_name, faq_cnt, faq_text, faq_check }) => (
+            {FAQList.map(({ faq_id, question, answer, faq_check }) => (
                 <div className={cn('border', { click: faq_check })} key={faq_id}>
                     <ButtonBase
                         component={"li"}
@@ -53,10 +68,9 @@ const FAQItems = memo(({ FAQList, setFAQList }) => {
                         <div className={styles['text-wrap']}>
                             <div className={styles['question']}>Q</div>
                             <div className={styles['text']}>
-                                <div className={styles['title']}>{faq_title}</div>
+                                <div className={styles['title']}>{question}</div>
                                 <div className={styles['bottom']}>
-                                    <div className={styles['name']}>{faq_name}</div>
-                                    <div className={styles['count']}>{faq_cnt}</div>
+                                    <div className={styles['name']}>운영자</div>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +80,7 @@ const FAQItems = memo(({ FAQList, setFAQList }) => {
                             <ArrowSmall rotate={faq_check ? 0 : 180} />
                         </IconButton>
                     </ButtonBase>
-                    <div className={cn('sub-text', { click: faq_check })}>{faq_text}</div>
+                    <div className={cn('sub-text', { click: faq_check })}>{answer}</div>
                 </div>
             ))}
         </ul>
@@ -75,73 +89,46 @@ const FAQItems = memo(({ FAQList, setFAQList }) => {
 
 const FAQContainer = () => {
 
-    const [FAQList, setFAQList] = useState([
-        {
-            faq_id: 1,
-            faq_title: '회원가입은 어떻게 하죠?',
-            faq_name: '스페이스',
-            faq_cnt: '조회수 123',
-            faq_text: "TEST 이벤트 제목입니이벤트 제목입니다.TEST 이벤트 제목입TEST 이벤트 제목입니다.TEST 이벤트 제목ST 이벤트 제목입니다.TEST 이벤트 제목입니다. TEST 이벤트 제목입",
-            faq_check: false,
-        },
-        {
-            faq_id: 2,
-            faq_title: '회원가입은 어떻게 하죠?',
-            faq_name: '스페이스',
-            faq_cnt: '조회수 123',
-            faq_text: "TEST 이벤트 제목입니이벤트 제목입니다.TEST 이벤트 제목입TEST 이벤트 제목입니다.TEST 이벤트 제목ST 이벤트 제목입니다.TEST 이벤트 제목입니다. TEST 이벤트 제목입",
-            faq_check: false,
-        },
-        {
-            faq_id: 3,
-            faq_title: '회원가입은 어떻게 하죠?',
-            faq_name: '스페이스',
-            faq_cnt: '조회수 123',
-            faq_text: "TEST 이벤트 제목입니이벤트 제목입니다.TEST 이벤트 제목입TEST 이벤트 제목입니다.TEST 이벤트 제목ST 이벤트 제목입니다.TEST 이벤트 제목입니다. TEST 이벤트 제목입",
-            faq_check: false,
-        },
-        {
-            faq_id: 4,
-            faq_title: '회원가입은 어떻게 하죠?',
-            faq_name: '스페이스',
-            faq_cnt: '조회수 123',
-            faq_text: "TEST 이벤트 제목입니이벤트 제목입니다.TEST 이벤트 제목입TEST 이벤트 제목입니다.TEST 이벤트 제목ST 이벤트 제목입니다.TEST 이벤트 제목입니다. TEST 이벤트 제목입",
-            faq_check: false,
-        },
-        {
-            faq_id: 5,
-            faq_title: '회원가입은 어떻게 하죠?',
-            faq_name: '스페이스',
-            faq_cnt: '조회수 123',
-            faq_text: "TEST 이벤트 제목입니이벤트 제목입니다.TEST 이벤트 제목입TEST 이벤트 제목입니다.TEST 이벤트 제목ST 이벤트 제목입니다.TEST 이벤트 제목입니다. TEST 이벤트 제목입",
-            faq_check: false,
-        },
-    ]);
+    const [FAQList, setFAQList] = useState([]);
 
+    const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading();
     const location = useLocation();
+    const history = useHistory();
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
     const t = query.type ? query.type : "0";
     const type = parseInt(t);
 
-    if (FAQList.length !== 0) {
-        return (
-            <>
-                <Category type={type} />
-                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
-            </>
-        );
-    };
+    const getFAQList = useCallback(async () => {
+        onLoading('faq');
+        const response = await requestGetFAQList(type);
+        setFAQList(response.notices);
+        offLoading('faq');
+        // eslint-disable-next-line
+    }, [type])
+
+    useEffect(() => {
+        try {
+            getFAQList();
+        } catch (e) {
+            openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
+        }
+        // eslint-disable-next-line 
+    }, [getFAQList, openDialog, history])
+
     return (
         <>
             <Category type={type} />
-            <div className={styles['non-faq']}>
-                <div className={styles['non-container']}>
-                    <Notice />
-                    <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
-                </div>
-            </div>
+            {FAQList.length !== 0 ?
+                <FAQItems FAQList={FAQList} setFAQList={setFAQList} />
+                : <div className={styles['non-faq']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>등록된 자주 묻는 질문이 없습니다.</div>
+                    </div>
+                </div>}
         </>
     );
 };

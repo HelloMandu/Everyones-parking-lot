@@ -5,7 +5,12 @@ const useInput = (initialValue = '', callback, limit, restrict) => {
     const [check, setCheck] = useState(false);
     const onChange = useCallback(
         (e) => {
-            if(restrict !== undefined){
+            if(e === undefined){
+                setState('');
+                setCheck(false);
+                return;
+            }
+            else if(restrict !== undefined){
                 if(restrict === true){
                     return;
                 }
