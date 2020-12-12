@@ -71,6 +71,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     );
 });
 
+//TODO: 주차공간 클릭시 상세보기 페이지가 나오며, 수정하기 버튼생성
 const ParkingManageContainer = () => {
     const allParkingList = useRef([]);
     const dataLength = useRef(0);

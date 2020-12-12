@@ -8,6 +8,7 @@ import React, {
     useState,
 } from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
+import qs from 'qs';
 
 import { requestGetAddressInfo } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
@@ -418,7 +419,13 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
     );
 });
 
-const ParkingEnrollContainer = ({ match }) => {
+//TODO: place_id를 이용해 수정하기, 등록하기 구분
+const ParkingEnrollContainer = ({ location, match }) => {
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    const { place_id } = query;
+    console.log(place_id);
     const { url, params } = match;
     const [checkAll, setCheckAll] = useState(false);
     const [checkBasicInfo, setCheckBasicInfo] = useState(false);

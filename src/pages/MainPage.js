@@ -2,7 +2,6 @@ import React from 'react';
 import {useHistory} from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
 import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support, Setting } from './main';
-import ErrorPage from './ErrorPage';
 
 const { Paths } = require('../paths');
 

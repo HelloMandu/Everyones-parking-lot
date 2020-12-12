@@ -42,6 +42,7 @@ const InfoItem = ({ txt, value }) => {
     );
 };
 
+//TODO: 최종등록 이전 페이지로 수정하기와 나눌지 고려
 const ParkingPreviewModal = ({ open, parkingInfo }) => {
     const history = useHistory();
     const openDialog = useDialog();

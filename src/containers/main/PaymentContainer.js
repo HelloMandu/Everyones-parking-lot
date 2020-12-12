@@ -5,7 +5,6 @@ import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
 import useModal from '../../hooks/useModal';
-import useLoading from '../../hooks/useLoading';
 import { useDialog } from '../../hooks/useDialog';
 
 import { numberFormat } from '../../lib/formatter';
@@ -263,10 +262,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
         usePoint,
     ]);
 
-    const [onLoading, offLoading] = useLoading();
-    useEffect(() => {
-        const getPaymentInfo = async (place_id, start_time, end_time) => {
-            onLoading('payment');
+    const getPaymentInfo = useCallback(
+        async (place_id, start_time, end_time) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const { data } = await requestGetPayInfo(
                 JWT_TOKEN,
@@ -294,11 +291,12 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     history.goBack(),
                 );
             }
-            offLoading('payment');
-        };
-        getPaymentInfo(place_id, start_time, end_time);
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        [],
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
     return (
         <>
             <main className={styles['parking-payment-container']}>
