@@ -15,7 +15,10 @@ const DetailPage = ({match,location}) => {
     console.log(place_id);
     return (
         <div>
-            <DetailContainer modal={modal} place_id={place_id}/>
+            <DetailContainer 
+            modal={modal} place_id={place_id}
+            match={match} location={location}
+            />
         </div>
     );
 }

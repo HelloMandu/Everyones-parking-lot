@@ -179,6 +179,7 @@ const MapContainer = ({ modal }) => {
 
     //주차장 마커를 생성하는 함수
     const createParkingMarker =()=>{
+        console.log('마커생성 시작');
 
         onLoading('parking/GET_LIST');
         if(cluster_marker.current!==null){
@@ -225,7 +226,7 @@ const MapContainer = ({ modal }) => {
             }
         });
         console.log('필터링 시작'+area);
-        const markdata = parking.filter((item)=>item.addr.indexOf(area)!==-1);
+        const markdata = parking.slice(0,1000).filter((item)=>item.addr.indexOf(area)!==-1);
         // 주차장 마커 생성
         const data = markdata.map((el) => {
             // const distance ='300';
@@ -332,14 +333,6 @@ const MapContainer = ({ modal }) => {
         };
     }, [dispatch]);
 
-
-    // useEffect(()=>{
-    //     const lat1 = markerdata[0].lat;
-    //     const lng1 =markerdata[0].lng;
-    //     const lat2 = markerdata[2].lat;
-    //     const lng2= markerdata[2].lng;
-    //     getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
-    // },[])
 
     return (
         <>

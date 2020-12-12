@@ -21,6 +21,7 @@ import { getDateRange ,calculateDate} from '../../lib/calculateDate';
 import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
+
 const useStyles = makeStyles((theme) => ({
     appBar: {
         position: 'relative',
@@ -88,17 +89,18 @@ const DatePickerModal = (props) => {
     for (let i = 0; i < 6; i++) minute.push(`${i}0`);
     for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
+    const{start_date,end_date,oper_start,oper_end} = props;
     const classes = useStyles();
     const history = useHistory();
-    
     const [date_index, dispatchDateIndex] = useReducer(dateReducer, initState);
     const [date_list, setDateList] = useState([]);
     const [start_open, setStartOpen] = useState(false);
     const [end_open, setEndOpen] = useState(false);
-    const [start_date, setStateDate] = useState(props.start_date);
-    const [end_date, setEndDate] = useState(props.end_date);
+    const [s_date, setStartDate] = useState(start_date ? start_date : 0);
+    const [e_date, setEndDate] = useState(end_date ? end_date : 0);
     const [total_date ,setTotalDate] = useState(0);
-    const [possible ,setPossible] = useState(false);
+    const [date_result ,setDateResult] = useState(false);
+    const [calc_price , setCaclPrice] = useState(null);
 
 
     const day_list = date_list.map((data,index) => (
@@ -118,15 +120,12 @@ const DatePickerModal = (props) => {
     ));
 
     useEffect(() => {
-        let start = new Date();
-        let end = new Date();
-        end.setFullYear(start.getFullYear());
-        end.setMonth(start.getMonth() + 1);
-        end.setDate(start.getDate());
-        const res = getDateRange(start, end);
-        setDateList(res);
-        console.log('속성');
-    }, []);
+        if(oper_start && oper_end){
+            const res = getDateRange(oper_start, oper_end);
+            setDateList(res);
+        }
+ 
+    }, [oper_start, oper_end]);
 
 
     useEffect(() => {
@@ -143,26 +142,20 @@ const DatePickerModal = (props) => {
                 DATE : date_list[end_day].DATE,
                 TIME : hour[end_hour] + ':' + minute[end_minute],
             }
-            setStateDate(newStartState);
+            setStartDate(newStartState);
             setEndDate(newEndState);
         }
     }, [date_index, date_list]);
 
     useEffect(()=>{
-        if(start_date!==0 && end_date !==0){
-            const res = calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME);
-            console.log(res);
-            setPossible(res.possible);
+        if(s_date!==0 && e_date !==0){
+            const res = calculateDate(s_date.DATE,e_date.DATE ,s_date.TIME , e_date.TIME);
+            setDateResult(res);
             if(res.possible){
-                setTotalDate(calculateDate(start_date.DATE,end_date.DATE ,start_date.TIME , end_date.TIME));
+                setTotalDate(calculateDate(s_date.DATE,e_date.DATE ,s_date.TIME , e_date.TIME));
             }
         }
-    },[start_date,end_date])
-
-    useEffect(()=>{
-        console.log('토탈 바뀜',total_date);
-    },[total_date])
-
+    },[s_date,e_date])
 
     return (
         <Dialog
@@ -173,11 +166,10 @@ const DatePickerModal = (props) => {
             className={classes.dialog}
         >
             <Header title={'대여시간 설정'} />
-            <DialogContent className={classes.content}>
                 <div className={styles['container']}>
                     <div className={styles['total-date']}>
                         <h1>
-                            {!possible ? '대여 시간을 확인해주세요.':
+                            {!date_result.possible ? '대여 시간을 확인해주세요.':
                             <>
                            {'총 '}
                             {total_date.day > 0 && `${total_date.day}일 `}
@@ -187,7 +179,7 @@ const DatePickerModal = (props) => {
                             }
                      
                         </h1>
-                        <p>{start_date.DAY} ~ {end_date.DAY}</p>
+                        <p>{s_date.DAY} ~ {e_date.DAY}</p>
                     </div>
                     <div className={cx('date-box', { open: start_open })}>
                         <div className={styles['txt-value']}>
@@ -196,7 +188,7 @@ const DatePickerModal = (props) => {
                                 className={styles['value']}
                                 onClick={() => setStartOpen(!start_open)}
                             >
-                                {start_date.DAY}
+                                {s_date.DAY}
                                 <Select />
                             </ButtonBase>
                         </div>
@@ -269,7 +261,7 @@ const DatePickerModal = (props) => {
                                 className={styles['value']}
                                 onClick={() => setEndOpen(!end_open)}
                             >
-                                {end_date.DAY}
+                                {e_date.DAY}
                                 <Select />
                             </ButtonBase>
                         </div>
@@ -329,14 +321,12 @@ const DatePickerModal = (props) => {
                         </div>
                     </div>
                 </div>
-            </DialogContent>
-            <FixedButton disable={!possible} button_name={"시간 설정 완료"} onClick={()=>{
-                props.onClick(start_date,end_date)
-                history.goBack();
-                }
-            }/>
+                <FixedButton disable={!date_result.possible} button_name={"시간 설정 완료"} onClick={()=>{
+                    props.onClick(s_date,e_date,total_date)
+                    history.goBack();
+                    }
+                }/>
         </Dialog>
-
     );
 };
 const DateItem = ({ value }) => {
