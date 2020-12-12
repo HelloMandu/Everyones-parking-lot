@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import cn from 'classnames/bind';
 import { ButtonBase, IconButton } from '@material-ui/core';
+import { Dialog, Slide } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 import ReviewRating from '../../../components/review/ReviewRating';
 import CircleButton from '../../../components/button/CircleButton';
 import CustomTabs from '../../../components/nav/CustomTabs';
-import DetailReviewItem from '../../../components/review/DetailReviewItem';
+import FixedButton from '../../../components/button/FixedButton';
+
+import { Paths } from '../../../paths';
+
+import { useDialog } from '../../../hooks/useDialog';
+
+import {
+    requestPostEnrollParking,
+    requestPutModifyParking,
+} from '../../../api/place';
+import { getFormatDateTime } from '../../../lib/calculateDate';
+import { isEmpty } from '../../../lib/formatChecker';
 
 import Arrow from '../../../static/asset/svg/Arrow';
-import test_img from '../../../static/asset/png/test_img.png';
 import guid_icon from '../../../static/asset/svg/detail/guid.svg';
 import roadview_icon from '../../../static/asset/svg/detail/roadview.svg';
 import shared_icon from '../../../static/asset/svg/detail/shared.svg';
 import datepicker_icon from '../../../static/asset/svg/detail/time_filter.svg';
 
-import styles from 'ParkingPreviewModal.module.scss';
+import styles from './ParkingPreviewModal.module.scss';
 
 const cx = cn.bind(styles);
+
+const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const InfoItem = ({ txt, value }) => {
     return (
@@ -27,27 +43,69 @@ const InfoItem = ({ txt, value }) => {
     );
 };
 
-const ParkingPreviewModal = () => {
+//TODO: 최종등록 이전 페이지로 수정하기와 나눌지 고려
+const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
+    const history = useHistory();
+    const openDialog = useDialog();
+    const onClickEnrollParking = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await (placeId
+            ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
+            : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
+        if (response.data.msg === 'success') {
+            openDialog('등록완료', '주차공간 등록을 완료했습니다.');
+            history.replace(Paths.main.parking.manage);
+        } else {
+            openDialog('등록실패', '주차공간 등록에 실패했습니다.');
+        }
+    }, [history, openDialog, parkingInfo, placeId]);
+    const [imgFile, setImgFile] = useState(null);
+    useEffect(() => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result;
+            if (base64) {
+                setImgFile(base64.toString());
+            }
+        };
+        if (parkingInfo.place_images) {
+            reader.readAsDataURL(parkingInfo.place_images[0].file);
+        }
+    }, [parkingInfo]);
+    if (isEmpty(parkingInfo)) {
+        return null;
+    }
+    const {
+        addr,
+        place_name,
+        place_comment,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+    } = parkingInfo;
     return (
-        <>
+        <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <div className={styles['wrapper']}>
-                <IconButton className={styles['back']}>
+                <IconButton
+                    className={styles['back']}
+                    onClick={() => history.goBack()}
+                >
                     <Arrow white={true}></Arrow>
                 </IconButton>
                 <div className={styles['parking-img']}>
-                    <img src={test_img} alt="img" />
+                    {imgFile && <img src={imgFile} alt="img" />}
                 </div>
                 <div className={styles['container']}>
                     <div className={styles['pd-box']}>
                         <div className={styles['item-table']}>
                             <div className={styles['item-name']}>
-                                <h1>test</h1>
+                                <h1>{place_name}</h1>
                                 <div className={styles['item-state']}>
                                     대여가능
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={3} />
+                                <ReviewRating rating={5} />
                                 <div className={styles['item-review']}>
                                     리뷰
                                 </div>
@@ -67,7 +125,7 @@ const ParkingPreviewModal = () => {
                             <div className={styles['txt']}>주차요금</div>
                             <div className={styles['value']}>
                                 <div className={styles['item-price']}>
-                                    {1000}원
+                                    {place_fee}원
                                 </div>
                                 <div className={styles['item-base-time']}>
                                     /30분 기준
@@ -77,7 +135,7 @@ const ParkingPreviewModal = () => {
                         <div className={cx('shared-time', 'space-between')}>
                             <div className={styles['txt']}>대여시간</div>
                             <div className={styles['value']}>
-                                "시작시간 ~ 끝시간"
+                                대여시간을 설정해주세요.
                                 <ButtonBase className={styles['date-picker']}>
                                     <img src={datepicker_icon} alt="date" />
                                 </ButtonBase>
@@ -86,43 +144,43 @@ const ParkingPreviewModal = () => {
                         <div className={cx('operation-time', 'space-between')}>
                             <div className={styles['txt']}>운영시간</div>
                             <div className={styles['value']}>
-                                시작시간 ~ 끝시간
+                                {getFormatDateTime(oper_start_time)} ~{' '}
+                                {getFormatDateTime(oper_end_time)}
                             </div>
                         </div>
                     </div>
                     <div className={styles['tab-wrapper']}>
                         <CustomTabs
-                            idx={1}
+                            idx={0}
                             categories={[
                                 { ca_name: '정보' },
                                 { ca_name: '리뷰' },
                             ]}
                         />
                         <div className={styles['detail-info']}>
-                            <InfoItem txt={'주소'} value={'주소'} />
+                            <InfoItem txt={'주소'} value={addr} />
                             <InfoItem
                                 txt={'주차장 종류'}
                                 value={'지하주차장'}
                             />
                             <InfoItem
                                 txt={'추가 요금'}
-                                value={`30분당 10000원`}
+                                value={`30분당 ${place_fee}원`}
                             />
                             <InfoItem
-                                txt={'추가 전달 사항'}
-                                value={'추가전달사항'}
+                                txt={'추가전달사항'}
+                                value={place_comment}
                             />
-                        </div>
-                        <div className={styles['review-list']}>
-                            <DetailReviewItem />
-                            <DetailReviewItem />
-                            <DetailReviewItem />
-                            <DetailReviewItem />
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+            <FixedButton
+                button_name={'최종등록'}
+                disable={false}
+                onClick={onClickEnrollParking}
+            ></FixedButton>
+        </Dialog>
     );
 };
 

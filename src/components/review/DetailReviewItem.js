@@ -27,4 +27,16 @@ const DetailReviewItem = () => {
     );
 };
 
+
+const DetailReviewList =({review_list})=>{
+    const list = review_list.map((item)=>(
+        <DetailReviewItem />
+    ))
+        return (
+            <>
+            
+            </>
+        )
+}
+
 export default DetailReviewItem;

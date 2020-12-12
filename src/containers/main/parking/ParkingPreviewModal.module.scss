@@ -34,7 +34,7 @@ html{
   @include container(0);
   min-height: calc(100vh - 260px);
   background-color: #F4F4F4;
-  padding-bottom: 120px;
+  padding-bottom: 60px;
   .pd-box{  
     padding : $padding;
       background-color: #fff;
@@ -83,9 +83,6 @@ html{
           margin:40px 0;
           display: flex;
           justify-content: space-around;
-          :global(.MuiButtonBase-root){
-
-          }
       }
   }
   .parking-detail-info{

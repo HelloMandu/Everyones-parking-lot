@@ -1,11 +1,13 @@
 import React from 'react';
+import {useHistory} from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
 import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support, Setting } from './main';
-import ErrorPage from './ErrorPage';
 
 const { Paths } = require('../paths');
 
 const MainPage = () => {
+
+    const history=  useHistory();
 
     return (
         <Switch>
@@ -22,7 +24,7 @@ const MainPage = () => {
             <Route path={Paths.main.coupon + '/:modal?'} component={Coupon} />
             <Route path={Paths.main.support.index} component={Support} />
             <Route path={Paths.main.setting} component={Setting} />
-            <Route component={ErrorPage} />
+            <Route render={()=> history.replace(Paths.main.index)} />
         </Switch>
     );
 };

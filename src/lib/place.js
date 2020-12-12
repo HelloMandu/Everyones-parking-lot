@@ -2,7 +2,7 @@ export const areaFormat = (data) => {
     let area = '';
     switch (data) {
         case '부산':
-            area = '부산광역시';
+            area = '부산';
             break;
         case '경남':
             area = '경상남도';
