@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory,useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
@@ -14,6 +14,7 @@ import LikeButton from '../../components/button/LikeButton';
 import DetailReviewItem from '../../components/review/DetailReviewItem';
 import DatePickerModal from '../../components/modal/DatePickerModal';
 import RoadviewModal from '../../components/modal/RoadviewModal';
+import FixedButton from '../../components/button/FixedButton';
 //asset
 import test_img from '../../static/asset/png/test_img.png';
 import guid_icon from '../../static/asset/svg/detail/guid.svg';
@@ -28,8 +29,7 @@ import Arrow from '../../static/asset/svg/Arrow';
 import { requestGetDetailParking } from '../../api/place';
 
 //lib
-import { getFormatDay } from '../../lib/calculateDate';
-import { getFormatDateTime,calculatePrice } from '../../lib/calculateDate';
+import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
 import { numberFormat } from '../../lib/formatter';
 
 //hooks
@@ -38,10 +38,10 @@ import useModal from '../../hooks/useModal';
 
 const cx = cn.bind(styles);
 const DetailContainer = ({ modal, place_id }) => {
-
+    const { user_id } = useSelector((state) => state.user);
     const history = useHistory();
     const location = useLocation();
-  
+
     const [openDatePicker, onClickDatePicker] = useModal(
         location.pathname,
         modal,
@@ -63,8 +63,8 @@ const DetailContainer = ({ modal, place_id }) => {
     const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(null);
     const [end_date, setEndDate] = useState(null);
-    const [total_date , setTotalDate] = useState(0);
-    const [price,setPrice] = useState(0);
+    const [total_date, setTotalDate] = useState(0);
+    const [price, setPrice] = useState(0);
     const [place, setPlace] = useState(null);
     const [likes, setLike] = useState(0);
     const [reviews, setReviews] = useState([]);
@@ -81,45 +81,44 @@ const DetailContainer = ({ modal, place_id }) => {
                 setLike(likes);
                 setReviews(reviews);
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e);
         }
         offLoading('detail');
         setLoading(false);
-    }
-    const onClickSetDate = (start_date, end_date,total_date) => {
+    };
+    const onClickSetDate = (start_date, end_date, total_date) => {
         setStartDate(start_date);
         setEndDate(end_date);
         setTotalDate(total_date);
         console.log(total_date);
-    }
+    };
 
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = () => {
         console.log(Kakao);
         Kakao.Navi.start({
-            name: "현대백화점 판교점", // 도착지 지번
+            name: '현대백화점 판교점', // 도착지 지번
             x: 127.11205203011632, //도착지 x좌표
             y: 37.39279717586919, //도착지 y 좌표
-            coordType: 'wgs84'
+            coordType: 'wgs84',
         });
-    }
+    };
 
     useEffect(() => {
         callGetDetailParking();
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    useEffect(()=>{
-        if(total_date){
-            setPrice(calculatePrice(total_date,place.place_fee));
+    useEffect(() => {
+        if (total_date) {
+            setPrice(calculatePrice(total_date, place.place_fee));
         }
-    },[total_date,place])
+    }, [total_date, place]);
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(start_date);
-    },[start_date])
-
+    }, [start_date]);
 
     // const createKakaoButton = () => {
     //     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
@@ -163,9 +162,11 @@ const DetailContainer = ({ modal, place_id }) => {
     //     }
     // }
     return (
-
         <div className={styles['wrapper']}>
-            <IconButton className={styles['back']} onClick={() => history.goBack()}>
+            <IconButton
+                className={styles['back']}
+                onClick={() => history.goBack()}
+            >
                 <Arrow white={true}></Arrow>
             </IconButton>
             {/* <button id="kakao-link-btn">
@@ -188,14 +189,20 @@ const DetailContainer = ({ modal, place_id }) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} txt={"공유"} />
-                            <CircleButton src={guid_icon} txt={"안내"} onClick={
-                                () => {
+                            <CircleButton src={shared_icon} txt={'공유'} />
+                            <CircleButton
+                                src={guid_icon}
+                                txt={'안내'}
+                                onClick={() => {
                                     // history.push(Paths.main.detail + '/nav');
                                     onClickKakaoNavi();
-                                }
-                            } />
-                            <CircleButton src={roadview_icon} txt={"로드뷰"} onClick={onClickRoadview} />
+                                }}
+                            />
+                            <CircleButton
+                                src={roadview_icon}
+                                txt={'로드뷰'}
+                                onClick={onClickRoadview}
+                            />
                         </div>
                     </div>
                 </div>
@@ -203,7 +210,9 @@ const DetailContainer = ({ modal, place_id }) => {
                     <div className={cx('price', 'space-between')}>
                         <div className={styles['txt']}>주차요금</div>
                         <div className={styles['value']}>
-                            <div className={styles['item-price']}>{numberFormat(place&&place.place_fee)}원</div>
+                            <div className={styles['item-price']}>
+                                {numberFormat(place && place.place_fee)}원
+                            </div>
                             <div className={styles['item-base-time']}>
                                 /30분 기준
                             </div>
@@ -212,19 +221,26 @@ const DetailContainer = ({ modal, place_id }) => {
                     <div className={cx('shared-time', 'space-between')}>
                         <div className={styles['txt']}>대여시간</div>
                         <div className={styles['value']}>
-                            { (start_date&& end_date) ? start_date.DAY +' ~ ' +end_date.DAY : '대여시간을 설정해주세요'} 
-                            <ButtonBase className={styles['date-picker']} onClick={onClickDatePicker}>
+                            {start_date && end_date
+                                ? start_date.DAY + ' ~ ' + end_date.DAY
+                                : '대여시간을 설정해주세요'}
+                            <ButtonBase
+                                className={styles['date-picker']}
+                                onClick={onClickDatePicker}
+                            >
                                 <img src={datepicker_icon} alt="date" />
                             </ButtonBase>
                         </div>
-
                     </div>
                     <div className={cx('operation-time', 'space-between')}>
                         <div className={styles['txt']}>운영시간</div>
                         <div className={styles['value']}>
-                            {place && 
-                            `${getFormatDateTime(place.oper_start_time)} ~  ${getFormatDateTime(place.oper_end_time)}`
-                            }
+                            {place &&
+                                `${getFormatDateTime(
+                                    place.oper_start_time,
+                                )} ~  ${getFormatDateTime(
+                                    place.oper_end_time,
+                                )}`}
                         </div>
                     </div>
                 </div>
@@ -246,24 +262,24 @@ const DetailContainer = ({ modal, place_id }) => {
                             />
                             <InfoItem
                                 txt={'추가 요금'}
-                                value={`30분당 ${numberFormat(place && place.place_fee)}원`}
+                                value={`30분당 ${numberFormat(
+                                    place && place.place_fee,
+                                )}원`}
                             />
                             <InfoItem
                                 txt={'추가 전달 사항'}
-                                value={
-                                    place && place.place_comment
-                                }
+                                value={place && place.place_comment}
                             />
                         </div>
                     )}
-                    {index === 1 &&
+                    {index === 1 && (
                         <div className={styles['review-list']}>
                             <DetailReviewItem />
                             <DetailReviewItem />
                             <DetailReviewItem />
                             <DetailReviewItem />
                         </div>
-                    }
+                    )}
                 </div>
             </div>
             <DatePickerModal
@@ -275,19 +291,42 @@ const DetailContainer = ({ modal, place_id }) => {
                 oper_end={place && place.oper_end_time}
                 onClick={onClickSetDate}
             />
-            <LikeButton 
-                like={likes} 
-                button_name={(start_date && end_date) ? `${numberFormat(price)}원 대여신청` : '대여시간을 설정해주세요'} 
-                disable={start_date ? false : true} 
-                onClick={() => history.push(Paths.main.payment +`?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`)} 
-            />
+            {place &&
+                (place.user_id === user_id ? (
+                    <FixedButton
+                        button_name={'수정하기'}
+                        disable={false}
+                        onClick={() =>
+                            history.push(
+                                `${Paths.main.parking.enrollment}?place_id=${place.place_id}`,
+                            )
+                        }
+                    ></FixedButton>
+                ) : (
+                    <LikeButton
+                        like={likes}
+                        button_name={
+                            start_date && end_date
+                                ? `${numberFormat(price)}원 대여신청`
+                                : '대여시간을 설정해주세요'
+                        }
+                        disable={start_date ? false : true}
+                        onClick={() =>
+                            history.push(
+                                Paths.main.payment +
+                                    `?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`,
+                            )
+                        }
+                    />
+                ))}
+
             <RoadviewModal
-                open={openLoadview} 
-                handleClose={() => history.goBack()} 
-                title={place && place.place_name} 
-                lat ={place && place.lat}
-                lng = {place && place.lng}
-             />
+                open={openLoadview}
+                handleClose={() => history.goBack()}
+                title={place && place.place_name}
+                lat={place && place.lat}
+                lng={place && place.lng}
+            />
         </div>
     );
 };

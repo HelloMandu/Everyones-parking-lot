@@ -10,7 +10,7 @@ import React, {
 import { ButtonBase, IconButton } from '@material-ui/core';
 import qs from 'qs';
 
-import { requestGetAddressInfo } from '../../../api/place';
+import { requestGetAddressInfo, requestGetDetailParking } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
 import useForm from '../../../hooks/useForm';
@@ -45,7 +45,7 @@ const typeList = [
     },
 ];
 
-const BasicInfo = forwardRef(({ setCheck }, ref) => {
+const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
     const [name, onChangeName, checkName] = useInput(
         '',
         (state) => state.length > 0,
@@ -114,6 +114,20 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
             checkName && address.length > 0 && checkAddressDetail && checkPrice,
         );
     }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
+    useEffect(()=>{
+        if(parkingInfoInit){
+            const {addr, addr_detail, lat, lng, place_fee, place_name, place_type, post_num} = parkingInfoInit;
+            onChangeName(place_name);
+            onChangeType(place_type);
+            setAddress(addr);
+            setPostNum(post_num);
+            onChangeAddressDetail(addr_detail);
+            setLat(lat);
+            setLng(lng);
+            onChangePrice(place_fee.toString());
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit])
 
     return (
         <section className={styles['parking-enroll-area']}>
@@ -293,11 +307,17 @@ const OperatingTime = forwardRef((props, ref) => {
     );
 });
 
-const ExtraInfo = forwardRef((props, ref) => {
+const ExtraInfo = forwardRef(({parkingInfoInit}, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
     useImperativeHandle(ref, () => ({
         extraInfo,
     }));
+    useEffect(()=>{
+        if(parkingInfoInit){
+            onChangeExtraInfo(parkingInfoInit.place_comment);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit])
     return (
         <section className={styles['parking-enroll-area']}>
             <h3 className={styles['title']}>추가정보</h3>
@@ -425,8 +445,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
         ignoreQueryPrefix: true,
     });
     const { place_id } = query;
-    console.log(place_id);
     const { url, params } = match;
+    const [parkingInfoInit, setParkingInfoInit] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
     const [checkBasicInfo, setCheckBasicInfo] = useState(false);
     const [checkParkingPicture, setCheckParkingPicture] = useState(false);
@@ -439,24 +459,43 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const [isOpenPreview, openPreviewModal] = useModal(
         url,
         params.modal,
-        `preview`,
+        `preview${place_id ? `?place_id=${place_id}` : ``}`
     );
+
+    const getDetailParking = useCallback(async () =>{
+        if(!place_id){
+            return;
+        }
+        try {
+            const { data } = await requestGetDetailParking(place_id);
+            const { msg, place } = data;
+            if (msg === 'success') {
+                const {addr, addr_detail, lat, lng, place_comment, place_fee, place_name, place_type, post_num} = place;
+                setParkingInfoInit({addr, addr_detail, lat, lng, place_comment, place_fee, place_name, place_type, post_num});
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, [place_id])
 
     useEffect(() => setCheckAll(checkBasicInfo && checkParkingPicture), [
         checkBasicInfo,
         checkParkingPicture,
     ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getDetailParking, [])
     return (
         <>
             <main className={styles['parking-enroll-container']}>
                 <BasicInfo
                     setCheck={setCheckBasicInfo}
+                    parkingInfoInit={parkingInfoInit}
                     ref={basicInfo}
                 ></BasicInfo>
                 <div className={styles['bar']} />
                 <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
-                <ExtraInfo ref={extraInfo}></ExtraInfo>
+                <ExtraInfo ref={extraInfo} parkingInfoInit={parkingInfoInit}></ExtraInfo>
                 <ParkingPicture
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
@@ -471,6 +510,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
             )}
             <ParkingPreviewModal
                 open={isOpenPreview}
+                placeId={place_id}
                 parkingInfo={
                     checkAll && {
                         addr: basicInfo.current.address,

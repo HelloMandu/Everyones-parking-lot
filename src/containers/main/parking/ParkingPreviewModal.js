@@ -15,6 +15,7 @@ import { useDialog } from '../../../hooks/useDialog';
 
 import {
     requestPostEnrollParking,
+    requestPutModifyParking,
 } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 import { isEmpty } from '../../../lib/formatChecker';
@@ -43,19 +44,21 @@ const InfoItem = ({ txt, value }) => {
 };
 
 //TODO: 최종등록 이전 페이지로 수정하기와 나눌지 고려
-const ParkingPreviewModal = ({ open, parkingInfo }) => {
+const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const onClickEnrollParking = useCallback(async () => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestPostEnrollParking(JWT_TOKEN, parkingInfo);
-            if (response.data.msg === 'success') {
-                openDialog('등록완료', '주차공간 등록을 완료했습니다');
-                history.replace(Paths.main.parking.manage);
-            } else {
-                openDialog('등록실패', '주차공간 등록에 실패했습니다');
-            }
-    }, [history, openDialog, parkingInfo]);
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await (placeId
+            ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
+            : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
+        if (response.data.msg === 'success') {
+            openDialog('등록완료', '주차공간 등록을 완료했습니다.');
+            history.replace(Paths.main.parking.manage);
+        } else {
+            openDialog('등록실패', '주차공간 등록에 실패했습니다.');
+        }
+    }, [history, openDialog, parkingInfo, placeId]);
     const [imgFile, setImgFile] = useState(null);
     useEffect(() => {
         const reader = new FileReader();
@@ -90,9 +93,7 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     <Arrow white={true}></Arrow>
                 </IconButton>
                 <div className={styles['parking-img']}>
-                    {imgFile && (
-                        <img src={imgFile} alt="img" />
-                    )}
+                    {imgFile && <img src={imgFile} alt="img" />}
                 </div>
                 <div className={styles['container']}>
                     <div className={styles['pd-box']}>
@@ -174,7 +175,11 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     </div>
                 </div>
             </div>
-            <FixedButton button_name={'최종등록'} disable={false} onClick={onClickEnrollParking}></FixedButton>
+            <FixedButton
+                button_name={'최종등록'}
+                disable={false}
+                onClick={onClickEnrollParking}
+            ></FixedButton>
         </Dialog>
     );
 };

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState, useRef, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-import useScrollEnd from '../../../hooks/useScrollEnd'
+import useScrollEnd from '../../../hooks/useScrollEnd';
 import { requestGetMyParkingList } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
@@ -73,6 +73,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
 
 //TODO: 주차공간 클릭시 상세보기 페이지가 나오며, 수정하기 버튼생성
 const ParkingManageContainer = () => {
+    const history = useHistory();
     const allParkingList = useRef([]);
     const dataLength = useRef(0);
     const [parkingList, setParkingList] = useState([]);
@@ -87,7 +88,7 @@ const ParkingManageContainer = () => {
         setParkingList((parkingList) => parkingList.concat(fetchData));
         dataLength.current += LIMIT;
     }, []);
-    useScrollEnd(fetchParkingList)
+    useScrollEnd(fetchParkingList);
     useEffect(() => {
         const getParkingList = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
@@ -96,7 +97,7 @@ const ParkingManageContainer = () => {
             fetchParkingList();
         };
         getParkingList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <main className={styles['parking-management-container']}>
@@ -120,12 +121,20 @@ const ParkingManageContainer = () => {
                             className={styles['parking-item']}
                             component="li"
                             key={place_id}
+                            onClick={() =>
+                                history.push(
+                                    Paths.main.detail + `?place_id=${place_id}`,
+                                )
+                            }
                         >
                             <ParkingItem
                                 status={place_status}
                                 image={
                                     Array.isArray(place_images)
-                                        ? place_images[0].split('\\')[1]
+                                        ? place_images[0].replace(
+                                              'uploads/',
+                                              '',
+                                          )
                                         : ''
                                 }
                                 title={place_name}

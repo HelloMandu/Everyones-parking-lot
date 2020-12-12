@@ -3,7 +3,7 @@ import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requsetGetSampleDate  = ()=>{
+export const requsetGetSampleDate = () => {
     // const url ='http://apis.map.kakao.com/download/web/data/chicken.json';
     // const res = await axios.get(url);
     // console.log(res);
@@ -35,8 +35,7 @@ export const requsetGetSampleDate  = ()=>{
     ];
 
     return markerdata;
-    
-}
+};
 
 export const requestGetParkingList = async (
     lat,
@@ -60,10 +59,12 @@ export const requestGetParkingList = async (
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place';
-    const params={
-        lat,lng,range:1000,
-    }
-    const response = await axios.get(URL,{params});
+    const params = {
+        lat,
+        lng,
+        range: 1000,
+    };
+    const response = await axios.get(URL, { params });
 
     return response;
 };
@@ -88,7 +89,6 @@ export const requestGetDetailParking = async (place_id) => {
     const URL = Paths.api + `place/${place_id}`;
 
     const response = await axios.get(URL);
-    console.log(response)
 
     return response;
 };
@@ -115,10 +115,10 @@ export const requestGetMyParkingList = async (JWT_TOKEN) => {
     */
 
     const URL = Paths.api + 'place/my';
-    const config  = {
+    const config = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
-        }
+        },
     };
     const response = await axios.get(URL, config);
 
@@ -163,6 +163,7 @@ export const requestPostEnrollParking = async (
 
         *응답: success / failure
     */
+   console.log('post')
     const formData = makeFormData({
         addr,
         addr_detail,
@@ -175,15 +176,17 @@ export const requestPostEnrollParking = async (
         place_fee,
         oper_start_time,
         oper_end_time,
-        place_type
+        place_type,
     });
     const URL = Paths.api + 'place';
-    place_images.forEach(({file}) => formData.append('place_images', file, file.name));
-    const config  = {
+    place_images.forEach(({ file }) =>
+        formData.append('place_images', file, file.name),
+    );
+    const config = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
             ContentType: 'multipart/form-data',
-        }
+        },
     };
     // return formData;
     const response = await axios.post(URL, formData, config);
@@ -197,12 +200,13 @@ export const requestPutModifyParking = async (
         addr,
         addr_detail,
         addr_extra,
+        place_type,
         post_num,
         lat,
         lng,
         place_name,
         place_comment,
-        place_img,
+        place_images,
         place_fee,
         oper_start_time,
         oper_end_time,
@@ -228,9 +232,33 @@ export const requestPutModifyParking = async (
 
         *응답: success / failure
     */
-
-    const URL = Paths.api + 'place/:place_id';
-    const response = await axios.put(URL);
+    console.log('put')
+    const formData = makeFormData({
+        addr,
+        addr_detail,
+        addr_extra,
+        post_num,
+        lat,
+        lng,
+        place_name,
+        place_comment,
+        place_fee,
+        oper_start_time,
+        oper_end_time,
+        place_type,
+    });
+    const URL = Paths.api + `place/${place_id}`;
+    place_images.forEach(({ file }) =>
+        formData.append('place_images', file, file.name),
+    );
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+            ContentType: 'multipart/form-data',
+        },
+    };
+    // return formData;
+    const response = await axios.put(URL, formData, config);
 
     return response;
 };
@@ -263,16 +291,16 @@ export const requestGetAddressInfo = async (address) => {
     return response;
 };
 
-export const requsetGetAreaInfo = async (lat,lng)=>{
+export const requsetGetAreaInfo = async (lat, lng) => {
     const URL = 'https://dapi.kakao.com/v2/local/geo/coord2address.json';
     const response = await axios.get(URL, {
         headers: {
             Authorization: `KakaoAK d747c230bfd2f62cfcf8accd952285b8`,
         },
         params: {
-            y:lat,
-            x:lng
+            y: lat,
+            x: lng,
         },
     });
     return response;
-}
+};
