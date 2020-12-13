@@ -25,6 +25,7 @@ import {
     FaQIcon,
 } from '../../static/asset/svg/aside';
 import { Paths } from '../../paths/index';
+import {isEmpty} from '../../lib/formatChecker';
 
 const cx = cn.bind(styles);
 const settings = {
@@ -40,8 +41,6 @@ const Aside = ({ open, handleClose }) => {
     const history = useHistory();
     const user = useSelector(state => state.user);
 
-
-
     const onClickLink = (Path) => {
         handleClose();
         setTimeout(() => {
@@ -50,7 +49,8 @@ const Aside = ({ open, handleClose }) => {
     };
 
     useEffect(() => {
-        console.log(user);
+        console.log(isEmpty(user));
+        
     }, [user])
     return (
         <>
@@ -66,16 +66,16 @@ const Aside = ({ open, handleClose }) => {
                     </div>
                     <ButtonBase className={styles['aside-profile']} onClick={
                         () =>
-                            user ? onClickLink(Paths.main.mypage.index) : onClickLink(Paths.auth.login)
+                        !isEmpty(user) ? onClickLink(Paths.main.mypage.index) : onClickLink(Paths.auth.login)
                     }
                     >
                         <div className={styles['user-img']}>
                             <img src={profile_icon} alt="notification" />
                         </div>
                         <div className={styles['user-profile']}>
-                            <div className={cx('user-name', { login: !user })}>{user ? user.name : '로그인이 필요합니다'}</div>
+                            <div className={cx('user-name', { login: isEmpty(user) })}>{ !isEmpty(user) ? user.name : '로그인이 필요합니다'}</div>
                             <div className={styles['user-email']}>
-                                {user && user.email}
+                                {!isEmpty(user) && user.email}
                             </div>
                         </div>
                     </ButtonBase>
