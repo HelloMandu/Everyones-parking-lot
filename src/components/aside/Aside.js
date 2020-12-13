@@ -1,13 +1,13 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-
 // styles
 import styles from './Aside.module.scss';
 import cn from 'classnames/bind';
 
 //components
-import { ButtonBase, IconButton,Backdrop } from '@material-ui/core';
+import { ButtonBase, IconButton, Backdrop } from '@material-ui/core';
+import Slider from "react-slick";
 
 //icon
 import banner from '../../static/asset/png/banner.png';
@@ -27,10 +27,20 @@ import {
 import { Paths } from '../../paths/index';
 
 const cx = cn.bind(styles);
+const settings = {
+    dots: true,
+    autoplay: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows:false
+};
 
 const Aside = ({ open, handleClose }) => {
     const history = useHistory();
     const user = useSelector(state => state.user);
+
+
 
     const onClickLink = (Path) => {
         handleClose();
@@ -39,31 +49,31 @@ const Aside = ({ open, handleClose }) => {
         }, 500);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(user);
-    },[user])
+    }, [user])
     return (
         <>
             <div className={cx('aside-menu', { open })}>
                 <div className={styles['aside-top']}>
                     <div className={styles['aside-icon']}>
-                        <IconButton onClick={()=>{onClickLink(Paths.main.notification)}}>
+                        <IconButton onClick={() => { onClickLink(Paths.main.notification) }}>
                             <img src={NotificationIcon} alt="notification" />
                         </IconButton>
-                        <IconButton onClick={()=>{onClickLink(Paths.main.setting)}}>
+                        <IconButton onClick={() => { onClickLink(Paths.main.setting) }}>
                             <img src={SettingIcon} alt="setting" />
                         </IconButton>
                     </div>
-                    <ButtonBase className={styles['aside-profile']} onClick ={
-                        ()=>
-                        user ?    onClickLink(Paths.main.mypage.index) : onClickLink(Paths.auth.login) 
-                          }
-                        >
+                    <ButtonBase className={styles['aside-profile']} onClick={
+                        () =>
+                            user ? onClickLink(Paths.main.mypage.index) : onClickLink(Paths.auth.login)
+                    }
+                    >
                         <div className={styles['user-img']}>
                             <img src={profile_icon} alt="notification" />
                         </div>
                         <div className={styles['user-profile']}>
-                            <div className={cx('user-name',{login :!user})}>{user ? user.name : '로그인이 필요합니다'}</div>
+                            <div className={cx('user-name', { login: !user })}>{user ? user.name : '로그인이 필요합니다'}</div>
                             <div className={styles['user-email']}>
                                 {user && user.email}
                             </div>
@@ -71,9 +81,14 @@ const Aside = ({ open, handleClose }) => {
                     </ButtonBase>
                 </div>
                 <div className={styles['aside-event']}>
-                    <div className={styles['banner-item']}>
-                        <img src={banner} alt="배너" />
-                    </div>
+                    <Slider {...settings}>
+                        <div className={styles['banner-item']}>
+                            <img src={banner} alt="배너" />
+                        </div>
+                        <div className={styles['banner-item']}>
+                            <img src={banner} alt="배너" />
+                        </div>
+                    </Slider>
                 </div>
                 <div className={styles['aside-list']}>
                     <LinkItem
