@@ -20,13 +20,12 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
-        zIndex: 3000
     },
     modal: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 3000
+        zIndex: '3000 !important'
     },
 }));
 

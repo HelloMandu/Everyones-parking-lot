@@ -28,8 +28,12 @@ import Arrow from '../../static/asset/svg/Arrow';
 //api
 import {
     requestGetDetailParking,
-    requestPutLikeParking,
 } from '../../api/place';
+import {
+    requestGetLike,
+    requestPostLike,
+    requestDeleteLike
+} from '../../api/like';
 
 //lib
 import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
@@ -73,6 +77,7 @@ const DetailContainer = ({ modal, place_id }) => {
     const [reviews, setReviews] = useState([]);
     const [shareOpen, setShareOpen] = useState(false);
 
+
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
         onLoading('detail');
@@ -111,14 +116,14 @@ const DetailContainer = ({ modal, place_id }) => {
         });
     }, []);
 
-    const onClickLike = useCallback(async () => {
+    const handleLikeCheck = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             try {
-                const res = await requestPutLikeParking(JWT_TOKEN);
+                const {msg, status} = await requestGetLike(JWT_TOKEN, place_id);
             } catch (e) {}
         }
-    }, []);
+    }, [place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
 
@@ -129,7 +134,6 @@ const DetailContainer = ({ modal, place_id }) => {
             setPrice(calculatePrice(total_date, place.place_fee));
         }
     }, [total_date, place]);
-
     return (
         <div className={styles['wrapper']}>
             <IconButton
