@@ -9,6 +9,7 @@ import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
+import IntroContainer from './containers/main/IntroContainer'
 
 import Header from './components/header/Header';
 
@@ -179,7 +180,10 @@ const App = () => {
         }
     };
 
+    const visited = localStorage.getItem('SpaceStation_visited')
+
     return (
+        visited ?
         <div className="App">
             {renderHeader()}
             <Switch>
@@ -190,6 +194,8 @@ const App = () => {
             <DialogContainer/>
             <LoadingContainer/>
         </div>
+        :
+        <IntroContainer />
     );
 };
 
