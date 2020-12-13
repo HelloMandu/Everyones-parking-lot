@@ -41,7 +41,7 @@ const NoticeDetailContainer = () => {
         try {
             getNoticeDetail();
         } catch (e) {
-            openDialog("공지사항 상세보기 오류", "", history.goBack());
+            openDialog("공지사항을 가지고 오는 도중에 오류가 발생했습니다.", "잠시 후에 다시 시도해 주세요.", history.goBack());
         }
     }, [getNoticeDetail, openDialog, history])
 

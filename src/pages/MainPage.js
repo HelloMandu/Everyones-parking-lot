@@ -1,14 +1,10 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
 import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support, Setting } from './main';
 
 const { Paths } = require('../paths');
 
-const MainPage = () => {
-
-    const history=  useHistory();
-
+const MainPage = ({ history }) => {
     return (
         <Switch>
             <Route path={Paths.main.index + '/:modal?'} component={Map} />
