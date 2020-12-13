@@ -93,18 +93,6 @@ export const requestGetDetailParking = async (place_id) => {
     return response;
 };
 
-export const requestPutLikeParking = async (JWT_TOKEN, status) => {
-    // { headers }: JWT_TOKEN(유저 로그인 토큰)
-    // status: 좋아요 상태(boolean, 필수)
-
-    // * 응답: status: 변경된 좋아요 상태
-
-    const URL = Paths.api + 'place/like';
-    const response = await axios.put(URL);
-
-    return response;
-};
-
 export const requestGetMyParkingList = async (JWT_TOKEN) => {
     /* 
         내 주차공간 리스트 요청 API
