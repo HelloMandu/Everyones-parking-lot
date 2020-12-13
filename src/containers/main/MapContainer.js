@@ -99,7 +99,8 @@ const MapContainer = ({ modal }) => {
                 duration: 300,
             },
         });
-        console.log(level);
+        var t = kakao_map.current.getBounds();
+        console.log(t);
         dispatch(set_level(level));
     };
 
@@ -226,7 +227,7 @@ const MapContainer = ({ modal }) => {
             }
         });
         console.log('필터링 시작'+area);
-        const markdata = parking.filter((item)=>item.addr.indexOf(area)!==-1);
+        const markdata = parking.slice(0,1000).filter((item)=>item.addr.indexOf(area)!==-1);
         // 주차장 마커 생성
         const data = markdata.map((el) => {
             // const distance ='300';
@@ -300,6 +301,15 @@ const MapContainer = ({ modal }) => {
         const map = new kakao.maps.Map(container, options);
         map.setMaxLevel(10);
         kakao_map.current = map;
+
+        kakao.maps.event.addListener(map, 'zoom_start', function() {
+            let level = kakao_map.current.getLevel();
+            console.log(level);
+        });
+        kakao.maps.event.addListener(map, 'tilesloaded', function() {
+            let level = kakao_map.current.getLevel();
+            console.log(level);
+        });
 
     };
 
