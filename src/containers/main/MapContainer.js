@@ -226,7 +226,7 @@ const MapContainer = ({ modal }) => {
             }
         });
         console.log('필터링 시작'+area);
-        const markdata = parking.slice(0,1000).filter((item)=>item.addr.indexOf(area)!==-1);
+        const markdata = parking.filter((item)=>item.addr.indexOf(area)!==-1);
         // 주차장 마커 생성
         const data = markdata.map((el) => {
             // const distance ='300';
