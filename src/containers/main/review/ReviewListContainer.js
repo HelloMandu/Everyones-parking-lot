@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import {useDialog} from '../../../hooks/useDialog'
+import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 
@@ -16,20 +17,34 @@ import Notice from '../../../static/asset/svg/Notice';
 const cx = className.bind(styles);
 
 const ReviewItem = ({ review }) => {
-    const openDialog = useDialog()
+    const openDialog = useDialog();
     const reviewDelete = useCallback(() => {
-        const token = localStorage.getItem('user_id')
-        openDialog('리뷰를 삭제하시겠습니까 ?', '', () => requestDeleteReview(token, review.review_id), true)
-    }, [openDialog, review])
+        const token = localStorage.getItem('user_id');
+        openDialog(
+            '리뷰를 삭제하시겠습니까 ?',
+            '',
+            () => requestDeleteReview(token, review.review_id),
+            true,
+        );
+    }, [openDialog, review]);
 
     return (
         <div className={cx('card')}>
             <Link to={Paths.main.review.detail + `?id=${review.review_id}`}>
-                <img src={Paths.storage + review.place.place_images[0].split('\\')[1]} alt='' />
+                <img
+                    src={
+                        Paths.storage +
+                        review.place.place_images[0].split('\\')[1]
+                    }
+                    alt=""
+                />
                 <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
-                    <Rating value={parseFloat(review.review_rating)}
-                        precision={0.5} readOnly />
+                    <Rating
+                        value={parseFloat(review.review_rating)}
+                        precision={0.5}
+                        readOnly
+                    />
                 </div>
                 <div className={cx('date')}>
                     {review.updated_at ? review.updated_at : review.created_at}
@@ -49,41 +64,35 @@ const ReviewItem = ({ review }) => {
 };
 
 const ReviewListContainer = () => {
-    const [list, setList] = useState([])
+    const token = useToken();
+    const [list, setList] = useState([]);
 
     const getReviewList = useCallback(async () => {
-        const token = localStorage.getItem('user_id');
-        const {data} = await requestGetReviewList(token);
+        const { data } = await requestGetReviewList(token);
 
-        setList(data.reviews)
-    }, []);
+        setList(data.reviews);
+    }, [token]);
 
     useEffect(() => {
-        getReviewList();
+        if (token !== null) getReviewList();
 
         return;
-    }, [getReviewList, list]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    return (
-        list.length !== 0 ? 
+    return list.length !== 0 ? (
         <div className={cx('container')}>
-            {list.map(
-                (item) => (
-                    <ReviewItem
-                        key={item.review_id}
-                        review={item}
-                    />
-                ),
-            )}
-        </div> : <div className={styles['non-qna']}>
+            {list.map((item) => (
+                <ReviewItem key={item.review_id} review={item} />
+            ))}
+        </div>
+    ) : (
+        <div className={styles['non-qna']}>
             <div className={styles['non-container']}>
                 <Notice />
-                <div className={styles['explain']}>
-                    리뷰가 없습니다.
-                </div>
+                <div className={styles['explain']}>리뷰가 없습니다.</div>
             </div>
         </div>
-
     );
 };
 

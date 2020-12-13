@@ -6,6 +6,7 @@ import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
 
 import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
@@ -46,6 +47,7 @@ const Button = ({ name, children }) => {
 };
 
 const UseDetailContainer = ({ location }) => {
+    const token = useToken()
     const history = useHistory();
     const openDialog = useDialog();
     const [order, setOrder] = useState({});
@@ -81,7 +83,7 @@ const UseDetailContainer = ({ location }) => {
     }, [id, openDialog]);
 
     useEffect(() => {
-        getUseDetail();
+        if(token !== null) getUseDetail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

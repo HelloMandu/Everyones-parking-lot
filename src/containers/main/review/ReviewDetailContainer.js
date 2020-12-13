@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 
 import {
     requestDeleteReview,
@@ -11,7 +12,7 @@ import {
     requestPostWriteComment,
 } from '../../../api/review';
 
-import {getFormatDateTime} from '../../../lib/calculateDate'
+import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
 
@@ -24,6 +25,7 @@ import { ButtonBase } from '@material-ui/core';
 const cx = classNames.bind(styles);
 
 const ReviewDetailContainer = ({ location }) => {
+    const token = useToken();
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
@@ -31,50 +33,60 @@ const ReviewDetailContainer = ({ location }) => {
     const { id } = query;
 
     const [review, setReview] = useState();
-    const [commentList, setCommentList] = useState([])
+    const [commentList, setCommentList] = useState([]);
     const [comment, onChangeComment] = useInput();
-    const history = useHistory()
+    const commentRef = useRef()
+    const history = useHistory();
     const openDialog = useDialog();
 
     const onClickSubmit = useCallback(async () => {
-        const token = localStorage.getItem('user_id');
         const { data } = await requestPostWriteComment(token, id, comment);
 
-        setCommentList(commentList.concat(data.comment))
+        setCommentList(commentList.concat(data.comment));
+        commentRef.current.value = ''
 
         if (data.msg !== 'success') {
-            openDialog('댓글 작성을 실패했습니다.')
+            openDialog('댓글 작성을 실패했습니다.');
         }
-    }, [comment, commentList, id, openDialog]);
+    }, [comment, commentList, id, openDialog, token]);
 
     const getReview = useCallback(async () => {
         const { data } = await requestGetDetailReview(id);
-        const {msg, review, comments} = data
+        const { msg, review, comments } = data;
 
         if (msg === 'success') {
             setReview(review);
-            setCommentList(comments)
+            setCommentList(comments);
         } else {
             openDialog(msg);
+            history.push(Paths.main.index)
         }
-    }, [id, openDialog]);
+    }, [history, id, openDialog]);
 
     useEffect(() => {
         getReview();
-    }, [getReview]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const reviewDelete = useCallback(() => {
-        const token = localStorage.getItem('user_id')
-        openDialog('리뷰를 삭제하시겠습니까 ?', '', async() => {
-            const {data} = await requestDeleteReview(token, review.review_id)
-            
-            if(data.msg === 'success'){
-                history.push(Paths.main.index)
-            }else {
-                openDialog(data.msg)
-            }
-        }, true)
-    }, [history, openDialog, review])
+        openDialog(
+            '리뷰를 삭제하시겠습니까 ?',
+            '',
+            async () => {
+                const { data } = await requestDeleteReview(
+                    token,
+                    review.review_id,
+                );
+
+                if (data.msg === 'success') {
+                    history.push(Paths.main.index);
+                } else {
+                    openDialog(data.msg);
+                }
+            },
+            true,
+        );
+    }, [history, openDialog, review, token]);
 
     return (
         review !== undefined && (
@@ -111,13 +123,16 @@ const ReviewDetailContainer = ({ location }) => {
                         {getFormatDateTime(review.createdAt)}
                         <hr />
                     </div>
-                    <div className={cx('body')}>
-                        {review.review_body}
-                    </div>
+                    <div className={cx('body')}>{review.review_body}</div>
 
                     <div className={cx('button-area')}>
                         <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
-                        <Link to={Paths.main.review.write + `?id=${review.rental_id}`}>
+                        <Link
+                            to={
+                                Paths.main.review.write +
+                                `?id=${review.rental_id}`
+                            }
+                        >
                             <ButtonBase>수정</ButtonBase>
                         </Link>
                     </div>
@@ -170,6 +185,7 @@ const ReviewDetailContainer = ({ location }) => {
                                 onClickSubmit();
                             }
                         }}
+                        ref={commentRef}
                     />
                     <ButtonBase onClick={onClickSubmit}>등록</ButtonBase>
                 </div>
