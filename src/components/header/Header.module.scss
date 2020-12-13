@@ -1,5 +1,4 @@
 @import '../../static/stylesheets/Root.scss';
-@import '../../static/stylesheets/Root.scss';
 .header{
     width: 100%;
     height: $header;
@@ -7,8 +6,9 @@
     position: fixed;
     background-color: #fff;
     z-index: $level0;
-    transition: box-shadow .15s ease-in;
+    transition: all .15s ease-in;
     .title{
+        display: flex;
         width: calc(100% - 80px);
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -19,17 +19,19 @@
         color: #333;
         margin-left:48px;
         letter-spacing :-0.5px;
-        line-height: $header;
+        height: 100%;
+        align-items: center;
     }
 }   
 .shadow{
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    height: 40px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 html{
     body{
         .back-btn{
-            width: $header; height: $header;
+            width: $header; height: 100%;
             position: absolute;
             top:0;
             left:0;

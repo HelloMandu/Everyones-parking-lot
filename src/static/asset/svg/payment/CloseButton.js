@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CloseButton = () => {
+const CloseButton = ({ stroke = "#fff" }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +20,7 @@ const CloseButton = () => {
                     y2="16"
                     transform="translate(310.5 300.5)"
                     fill="none"
-                    stroke="#fff"
+                    stroke={stroke}
                     strokeLinecap="round"
                     strokeWidth="2"
                 />
@@ -31,7 +31,7 @@ const CloseButton = () => {
                     y2="16"
                     transform="translate(310.5 300.5)"
                     fill="none"
-                    stroke="#fff"
+                    stroke={stroke}
                     strokeLinecap="round"
                     strokeWidth="2"
                 />

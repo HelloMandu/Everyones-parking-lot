@@ -53,17 +53,13 @@ $aside-pd : 20px;
         }
     }
     .aside-event{
+        // border:5px solid red;
         padding : $aside-pd ;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .banner-item{
-            width: 100%;
-            img{
-                width: 100%;
-            }
-        }
+        // box-sizing: border-box;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+       
     }
 }
 
@@ -91,6 +87,12 @@ html{
             span{
                 font-size: 16px;
                 font-weight: 500;
+            }
+        }
+        .banner-item{
+            width: 100%;
+            img{
+                width: 100%;
             }
         }
     }
