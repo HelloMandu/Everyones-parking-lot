@@ -34,6 +34,19 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const getParkingType = (type) => {
+    switch (parseInt(type)) {
+        case 0:
+            return '주차타운';
+        case 1:
+            return '지하주차장';
+        case 2:
+            return '지상주차장';
+        default:
+            return '지정주차';
+    }
+};
+
 const InfoItem = ({ txt, value }) => {
     return (
         <div className={styles['info-item']}>
@@ -161,7 +174,7 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                             <InfoItem txt={'주소'} value={addr} />
                             <InfoItem
                                 txt={'주차장 종류'}
-                                value={'지하주차장'}
+                                value={getParkingType(parkingInfo.place_type)}
                             />
                             <InfoItem
                                 txt={'추가 요금'}
