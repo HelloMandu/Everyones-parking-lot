@@ -38,6 +38,11 @@ $aside-pd : 20px;
                     font-size: 22px;
                     font-weight: bold;
                     line-height: 1.5;
+                    &.login{
+                        font-size: 18px;
+                        color:#777;
+                        font-weight: 500;
+                    }
                 }
                 .user-email{
                     color:#555;

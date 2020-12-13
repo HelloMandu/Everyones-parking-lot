@@ -26,7 +26,7 @@ import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
 //api
-import { requestGetDetailParking } from '../../api/place';
+import { requestGetDetailParking,requestPutLikeParking } from '../../api/place';
 
 //lib
 import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
@@ -75,6 +75,7 @@ const DetailContainer = ({ modal, place_id }) => {
         setLoading(true);
         try {
             const res = await requestGetDetailParking(place_id);
+            console.log(res);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
                 setPlace(place);
@@ -104,6 +105,20 @@ const DetailContainer = ({ modal, place_id }) => {
             coordType: 'wgs84',
         });
     };
+
+    const onClickLike =async()=>{
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if(JWT_TOKEN){
+            try{
+                //여기서부터 시작
+                const res = await requestPutLikeParking(JWT_TOKEN);
+            }
+            catch(e){
+
+            }
+        }
+
+    }
 
     useEffect(() => {
         callGetDetailParking();
