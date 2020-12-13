@@ -70,6 +70,8 @@ const BookmarkModal = (props) => {
     const user = useSelector(state=>state.user);
 
     const getCallBookmarkApi = async () => {
+
+        //작업중
         if (!isEmpty(user)) {
             const JWT_TOKEN = localStorage.getItem('user_id');
             try {
