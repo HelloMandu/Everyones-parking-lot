@@ -28,8 +28,11 @@ const App = () => {
 
     const judgementLogin = useCallback(() => {
         const token = localStorage.getItem('user_id')
+
+        if(token) {
+            dispatch(getUser(token))
+        }
         
-        dispatch(getUser(token))
     }, [dispatch])
 
     useEffect(() => {

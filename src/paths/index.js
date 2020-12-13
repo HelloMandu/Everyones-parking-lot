@@ -71,7 +71,7 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/api/',
+    api: 'https://intospace.kr/api/',
     storage: 'http://localhost:8080/uploads/',
 };
 

@@ -22,6 +22,12 @@ const cx = classNames.bind(styles)
 const FindPasswordCompleteContainer = () => {
     const history = useHistory()
     const openDialog = useDialog();
+    const token = sessionStorage.getItem('session_pw')
+
+    if(token === null){
+        openDialog('잘못된 접근입니다.');
+        history.push(Paths.auth.login);
+    }
 
     const [password, onChangePassword] = useInput(
         '',
@@ -31,15 +37,15 @@ const FindPasswordCompleteContainer = () => {
     const [submit, setSubmit] = useState(false)
 
     const onClickSignUp = useCallback(async() => {
-        const token = localStorage.getItem('user_id')
         const resetPW = await requestPutRePassword(token, password)
 
         if(resetPW.msg === "success"){
+            sessionStorage.removeItem('session_pw')
             history.push(Paths.auth.signin)
         } else {
             openDialog(resetPW.msg, "")
         }
-    }, [password, history, openDialog])
+    }, [token, password, history, openDialog])
 
     useEffect(() => {
         if(password !== '' && passwordCheck !== '' && password === passwordCheck) setSubmit(true)
