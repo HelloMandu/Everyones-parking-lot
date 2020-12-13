@@ -6,7 +6,7 @@ import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
 //components
-import Shared from '../../components/shared/Shared'
+import Shared from '../../components/shared/Shared';
 import ReviewRating from '../../components/review/ReviewRating';
 import CircleButton from '../../components/button/CircleButton';
 import CustomTabs from '../../components/nav/CustomTabs';
@@ -26,13 +26,11 @@ import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
 //api
-import {
-    requestGetDetailParking,
-} from '../../api/place';
+import { requestGetDetailParking } from '../../api/place';
 import {
     requestGetLike,
     requestPostLike,
-    requestDeleteLike
+    requestDeleteLike,
 } from '../../api/like';
 
 //lib
@@ -42,12 +40,14 @@ import { numberFormat } from '../../lib/formatter';
 //hooks
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
+import { useDialog } from '../../hooks/useDialog';
 
 const cx = cn.bind(styles);
 const DetailContainer = ({ modal, place_id }) => {
     const { user_id } = useSelector((state) => state.user);
     const history = useHistory();
     const location = useLocation();
+    const openDialog = useDialog();
 
     const [openDatePicker, onClickDatePicker] = useModal(
         location.pathname,
@@ -73,10 +73,10 @@ const DetailContainer = ({ modal, place_id }) => {
     const [total_date, setTotalDate] = useState(0);
     const [price, setPrice] = useState(0);
     const [place, setPlace] = useState(null);
-    const [likes, setLike] = useState(0);
+    const [likes, setLikes] = useState(0);
     const [reviews, setReviews] = useState([]);
     const [shareOpen, setShareOpen] = useState(false);
-
+    const [likeStatus, setLikeStatus] = useState(false);
 
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
@@ -88,7 +88,7 @@ const DetailContainer = ({ modal, place_id }) => {
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
                 setPlace(place);
-                setLike(likes);
+                setLikes(likes);
                 setReviews(reviews);
             }
         } catch (e) {
@@ -102,7 +102,6 @@ const DetailContainer = ({ modal, place_id }) => {
         setStartDate(start_date);
         setEndDate(end_date);
         setTotalDate(total_date);
-        console.log(total_date);
     }, []);
 
     // 카카오 내비게이션 실행
@@ -116,19 +115,52 @@ const DetailContainer = ({ modal, place_id }) => {
         });
     }, []);
 
-    const handleLikeCheck = useCallback(async () => {
+    const likeCheck = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             try {
-                const {msg, status} = await requestGetLike(JWT_TOKEN, place_id);
-            } catch (e) {}
+                const { msg, status } = await requestGetLike(
+                    JWT_TOKEN,
+                    place_id,
+                );
+                if (msg === 'success') {
+                    setLikeStatus(status);
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
     }, [place_id]);
+
+    const handleLikeStatus = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            try {
+                const { msg, status } = await (likeStatus
+                    ? requestDeleteLike(JWT_TOKEN, place_id)
+                    : requestPostLike(JWT_TOKEN, place_id));
+                if (msg === 'success') {
+                    setLikeStatus(status);
+                    setLikes((likes) => (status ? likes + 1 : likes - 1));
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        } else {
+            openDialog(
+                '로그인 후 이용가능합니다.',
+                '',
+                () => history.push(Paths.auth.login),
+                true,
+            );
+        }
+    }, [history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callGetDetailParking, []);
+    useEffect(likeCheck, [likeCheck]);
     useEffect(() => {
         if (total_date) {
             setPrice(calculatePrice(total_date, place.place_fee));
@@ -159,7 +191,11 @@ const DetailContainer = ({ modal, place_id }) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} txt={'공유'} onClick={handleShare}/>
+                            <CircleButton
+                                src={shared_icon}
+                                txt={'공유'}
+                                onClick={handleShare}
+                            />
                             <CircleButton
                                 src={guid_icon}
                                 txt={'안내'}
@@ -271,13 +307,15 @@ const DetailContainer = ({ modal, place_id }) => {
                     ></FixedButton>
                 ) : (
                     <LikeButton
-                        like={likes}
+                        likes={likes}
                         button_name={
                             start_date && end_date
                                 ? `${numberFormat(price)}원 대여신청`
                                 : '대여시간을 설정해주세요'
                         }
                         disable={start_date ? false : true}
+                        likeStatus={likeStatus}
+                        handleLike={handleLikeStatus}
                         onClick={() =>
                             history.push(
                                 Paths.main.payment +

@@ -96,4 +96,24 @@
             }
         }
     }
+    .non-qna{
+        width: 100%;
+        height: calc(100vh - 160px);
+        .non-container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            // height: calc(100% - 96px);
+            .explain{
+                font-size: 1.333rem; // 16px;
+                font-weight: 400; // Regular
+                color: #222;
+                margin-top: 28px;
+            }
+    
+        }
+    }
 }
+

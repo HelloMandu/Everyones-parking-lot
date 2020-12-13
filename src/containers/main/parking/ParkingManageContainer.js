@@ -9,6 +9,8 @@ import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
 
+import Notice from '../../../static/asset/svg/Notice';
+
 import styles from './ParkingManageContainer.module.scss';
 
 const cx = cn.bind(styles);
@@ -106,46 +108,58 @@ const ParkingManageContainer = () => {
                     <span className={styles['plus']}>+</span>주차공간 등록하기
                 </ButtonBase>
             </Link>
-            <ul className={styles['parking-list']}>
-                {parkingList.map(
-                    ({
-                        place_id,
-                        place_status,
-                        place_images,
-                        place_name,
-                        oper_start_time,
-                        oper_end_time,
-                        place_fee,
-                    }) => (
-                        <ButtonBase
-                            className={styles['parking-item']}
-                            component="li"
-                            key={place_id}
-                            onClick={() =>
-                                history.push(
-                                    Paths.main.detail + `?place_id=${place_id}`,
-                                )
-                            }
-                        >
-                            <ParkingItem
-                                status={place_status}
-                                image={
-                                    Array.isArray(place_images)
-                                        ? place_images[0].replace(
-                                              'uploads/',
-                                              '',
-                                          )
-                                        : ''
+            {parkingList.length ? (
+                <ul className={styles['parking-list']}>
+                    {parkingList.map(
+                        ({
+                            place_id,
+                            place_status,
+                            place_images,
+                            place_name,
+                            oper_start_time,
+                            oper_end_time,
+                            place_fee,
+                        }) => (
+                            <ButtonBase
+                                className={styles['parking-item']}
+                                component="li"
+                                key={place_id}
+                                onClick={() =>
+                                    history.push(
+                                        Paths.main.detail +
+                                            `?place_id=${place_id}`,
+                                    )
                                 }
-                                title={place_name}
-                                start={oper_start_time}
-                                end={oper_end_time}
-                                price={place_fee}
-                            ></ParkingItem>
-                        </ButtonBase>
-                    ),
-                )}
-            </ul>
+                            >
+                                <ParkingItem
+                                    status={place_status}
+                                    image={
+                                        Array.isArray(place_images)
+                                            ? place_images[0].replace(
+                                                  'uploads/',
+                                                  '',
+                                              )
+                                            : ''
+                                    }
+                                    title={place_name}
+                                    start={oper_start_time}
+                                    end={oper_end_time}
+                                    price={place_fee}
+                                ></ParkingItem>
+                            </ButtonBase>
+                        ),
+                    )}
+                </ul>
+            ) : (
+                <div className={styles['non-qna']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>
+                            등록된 주차공간이 없습니다.
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 };

@@ -10,7 +10,10 @@ import React, {
 import { ButtonBase, IconButton } from '@material-ui/core';
 import qs from 'qs';
 
-import { requestGetAddressInfo, requestGetDetailParking } from '../../../api/place';
+import {
+    requestGetAddressInfo,
+    requestGetDetailParking,
+} from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
 import useForm from '../../../hooks/useForm';
@@ -51,7 +54,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
         (state) => state.length > 0,
     );
     const [type, onChangeType] = useInput('0');
-    const [address, setAddress] = useState('');
+    const [address, onChangeAddress] = useInput('');
     const [postNum, setPostNum] = useState();
     const [addressDetail, onChangeAddressDetail, checkAddressDetail] = useInput(
         '',
@@ -73,12 +76,12 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                     x: lng,
                     y: lat,
                 } = response.data.documents[0];
-                setAddress(address_name);
+                onChangeAddress(address_name);
                 setLat(lat);
                 setLng(lng);
             }
         },
-        [setAddress],
+        [onChangeAddress],
     );
 
     const onClickAddressSearch = useCallback(() => {
@@ -88,9 +91,9 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                     setPostNum(data.zonecode);
                     getAddressInfo(data.address);
                 },
-            }).open();
+            }).open({ q: address });
         });
-    }, [getAddressInfo]);
+    }, [address, getAddressInfo]);
 
     const typeSelectList = typeList.map(({ id, type }) => (
         <option className={styles['select-item']} key={id} value={id}>
@@ -114,20 +117,29 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
             checkName && address.length > 0 && checkAddressDetail && checkPrice,
         );
     }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
-    useEffect(()=>{
-        if(parkingInfoInit){
-            const {addr, addr_detail, lat, lng, place_fee, place_name, place_type, post_num} = parkingInfoInit;
+    useEffect(() => {
+        if (parkingInfoInit) {
+            const {
+                addr,
+                addr_detail,
+                lat,
+                lng,
+                place_fee,
+                place_name,
+                place_type,
+                post_num,
+            } = parkingInfoInit;
             onChangeName(place_name);
             onChangeType(place_type);
-            setAddress(addr);
+            onChangeAddress(addr);
             setPostNum(post_num);
             onChangeAddressDetail(addr_detail);
             setLat(lat);
             setLng(lng);
             onChangePrice(place_fee.toString());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [parkingInfoInit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit]);
 
     return (
         <section className={styles['parking-enroll-area']}>
@@ -153,6 +165,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 value={address}
                 name={'address'}
                 placeholder={'주차장 주소를 입력해주세요'}
+                onChange={onChangeAddress}
             ></InputBox>
             <ButtonBase
                 className={styles['button']}
@@ -307,17 +320,17 @@ const OperatingTime = forwardRef((props, ref) => {
     );
 });
 
-const ExtraInfo = forwardRef(({parkingInfoInit}, ref) => {
+const ExtraInfo = forwardRef(({ parkingInfoInit }, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
     useImperativeHandle(ref, () => ({
         extraInfo,
     }));
-    useEffect(()=>{
-        if(parkingInfoInit){
+    useEffect(() => {
+        if (parkingInfoInit) {
             onChangeExtraInfo(parkingInfoInit.place_comment);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [parkingInfoInit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit]);
     return (
         <section className={styles['parking-enroll-area']}>
             <h3 className={styles['title']}>추가정보</h3>
@@ -459,31 +472,51 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const [isOpenPreview, openPreviewModal] = useModal(
         url,
         params.modal,
-        `preview${place_id ? `?place_id=${place_id}` : ``}`
+        `preview${place_id ? `?place_id=${place_id}` : ``}`,
     );
 
-    const getDetailParking = useCallback(async () =>{
-        if(!place_id){
+    const getDetailParking = useCallback(async () => {
+        if (!place_id) {
             return;
         }
         try {
             const { data } = await requestGetDetailParking(place_id);
             const { msg, place } = data;
             if (msg === 'success') {
-                const {addr, addr_detail, lat, lng, place_comment, place_fee, place_name, place_type, post_num} = place;
-                setParkingInfoInit({addr, addr_detail, lat, lng, place_comment, place_fee, place_name, place_type, post_num});
+                const {
+                    addr,
+                    addr_detail,
+                    lat,
+                    lng,
+                    place_comment,
+                    place_fee,
+                    place_name,
+                    place_type,
+                    post_num,
+                } = place;
+                setParkingInfoInit({
+                    addr,
+                    addr_detail,
+                    lat,
+                    lng,
+                    place_comment,
+                    place_fee,
+                    place_name,
+                    place_type,
+                    post_num,
+                });
             }
         } catch (e) {
             console.error(e);
         }
-    }, [place_id])
+    }, [place_id]);
 
     useEffect(() => setCheckAll(checkBasicInfo && checkParkingPicture), [
         checkBasicInfo,
         checkParkingPicture,
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(getDetailParking, [])
+    useEffect(getDetailParking, []);
     return (
         <>
             <main className={styles['parking-enroll-container']}>
@@ -495,7 +528,10 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 <div className={styles['bar']} />
                 <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
-                <ExtraInfo ref={extraInfo} parkingInfoInit={parkingInfoInit}></ExtraInfo>
+                <ExtraInfo
+                    ref={extraInfo}
+                    parkingInfoInit={parkingInfoInit}
+                ></ExtraInfo>
                 <ParkingPicture
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
