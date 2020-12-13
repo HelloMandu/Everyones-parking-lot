@@ -275,7 +275,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 const { deposit, place, total_price: price } = data;
                 const { place_name: title, place_images } = place;
                 const image = Array.isArray(place_images)
-                    ? place_images[0].split('\\')[1]
+                    ? place_images[0].replace('uploads/', '')
                     : '';
                 setParkingInfo({
                     title,

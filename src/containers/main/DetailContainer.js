@@ -43,6 +43,18 @@ import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
 
 const cx = cn.bind(styles);
+const getParkingType = (type) => {
+    switch (type) {
+        case 0:
+            return '주차타운';
+        case 1:
+            return '주차타운';
+        case 2:
+            return '주차타운';
+        default:
+            return '지정주차';
+    }
+};
 const DetailContainer = ({ modal, place_id }) => {
     const { user_id } = useSelector((state) => state.user);
     const history = useHistory();
@@ -174,9 +186,17 @@ const DetailContainer = ({ modal, place_id }) => {
             >
                 <Arrow white={true}></Arrow>
             </IconButton>
-            <div className={styles['parking-img']}>
-                <img src={test_img} alt="img" />
-            </div>
+            {place && (
+                <div
+                    className={styles['parking-img']}
+                    style={{
+                        backgroundImage: `url('${Paths.storage}${
+                            place &&
+                            place.place_images[0].replace('uploads/', '')
+                        }')`,
+                    }}
+                />
+            )}
             <div className={styles['container']}>
                 <div className={styles['pd-box']}>
                     <div className={styles['item-table']}>
@@ -261,7 +281,9 @@ const DetailContainer = ({ modal, place_id }) => {
                             />
                             <InfoItem
                                 txt={'주차장 종류'}
-                                value={'지하주차장'}
+                                value={getParkingType(
+                                    place && place.place_type,
+                                )}
                             />
                             <InfoItem
                                 txt={'추가 요금'}
