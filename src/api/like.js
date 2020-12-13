@@ -1,5 +1,4 @@
 import axios from 'axios';
-import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
@@ -13,12 +12,13 @@ export const requestGetLike = async (JWT_TOKEN, place_id) => {
         * 응답: status = 좋아요 상태        
     */
     const URL = Paths.api + 'like';
-    const config = {
+    const options = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
+        params: { place_id },
     };
-    const response = await axios.get(URL, { params: { place_id } }, config);
+    const response = await axios.get(URL, options);
 
     return response.data;
 };
@@ -33,13 +33,12 @@ export const requestPostLike = async (JWT_TOKEN, place_id) => {
         * 응답: status = 변경된 좋아요 상태
     */
     const URL = Paths.api + 'like';
-    const option = {
+    const options = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
-        place_id
     };
-    const response = await axios.post(URL, option);
+    const response = await axios.post(URL, { place_id }, options);
 
     return response.data;
 };
@@ -54,14 +53,15 @@ export const requestDeleteLike = async (JWT_TOKEN, place_id) => {
         * 응답: status = 변경된 좋아요 상태
     */
     const URL = Paths.api + 'like';
-    const option = {
+    const options = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
-        place_id
+        data: {
+            place_id
+        }
     };
-    const response = await axios.delete(URL, option);
+    const response = await axios.delete(URL, options);
 
     return response.data;
 };
-

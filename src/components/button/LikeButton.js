@@ -15,13 +15,13 @@ const cx = cn.bind(styles);
 */
 
 
-const LikeButton = ({ button_name, disable, like, count ,onClick}) => {
+const LikeButton = ({ button_name, disable, likes, likeStatus ,onClick, handleLike}) => {
     return (
         <div className={styles['like-button']}>
             <div className={styles['box']}>
-                <ButtonBase className={styles['like-icon']}>
-                    <Like />
-                    <div className={styles['count']}> {like} </div>
+                <ButtonBase className={styles['like-icon']} onClick={handleLike}>
+                    <Like status={likeStatus}/>
+                    <div className={styles['count']}> {likes} </div>
                 </ButtonBase>
                 <ButtonBase className={cx('basic-button', { disable })} disabled={disable} onClick={onClick}>
                     {button_name}
