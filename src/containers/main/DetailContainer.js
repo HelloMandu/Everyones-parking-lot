@@ -25,7 +25,7 @@ import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
 //api
-import { requestGetDetailParking } from '../../api/place';
+import { requestGetDetailParking,requestPutLikeParking } from '../../api/place';
 
 //lib
 import { getFormatDay } from '../../lib/calculateDate';
@@ -75,6 +75,7 @@ const DetailContainer = ({ modal, place_id }) => {
         setLoading(true);
         try {
             const res = await requestGetDetailParking(place_id);
+            console.log(res);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
                 setPlace(place);
@@ -92,7 +93,6 @@ const DetailContainer = ({ modal, place_id }) => {
         setStartDate(start_date);
         setEndDate(end_date);
         setTotalDate(total_date);
-        console.log(total_date);
     }
 
     // 카카오 내비게이션 실행
@@ -104,6 +104,20 @@ const DetailContainer = ({ modal, place_id }) => {
             y: 37.39279717586919, //도착지 y 좌표
             coordType: 'wgs84'
         });
+    }
+
+    const onClickLike =async()=>{
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if(JWT_TOKEN){
+            try{
+                //여기서부터 시작
+                const res = await requestPutLikeParking(JWT_TOKEN);
+            }
+            catch(e){
+
+            }
+        }
+
     }
 
     useEffect(() => {
