@@ -1,12 +1,12 @@
 /*global Kakao*/
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
 
 //components
+import Shared from '../../components/shared/Shared'
 import ReviewRating from '../../components/review/ReviewRating';
 import CircleButton from '../../components/button/CircleButton';
 import CustomTabs from '../../components/nav/CustomTabs';
@@ -26,7 +26,10 @@ import { Paths } from '../../paths';
 import Arrow from '../../static/asset/svg/Arrow';
 
 //api
-import { requestGetDetailParking,requestPutLikeParking } from '../../api/place';
+import {
+    requestGetDetailParking,
+    requestPutLikeParking,
+} from '../../api/place';
 
 //lib
 import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
@@ -68,9 +71,10 @@ const DetailContainer = ({ modal, place_id }) => {
     const [place, setPlace] = useState(null);
     const [likes, setLike] = useState(0);
     const [reviews, setReviews] = useState([]);
+    const [shareOpen, setShareOpen] = useState(false);
 
     // 상세보기 할 주차공간 api 호출
-    const callGetDetailParking = async () => {
+    const callGetDetailParking = useCallback(async () => {
         onLoading('detail');
         setLoading(true);
         try {
@@ -87,16 +91,17 @@ const DetailContainer = ({ modal, place_id }) => {
         }
         offLoading('detail');
         setLoading(false);
-    };
-    const onClickSetDate = (start_date, end_date, total_date) => {
+    }, [offLoading, onLoading, place_id]);
+
+    const onClickSetDate = useCallback((start_date, end_date, total_date) => {
         setStartDate(start_date);
         setEndDate(end_date);
         setTotalDate(total_date);
         console.log(total_date);
-    };
+    }, []);
 
     // 카카오 내비게이션 실행
-    const onClickKakaoNavi = () => {
+    const onClickKakaoNavi = useCallback(() => {
         console.log(Kakao);
         Kakao.Navi.start({
             name: '현대백화점 판교점', // 도착지 지번
@@ -104,78 +109,27 @@ const DetailContainer = ({ modal, place_id }) => {
             y: 37.39279717586919, //도착지 y 좌표
             coordType: 'wgs84',
         });
-    };
-
-    const onClickLike =async()=>{
-        const JWT_TOKEN = localStorage.getItem('user_id');
-        if(JWT_TOKEN){
-            try{
-                //여기서부터 시작
-                const res = await requestPutLikeParking(JWT_TOKEN);
-            }
-            catch(e){
-
-            }
-        }
-
-    }
-
-    useEffect(() => {
-        callGetDetailParking();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const onClickLike = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            try {
+                const res = await requestPutLikeParking(JWT_TOKEN);
+            } catch (e) {}
+        }
+    }, []);
+
+    const handleShare = useCallback(() => setShareOpen((state) => !state), []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(callGetDetailParking, []);
     useEffect(() => {
         if (total_date) {
             setPrice(calculatePrice(total_date, place.place_fee));
         }
     }, [total_date, place]);
 
-    useEffect(() => {
-        console.log(start_date);
-    }, [start_date]);
-
-    // const createKakaoButton = () => {
-    //     // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
-    //     if (Kakao) {
-
-    //         Kakao.Link.createDefaultButton({
-    //         // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
-    //         container: '#kakao-link-btn',
-    //         objectType: 'feed',
-    //         content: {
-    //           title: '타이틀',
-    //           description: '#리액트 #카카오 #공유버튼',
-    //           imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
-    //           link: {
-    //             mobileWebUrl: 'https://www.naver.com',
-    //             webUrl: 'https://www.naver.com',
-    //           },
-    //         },
-    //         social: {
-    //           likeCount: 77,
-    //           commentCount: 55,
-    //           sharedCount: 333,
-    //         },
-    //         buttons: [
-    //           {
-    //             title: '웹으로 보기',
-    //             link: {
-    //               mobileWebUrl: 'https://www.naver.com',
-    //               webUrl: 'https://www.naver.com',
-    //             },
-    //           },
-    //           {
-    //             title: '앱으로 보기',
-    //             link: {
-    //               mobileWebUrl:'https://www.naver.com',
-    //               webUrl:'https://www.naver.com',
-    //             },
-    //           },
-    //         ],
-    //       })
-    //     }
-    // }
     return (
         <div className={styles['wrapper']}>
             <IconButton
@@ -184,9 +138,6 @@ const DetailContainer = ({ modal, place_id }) => {
             >
                 <Arrow white={true}></Arrow>
             </IconButton>
-            {/* <button id="kakao-link-btn">
-        <img src={shared_icon} alt="kakao-share-icon" />
-      </button> */}
             <div className={styles['parking-img']}>
                 <img src={test_img} alt="img" />
             </div>
@@ -204,14 +155,11 @@ const DetailContainer = ({ modal, place_id }) => {
                             </div>
                         </div>
                         <div className={styles['function-box']}>
-                            <CircleButton src={shared_icon} txt={'공유'} />
+                            <CircleButton src={shared_icon} txt={'공유'} onClick={handleShare}/>
                             <CircleButton
                                 src={guid_icon}
                                 txt={'안내'}
-                                onClick={() => {
-                                    // history.push(Paths.main.detail + '/nav');
-                                    onClickKakaoNavi();
-                                }}
+                                onClick={onClickKakaoNavi}
                             />
                             <CircleButton
                                 src={roadview_icon}
@@ -342,6 +290,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 lat={place && place.lat}
                 lng={place && place.lng}
             />
+            <Shared open={shareOpen} onToggle={handleShare}></Shared>
         </div>
     );
 };
