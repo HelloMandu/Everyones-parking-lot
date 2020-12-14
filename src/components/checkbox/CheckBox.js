@@ -78,7 +78,7 @@ const CheckBox = ({
         }
     }, [checkList, checkListProps, setCheck]);
     return (
-        <div>
+        <section>
             <div className={cx('checkitem', 'allcheck', { box })} onClick={onToggleAll}>
                 <CheckBoxItem
                     checked={allCheck}
