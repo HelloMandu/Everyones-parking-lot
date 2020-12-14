@@ -20,8 +20,8 @@ const Header = ({ title }) => {
         return () => window.removeEventListener('scroll', headerControll);
     }, []);
     return (
-        <div className={cx('header', { shadow })} ref={headerRef}>
-            <div className={styles['content']}>
+        <div className={styles['header']} ref={headerRef}>
+            <div className={cx('content', { shadow })}>
                 <IconButton
                     className={styles['back-btn']}
                     onClick={() => history.goBack()}

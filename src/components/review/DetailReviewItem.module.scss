@@ -46,3 +46,16 @@
         color:#333;
     }
 }
+.comment-none-wrapper {
+    height: 113px;
+    border-bottom: 1px solid #e9ebed;
+    background-color: white;
+    .comment-none {
+        font-size: 14px;
+        color: #cccccc;
+        text-align: center;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}

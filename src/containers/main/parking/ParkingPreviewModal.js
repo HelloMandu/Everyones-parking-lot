@@ -8,6 +8,7 @@ import Rating from '@material-ui/lab/Rating';
 import CircleButton from '../../../components/button/CircleButton';
 import CustomTabs from '../../../components/nav/CustomTabs';
 import FixedButton from '../../../components/button/FixedButton';
+import { numberFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
 
@@ -143,7 +144,7 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                             <div className={styles['txt']}>주차요금</div>
                             <div className={styles['value']}>
                                 <div className={styles['item-price']}>
-                                    {place_fee}원
+                                    {numberFormat(place_fee)}원
                                 </div>
                                 <div className={styles['item-base-time']}>
                                     /30분 기준

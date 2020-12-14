@@ -33,7 +33,7 @@ const DetailReviewItem = ({ reviewInfo }) => {
                 <div className={styles['profile']}>
                     <img
                         src={
-                            user.profile_image
+                            user && user.profile_image
                                 ? `${Paths.storage}${user.profile_image.replace(
                                       'uploads/',
                                       '',
@@ -44,7 +44,7 @@ const DetailReviewItem = ({ reviewInfo }) => {
                     />
                 </div>
                 <div className={styles['user-info']}>
-                    <div className={styles['user-name']}>작성자이름 TODO</div>
+                    <div className={styles['user-name']}>{user && user.name}</div>
                     <div className={styles['comment-date']}>
                         {getFormatDateNanTime(createdAt)}
                     </div>
@@ -63,6 +63,16 @@ const DetailReviewList = ({ review_list }) => {
     const list = review_list.map((reviewInfo) => (
         <DetailReviewItem reviewInfo={reviewInfo} />
     ));
+    if (review_list.length === 0 || !review_list) {
+        return (
+            <div className={styles['comment-none-wrapper']}>
+                <div className={styles['comment-none']}>
+                    등록된 댓글이 없습니다.
+                    <br />첫 댓글을 남겨주세요!
+                </div>
+            </div>
+        );
+    }
     return <ul>{list}</ul>;
 };
 

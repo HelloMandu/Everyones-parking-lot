@@ -5,6 +5,7 @@ import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
 import { requestGetMyParkingList } from '../../../api/place';
+import { numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
@@ -65,7 +66,9 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
                     </div>
                     <div className={styles['per-price']}>
                         <div className={styles['per']}>30분당</div>
-                        <div className={styles['price']}>{price}원</div>
+                        <div className={styles['price']}>
+                            {numberFormat(price)}원
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,6 +98,7 @@ const ParkingManageContainer = () => {
         const getParkingList = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
+            console.log(places);
             allParkingList.current = places;
             fetchParkingList();
         };

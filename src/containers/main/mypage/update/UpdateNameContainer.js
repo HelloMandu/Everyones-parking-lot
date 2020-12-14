@@ -40,7 +40,9 @@ const UpdateNameContainer = () => {
     const nameRef = useRef();
 
     useEffect(() => {
-        nameRef.current.focus();
+        if (nameRef.current) {
+            nameRef.current.focus();
+        }
     }, [])
 
     const onClickButton = useCallback(async () => {

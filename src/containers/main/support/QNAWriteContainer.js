@@ -140,10 +140,11 @@ const QNAWriteContainer = () => {
     }, [email, subject, question]);
 
     useEffect(() => {
-        emailRef.current.focus();
+        if(emailRef.current){
+            emailRef.current.focus();
+        }
     }, [])
 
-    console.log(questionRef);
     return (
         <>
             <div className={styles['container']}>

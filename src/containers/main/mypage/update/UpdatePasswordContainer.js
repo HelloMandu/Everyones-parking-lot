@@ -83,7 +83,9 @@ const UpdatePasswordContainer = () => {
     }, [CheckPassword])
 
     useEffect(() => {
-        passwordRef.current.focus();
+        if(passwordRef.current){
+            passwordRef.current.focus();
+        }
     }, []);
 
     return (

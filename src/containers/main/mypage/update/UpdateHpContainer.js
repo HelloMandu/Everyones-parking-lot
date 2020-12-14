@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 /* Library */
@@ -33,9 +33,6 @@ const UpdateHpContainer = () => {
     const phoneRef = useRef();
     const [phoneCheck, setPhoneCheck] = useState(false);
 
-    useEffect(() => {
-        console.log(phoneRef)
-    }, []);
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청

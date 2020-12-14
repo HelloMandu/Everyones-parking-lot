@@ -176,7 +176,9 @@ const UpdateCar = () => {
         setCheckAll(carNum && carPicture);
     }, [carNum, carPicture]);
     useEffect(() => {
-        carRef.current.focus();
+        if(carRef.current){
+            carRef.current.focus();
+        }
     }, []);
 
     return (

@@ -189,14 +189,16 @@ const DetailContainer = ({ modal, place_id }) => {
     return (
         <>
             <div className={cx('header', { headerOn })} ref={headerRef}>
-                <IconButton
-                    className={styles['back-btn']}
-                    onClick={() => history.goBack()}
-                >
-                    <Arrow></Arrow>
-                </IconButton>
-                <div className={styles['title']}>
-                    {place && place.place_name}
+                <div className={styles['content']}>
+                    <IconButton
+                        className={styles['back-btn']}
+                        onClick={() => history.goBack()}
+                    >
+                        <Arrow />
+                    </IconButton>
+                    <div className={styles['title']}>
+                        {place && place.place_name}
+                    </div>
                 </div>
             </div>
             <div className={styles['wrapper']}>
@@ -324,7 +326,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         )}
                         {index === 1 && (
                             <div className={styles['review-list']}>
-                                <DetailReviewList review_list={reviews}/>
+                                <DetailReviewList review_list={reviews} />
                             </div>
                         )}
                     </div>
@@ -376,7 +378,11 @@ const DetailContainer = ({ modal, place_id }) => {
                 lat={place && place.lat}
                 lng={place && place.lng}
             />
-            <Shared open={shareOpen} onToggle={handleShare} placeInfo={place}></Shared>
+            <Shared
+                open={shareOpen}
+                onToggle={handleShare}
+                placeInfo={place}
+            ></Shared>
         </>
     );
 };
