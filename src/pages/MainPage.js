@@ -5,6 +5,8 @@ import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Co
 import OAuthPage from './OAuthPage';
 
 import {set_filters} from '../store/main/filters';
+import { set_position, set_level,get_area } from '../store/main/position';
+
 const { Paths } = require('../paths');
 
 const MainPage = ({ history }) => {
@@ -21,13 +23,26 @@ const MainPage = ({ history }) => {
             dispatch(set_filters({type:'stated_parking', value:stated_parking}));
         }
         else{
-            const init = {
+            const init_filter = {
                 parking_town: true,
                 underground_parking: true,
                 ground_parking: true,
                 stated_parking: true,
             }
-            localStorage.setItem('filter_data',JSON.stringify(init));
+            localStorage.setItem('filter_data',JSON.stringify(init_filter));
+        }
+
+        const position_data = JSON.parse(localStorage.getItem('position'));
+        if(position_data){
+            const {lat,lng} =position_data;
+            dispatch(set_position({lat,lng}));
+        }
+        else{
+            const init_position={
+                lat : 35.8360328674316,
+                lng : 128.5743408203125,
+            }
+            localStorage.setItem('position',JSON.stringify(init_position));
         }
 
     },[])

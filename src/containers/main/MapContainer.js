@@ -66,10 +66,7 @@ const MapContainer = ({ modal }) => {
 
     const [onLoading, offLoading] = useLoading();
 
-    let position_ref = useRef({
-        lat: 35.8360328674316,
-        lng: 128.5743408203125,
-    }); //지도 첫렌더시 좌표
+    let position_ref = useRef(null); //지도 첫렌더시 좌표
     let map_lev = useRef(5); // 디폴트 레벨
     let slide_view = useRef(false); // 슬라이드 여부
     let arrive_markers = useRef([]); //도착지 마커
@@ -310,6 +307,8 @@ const MapContainer = ({ modal }) => {
 
  
     useEffect(() => {
+        const storage_position = JSON.parse(localStorage.getItem('position'));
+        position_ref.current=storage_position;
         const {lat,lng} = position_ref.current; 
         mapRender();
         dispatch(get_area({lat,lng}));

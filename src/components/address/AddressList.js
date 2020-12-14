@@ -44,6 +44,11 @@ const BookmarkItem = ({notification_id,place, onClick }) => {
         position.lat,
         position.lng,
     );
+    console.log(lat);
+    console.log(lng);
+    console.log(position.lat);
+    console.log(position.lng);
+    console.log(distance);
     return (
         <ButtonBase className={styles['address-item']} onClick={onClick}>
             <div className={styles['icon']}>
