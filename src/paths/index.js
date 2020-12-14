@@ -72,7 +72,7 @@ export const Paths = {
         },
     },
     api: 'https://intospace.kr/api/',
-    storage: 'http://localhost:8080/uploads/',
+    storage: 'https://intospace.kr/uploads/',
 };
 
 export const HeaderTitle = {
