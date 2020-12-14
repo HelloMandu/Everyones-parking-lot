@@ -1,0 +1,24 @@
+
+.custom-overlay {
+    // bottom:35px;
+    // left:50px;
+    position: relative;
+    border-radius: 6px;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    color:#777;
+    width: 80px;
+    height: 50px;
+    // border: 5px solid red;
+    background-position: center;
+    background-image: url('../../static/asset/svg/main/marker2.svg');
+    span{
+        color:red;
+        position: absolute;
+        left: 65%;
+        top:30%;
+        transform: translate(-50%,-50%);
+        
+    }
+}

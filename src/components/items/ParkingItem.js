@@ -1,30 +1,34 @@
 import React from 'react';
 import styles from './ParkingItem.module.scss';
 import { ButtonBase } from '@material-ui/core';
-// import { numberFormat } from '../../lib/formatter';
+
 import ParkingImg from '../../static/asset/png/parking.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import cn from 'classnames/bind';
 
+//lib
+import { numberFormat } from '../../lib/formatter'; 
+import {getFormatDateTime} from '../../lib/calculateDate';
+
 const cx = cn.bind(styles);
-const ParkingItem = ({onClick}) => {
+const ParkingItem = ({ onClick, place_name,place_fee,oper_start,oper_end }) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
             <div className={styles['item-img']}>
-                <img src={ParkingImg} alt='parking-img'/>
+                <img src={ParkingImg} alt="parking-img" />
             </div>
             <div className={styles['item-info']}>
-                <div className={styles['item-name']}>길동이 주차공간</div>
+                <div className={styles['item-name']}>{place_name}</div>
                 <div className={styles['item-price']}>
-                    <div className={styles['price']}>12,000원</div>
-                    <div className={styles['price-to-time']}>
+                    <div className={styles['price']}> (30분당 {numberFormat(place_fee)}원)</div>
+                    {/* <div className={styles['price-to-time']}>
                         (30분당 3000원)
-                    </div>
+                    </div> */}
                 </div>
                 <div className={styles['item-date']}>
-                    <div className={styles['title']}>대여시간</div>
+                    <div className={styles['title']}>운영시간</div>
                     <div className={styles['value']}>
-                        10/5(수)14:00 ~ 10/5(수)16:00
+                        {getFormatDateTime(oper_start)} ~ {getFormatDateTime(oper_end)}
                     </div>
                 </div>
             </div>
@@ -32,30 +36,30 @@ const ParkingItem = ({onClick}) => {
     );
 };
 
-const ParkingList = ({onClick,view}) => {
+const ParkingList = ({ onClick, view, slide_list }) => {
+    const list = slide_list.map((slide) => (
+        <SwiperSlide className={styles['swiper-slide']} key = {slide.place_id}>
+            <ParkingItem  
+            place_name={slide.place_name}
+            place_fee={slide.place_fee}
+            oper_start={slide.oper_start_time}
+            oper_end = {slide.oper_end_time} 
+            onClick={onClick} />
+        </SwiperSlide>
+    ));
     return (
-        <Swiper 
-        initialSlide={0} 
-        spaceBetween={15}
-        slidesPerView={1}
-        freeMode={true}
-        centeredSlides={true}
-        className={cx('swiper',{view}) } 
+        <Swiper
+            initialSlide={0}
+            spaceBetween={15}
+            slidesPerView={1}
+            freeMode={true}
+            centeredSlides={true}
+            className={cx('swiper', { view })}
         >
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-            <SwiperSlide className={styles['swiper-slide']}><ParkingItem onClick={onClick}/></SwiperSlide>
-
+            {list}
         </Swiper>
     );
 };
 
-// const Test=()=>{
-//     return(
-//         <div className={styles['test']}>
-//                 gd
-//         </div>
-//     )
-// }
 
 export default ParkingList;

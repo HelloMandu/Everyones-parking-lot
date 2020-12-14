@@ -18,7 +18,7 @@ $aside-pd : 20px;
         background-color: #E9EBED;
         height: 221px;
         .aside-icon{
-            padding:$aside-pd  0;
+            padding:$aside-pd  12px;
         }
         .aside-profile{
             width: 100%;
@@ -38,6 +38,11 @@ $aside-pd : 20px;
                     font-size: 22px;
                     font-weight: bold;
                     line-height: 1.5;
+                    &.login{
+                        font-size: 18px;
+                        color:#777;
+                        font-weight: 500;
+                    }
                 }
                 .user-email{
                     color:#555;
@@ -48,17 +53,13 @@ $aside-pd : 20px;
         }
     }
     .aside-event{
+        // border:5px solid red;
         padding : $aside-pd ;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .banner-item{
-            width: 100%;
-            img{
-                width: 100%;
-            }
-        }
+        // box-sizing: border-box;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+       
     }
 }
 
@@ -86,6 +87,12 @@ html{
             span{
                 font-size: 16px;
                 font-weight: 500;
+            }
+        }
+        .banner-item{
+            width: 100%;
+            img{
+                width: 100%;
             }
         }
     }

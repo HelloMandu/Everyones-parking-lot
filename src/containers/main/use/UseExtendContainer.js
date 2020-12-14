@@ -10,6 +10,7 @@ import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 
 import useModal from '../../../hooks/useModal';
 import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import { requestPostExtension } from '../../../api/extension';
@@ -71,6 +72,7 @@ const PaymentType = ({ paymentType, openTypeModal }) => {
 };
 
 const UseExtendContainer = ({ match, location }) => {
+    const token = useToken()
     const { url, params } = match;
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -108,7 +110,7 @@ const UseExtendContainer = ({ match, location }) => {
 
     const getUseDetail = useCallback(async () => {
         const resOrder = await requestGetDetailUseRental(id);
-        console.log(resOrder);
+        
         if (resOrder.msg === 'success') {
             setOrder(resOrder);
             setEndTime(new Date(resOrder.order.rental_end_time).getTime());
@@ -118,7 +120,7 @@ const UseExtendContainer = ({ match, location }) => {
     }, [id, openDialog]);
 
     useEffect(() => {
-        getUseDetail();
+        if(token !== null) getUseDetail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -127,7 +129,6 @@ const UseExtendContainer = ({ match, location }) => {
             if (!(checkPhone && type !== -1 && checked))
                 return;
             else {
-                const token = localStorage.getItem('user_id');
                 const {data} = await requestPostExtension(
                     token,
                     rental_id,
@@ -138,9 +139,8 @@ const UseExtendContainer = ({ match, location }) => {
                 );
 
                 if(data.msg === 'success') {
-                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`)
-                    history.push(Paths.main.use.list)
-                }
+                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?id=${rental_id}`), false, true)
+                } else openDialog(data.msg)
             }
         },
         [order, checkPhone, paymentType, checked],

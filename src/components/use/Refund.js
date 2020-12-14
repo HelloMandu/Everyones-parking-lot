@@ -43,8 +43,10 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
         const token = localStorage.getItem('user_id')
         const {data} = await requestPutCancelRental(token, rentalID)
 
-        openDialog(data.msg)
-        history.push(Paths.main.use.list)
+        if(data.msg === 'success'){
+            openDialog('환불되었습니다.', '', () => history.replace(Paths.main.use.list), false, true)
+        } else if(data.msg === '이미 대여 중인 주차공간입니다.') openDialog(data.msg)
+        else openDialog(data.msg, '', () => history.replace(Paths.main.index))
     }, [history, openDialog, rentalID])
 
     return (

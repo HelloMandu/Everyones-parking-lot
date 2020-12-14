@@ -16,16 +16,20 @@ export const requestPostWriteReview = async (
     // review_rating: 리뷰 평점
 
     const URL = Paths.api + 'review';
-    const response = await axios.post(URL, {
-        rental_id,
-        place_id,
-        review_body,
-        review_rating
-    }, {
-        headers: {
-            Authorization: `Bearer ${JWT_TOKEN}`
-        }
-    });
+    const response = await axios.post(
+        URL,
+        {
+            rental_id,
+            place_id,
+            review_body,
+            review_rating,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${JWT_TOKEN}`,
+            },
+        },
+    );
 
     return response;
 };
@@ -42,14 +46,18 @@ export const requestPutModifyReview = async (
     // review_rating: 수정할 리뷰 평점
 
     const URL = Paths.api + `review/${review_id}`;
-    const response = await axios.put(URL, {
-        review_body,
-        review_rating
-    },{
-        headers: {
-            Authorization: `Bearer ${JWT_TOKEN}`
-        }
-    });
+    const response = await axios.put(
+        URL,
+        {
+            review_body,
+            review_rating,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${JWT_TOKEN}`,
+            },
+        },
+    );
 
     return response;
 };
@@ -103,6 +111,24 @@ export const requestPostWriteComment = async (
                 Authorization: `Bearer ${JWT_TOKEN}`,
             },
         },
+    );
+
+    return response;
+};
+
+export const requestDeleteReview = async (JWT_TOKEN, review_id) => {
+    /*
+        리뷰 삭제 요청 API(DELETE): /api/review/:review_id
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
+        { params: review_id }: 삭제할 리뷰 id
+
+        * 응답: success / failure
+    */
+
+    const URL = Paths.api + `review/${review_id}`;
+    const response = await axios.delete(
+        URL,
+        { headers: { Authorization: `Bearer ${JWT_TOKEN}` } },
     );
 
     return response;
