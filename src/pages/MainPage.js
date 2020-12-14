@@ -1,11 +1,39 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support, Setting } from './main';
 import OAuthPage from './OAuthPage';
 
+import {set_filters} from '../store/main/filters';
 const { Paths } = require('../paths');
 
 const MainPage = ({ history }) => {
+
+    const dispatch = useDispatch();
+    useEffect(()=>{
+
+        const filter_data = JSON.parse(localStorage.getItem('filter_data'));
+        console.log('스토리지 필터링');
+        console.log(filter_data);
+        if(filter_data){
+            const {parking_town,underground_parking,ground_parking,stated_parking} = filter_data
+            console.log('스토리지 디스패치');
+            dispatch(set_filters({type:'parking_town', value:parking_town}));
+            dispatch(set_filters({type:'underground_parking', value:underground_parking}));
+            dispatch(set_filters({type:'ground_parking', value:ground_parking}));
+            dispatch(set_filters({type:'stated_parking', value:stated_parking}));
+        }
+        else{
+            const init = {
+                parking_town: true,
+                underground_parking: true,
+                ground_parking: true,
+                stated_parking: true,
+            }
+            localStorage.setItem('filter_data',JSON.stringify(init));
+        }
+
+    },[])
     return (
         <Switch>
             <Route path={Paths.main.index + '/:modal?'} component={Map} />
