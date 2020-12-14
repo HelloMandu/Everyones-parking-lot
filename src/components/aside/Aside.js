@@ -40,8 +40,6 @@ const Aside = ({ open, handleClose }) => {
     const history = useHistory();
     const user = useSelector(state => state.user);
 
-
-
     const onClickLink = (Path) => {
         handleClose();
         setTimeout(() => {

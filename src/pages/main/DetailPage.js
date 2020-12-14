@@ -11,8 +11,6 @@ const DetailPage = ({match,location}) => {
         ignoreQueryPrefix: true,
     });
     const {place_id} = query;
-    console.log('플레이스 아이디');
-    console.log(place_id);
     return (
         <div>
             <DetailContainer 

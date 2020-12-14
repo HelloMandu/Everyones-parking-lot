@@ -23,18 +23,22 @@ const App = () => {
         Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
     }, []);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const judgementLogin = useCallback(() => {
-        const token = localStorage.getItem('user_id')
-        
-        dispatch(getUser(token))
-    }, [dispatch])
+        const token = localStorage.getItem('user_id');
+
+        dispatch(getUser(token));
+    }, [dispatch]);
 
     useEffect(() => {
-        judgementLogin()
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -141,7 +145,7 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.enrollment) {
             return <Header title={HeaderTitle.main.mypage.update.enrollment} />;
         }
-        //생년월일 변경 
+        //생년월일 변경
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
@@ -161,7 +165,7 @@ const App = () => {
         else if (pathname === Paths.main.support.notice_detail) {
             return <Header title={HeaderTitle.main.support.notice_detail} />;
         }
-        //자주 묻는 질문 리스트 뷰 
+        //자주 묻는 질문 리스트 뷰
         else if (pathname === Paths.main.support.faq) {
             return <Header title={HeaderTitle.main.support.faq} />;
         }
@@ -169,7 +173,7 @@ const App = () => {
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
         }
-        //1:1문의 상세보기 
+        //1:1문의 상세보기
         else if (pathname === Paths.main.support.qna_detail) {
             return <Header title={HeaderTitle.main.support.qna_detail} />;
         }
@@ -187,11 +191,10 @@ const App = () => {
                 <Route path={Paths.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
-            <DialogContainer/>
-            <LoadingContainer/>
+            <DialogContainer />
+            <LoadingContainer />
         </div>
     );
 };
 
 export default App;
- 

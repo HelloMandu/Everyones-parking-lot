@@ -1,5 +1,5 @@
 // const API_SERVER ='http://localhost:8080';
-const API_SERVER= 'https://intospace.kr';
+export const API_SERVER= 'https://intospace.kr';
 export const Paths = {
     index: '/',
     main: {

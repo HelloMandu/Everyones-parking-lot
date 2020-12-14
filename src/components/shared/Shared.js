@@ -1,7 +1,9 @@
 /*global Kakao*/
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Backdrop, Fade, IconButton, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+import { Paths, API_SERVER } from '../../paths';
 
 import CloseButton from '../../static/asset/svg/payment/CloseButton';
 
@@ -25,52 +27,80 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: '3000 !important'
+        zIndex: '3000 !important',
     },
 }));
 
 const Share = ({ open, onToggle, placeInfo }) => {
     const classes = useStyles();
-    const createKakaoButton = useCallback(() => {
+    const handleKakaoShare = useCallback(() => {
         // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
+        if (!placeInfo) {
+            return;
+        }
+        const { place_name, place_id, place_images, place_comment } = placeInfo;
         if (Kakao) {
             Kakao.Link.createDefaultButton({
-                // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
                 container: '#kakao-link-btn',
                 objectType: 'feed',
                 content: {
-                    title: '타이틀',
-                    description: '#리액트 #카카오 #공유버튼',
-                    imageUrl: 'IMAGE_URL', // i.e. process.env.FETCH_URL + '/logo.png'
+                    title: `${place_name}`,
+                    description: `${place_comment}`,
+                    imageUrl: `${Paths.storage}${place_images[0].replace(
+                        'uploads/',
+                        '',
+                    )}`,
                     link: {
-                        mobileWebUrl: 'https://www.naver.com',
-                        webUrl: 'https://www.naver.com',
+                        mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
+                        webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
                     },
                 },
-                social: {
-                    likeCount: 77,
-                    commentCount: 55,
-                    sharedCount: 333,
-                },
-                buttons: [
-                    {
-                        title: '웹으로 보기',
-                        link: {
-                            mobileWebUrl: 'https://www.naver.com',
-                            webUrl: 'https://www.naver.com',
-                        },
-                    },
-                    {
-                        title: '앱으로 보기',
-                        link: {
-                            mobileWebUrl: 'https://www.naver.com',
-                            webUrl: 'https://www.naver.com',
-                        },
-                    },
-                ],
             });
         }
-    }, []);
+    }, [placeInfo]);
+    const handleTwitterShare = useCallback(() => {
+        if (!placeInfo) {
+            return;
+        }
+        const { place_id, place_name } = placeInfo;
+        window.open(
+            `https://www.twitter.com/intent/tweet?&url=${API_SERVER}/detail?place_id=${place_id}&t=${place_name}`,
+        );
+    }, [placeInfo]);
+    const handleFacebookShare = useCallback(() => {
+        if (!placeInfo) {
+            return;
+        }
+        const { place_id } = placeInfo;
+        window.open(
+            `https://www.facebook.com/sharer/sharer.php?display=popup&u=${API_SERVER}/detail?place_id=${place_id}`,
+        );
+    }, [placeInfo]);
+    const handleKakaoStoryShare = useCallback(() => {
+        if (!placeInfo) {
+            return;
+        }
+        const { place_id } = placeInfo;
+        window.open(
+            `https://story.kakao.com/share?url=${API_SERVER}/detail?place_id=${place_id}`,
+        );
+    }, [placeInfo]);
+    const handleNaverBlogShare = useCallback(() => {
+        if (!placeInfo) {
+            return;
+        }
+        const { place_id, place_name } = placeInfo;
+        window.open(
+            `https://share.naver.com/web/shareView.nhn?url=${API_SERVER}/detail?place_id=${place_id}"&title=${place_name}"`,
+        );
+    }, [placeInfo]);
+    const handleBandShare = (url, content) => {
+        const { place_id, place_name } = placeInfo;
+        window.open(
+            `http://band.us/plugin/share?body=${place_name}&route=${API_SERVER}/detail?place_id=${place_id}`,
+            'share',
+        );
+    };
     return (
         <>
             <Modal
@@ -101,8 +131,9 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                 <ul className={styles['share-list']}>
                                     <li className={styles['share-item']}>
                                         <IconButton
+                                            id="kakao-link-btn"
                                             className={styles['circle-btn']}
-                                            onClick={createKakaoButton}
+                                            onClick={handleKakaoShare}
                                         >
                                             <img src={kakao} alt="alt" />
                                         </IconButton>
@@ -111,6 +142,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                     <li className={styles['share-item']}>
                                         <IconButton
                                             className={styles['circle-btn']}
+                                            onClick={handleTwitterShare}
                                         >
                                             <img src={twitter} alt="alt" />
                                         </IconButton>
@@ -119,6 +151,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                     <li className={styles['share-item']}>
                                         <IconButton
                                             className={styles['circle-btn']}
+                                            onClick={handleFacebookShare}
                                         >
                                             <img src={facebook} alt="alt" />
                                         </IconButton>
@@ -127,6 +160,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                     <li className={styles['share-item']}>
                                         <IconButton
                                             className={styles['circle-btn']}
+                                            onClick={handleKakaoStoryShare}
                                         >
                                             <img src={kakaostory} alt="alt" />
                                         </IconButton>
@@ -135,6 +169,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                     <li className={styles['share-item']}>
                                         <IconButton
                                             className={styles['circle-btn']}
+                                            onClick={handleNaverBlogShare}
                                         >
                                             <img src={blog} alt="alt" />
                                         </IconButton>
@@ -143,6 +178,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                     <li className={styles['share-item']}>
                                         <IconButton
                                             className={styles['circle-btn']}
+                                            onClick={handleBandShare}
                                         >
                                             <img src={band} alt="alt" />
                                         </IconButton>
