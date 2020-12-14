@@ -58,8 +58,7 @@ const ReviewDetailContainer = ({ location }) => {
             setReview(review);
             setCommentList(comments);
         } else {
-            openDialog(msg);
-            history.push(Paths.main.index)
+            openDialog(msg, '', () => history.push(Paths.main.index), false, true);
         }
     }, [history, id, openDialog]);
 

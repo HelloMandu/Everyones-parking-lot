@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
@@ -17,16 +17,24 @@ import Notice from '../../../static/asset/svg/Notice';
 const cx = className.bind(styles);
 
 const ReviewItem = ({ review }) => {
+    const history = useHistory()
     const openDialog = useDialog();
     const reviewDelete = useCallback(() => {
         const token = localStorage.getItem('user_id');
         openDialog(
             '리뷰를 삭제하시겠습니까 ?',
             '',
-            () => requestDeleteReview(token, review.review_id),
+            async() => {
+                const {data} = await requestDeleteReview(token, review.review_id)
+
+                if(data.msg === 'success') {
+                    openDialog('리뷰가 삭제되었습니다.')
+                    history.push(Paths.main.index)
+                } else openDialog(data.msg)
+            },
             true,
         );
-    }, [openDialog, review]);
+    }, [history, openDialog, review]);
 
     return (
         <div className={cx('card')}>
@@ -77,8 +85,7 @@ const ReviewListContainer = () => {
         if (token !== null) getReviewList();
 
         return;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [getReviewList, token]);
 
     return list.length !== 0 ? (
         <div className={cx('container')}>

@@ -39,8 +39,7 @@ const SignInContainer = () => {
 
     const onClickLogin = useCallback(async () => {
         const response = await requestPostSignIn(email, password)
-        
-        if(response.data.msg === 'success') {
+        if (response.data.msg === 'success') {
             localStorage.setItem("user_id", response.data.token)
             dispatch(getUser(response.data.token))
             history.push(Paths.main.index)

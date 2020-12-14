@@ -139,9 +139,8 @@ const UseExtendContainer = ({ match, location }) => {
                 );
 
                 if(data.msg === 'success') {
-                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`)
-                    history.push(Paths.main.index)
-                }
+                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?id=${rental_id}`), false, true)
+                } else openDialog(data.msg)
             }
         },
         [order, checkPhone, paymentType, checked],

@@ -72,6 +72,7 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
+    Oauth: '/Oauth',
     api: API_SERVER + '/api/',
     storage: API_SERVER + '/uploads/',
 };
