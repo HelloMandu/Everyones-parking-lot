@@ -17,17 +17,15 @@ html{
     width: 100%;
     min-height: 260px;
     margin: 0 auto;
-    img{
-        min-height: 260px;
-        width: 100%;
-        height: 100%;
-    }
+    padding-top: 34%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .wrapper{
     width: 100%;
     margin: 0 auto;
     max-width:  $max-width;
-    // transform: translateX(-500px);
 }
 
 .container{

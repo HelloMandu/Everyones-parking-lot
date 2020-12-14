@@ -94,8 +94,6 @@ const ReviewItem = ({
 };
 
 const ReviewListContainer = () => {
-    // requestGetReviewList API
-
     const getReviewList = useCallback(async (token) => {
         const {data} = await requestGetReviewList(token);
         console.log(data);

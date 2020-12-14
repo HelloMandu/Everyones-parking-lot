@@ -23,7 +23,7 @@ const Ad = () => {
                 id="마스크_그룹_28"
                 data-name="마스크 그룹 28"
                 transform="translate(0 19.7) rotate(-45)"
-                clip-path="url(#clip-path)"
+                clipPath="url(#clip-path)"
             >
                 <g id="ads" transform="translate(0.001 0)">
                     <g

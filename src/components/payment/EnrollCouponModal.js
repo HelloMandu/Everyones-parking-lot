@@ -15,7 +15,7 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EnrollCouponContainer = ({ open, setCoupon, totalPrice, placeId }) => {
+const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const [useCoupon, setUseCoupon] = useState(false);
@@ -42,7 +42,7 @@ const EnrollCouponContainer = ({ open, setCoupon, totalPrice, placeId }) => {
     const handleEnrollCoupon = useCallback(() => {
         const selectedCoupon = couponList.find(({ checked }) => checked);
         const { cp_price } = selectedCoupon;
-        if (totalPrice >= cp_price) {
+        if (price >= cp_price) {
             setCoupon(selectedCoupon);
             history.goBack();
         } else {
@@ -51,7 +51,7 @@ const EnrollCouponContainer = ({ open, setCoupon, totalPrice, placeId }) => {
                 '결제금액 이상의 쿠폰은 사용하실 수 없습니다',
             );
         }
-    }, [couponList, totalPrice, setCoupon, history, openDialog]);
+    }, [couponList, price, setCoupon, history, openDialog]);
     useEffect(() => {
         const getCouponList = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
@@ -64,7 +64,7 @@ const EnrollCouponContainer = ({ open, setCoupon, totalPrice, placeId }) => {
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'적용쿠폰선택'}></Header>
-            <div className={styles['enroll-coupon']}>
+            <main className={styles['enroll-coupon']}>
                 <Coupon
                     list={couponList}
                     onClick={handleCouponApply}
@@ -75,7 +75,7 @@ const EnrollCouponContainer = ({ open, setCoupon, totalPrice, placeId }) => {
                     disable={!useCoupon}
                     onClick={handleEnrollCoupon}
                 ></FixedButton>
-            </div>
+            </main>
         </Dialog>
     );
 };

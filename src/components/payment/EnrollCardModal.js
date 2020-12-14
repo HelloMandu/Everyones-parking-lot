@@ -70,16 +70,25 @@ const EnrollCardModal = ({ open, setCardList }) => {
             openDialog('등록실패', '네트워크 상태를 확인하세요');
         }
 
-        cardNum.card1 = ''
-        cardNum.card2 = ''
-        cardNum.card3 = ''
-        cardNum.card4 = ''
+        cardNum.card1 = '';
+        cardNum.card2 = '';
+        cardNum.card3 = '';
+        cardNum.card4 = '';
 
-        cardPeriod.month = ''
-        cardPeriod.year = ''
+        cardPeriod.month = '';
+        cardPeriod.year = '';
 
-        onChangeCardPassword()
-    }, [allCheck, cardNum, cardPeriod, cardPassword, onChangeCardPassword, openDialog, setCardList, history]);
+        onChangeCardPassword();
+    }, [
+        allCheck,
+        cardNum,
+        cardPeriod,
+        cardPassword,
+        onChangeCardPassword,
+        openDialog,
+        setCardList,
+        history,
+    ]);
 
     useEffect(
         () => setAllCheck(checkCardNum && checkCardPeriod && checkCardPassword),
@@ -88,72 +97,78 @@ const EnrollCardModal = ({ open, setCardList }) => {
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제수단등록'}></Header>
-            <div className={styles['enrollcard-container']}>
-                <div className={styles['enroll-title']}>카드번호</div>
-                <div className={styles['card-input']}>
-                    <input
-                        type={'text'}
-                        name={'card1'}
-                        value={card1}
-                        onChange={onChangeCardNum}
-                    />
-                    -
-                    <input
-                        type={'text'}
-                        name={'card2'}
-                        value={card2}
-                        onChange={onChangeCardNum}
-                    />
-                    -
-                    <input
-                        type={'text'}
-                        name={'card3'}
-                        value={card3}
-                        onChange={onChangeCardNum}
-                    />
-                    -
-                    <input
-                        type={'text'}
-                        name={'card4'}
-                        value={card4}
-                        onChange={onChangeCardNum}
-                    />
-                </div>
-                <div className={styles['enroll-title']}>유효기간</div>
-                <div className={styles['card-period']}>
-                    <div className={styles['card-period-wrapper']}>
+            <article className={styles['enrollcard-container']}>
+                <section>
+                    <h3 className={styles['enroll-title']}>카드번호</h3>
+                    <div className={styles['card-input']}>
+                        <input
+                            type={'text'}
+                            name={'card1'}
+                            value={card1}
+                            onChange={onChangeCardNum}
+                        />
+                        -
+                        <input
+                            type={'text'}
+                            name={'card2'}
+                            value={card2}
+                            onChange={onChangeCardNum}
+                        />
+                        -
+                        <input
+                            type={'text'}
+                            name={'card3'}
+                            value={card3}
+                            onChange={onChangeCardNum}
+                        />
+                        -
+                        <input
+                            type={'text'}
+                            name={'card4'}
+                            value={card4}
+                            onChange={onChangeCardNum}
+                        />
+                    </div>
+                </section>
+                <section>
+                    <h3 className={styles['enroll-title']}>유효기간</h3>
+                    <div className={styles['card-period']}>
+                        <div className={styles['card-period-wrapper']}>
+                            <InputBox
+                                className={'input-box'}
+                                type={'text'}
+                                name={'month'}
+                                value={month}
+                                placeholder={'MM'}
+                                onChange={onChangeCardPeriod}
+                            ></InputBox>
+                        </div>
+                        <span>/</span>
+                        <div className={styles['card-period-wrapper']}>
+                            <InputBox
+                                className={'input-box'}
+                                type={'text'}
+                                name={'year'}
+                                value={year}
+                                placeholder={'YY'}
+                                onChange={onChangeCardPeriod}
+                            ></InputBox>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3 className={styles['enroll-title']}>비밀번호</h3>
+                    <div className={styles['card-password']}>
                         <InputBox
                             className={'input-box'}
-                            type={'text'}
-                            name={'month'}
-                            value={month}
-                            placeholder={'MM'}
-                            onChange={onChangeCardPeriod}
+                            type={'password'}
+                            value={cardPassword}
+                            placeholder={'카드 비밀번호 앞 두자리'}
+                            onChange={onChangeCardPassword}
                         ></InputBox>
                     </div>
-                    <span>/</span>
-                    <div className={styles['card-period-wrapper']}>
-                        <InputBox
-                            className={'input-box'}
-                            type={'text'}
-                            name={'year'}
-                            value={year}
-                            placeholder={'YY'}
-                            onChange={onChangeCardPeriod}
-                        ></InputBox>
-                    </div>
-                </div>
-                <div className={styles['enroll-title']}>비밀번호</div>
-                <div className={styles['card-password']}>
-                    <InputBox
-                        className={'input-box'}
-                        type={'password'}
-                        value={cardPassword}
-                        placeholder={'카드 비밀번호 앞 두자리'}
-                        onChange={onChangeCardPassword}
-                    ></InputBox>
-                </div>
-            </div>
+                </section>
+            </article>
             <FixedButton
                 button_name={'등록하기'}
                 disable={!allCheck}

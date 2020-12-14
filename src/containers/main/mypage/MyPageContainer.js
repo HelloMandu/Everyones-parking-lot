@@ -16,6 +16,9 @@ import { getFormatDateString } from '../../../lib/calculateDate';
 import { stringToTel } from '../../../lib/formatter';
 /* Lib */
 
+import { useDialog } from '../../../hooks/useDialog';
+/* Hooks */
+
 import { requestPutProfile } from '../../../api/user';
 /* API */
 
@@ -24,6 +27,7 @@ import { Paths } from '../../../paths'
 
 const FileItem = ({ file, image }) => {
 
+    const openDialog = useDialog();
     const [imgFile, setImgfile] = useState(null);
 
     const UpdateProfile = useCallback(async () => {
@@ -47,9 +51,9 @@ const FileItem = ({ file, image }) => {
         try {
             UpdateProfile();
         } catch (e) {
-
+            openDialog("프로필 사진 업로드 오류");
         }
-    }, [UpdateProfile]);
+    }, [UpdateProfile, openDialog]);
 
     return (
         <>

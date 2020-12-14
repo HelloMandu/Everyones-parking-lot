@@ -90,12 +90,18 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                 checked: false,
             }));
             setPayList(newPayList);
-            const seletedCard = newCardList.find(({ checked }) => checked === true);
-            if(seletedCard){
+            const seletedCard = newCardList.find(
+                ({ checked }) => checked === true,
+            );
+            if (seletedCard) {
                 const { card_id } = seletedCard;
                 setPaymentType({ title: '등록카드결제', type: 0, card_id });
-            } else{
-                setPaymentType({ title: '결제수단 선택', type: -1, card_id: -1 });
+            } else {
+                setPaymentType({
+                    title: '결제수단 선택',
+                    type: -1,
+                    card_id: -1,
+                });
             }
         },
         [payList, cardList, setPaymentType],
@@ -171,7 +177,7 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'결제 수단 선택'}></Header>
-            <div className={styles['payment-container']}>
+            <main className={styles['payment-container']}>
                 <h2 className={styles['payment-title']}>등록카드 결제</h2>
                 <Swiper
                     className={styles['card-swiper']}
@@ -193,7 +199,7 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                             index,
                         ) => (
                             <SwiperSlide key={index}>
-                                <div className={styles['card-wrapper']}>
+                                <section className={styles['card-wrapper']}>
                                     <img
                                         className={cx('card-image', {
                                             checked,
@@ -219,42 +225,40 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
                                             삭제
                                         </ButtonBase>
                                     </div>
-                                </div>
+                                </section>
                             </SwiperSlide>
                         ),
                     )}
                     <SwiperSlide>
-                        <div
+                        <section
                             className={styles['card-register']}
                             onClick={openCardEnrollment}
                         >
                             <RegisterIcon></RegisterIcon>
                             <div>카드등록</div>
-                        </div>
+                        </section>
                     </SwiperSlide>
                 </Swiper>
-                <div className={styles['card-info']}>
-                    <div className={styles['card-name']}></div>
-                    <div className={styles['card-delete']}></div>
-                </div>
-                <h2 className={cx(['payment-title', 'type'])}>일반결제</h2>
-                <ul className={styles['pay-list']}>
-                    {payList.map(({ id, src, title, checked }, index) => (
-                        <li key={index}>
-                            <img
-                                className={cx({ checked })}
-                                data-key={index}
-                                data-title={title}
-                                data-type={id}
-                                src={src}
-                                alt="card"
-                                onClick={handlePayList}
-                            ></img>
-                            <div className={cx('pay-name')}>{title}</div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                <section>
+                    <h2 className={cx(['payment-title', 'type'])}>일반결제</h2>
+                    <ul className={styles['pay-list']}>
+                        {payList.map(({ id, src, title, checked }, index) => (
+                            <li key={index}>
+                                <img
+                                    className={cx({ checked })}
+                                    data-key={index}
+                                    data-title={title}
+                                    data-type={id}
+                                    src={src}
+                                    alt="card"
+                                    onClick={handlePayList}
+                                ></img>
+                                <div className={cx('pay-name')}>{title}</div>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            </main>
             <FixedButton
                 button_name={'결제하기'}
                 disable={!check}
