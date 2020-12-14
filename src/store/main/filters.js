@@ -19,7 +19,7 @@ const filters = handleActions(
     {
         [SET_FILTERS] : (state,action)=>{
             const {type,value} = action.payload;
-          
+            console.log(action);
             return{
                 ...state,
                 [type] : value,
