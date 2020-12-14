@@ -21,15 +21,16 @@ import { getUser } from './store/user';
 const App = () => {
     const location = useLocation();
     useEffect(() => {
-        // Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
     }, []);
 
     const dispatch = useDispatch();
 
     const judgementLogin = useCallback(() => {
         const token = localStorage.getItem('user_id');
-
-        dispatch(getUser(token));
+        if(token){
+            dispatch(getUser(token));
+        }
     }, [dispatch]);
 
     useEffect(() => {

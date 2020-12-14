@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import useToken from '../../hooks/useToken';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
 import {
@@ -24,6 +25,7 @@ import 'swiper/swiper.scss';
 import styles from './CouponContainer.module.scss';
 
 const CouponContainer = ({ match }) => {
+    const JWT_TOKEN = useToken();
     const [myCoupon, setMyCoupon] = useState([]);
     const [couponBook, setCouponBook] = useState([]);
     const [useCoupon, setuseCoupon] = useState([]);
@@ -56,23 +58,28 @@ const CouponContainer = ({ match }) => {
 
     const handleCouponEnroll = useCallback(
         async (id, isInput) => {
-            const { msg, coupon } = await requestPostCouponCode(id);
-            if (msg === 'success') {
-                const newCouponList = couponBook.map((coupon) =>
-                    coupon.cz_id === id
-                        ? { ...coupon, checked: !coupon.checked }
-                        : coupon,
+            if (JWT_TOKEN) {
+                const { msg, coupon } = await requestPostCouponCode(
+                    JWT_TOKEN,
+                    id,
                 );
-                setCouponBook(newCouponList);
-                setMyCoupon((myCoupon) => myCoupon.concat(coupon));
-                if (isInput) {
-                    history.goBack();
+                if (msg === 'success') {
+                    const newCouponList = couponBook.map((coupon) =>
+                        coupon.cz_id === id
+                            ? { ...coupon, checked: !coupon.checked }
+                            : coupon,
+                    );
+                    setCouponBook(newCouponList);
+                    setMyCoupon((myCoupon) => myCoupon.concat(coupon));
+                    if (isInput) {
+                        history.goBack();
+                    }
+                } else {
+                    openDialog('입력 실패', msg);
                 }
-            } else {
-                openDialog('입력 실패', msg);
             }
         },
-        [couponBook, history, openDialog],
+        [JWT_TOKEN, couponBook, history, openDialog],
     );
 
     useEffect(() => {

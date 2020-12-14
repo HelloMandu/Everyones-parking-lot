@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { ButtonBase } from '@material-ui/core';
 
 import ReviewRating from './ReviewRating';
 
@@ -20,7 +21,8 @@ const DetailReviewItem = ({ reviewInfo }) => {
     } = reviewInfo;
     const history = useHistory();
     return (
-        <li
+        <ButtonBase
+            component="li"
             className={styles['detail-review-item']}
             key={review_id}
             onClick={() =>
@@ -44,7 +46,9 @@ const DetailReviewItem = ({ reviewInfo }) => {
                     />
                 </div>
                 <div className={styles['user-info']}>
-                    <div className={styles['user-name']}>{user && user.name}</div>
+                    <div className={styles['user-name']}>
+                        {user && user.name}
+                    </div>
                     <div className={styles['comment-date']}>
                         {getFormatDateNanTime(createdAt)}
                     </div>
@@ -55,7 +59,7 @@ const DetailReviewItem = ({ reviewInfo }) => {
             <div className={styles['rating']}>
                 <ReviewRating rating={parseInt(review_rating)} />
             </div>
-        </li>
+        </ButtonBase>
     );
 };
 

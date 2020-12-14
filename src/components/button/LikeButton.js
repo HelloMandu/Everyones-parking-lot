@@ -18,6 +18,7 @@ const cx = cn.bind(styles);
 const LikeButton = ({ button_name, disable, likes, likeStatus ,onClick, handleLike}) => {
     return (
         <div className={styles['like-button']}>
+            <div className={styles['like-button-content']}>
             <div className={styles['box']}>
                 <ButtonBase className={styles['like-icon']} onClick={handleLike}>
                     <Like status={likeStatus}/>
@@ -27,7 +28,7 @@ const LikeButton = ({ button_name, disable, likes, likeStatus ,onClick, handleLi
                     {button_name}
                 </ButtonBase>
             </div>
-
+        </div>
         </div>
     )
 

@@ -1,7 +1,7 @@
 @import '../../../static/stylesheets/Root.scss';
 
 .container{
-    @include container(96px);
+    @include container(48px);
     :global .MuiTab-textColorInherit.Mui-selected{
         color: #222;
         font-weight: bold;
@@ -10,10 +10,6 @@
 
 
 .tabs {
-    z-index: 3000;
-    position: fixed;
-    top:$header;
-    left:0;
     background-color: #FFF;
     width: 100%;
     .tab {

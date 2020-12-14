@@ -4,6 +4,7 @@ import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
+import useToken from '../../../hooks/useToken';
 import { requestGetMyParkingList } from '../../../api/place';
 import { numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
@@ -78,6 +79,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
 
 //TODO: 주차공간 클릭시 상세보기 페이지가 나오며, 수정하기 버튼생성
 const ParkingManageContainer = () => {
+    const JWT_TOKEN = useToken();
     const history = useHistory();
     const allParkingList = useRef([]);
     const dataLength = useRef(0);
@@ -96,15 +98,13 @@ const ParkingManageContainer = () => {
     useScrollEnd(fetchParkingList);
     useEffect(() => {
         const getParkingList = async () => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
-            console.log(places);
             allParkingList.current = places;
             fetchParkingList();
         };
         getParkingList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [JWT_TOKEN]);
     return (
         <main className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>
