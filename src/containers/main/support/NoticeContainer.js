@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 /* Library */
 
 import styles from './NoticeContainer.module.scss';
 import Notice from '../../../static/asset/svg/Notice';
 /* StyleSheets */
-
-import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading';
-/* Hooks */
 
 import { getFormatDateNanTime } from '../../../lib/calculateDate';
 /* Lib */
@@ -42,26 +38,42 @@ const NoticeItems = ({ noticeList }) => {
 }
 const NoticeContainer = () => {
 
-    const [noticeList, setNoticeList] = useState([]);
-    const [onLoading, offLoading] = useLoading();
-    const openDialog = useDialog();
-    const history = useHistory();
+    const allNoticeList = useRef([]);
+    const dataLength = useRef(0);
 
-    const getNoticeList = useCallback(async () => {
-        onLoading('notice');
-        const response = await requestGetNoticeList();
-        setNoticeList(response.notices);
-        offLoading('notice');
-        // eslint-disable-next-line
+    const [noticeList, setNoticeList] = useState([]);
+
+    const fetchNoticeList = useCallback(() => {
+        const allLength = allNoticeList.current.notices.length;
+        const length = dataLength.current;
+        if (length >= allLength) return;
+
+        const fetchData = allNoticeList.current.notices.slice(length, length + 10);
+        setNoticeList((noticeList) => noticeList.concat(fetchData));
+        dataLength.current += 10;
     }, []);
 
     useEffect(() => {
-        try {
-            getNoticeList();
-        } catch (e) {
-            openDialog("공지사항 오류", "", () => history.goBack());
+        const handleScroll = () => {
+            const endPoint =
+                Math.ceil(
+                    window.innerHeight + document.documentElement.scrollTop,
+                ) === document.documentElement.offsetHeight;
+            if (endPoint) {
+                fetchNoticeList();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        const getNoticeList = async () => {
+            const response = await requestGetNoticeList();
+            allNoticeList.current = response;
+            fetchNoticeList();
         }
-    }, [getNoticeList, openDialog, history]);
+        getNoticeList();
+        return () => window.removeEventListener('scroll', handleScroll);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (noticeList.length !== 0) {
         return (

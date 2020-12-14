@@ -114,7 +114,7 @@ const CouponContainer = ({ match }) => {
             <div className={styles['coupon-container']}>
                 <ButtonBase
                     className={styles['coupon-input']}
-                    onClick={() => onToggleConponCode()}
+                    onClick={onToggleConponCode}
                 >
                     {!isOpenCouponCodeModal ? '쿠폰입력' : <XButton />}
                 </ButtonBase>
@@ -132,7 +132,7 @@ const CouponContainer = ({ match }) => {
                     <Tab className={styles['tab']} label="쿠폰북" />
                     <Tab className={styles['tab']} label="사용내역" />
                 </Tabs>
-                <div className={styles['order']}>
+                <section className={styles['order']}>
                     <div className={styles['order-select']}>
                         <select>
                             <option value={'temp'} defaultValue>
@@ -141,10 +141,8 @@ const CouponContainer = ({ match }) => {
                         </select>
                         <ArrowSmall rotate={180}></ArrowSmall>
                     </div>
-                </div>
+                </section>
                 <Swiper
-                    id="category-swiper"
-                    className={styles['coupon-swiper']}
                     spaceBetween={50}
                     slidesPerView={1}
                     onSlideChange={(swiper) =>

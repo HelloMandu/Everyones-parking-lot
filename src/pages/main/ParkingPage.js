@@ -4,7 +4,6 @@ import { Switch, Route,useHistory } from 'react-router-dom';
 
 import ParkingManageContainer from '../../containers/main/parking/ParkingManageContainer';
 import ParkingEnrollContainer from '../../containers/main/parking/ParkingEnrollContainer';
-import ParkingPreviewContainer from '../../containers/main/parking/ParkingPreviewContainer';
 /* Containers */
 
 import { Paths } from '../../paths';
@@ -15,9 +14,8 @@ const ParkingPage = () => {
     return (
         <div>
             <Switch>
-                <Route path={Paths.main.parking.manage} component={ParkingManageContainer} />
-                <Route path={Paths.main.parking.enrollment} component={ParkingEnrollContainer} />
-                <Route path={Paths.main.parking.preview} component={ParkingPreviewContainer} />
+                <Route path={Paths.main.parking.manage + '/:modal?'} component={ParkingManageContainer} />
+                <Route path={Paths.main.parking.enrollment + '/:modal?'} component={ParkingEnrollContainer} />
                 <Route render={() =>history.replace(Paths.main.parking.manage)} />
             </Switch>
         </div>

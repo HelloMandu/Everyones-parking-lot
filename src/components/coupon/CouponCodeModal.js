@@ -19,8 +19,8 @@ const CouponCodeModal = ({ open, onClick }) => {
     );
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
-            <div className={styles['coupon-code']}>
-                <div className={styles['code-input']}>쿠폰 코드 입력</div>
+            <main className={styles['coupon-code']}>
+                <h2 className={styles['code-input']}>쿠폰 코드 입력</h2>
                 <InputBox
                     className={'input-box'}
                     type={'text'}
@@ -28,7 +28,7 @@ const CouponCodeModal = ({ open, onClick }) => {
                     onChange={onChangeCouponCode}
                     placeholder={'쿠폰 코드를 입력하세요'}
                 ></InputBox>
-            </div>
+            </main>
             <FixedButton
                 button_name={'쿠폰 입력'}
                 disable={!couponCheck}

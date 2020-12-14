@@ -4,15 +4,20 @@ html {
     body {
         :global(.MuiDialog-root) {
             min-height: 100vh;
-            z-index: $level2 !important;
+            // z-index: $level2 !important;
         }
         .dim {
-            z-index: $level2;
+            // z-index: $level2;
         }
     }
 }
 
 .container {
+    padding-top:76px;
+    padding-left:24px;
+    padding-right: 24px;
+    padding-bottom: 0px;
+    flex: '0 0 auto';
     .total-date {
         display: flex;
         justify-content: center;

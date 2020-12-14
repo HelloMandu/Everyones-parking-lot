@@ -1,3 +1,5 @@
+// const API_SERVER ='http://localhost:8080';
+const API_SERVER = 'https://intospace.kr';
 export const Paths = {
     index: '/',
     main: {
@@ -36,7 +38,6 @@ export const Paths = {
             index: '/parking',
             manage: '/parking/manage',
             enrollment: '/parking/enrollment',
-            preview: '/parking/preview',
         },
         notification: '/notification',
         setting: '/setting',
@@ -54,7 +55,7 @@ export const Paths = {
             qna: '/support/qna',
             qna_detail: '/support/qna_detail',
             qna_write: '/support/qna_write',
-        }
+        },
     },
     auth: {
         index: '/auth',
@@ -71,8 +72,8 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'https://intospace.kr/api/',
-    storage: 'https://intospace.kr/uploads/',
+    api: API_SERVER + '/api/',
+    storage: API_SERVER + '/uploads/',
 };
 
 export const HeaderTitle = {
@@ -130,7 +131,7 @@ export const HeaderTitle = {
             qna: '고객센터 ',
             qna_detail: '고객센터',
             qna_write: '1:1 문의 작성',
-        }
+        },
     },
     auth: {
         index: '',
