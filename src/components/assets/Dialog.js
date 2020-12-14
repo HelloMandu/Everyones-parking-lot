@@ -21,13 +21,13 @@ const useStyles = makeStyles((theme) => ({
 
 const cn = classnames.bind(styles);
 
-const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
+const Dialog =  ({ confirm, title, text, handleClick, open }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const onClose = useCallback(() => dispatch(dialogClose()), [dispatch]);
     const onClick = useCallback(() => {
-        handleClick();
+        if(handleClick) handleClick();
         onClose();
     }, [handleClick, onClose]);
 
@@ -49,8 +49,6 @@ const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
         document.addEventListener('keydown', onKeyDown, true);
         return () => document.removeEventListener('keydown', onKeyDown, true);
     }, [onKeyDown]);
-
-    const isFunc = handleClick.toString !== '() => {}' ? true : false
 
     return (
         <>
@@ -81,7 +79,7 @@ const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
             <Backdrop
                 className={classes.backdrop}
                 open={open}
-                onClick={isFunc ? () => {handleClick(); onClose()} : onClose}
+                onClick={handleClick? onClick : onClose}
             />
         </>
     );

@@ -4,7 +4,7 @@ import { dialogOpen } from "../store/dialog";
 
 export const useDialog = () => {
     const dialogDispatch = useDispatch();
-    const openDialog = useCallback((title, text, handleClick = () => {}, confirm = false) => {
+    const openDialog = useCallback((title, text, handleClick, confirm = false) => {
         dialogDispatch(dialogOpen(confirm, title, text, handleClick));
     }, [dialogDispatch]);
     return openDialog;

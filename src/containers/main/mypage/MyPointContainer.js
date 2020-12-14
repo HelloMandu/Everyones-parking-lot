@@ -197,7 +197,7 @@ const MyPointContainer = () => {
                 <div className={styles['fixed']}>
                     <div className={styles['show-area']}>
                         <div className={styles['button']}>
-                            <ButtonBase component='div' className={styles['btn']} onClick={() => console.log('click')}>
+                            <ButtonBase component='div' className={styles['btn']}>
                                 <XIcon />
                             </ButtonBase>
                         </div>

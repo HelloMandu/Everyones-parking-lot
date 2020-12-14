@@ -7,7 +7,6 @@ const KEY = 'devU01TX0FVVEgyMDIwMTExMTAwMDI0ODExMDQwMDc=';
 export const requestAddress = async (search) => {
 
     const req = URL;
-    console.log(search);
     const config ={
         params:{
             confmKey : KEY,

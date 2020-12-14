@@ -39,7 +39,6 @@ function *getArea(action){
     try{
         const {lat,lng} = action.payload;
         const res = yield call(requsetGetAreaInfo , lat,lng);
-        console.log(res);
         let area= areaFormat(res.data.documents[0].address.region_1depth_name);
     
         yield put({
@@ -49,7 +48,6 @@ function *getArea(action){
 
     }
     catch(e){
-        console.error(e);
         yield put({
             type:GET_AREA_ERROR,
             payload :e,

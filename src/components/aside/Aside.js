@@ -50,7 +50,6 @@ const Aside = ({ open, handleClose }) => {
     };
 
     useEffect(() => {
-        console.log(user);
     }, [user])
     return (
         <>

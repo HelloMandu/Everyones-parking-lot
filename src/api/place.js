@@ -151,7 +151,6 @@ export const requestPostEnrollParking = async (
 
         *응답: success / failure
     */
-   console.log('post')
     const formData = makeFormData({
         addr,
         addr_detail,
@@ -220,7 +219,6 @@ export const requestPutModifyParking = async (
 
         *응답: success / failure
     */
-    console.log('put')
     const formData = makeFormData({
         addr,
         addr_detail,
