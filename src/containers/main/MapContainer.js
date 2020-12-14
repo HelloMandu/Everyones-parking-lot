@@ -62,6 +62,7 @@ const MapContainer = ({ modal }) => {
         (state) => state.position,
     ); //마지막 좌표 및 레벨
     const {parking} = useSelector((state)=>state.parking);
+    const { parking_town, underground_parking, ground_parking, stated_parking } = useSelector((state) => state.filters);
 
     const [onLoading, offLoading] = useLoading();
 
@@ -211,6 +212,8 @@ const MapContainer = ({ modal }) => {
             position_ref.current.lng = latlng.getLng();
             const {lat,lng} = position_ref.current;
             dispatch(get_area({lat,lng}));
+            const new_position ={lat,lng};
+            localStorage.setItem('position',JSON.stringify(new_position));
         });
 
         //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
@@ -220,7 +223,7 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-        const markdata = parking.filter(
+        const markdata = parking.slice(0,1000).filter(
             (item) => item.addr.indexOf(area) !== -1,
         );
         // 주차장 마커 생성
@@ -309,12 +312,29 @@ const MapContainer = ({ modal }) => {
     useEffect(() => {
         const {lat,lng} = position_ref.current; 
         mapRender();
-        createParkingMarker();
-        dispatch(get_list({lat,lng,range :3000} ));
         dispatch(get_area({lat,lng}));
     }, []);
 
     useEffect(()=>{
+        const {lat,lng} = position_ref.current; 
+        let filter_arr =[];
+        if(parking_town){
+            filter_arr.push(1);
+        }
+        if(underground_parking){
+            filter_arr.push(2);
+        }
+        if(ground_parking){
+            filter_arr.push(3);
+        }
+        if(stated_parking){
+            filter_arr.push(4);
+        }
+        dispatch(get_list({lat,lng,range :3000,filter:filter_arr} ));
+    },[parking_town,underground_parking,ground_parking,stated_parking])
+
+    useEffect(()=>{
+        console.log('마커생성');
         createParkingMarker();
     },[parking,area,position])
 

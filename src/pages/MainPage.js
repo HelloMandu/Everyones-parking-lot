@@ -13,11 +13,8 @@ const MainPage = ({ history }) => {
     useEffect(()=>{
 
         const filter_data = JSON.parse(localStorage.getItem('filter_data'));
-        console.log('스토리지 필터링');
-        console.log(filter_data);
         if(filter_data){
             const {parking_town,underground_parking,ground_parking,stated_parking} = filter_data
-            console.log('스토리지 디스패치');
             dispatch(set_filters({type:'parking_town', value:parking_town}));
             dispatch(set_filters({type:'underground_parking', value:underground_parking}));
             dispatch(set_filters({type:'ground_parking', value:ground_parking}));
