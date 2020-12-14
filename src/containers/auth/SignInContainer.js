@@ -45,8 +45,7 @@ const SignInContainer = () => {
             dispatch(getUser(response.data.token))
             history.push(Paths.main.index)
         } else {
-            openDialog(response.data.msg, '')
-            console.log(response.data.msg)
+            openDialog(response.data.msg)
         }
     }, [email, password, dispatch, history, openDialog]);
 

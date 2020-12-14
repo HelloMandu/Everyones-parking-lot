@@ -32,10 +32,8 @@ const FindEmailContainer = () => {
         );
 
         if (userEmail.status === 200) {
-            history.push({
-                pathname: Paths.auth.find.email_complete,
-                state: userEmail.data.email,
-            });
+            sessionStorage.setItem('session_email', userEmail.data.email);
+            history.push(Paths.auth.find.email_complete);
         } else {
             openDialog(userEmail.data.msg, '');
         }

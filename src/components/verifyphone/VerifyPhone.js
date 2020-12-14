@@ -51,7 +51,6 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 setSent(true);
                 setButtonTitle('인증번호 재발송');
                 setTimer(180000);
-                console.log(response.data.auth_number);
             } else {
                 openDialog('전송실패', '인증번호 전송에 실패했습니다');
             }

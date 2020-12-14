@@ -1,0 +1,42 @@
+@import '../../static/stylesheets/Root.scss';
+
+.header {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    color: #999999;
+    line-height: 48px;
+    position: relative;
+
+    & > button {
+        padding: 8px 10px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: $padding;
+    }
+}
+
+.comment {
+    width: 100%;
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 55px;
+    font-size: 22px;
+    color: #222222;
+}
+
+:global(#parking
+        > div
+        > div.swiper-container.swiper-container-initialized.swiper-container-horizontal.swiper-container-ios
+        > div.swiper-wrapper
+        > div.swiper-slide.swiper-slide-active) {
+    width: 100%;
+}
+
+:global(#parking
+        > div.swiper-container.swiper-container-initialized.swiper-container-horizontal.swiper-container-ios
+        > div.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets
+        > span.swiper-pagination-bullet.swiper-pagination-bullet-active) {
+    background-color: #222222;
+}

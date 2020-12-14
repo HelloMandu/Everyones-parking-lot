@@ -29,9 +29,9 @@ const Category = ({ type }) => {
     const [onLoading, offLoading] = useLoading();
 
     const onClickCategory = useCallback((type) => {
-        onLoading('faq');
+        onLoading('category');
         history.replace(Paths.main.support.faq + `?type=${type}`);
-        offLoading('faq');
+        offLoading('category');
         // eslint-disable-next-line 
     }, [history]);
 
@@ -49,14 +49,17 @@ const Category = ({ type }) => {
 
 const FAQItems = memo(({ type }) => {
 
-    const openDialog = useDialog();
     const history = useHistory();
+    const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading();
 
     const [FAQList, setFAQList] = useState([]);
 
     const { data } = useSWR(['faq', type], requestGetFAQList);
     useEffect(() => {
+        if (!data) onLoading('faq');
         if (data !== undefined) {
+            offLoading('faq');
             if (data.msg === 'success') {
                 setFAQList(data.notices);
             } else {

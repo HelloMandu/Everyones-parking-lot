@@ -73,7 +73,11 @@ export const requestGetUseRental = async (JWT_TOKEN, filter) => {
     // * orders:  [주문 정보 Array…]
 
     const URL = Paths.api + "rental";
-    const response = await axios.get(URL);
+    const response = await axios.get(URL, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };
@@ -103,8 +107,12 @@ export const requestPutCancelRental = async (JWT_TOKEN, rental_id) => {
 
     // * 응답: success / failure
 
-    const URL = Paths.api + 'rental/:rental_id';
-    const response = await axios.put(URL);
+    const URL = Paths.api + `rental/${rental_id}`;
+    const response = await axios.put(URL, {}, {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`
+        }
+    });
 
     return response;
 };

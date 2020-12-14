@@ -50,6 +50,8 @@ const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
         return () => document.removeEventListener('keydown', onKeyDown, true);
     }, [onKeyDown]);
 
+    const isFunc = handleClick.toString !== '() => {}' ? true : false
+
     return (
         <>
             <div className={cn('dialog', { confirm, open })}>
@@ -79,7 +81,7 @@ const Dialog =  ({ confirm, title, text, handleClick = () => {}, open }) => {
             <Backdrop
                 className={classes.backdrop}
                 open={open}
-                onClick={onClose}
+                onClick={isFunc ? () => {handleClick(); onClose()} : onClose}
             />
         </>
     );

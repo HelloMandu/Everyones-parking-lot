@@ -178,11 +178,12 @@ export const requestPutReName = async (JWT_TOKEN, name) => {
     return response.data;
 };
 
-export const requestPutRePassword = async (JWT_TOKEN, password) => {
+export const requestPutRePassword = async (JWT_TOKEN, prev_password, password) => {
     /*
         비밀번호 재설정 API(PUT): /api/user/password
         { headers }: JWT_TOKEN(유저 임시 토큰 or 유저 로그인 토큰)
 
+        prev_password: 마이페이지에서 재설정 시 필요한 현재 비밀번호(String)
         password: 새 비밀번호(String, 필수)
         
         * 응답: success / failure
@@ -193,7 +194,7 @@ export const requestPutRePassword = async (JWT_TOKEN, password) => {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     };
-    const response = await axios.put(URL, { password }, config);
+    const response = await axios.put(URL, { prev_password, password }, config);
 
     return response.data;
 };

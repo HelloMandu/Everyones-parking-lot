@@ -112,6 +112,7 @@ const QNAWriteContainer = () => {
     const subjectRef = useRef();
     const questionRef = useRef();
     const parkingPicture = useRef();
+    const emailRef = useRef();
 
     const [email, onChangeEmail] = useInput('');
     const [subject, onChangeSubject] = useInput('');
@@ -124,7 +125,7 @@ const QNAWriteContainer = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPostWriteQNA(JWT_TOKEN, email, subject, question, parkingPicture.current !== undefined ? parkingPicture.current.fileList : null);
         if (response.msg === 'success') {
-            openDialog("1:1문의 작성 완료", "", () => history.push(Paths.main.support.qna));
+            openDialog("1:1문의 작성 완료", "", () => history.replace(Paths.main.support.qna));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -138,6 +139,11 @@ const QNAWriteContainer = () => {
         }
     }, [email, subject, question]);
 
+    useEffect(() => {
+        emailRef.current.focus();
+    }, [])
+
+    console.log(questionRef);
     return (
         <>
             <div className={styles['container']}>
@@ -153,6 +159,7 @@ const QNAWriteContainer = () => {
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') subjectRef.current.focus();
                             }}
+                            reference={emailRef}
                         />
                     </div>
                     <div className={styles['subject-wrap']}>
@@ -165,7 +172,10 @@ const QNAWriteContainer = () => {
                             onChange={onChangeSubject}
                             reference={subjectRef}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter') questionRef.current.focus();
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    questionRef.current.focus();
+                                }
                             }}
                         />
                     </div>
@@ -176,6 +186,7 @@ const QNAWriteContainer = () => {
                             value={question}
                             placeholder={'문의 내용을 입력해주세요'}
                             onChange={onChangeQuestion}
+                            ref={questionRef}
                         />
                     </div>
                     <div className={styles['files-wrap']}>

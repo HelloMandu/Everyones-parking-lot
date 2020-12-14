@@ -1,7 +1,14 @@
-import React, { useState, useEffect, forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
+    useCallback,
+    useImperativeHandle,
+    useRef,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import { ButtonBase, IconButton } from '@material-ui/core'
+import { ButtonBase, IconButton } from '@material-ui/core';
 /* Library */
 
 import InputBox from '../../components/inputbox/InputBox';
@@ -88,8 +95,7 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
             setFileList(files);
         }
     }, []);
-    const handleDeleteFile = useCallback(() => setFileList([]), [setFileList]
-    );
+    const handleDeleteFile = useCallback(() => setFileList([]), [setFileList]);
     useImperativeHandle(ref, () => ({
         fileList,
     }));
@@ -125,7 +131,7 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
                     formEncType="multipart/form-data"
                 />
                 <ul className={styles['file-list']}>
-                    <li >
+                    <li>
                         <FileItem
                             file={fileList[0]}
                             onDelete={handleDeleteFile}
@@ -138,9 +144,14 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
 });
 
 const UpdateCar = () => {
-
     const history = useHistory();
     const openDialog = useDialog();
+
+    const sessionToken = sessionStorage.getItem('session_token');
+    if (sessionToken === null) {
+        openDialog('잘못된 접근입니다.');
+        history.push(Paths.auth.login);
+    }
 
     const [area, onChangeArea] = useInput('');
     const [carNumber, onChangeCarNumber] = useInput('');
@@ -153,27 +164,33 @@ const UpdateCar = () => {
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
-        const JWT_TOKEN = localStorage.getItem('user_id');
-        if (JWT_TOKEN) {
-            const response = await requestPutReCarInfo(JWT_TOKEN, {
-                car_location: area === 'default' ? undefined : area === '' ? undefined : area,
+        if (sessionToken) {
+            const response = await requestPutReCarInfo(sessionToken, {
+                car_location:
+                    area === 'default'
+                        ? undefined
+                        : area === ''
+                        ? undefined
+                        : area,
                 car_num: carNumber,
                 car_image: parkingPicture.current.fileList[0],
             });
             if (response.msg === 'success') {
-                openDialog("차량정보변경 완료", "", () => history.push(Paths.main.mypage.index));
+                sessionStorage.removeItem('session_token');
+                openDialog('차량정보등록 완료');
+                history.push(Paths.auth.sign_complete);
             } else {
                 openDialog(response.msg, response.sub);
             }
         } else {
-            openDialog("로그인이 필요합니다", "로그인 창으로 이동합니다", () => history.push(Paths.auth.signin));
+            openDialog('로그인이 필요합니다', '', () => history.push(Paths.auth.signin));
         }
-    }, [history, openDialog, area, carNumber]);
+    }, [sessionToken, area, carNumber, openDialog, history]);
 
     useEffect(() => {
         if (carNumber === '') setCarNum(false);
         else setCarNum(true);
-    }, [carNumber])
+    }, [carNumber]);
     useEffect(() => {
         setCheckAll(carNum && carPicture);
     }, [carNum, carPicture]);
@@ -181,8 +198,14 @@ const UpdateCar = () => {
         <>
             <div className={cx('container')}>
                 <div className={cx('select-wrapper')}>
-                    <select className={cx('select')} onChange={onChangeArea} defaultValue={'defalut'} >
-                        <option value='defalut'>번호판에 지역 존재시 선택</option>
+                    <select
+                        className={cx('select')}
+                        onChange={onChangeArea}
+                        defaultValue={'defalut'}
+                    >
+                        <option value="defalut">
+                            번호판에 지역 존재시 선택
+                        </option>
                         {areas.map((item) => (
                             <option key={item}>{item}</option>
                         ))}
@@ -197,10 +220,17 @@ const UpdateCar = () => {
                 />
 
                 <div className={cx('img-wrapper')}>
-                    <ParkingPicture ref={parkingPicture} setCheck={setCarPicture} />
+                    <ParkingPicture
+                        ref={parkingPicture}
+                        setCheck={setCarPicture}
+                    />
                 </div>
             </div>
-            <FixedButton button_name="등록" disable={!checkAll} onClick={onClickButton} />
+            <FixedButton
+                button_name="등록"
+                disable={!checkAll}
+                onClick={onClickButton}
+            />
         </>
     );
 };

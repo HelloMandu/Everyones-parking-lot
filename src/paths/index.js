@@ -71,8 +71,8 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: 'http://localhost:8080/api/',
-    storage: 'http://localhost:8080/uploads/',
+    api: 'https://intospace.kr/api/',
+    storage: 'https://intospace.kr/uploads/',
 };
 
 export const HeaderTitle = {
