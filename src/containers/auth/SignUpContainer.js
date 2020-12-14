@@ -32,8 +32,13 @@ const cx = classNames.bind(styles);
 
 const Email = forwardRef(({ setCheck, onKeyDown }, ref) => {
     const [email, onChangeEmail, checkEmail] = useInput('', isEmailForm);
+    const emailRef = useRef(null);
     useImperativeHandle(ref, () => ({
-        email: email,
+        email,
+        focusing: () => {
+            onChangeEmail('')
+            emailRef.current.focus()
+        }
     }));
     useEffect(() => setCheck(checkEmail), [setCheck, checkEmail]);
     return (
@@ -46,6 +51,7 @@ const Email = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 placeholder={'이메일을 입력해주세요.'}
                 onChange={onChangeEmail}
                 onKeyDown={onKeyDown}
+                reference={emailRef}
             />
         </div>
     );
@@ -55,7 +61,7 @@ const Name = forwardRef(({ setCheck, onKeyDown }, ref) => {
     const [name, onChangeName] = useInput('');
     useEffect(() => setCheck(name !== '' ? true : false), [setCheck, name]);
     useImperativeHandle(ref, () => ({
-        name: name,
+        name,
     }));
     return (
         <div className={cx('input-wrapper')}>
@@ -83,9 +89,14 @@ const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
     const [passwordCheck, onChangePasswordCheck] = useInput('');
     const [apear, setApear] = useState(false);
     const [same, setSame] = useState(false);
+    const pwRef = useRef(null)
 
     useImperativeHandle(ref, () => ({
-        password: password,
+        password,
+        focusing: () => {
+            onChangePassword('')
+            pwRef.current.focus()
+        }
     }));
 
     useEffect(() => {
@@ -104,6 +115,7 @@ const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 placeholder={'비밀번호를 입력해주세요.'}
                 onChange={onChangePassword}
                 onKeyDown={onKeyDown}
+                reference={pwRef}
             />
             <InputBox
                 className={'input-bar'}
@@ -210,6 +222,9 @@ const SignUpContainer = () => {
             history.push(Paths.auth.enrollment);
         } else {
             openDialog(data.msg);
+
+            if(data.msg === '이미 가입한 이메일입니다.') emailRef.current.focusing()
+            else if (data.msg === '비밀번호를 설정하지 못했습니다.') passwordRef.current.focusing()
         }
     }, [history, signUp, getBirth, openDialog]);
 

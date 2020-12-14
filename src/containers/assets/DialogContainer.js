@@ -9,8 +9,8 @@ import Dialog from '../../components/assets/Dialog';
 
 const DialogContainer =  () => {
     const state = useSelector(state => state.dialog);
-    const { title, text, handleClick, open, confirm } = state;
-    return <Dialog confirm={confirm} title={title} text={text} handleClick={handleClick} open={open} />;
+    const { title, text, handleClick, open, confirm, handleBackDrop } = state;
+    return <Dialog confirm={confirm} title={title} text={text} handleClick={handleClick} open={open} handleBackDrop={handleBackDrop} />;
 };
 
 export default DialogContainer;

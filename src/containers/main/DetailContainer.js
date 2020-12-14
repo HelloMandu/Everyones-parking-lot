@@ -104,7 +104,6 @@ const DetailContainer = ({ modal, place_id }) => {
         setLoading(true);
         try {
             const res = await requestGetDetailParking(place_id);
-            console.log(res);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
                 setPlace(place);
@@ -112,7 +111,6 @@ const DetailContainer = ({ modal, place_id }) => {
                 setReviews(reviews);
             }
         } catch (e) {
-            console.error(e);
         }
         offLoading('detail');
         setLoading(false);
@@ -126,7 +124,6 @@ const DetailContainer = ({ modal, place_id }) => {
 
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = useCallback(() => {
-        console.log(Kakao);
         Kakao.Navi.start({
             name: '현대백화점 판교점', // 도착지 지번
             x: 127.11205203011632, //도착지 x좌표

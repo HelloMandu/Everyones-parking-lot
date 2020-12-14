@@ -14,7 +14,7 @@
         margin-bottom: 16px;
 
         .title {
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
             margin-top: 20px;
             margin-left: 20px;
@@ -44,7 +44,7 @@
         .information {
             padding: 0 $padding;
             color: #777777;
-            font-size: 14px;
+            font-size: 1.16rem;
             font-weight: bold;
             line-height: 16px;
 
@@ -53,7 +53,7 @@
             }
 
             .information-content {
-                font-size: 12px;
+                font-size: 1rem;
                 color: #cccccc;
                 margin: 10px 0 24px;
                 word-break: break-all;
@@ -66,7 +66,7 @@
 
         .attribute-wrapper {
             .attribute {
-                font-size: 14px;
+                font-size: 1.16rem;
                 font-weight: bold;
                 color: #aaaaaa;
                 display: inline-block;
@@ -74,7 +74,7 @@
             }
 
             .value {
-                font-size: 14px;
+                font-size: 1.16rem;
                 color: #777777;
                 float: right;
                 margin-bottom: 10px;
@@ -94,7 +94,7 @@
     }
 
     .discount-title {
-        font-size: 18px;
+        font-size: 1.5rem;
         font-weight: bold;
         color: #222222;
         margin-bottom: 18px;
@@ -117,7 +117,7 @@
     }
 
     .input-title{
-        font-size: 14px;
+        font-size: 1.16rem;
         font-weight: bold;
         color: #999999;
         margin-bottom: 9px;
@@ -154,12 +154,12 @@
             text-align: center;
 
             .comment {
-                font-size: 14px;
+                font-size: 1.16rem;
                 color: #555555;
             }
 
             .checkout-time {
-                font-size: 20px;
+                font-size: 1.66rem;
                 font-weight: bold;
                 color: #222222;
             }
@@ -176,7 +176,7 @@
         width: 100%;
         margin-bottom: 20px;
         .title {
-            font-size: 16px;
+            font-size: 1.33rem;
             font-weight: bold;
             margin-bottom: 13px;
         }
@@ -186,14 +186,14 @@
             width: 100%;
             height: 48px;
             border: 1px solid #ebebeb;
-            font-size: 15px;
+            font-size: 1.25rem;
             line-height: 48px;
             justify-content: flex-start;
             background: url('../../../static/asset/svg/arrow.svg') no-repeat
                 calc(100% - 8px) 50% #fff;
             display: flex;
             justify-content: space-between;
-            font-size: 17px;
+            font-size: 1.41rem;
             font-weight: bold;
             color: #555555;
             margin-bottom: 6px;
@@ -216,13 +216,13 @@
         transform: translateY(-50%);
 
         .attribute {
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #222222;
         }
 
         .value {
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #222222;
         }

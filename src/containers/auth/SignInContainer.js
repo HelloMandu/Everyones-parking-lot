@@ -39,15 +39,21 @@ const SignInContainer = () => {
 
     const onClickLogin = useCallback(async () => {
         const response = await requestPostSignIn(email, password)
-        
-        if(response.data.msg === 'success') {
+        if (response.data.msg === 'success') {
             localStorage.setItem("user_id", response.data.token)
             dispatch(getUser(response.data.token))
             history.push(Paths.main.index)
         } else {
-            openDialog(response.data.msg)
+
+            if(response.data.msg === '가입하지 않은 이메일입니다.') {
+                onChangeEmail('')
+                openDialog(response.data.msg, '', () => emailRef.current.focus(), false, true)
+            } else if(response.data.msg === '비밀번호가 일치하지 않습니다.') {
+                onChangePassword('')
+                openDialog(response.data.msg, '', () => passwordRef.current.focus(), false, true)
+            } else openDialog(response.data.msg)
         }
-    }, [email, password, dispatch, history, openDialog]);
+    }, [email, password, dispatch, history, openDialog, onChangeEmail, onChangePassword]);
 
     useEffect(() => {
         emailRef.current.focus();

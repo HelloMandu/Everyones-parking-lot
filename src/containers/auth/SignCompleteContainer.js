@@ -18,7 +18,7 @@ const SignCompleteContainer = () => {
 
     const signComplete = useCallback(() => {
         sessionStorage.removeItem('session_name')
-        history.push(Paths.main.index)
+        history.push(Paths.auth.signin)
     }, [history])
 
     return (

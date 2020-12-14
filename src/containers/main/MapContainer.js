@@ -99,8 +99,6 @@ const MapContainer = ({ modal }) => {
                 duration: 300,
             },
         });
-        var t = kakao_map.current.getBounds();
-        console.log(t);
         dispatch(set_level(level));
     };
 
@@ -111,8 +109,6 @@ const MapContainer = ({ modal }) => {
                 const p = await getCoordinates();
                 const lat = p.coords.latitude;
                 const lng = p.coords.longitude;
-                console.log(lat);
-                console.log(lng);
                 dispatch(set_position({lat,lng}));
                 setCoordinates(lat, lng);
                 createMyLocationMarker(lat,lng);
@@ -154,7 +150,6 @@ const MapContainer = ({ modal }) => {
     // 도착지 마커를 생성하는 함수.
     const createArriveMarker = () => {
         if (arrive_markers.current.length !== 0) {
-            console.log(arrive_markers.current);
             arrive_markers.current.map((marker) => marker.setMap(null));
             arrive_markers.current = [];
         }
@@ -180,7 +175,6 @@ const MapContainer = ({ modal }) => {
 
     //주차장 마커를 생성하는 함수
     const createParkingMarker =()=>{
-        console.log('마커생성 시작');
 
         onLoading('parking/GET_LIST');
         if(cluster_marker.current!==null){
@@ -226,8 +220,9 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-        console.log('필터링 시작'+area);
-        const markdata = parking.slice(0,1000).filter((item)=>item.addr.indexOf(area)!==-1);
+        const markdata = parking.filter(
+            (item) => item.addr.indexOf(area) !== -1,
+        );
         // 주차장 마커 생성
         const data = markdata.map((el) => {
             // const distance ='300';
@@ -253,7 +248,6 @@ const MapContainer = ({ modal }) => {
         cluster_marker.current.addMarkers(data);
         kakao.maps.event.addListener(  cluster_marker.current, 'clusterclick', function(cluster) {
             const overlays = cluster.getMarkers();
-            console.log(overlays);
 
             if(overlays.length > 10){
                 var level = map.getLevel()-1;
@@ -264,9 +258,7 @@ const MapContainer = ({ modal }) => {
            
                 const slides = overlays.map((overlay) => {
                     const data = overlay.getContent();
-                    console.log(data);
                     const t_index = data.indexOf('title=');
-                    console.log(t_index);
                     const close_index = data.indexOf('>');
                     const str = data.substring(t_index+6, close_index);
                     return JSON.parse(str);

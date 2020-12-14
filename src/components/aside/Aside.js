@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 // styles
@@ -47,11 +47,6 @@ const Aside = ({ open, handleClose }) => {
             history.push(Path);
         }, 500);
     };
-
-    useEffect(() => {
-        console.log(isEmpty(user));
-        
-    }, [user])
     return (
         <>
             <div className={cx('aside-menu', { open })}>
