@@ -20,7 +20,7 @@
         }
     }
 
-    & > button{
+    & > button {
         position: absolute;
         top: $padding;
         right: $padding;
@@ -37,8 +37,9 @@
     }
 
     .area {
-        height: 323px;
-        position: relative;
+        position: absolute;
+        width: 100%;
+        left: 0; bottom: 60px;
         padding: 41px $padding 0;
         border: none;
 
