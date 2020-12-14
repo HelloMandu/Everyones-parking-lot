@@ -36,7 +36,8 @@ const WithdrawContainer = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestDeleteUser(JWT_TOKEN);
         if (response.msg === 'success') {
-            openDialog("회원탈퇴가 완료되었습니다.", "", () => history.push(Paths.main.index));
+            localStorage.removeItem('user_id');
+            openDialog("회원탈퇴가 완료되었습니다.", "", () => history.replace(Paths.main.index));
         } else {
             openDialog(response.msg, response.sub);
         }

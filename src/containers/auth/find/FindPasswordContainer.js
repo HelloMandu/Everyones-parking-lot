@@ -30,7 +30,7 @@ const FindPasswordContainer = () => {
         const resetPW = await requestPostFindPassword(name, email, phoneNumber.current.phoneNumber)
 
         if(resetPW.status === 200){
-            localStorage.setItem('user_id', resetPW.data.token)
+            sessionStorage.setItem('session_pw', resetPW.data.token)
             history.push(Paths.auth.find.password_complete)
         } else {
             openDialog(resetPW.data.msg, '')

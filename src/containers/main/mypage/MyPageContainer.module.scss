@@ -47,6 +47,7 @@
             transform: translateY(-50%);
             .name-wrap{
                 position: relative;
+                padding-right: 18px;
                 .user-name{
                     display: inline-block;
                     & > span{
@@ -131,6 +132,23 @@
             background-color: #FFF;
             border: 1px solid #EBEBEB;
             padding: 0 $padding;
+        }
+    }
+    .logout-area{
+        margin-top: 40px;
+        padding: 0 $padding;
+        .logout-wrap{
+            width: 100%; height: 48px;
+            border: 1px solid #DBDBDB;
+            background-color: #FFF;
+            padding: 0 $padding;
+            text-align: center;
+            line-height: 48px;
+            & > span{
+                font-size: 1.167rem; // 14px;
+                font-weight: 400; // Regular
+                // color: #777;
+            }
         }
     }
     .withdraw-area{

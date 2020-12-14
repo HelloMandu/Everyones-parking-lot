@@ -17,6 +17,7 @@ const SupportContainer = () => {
 
     const location = useLocation();
     const history = useHistory();
+
     const [mode, setMode] = useState(null);
     const [tabIndex, setTabIndex] = useState(0);
 

@@ -12,6 +12,7 @@ import styles from './UpdateBirthdayContainer.module.scss';
 
 import useBirth from '../../../../hooks/useBirth';
 import { useDialog } from '../../../../hooks/useDialog';
+import useToken from '../../../../hooks/useToken';
 /* Hooks */
 
 import { Paths } from '../../../../paths';
@@ -35,6 +36,7 @@ const UpdateBirthdayContiner = () => {
     const openDialog = useDialog();
     const history = useHistory();
     const reduxDispatch = useDispatch();
+    const TOKEN = useToken();
 
     const [onChangeBirth, getBirth] = useBirth({
         year: date[0],
@@ -48,7 +50,7 @@ const UpdateBirthdayContiner = () => {
         const response = await requestPutReBirth(JWT_TOKEN, getBirth());
         if (response.msg === 'success') {
             reduxDispatch(updateUser('birth', getBirth()));
-            openDialog("생년월일변경 완료", "", () => history.push(Paths.main.mypage.index));
+            openDialog("생년월일변경 완료", "", () => history.replace(Paths.main.mypage.index));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -56,12 +58,16 @@ const UpdateBirthdayContiner = () => {
 
     return (
         <>
-            <div className={styles['container']}>
-                <div className={styles['birth-area']}>
-                    <Birth onChangeBirth={onChangeBirth} year={parseInt(date[0])} month={parseInt(date[1])} day={parseInt(date[2])} />
-                </div>
-            </div>
-            <FixedButton button_name="변경" disable={false} onClick={onClickButton} />
+            {TOKEN !== null &&
+                <>
+                    <div className={styles['container']}>
+                        <div className={styles['birth-area']}>
+                            <Birth onChangeBirth={onChangeBirth} year={parseInt(date[0])} month={parseInt(date[1])} day={parseInt(date[2])} />
+                        </div>
+                    </div>
+                    <FixedButton button_name="변경" disable={false} onClick={onClickButton} />
+                </>
+            }
         </>
     );
 };

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken'
 
 import { requestGetUseRental } from '../../../api/rental';
 
@@ -18,19 +19,19 @@ import Notice from '../../../static/asset/svg/Notice';
 const cx = classNames.bind(styles);
 
 const UseListContainer = () => {
+    const token = useToken()
     const [list, setList] = useState([]);
     const openDialog = useDialog();
 
     const getUseList = useCallback(async () => {
-        const token = localStorage.getItem('user_id');
         const { data } = await requestGetUseRental(token);
 
         if (data.msg === 'success') setList(data.orders);
         else openDialog(data.msg);
-    }, [openDialog]);
+    }, [openDialog, token]);
 
     useEffect(() => {
-        getUseList();
+        if(token != null) getUseList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

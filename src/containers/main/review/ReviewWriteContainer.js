@@ -1,14 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import qs from 'qs';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 /* Library */
 
 import FixedButton from '../../../components/button/FixedButton';
+
+import {useDialog} from '../../../hooks/useDialog'
+import useToken from '../../../hooks/useToken'
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import { requestPostWriteReview, requestPutModifyReview } from '../../../api/review'
 
 import { getFormatDateTime } from '../../../lib/calculateDate';
+
+import {Paths} from '../../../paths'
 
 import className from 'classnames/bind';
 import styles from './ReviewWriteContainer.module.scss';
@@ -17,11 +22,14 @@ import Rating from '@material-ui/lab/Rating';
 const cx = className.bind(styles);
 
 const ReviewWriteContainer = () => {
+    const token = useToken()
+    const openDialog = useDialog()
     const location = useLocation();
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
     const { id } = query;
+    const history = useHistory()
 
     const [order, setOrder] = useState();
     const [exist, setExist] = useState(false);
@@ -32,7 +40,6 @@ const ReviewWriteContainer = () => {
     const getOrder = useCallback(async () => {
         const { msg, order, review } = await requestGetDetailUseRental(id);
 
-        console.log(order, review);
         if (msg === 'success') {
             setOrder(order);
               
@@ -45,28 +52,31 @@ const ReviewWriteContainer = () => {
     }, [id]);
 
     useEffect(() => {
-        getOrder();
+        if(token !== null) getOrder();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const writeReview = useCallback(async() => {
-        const token = localStorage.getItem('user_id')
-        const result = await requestPostWriteReview(token, order.rental_id, order.place_id, reviewBody, rating)
+        const {data} = await requestPostWriteReview(token, order.rental_id, order.place_id, reviewBody, rating)
         
-        console.log(result)
-    }, [order, rating, reviewBody])
+        if(data.msg === 'success'){
+            openDialog('리뷰가 작성되었습니다.')
+            history.push(Paths.main.index)
+        }
+    }, [history, openDialog, order, rating, reviewBody, token])
 
     const modifyReview = useCallback(async() => {
-        const token = localStorage.getItem('user_id')
-        const result = await requestPutModifyReview(token, review.review_id, reviewBody, rating)
+        const {data} = await requestPutModifyReview(token, review.review_id, reviewBody, rating)
 
-        console.log(result)
-    }, [rating, review, reviewBody])
+        if(data.msg === 'success'){
+            openDialog('리뷰가 수정되었습니다.')
+            history.push(Paths.main.index)
+        }
+    }, [history, openDialog, rating, review, reviewBody, token])
 
     return (
         order !== undefined && (
             <>
-            {console.log(rating, reviewBody)}
                 <div className={cx('container')}>
                     <div className={cx('comment')}>
                         <div className={cx('date')}>

@@ -10,6 +10,9 @@ import Notice from '../../../static/asset/svg/Notice';
 import { getFormatDateNanTime } from '../../../lib/calculateDate';
 /* Lib */
 
+import useLoading from '../../../hooks/useLoading';
+/* Hooks */
+
 import { Paths } from '../../../paths';
 /* Paths */
 
@@ -37,6 +40,8 @@ const NoticeItems = ({ noticeList }) => {
     )
 }
 const NoticeContainer = () => {
+
+    const [onLoading, offLoading] = useLoading();
 
     const allNoticeList = useRef([]);
     const dataLength = useRef(0);
@@ -66,29 +71,31 @@ const NoticeContainer = () => {
 
         window.addEventListener('scroll', handleScroll);
         const getNoticeList = async () => {
+            onLoading('notice');
             const response = await requestGetNoticeList();
             allNoticeList.current = response;
             fetchNoticeList();
+            offLoading('notice');
         }
         getNoticeList();
         return () => window.removeEventListener('scroll', handleScroll);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (noticeList.length !== 0) {
-        return (
-            <div className={styles['container']}>
-                <NoticeItems noticeList={noticeList} />
-            </div>
-        )
-    }
     return (
-        <div className={styles['non-notice']}>
-            <div className={styles['non-container']}>
-                <Notice />
-                <div className={styles['explain']}>등록된 공지사항이 없습니다.</div>
-            </div>
-        </div>
+        <>
+            {noticeList.length !== 0
+                ? <div className={styles['container']}>
+                    <NoticeItems noticeList={noticeList} />
+                </div>
+                : <div className={styles['non-notice']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>등록된 공지사항이 없습니다.</div>
+                    </div>
+                </div>
+            }
+        </>
     );
 };
 

@@ -104,8 +104,8 @@ const CheckBox = ({
                                     {subDescription}
                                 </div>
                             ) : (
-                                ''
-                            )}
+                                    ''
+                                )}
                         </li>
                     ),
                 )}

@@ -17,6 +17,7 @@ import styles from './UpdateCarContainer.module.scss';
 
 import useInput from '../../../../hooks/useInput';
 import { useDialog } from '../../../../hooks/useDialog';
+import useToken from '../../../../hooks/useToken';
 /* Hooks */
 
 import { requestPutReCarInfo } from '../../../../api/user';
@@ -140,6 +141,7 @@ const UpdateCar = () => {
 
     const history = useHistory();
     const openDialog = useDialog();
+    const TOKEN = useToken();
 
     const [area, onChangeArea] = useInput('');
     const [carNumber, onChangeCarNumber] = useInput('');
@@ -149,6 +151,7 @@ const UpdateCar = () => {
     const [carPicture, setCarPicture] = useState(false);
 
     const parkingPicture = useRef();
+    const carRef = useRef();
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
@@ -159,7 +162,7 @@ const UpdateCar = () => {
             car_image: parkingPicture.current.fileList[0],
         });
         if (response.msg === 'success') {
-            openDialog("차량정보변경 완료", "", () => history.push(Paths.main.mypage.index));
+            openDialog("차량정보변경 완료", "", () => history.replace(Paths.main.mypage.index));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -172,30 +175,39 @@ const UpdateCar = () => {
     useEffect(() => {
         setCheckAll(carNum && carPicture);
     }, [carNum, carPicture]);
+    useEffect(() => {
+        carRef.current.focus();
+    }, []);
+
     return (
         <>
-            <div className={cx('container')}>
-                <div className={cx('select-wrapper')}>
-                    <select className={cx('select')} onChange={onChangeArea} defaultValue={'defalut'} >
-                        <option value='defalut'>번호판에 지역 존재시 선택</option>
-                        {areas.map((item) => (
-                            <option key={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-                <InputBox
-                    className={'input-box'}
-                    type={'text'}
-                    value={carNumber}
-                    placeholder={'차량 번호를 입력해주세요. Ex)21수 7309'}
-                    onChange={onChangeCarNumber}
-                />
+            {TOKEN !== null &&
+                <>
+                    <div className={cx('container')}>
+                        <div className={cx('select-wrapper')}>
+                            <select className={cx('select')} onChange={onChangeArea} defaultValue={'defalut'} >
+                                <option value='defalut'>번호판에 지역 존재시 선택</option>
+                                {areas.map((item) => (
+                                    <option key={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <InputBox
+                            className={'input-box'}
+                            type={'text'}
+                            value={carNumber}
+                            placeholder={'차량 번호를 입력해주세요. Ex)21수 7309'}
+                            onChange={onChangeCarNumber}
+                            reference={carRef}
+                        />
 
-                <div className={cx('img-wrapper')}>
-                    <ParkingPicture ref={parkingPicture} setCheck={setCarPicture} />
-                </div>
-            </div>
-            <FixedButton button_name="등록" disable={!checkAll} onClick={onClickButton} />
+                        <div className={cx('img-wrapper')}>
+                            <ParkingPicture ref={parkingPicture} setCheck={setCarPicture} />
+                        </div>
+                    </div>
+                    <FixedButton button_name="등록" disable={!checkAll} onClick={onClickButton} />
+                </>
+            }
         </>
     );
 };

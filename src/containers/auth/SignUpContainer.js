@@ -205,7 +205,8 @@ const SignUpContainer = () => {
         );
 
         if (data.msg === 'success'){
-            localStorage.setItem('user_id', data.token)
+            sessionStorage.setItem('session_token', data.token)
+            sessionStorage.setItem('session_name', nameRef.current.name)
             history.push(Paths.auth.enrollment);
         } else {
             openDialog(data.msg);
@@ -233,7 +234,6 @@ const SignUpContainer = () => {
 
     return (
         <>
-        {console.log(getBirth())}
             <div className={cx('container')}>
                 <Email
                     setCheck={setCheckEmail}
