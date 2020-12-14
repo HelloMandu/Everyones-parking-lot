@@ -57,7 +57,8 @@ const crossBrowsingDate = date => {
 const dateFormatting = (date) => (date < 10 ? '0' + date : date); // 달력의 수치를 두 자리로 변환해주는 함수
 export const dateToYYYYMMDD = (date, join = '-') => {
     // Javascript Date 객체를 형식에 맞게 변환하여 표현함.
-    const absolute = crossBrowsingDate(date); // 만약에 Date 객체가 넘어오지 않을 것을 대비
+    // const absolute = crossBrowsingDate(date); // 만약에 Date 객체가 넘어오지 않을 것을 대비
+    const absolute = new Date(date);
     const monthFormatting = dateFormatting(absolute.getMonth() + 1); // 월을 두 자리로 변환
     const dayFormatting = dateFormatting(absolute.getDate()); // 일을 두 자리로 변환
     return (

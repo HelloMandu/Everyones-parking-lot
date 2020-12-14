@@ -1,6 +1,6 @@
 @import '../../../static/stylesheets/Root.scss';
 
-.container{
+.container {
     padding: $padding;
 
     max-width: $max-width;
@@ -8,151 +8,158 @@
     margin: 0 auto;
     width: 100%;
 
-    .card{
-        border: 1px solid #E9EBED;
+    .card {
+        border: 1px solid #e9ebed;
         box-shadow: 0px 5px 10px rgba($color: #000000, $alpha: 0.05);
         margin-bottom: 16px;
 
-        .title{
-            font-size: 18px;
+        .title {
+            font-size: 1.5rem;
             font-weight: bold;
             margin-top: 20px;
             margin-left: 20px;
             margin-bottom: 18px;
         }
 
-        .button-area{
+        .button-area {
             text-align: center;
             margin-bottom: 30px;
             padding: 0 20px;
 
-            & > button{
+            & > button {
                 padding: 10px 8px;
-                border: 1px solid #EBEBEB;
+                border: 1px solid #ebebeb;
                 margin-right: 16px;
 
-                & > svg{
+                & > svg {
                     margin-right: 6px;
                 }
             }
 
-            & > button:last-child{
+            & > button:last-child {
                 margin: 0;
             }
         }
 
-        .information{
+        .information {
             padding: 0 $padding;
             color: #777777;
-            font-size: 14px;
+            font-size: 1.16rem;
             font-weight: bold;
             line-height: 16px;
-            
-            & > svg{
+
+            & > svg {
                 vertical-align: middle;
             }
 
-            .information-content{
-                font-size: 12px;
-                color: #CCCCCC;
+            .information-content {
+                font-size: 1rem;
+                color: #cccccc;
                 margin: 10px 0 24px;
                 word-break: break-all;
             }
         }
     }
 
-    .content-area{
+    .content-area {
         padding: 0 20px;
 
-        .attribute-wrapper{
-            .attribute{
-                font-size: 14px;
+        .attribute-wrapper {
+            .attribute {
+                font-size: 1.16rem;
                 font-weight: bold;
-                color: #AAAAAA;
+                color: #aaaaaa;
                 display: inline-block;
                 margin-bottom: 10px;
             }
 
-            .value{
-                font-size: 14px;
+            .value {
+                font-size: 1.16rem;
                 color: #777777;
                 float: right;
                 margin-bottom: 10px;
             }
 
-            .black{
+            .black {
                 font-weight: bold;
                 color: #333333;
             }
         }
 
-        .attribute-wrapper:last-child{
-            border-bottom: 1px solid #E9EBED;
+        .attribute-wrapper:last-child {
+            border-bottom: 1px solid #e9ebed;
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
     }
 
-    .discount-title{
-        font-size: 18px;
+    .discount-title {
+        font-size: 1.5rem;
         font-weight: bold;
         color: #222222;
         margin-bottom: 18px;
     }
 
-    .button-area{
+    .button-area {
         padding-top: 24px;
 
-        & > button{
+        & > button {
             width: 33%;
             height: 48px;
             margin-right: 0.5%;
             margin-bottom: 0.5%;
-            border: 1px solid #EBEBEB;
+            border: 1px solid #ebebeb;
         }
 
-        & > button:nth-child(3n){
+        & > button:nth-child(3n) {
             margin: 0;
         }
     }
+
+    .input-title{
+        font-size: 1.16rem;
+        font-weight: bold;
+        color: #999999;
+        margin-bottom: 9px;
+    }
 }
 
-.bar{
+.bar {
     width: 100%;
     height: 16px;
-    background-color: #F4F4F4;
+    background-color: #f4f4f4;
 }
 
-.top{
+.top {
     padding-top: $pd-top + 20px;
 }
 
-.checkout-time-container{
+.checkout-time-container {
     width: 100%;
     height: 134px;
-    background-color: #F7F8F9;
+    background-color: #f7f8f9;
     padding: 20px $padding;
 
-    .box{
+    .box {
         width: 100%;
         height: 100%;
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         border: 1px solid #222222;
         border-radius: 2px;
 
-        .checkout-time-area{
+        .checkout-time-area {
             position: relative;
             top: 50%;
             transform: translateY(-50%);
             text-align: center;
 
-            .comment{
-                font-size: 14px;
+            .comment {
+                font-size: 1.16rem;
                 color: #555555;
             }
 
-            .checkout-time{
-                font-size: 20px;
+            .checkout-time {
+                font-size: 1.66rem;
                 font-weight: bold;
                 color: #222222;
             }
@@ -167,33 +174,39 @@
     .parking-payment-wrapper {
         position: relative;
         width: 100%;
-        margin-top: 41px;
-        margin-bottom: 14px;
+        margin-bottom: 20px;
         .title {
-            font-size: 16px;
+            font-size: 1.33rem;
             font-weight: bold;
             margin-bottom: 13px;
         }
-    
+
         .payment {
             padding-left: 10px;
             width: 100%;
             height: 48px;
             border: 1px solid #ebebeb;
-            font-size: 15px;
+            font-size: 1.25rem;
             line-height: 48px;
-            background: url('../../../static/asset/svg/arrow.svg') no-repeat calc(100% - 8px) 50% #fff;   
+            justify-content: flex-start;
+            background: url('../../../static/asset/svg/arrow.svg') no-repeat
+                calc(100% - 8px) 50% #fff;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.41rem;
+            font-weight: bold;
+            color: #555555;
+            margin-bottom: 6px;
         }
     }
 }
 
-
-.extend-price{
+.extend-price {
     width: 100%;
     height: 88px;
-    background-color: #F7F8F9;
+    background-color: #f7f8f9;
 
-    & > .attribute-wrapper{
+    & > .attribute-wrapper {
         display: flex;
         justify-content: space-between;
         padding: $padding;
@@ -202,14 +215,14 @@
         top: 50%;
         transform: translateY(-50%);
 
-        .attribute{
-            font-size: 18px;
+        .attribute {
+            font-size: 1.5rem;
             font-weight: bold;
             color: #222222;
         }
 
-        .value{
-            font-size: 18px;
+        .value {
+            font-size: 1.5rem;
             font-weight: bold;
             color: #222222;
         }

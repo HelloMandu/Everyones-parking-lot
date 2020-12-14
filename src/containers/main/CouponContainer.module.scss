@@ -34,16 +34,8 @@
         }
     }
 
-    .coupon-swiper {
-        height: calc(100vh - 132px);
-        overflow-y: scroll;
-        &::-webkit-scrollbar {
-            display: none;
-        }
-    }
-
     .coupon-input {
-        position: fixed;
+        position: absolute;
         z-index: $level0;
         width: 75px;
         height: 48px;

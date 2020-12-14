@@ -5,6 +5,7 @@ import React, {
     useState,
 } from 'react';
 import cn from 'classnames/bind';
+// import { useSnackbar } from 'notistack';
 
 import { requestPostAuth, requestPostConfirm } from '../../api/mobile';
 
@@ -30,6 +31,7 @@ const getTime = (timer) =>
 const VerifyPhone = ({ setCheck }, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
+    // const { enqueueSnackbar } = useSnackbar();
     const [
         phoneNumber,
         handleChangePhoneNumber,
@@ -43,7 +45,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
     );
     const [buttonTitle, setButtonTitle] = useState('인증번호 발송');
     const openDialog = useDialog();
-    
+
     const onClickSendVerify = useCallback(async () => {
         if (sendCheck) {
             const response = await requestPostAuth(phoneNumber);
@@ -51,7 +53,6 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 setSent(true);
                 setButtonTitle('인증번호 재발송');
                 setTimer(180000);
-                console.log(response.data.auth_number);
             } else {
                 openDialog('전송실패', '인증번호 전송에 실패했습니다');
             }
@@ -71,32 +72,32 @@ const VerifyPhone = ({ setCheck }, ref) => {
                     setCheck(true);
                 }
             } else {
-                openDialog('인증실패', '인증번호가 다릅니다');
+                openDialog('인증실패', '인증번호 전송에 실패했습니다');
+                // enqueueSnackbar('인증번호가 다릅니다.', { variant: 'error' } );
             }
         }
     }, [
         verifyCheck,
-        setIsConfirm,
-        sendCheck,
-        setSendCheck,
         phoneNumber,
         verify,
-        openDialog,
+        setSendCheck,
+        sendCheck,
         setCheck,
+        openDialog,
     ]);
     const [verifyFocus, verifyKeyDown] = useKeyDown(onClickVerify);
 
     useInterval(() => setTimer(timer - 1000), sent && timer > 0 ? 1000 : 0);
 
     useImperativeHandle(ref, () => ({
-        phoneNumber: phoneNumber,
+        phoneNumber,
     }));
     return (
-        <>
+        <section>
             <div className={styles['send-verify']}>
                 <InputBox
                     className={'input-box'}
-                    type={'text'}
+                    type={'number'}
                     value={phoneNumber}
                     placeholder={'ex) 01012341234'}
                     onChange={handleChangePhoneNumber}
@@ -115,7 +116,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
             <div className={cx('verify-phone', { sent, isConfirm })}>
                 <InputBox
                     className={'input-box'}
-                    type={'text'}
+                    type={'number'}
                     value={verify}
                     placeholder={'인증번호 입력'}
                     onChange={handleChangeVerify}
@@ -133,7 +134,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
                     ></ConfirmButton>
                 </div>
             </div>
-        </>
+        </section>
     );
 };
 

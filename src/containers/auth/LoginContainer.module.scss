@@ -1,17 +1,17 @@
 @import '../../static/stylesheets/Root.scss';
 
-.container{
+.container {
     @include container($pd-top);
     background-position: 50% 100%;
     background-repeat: no-repeat;
     background-size: 100%;
     background-image: url('../../static/asset/png/auth_background.png');
 
-    .logo{
+    .logo {
         height: 275px;
         margin-bottom: 115px;
-        
-        & > svg{
+
+        & > svg {
             width: 230px;
             position: relative;
             top: 50%;
@@ -20,8 +20,14 @@
         }
     }
 
-    .background{
-        & > img{
+    & > button {
+        position: absolute;
+        top: $padding;
+        right: $padding;
+    }
+
+    .background {
+        & > img {
             position: relative;
             left: 50%;
             transform: translateX(-50%);
@@ -30,23 +36,24 @@
         }
     }
 
-    .area{
-        height: 323px;
-        position: relative;
+    .area {
+        position: absolute;
+        width: 100%;
+        left: 0; bottom: 60px;
         padding: 41px $padding 0;
         border: none;
 
-        .button{
+        .button {
             width: 100%;
             border: none;
             border-radius: 100px;
             height: 48px;
             text-align: center;
             line-height: 48px;
-            font-size: 15px;
+            font-size: 1.25rem;
             margin-bottom: 12px;
 
-            & > svg{
+            & > svg {
                 vertical-align: baseline;
                 margin-right: 12px;
             }
@@ -55,7 +62,7 @@
 
     & > img {
         position: absolute;
-        bottom:0;
+        bottom: 0;
         width: 100%;
         z-index: -1;
     }

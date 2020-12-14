@@ -1,5 +1,6 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import {useSelector} from 'react-redux';
 
 //styles
 
@@ -12,6 +13,12 @@ import AddressList from '../address/AddressList';
 
 import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
+
+//lib
+import {isEmpty} from '../../lib/formatChecker';
+
+//api
+import {requestGetLikeParkingList} from '../../api/place';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,6 +67,28 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const BookmarkModal = (props) => {
     const classes = useStyles();
+    const user = useSelector((state) => state.user);
+
+    const getCallBookmarkApi = async () => {
+
+        //작업중
+        if (!isEmpty(user)) {
+            const JWT_TOKEN = localStorage.getItem('user_id');
+            try {
+                const res = await requestGetLikeParkingList(JWT_TOKEN);
+                console.log(res);
+            }
+            catch (e) {
+
+            }
+        }
+
+    }
+
+    useEffect(() => {
+        getCallBookmarkApi();
+    }, [user]);
+
     return (
         <Dialog
             fullScreen

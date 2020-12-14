@@ -4,16 +4,18 @@ import { ButtonBase } from '@material-ui/core';
 
 import CouponCheckBox from '../../static/asset/svg/coupon/CouponCheckBox';
 import CouponCheck from '../../static/asset/svg/coupon/CouponCheck';
-
+import CouponDown from '../../static/asset/svg/coupon/CouponDown';
 import CouponBox from '../../static/asset/svg/coupon/CouponBox';
 
 import { numberFormat } from '../../lib/formatter';
+import { getFormatDateNanTime } from '../../lib/calculateDate';
 
 import styles from './Coupon.module.scss';
 
 const cx = cn.bind(styles);
 
-const CouponItem = memo(({ subject, endDate, price, checked }) => {
+const CouponItem = memo(({ subject, endDate, price, book, checked }) => {
+    const bookCheck = !checked;
     return (
         <>
             <div className={styles['default']}>coupon</div>
@@ -23,10 +25,17 @@ const CouponItem = memo(({ subject, endDate, price, checked }) => {
                     {numberFormat(price)}
                     <span>원</span>
                 </div>
-                <div className={styles['end-date']}>{endDate}까지</div>
+                <div className={styles['end-date']}>
+                    {getFormatDateNanTime(endDate)}까지
+                </div>
             </div>
-            <div className={styles['state-box']}>
+            <div className={cx('state-box')}>
                 <CouponCheckBox></CouponCheckBox>
+                {book && (
+                    <div className={cx({ book, bookCheck })}>
+                        <CouponDown />
+                    </div>
+                )}
                 <div className={cx('check', { checked })}>
                     <CouponCheck></CouponCheck>
                 </div>
@@ -35,19 +44,19 @@ const CouponItem = memo(({ subject, endDate, price, checked }) => {
     );
 });
 
-const Coupon = ({ list, onClick }) => {
+const Coupon = memo(({ list, onClick = () => {}, clicked = false, book = false }) => {
     if (list !== undefined && list.length) {
         return (
             <ul className={styles['coupon-list']}>
                 {list.map(
-                    ({ cp_id, cp_subject, cp_end_date, cp_price, checked }) => (
+                    ({ cp_id, cz_id, cp_subject, cp_end_date, cp_price, checked }) => (
                         <ButtonBase
                             className={styles['coupon-item']}
                             component="li"
                             key={cp_id}
                             onClick={() => {
-                                if (onClick !== undefined) {
-                                    onClick(cp_id);
+                                if (clicked) {
+                                    onClick(cz_id);
                                 }
                             }}
                         >
@@ -56,6 +65,7 @@ const Coupon = ({ list, onClick }) => {
                                 endDate={cp_end_date}
                                 price={cp_price}
                                 checked={checked}
+                                book={book}
                             ></CouponItem>
                         </ButtonBase>
                     ),
@@ -66,9 +76,11 @@ const Coupon = ({ list, onClick }) => {
     return (
         <div className={styles['coupon-box']}>
             <CouponBox></CouponBox>
-            <div className={styles['explain']}>보유하고 계신 쿠폰이 없습니다.</div>
+            <div className={styles['explain']}>
+                보유하고 계신 쿠폰이 없습니다.
+            </div>
         </div>
     );
-};
+});
 
 export default Coupon;

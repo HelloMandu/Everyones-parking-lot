@@ -1,34 +1,46 @@
 @import '../../../static/stylesheets/Root.scss';
 
-.container{
+.container {
     padding: $padding;
 
     @include container($pd-top);
 
-    .area{
-        border: 1px solid #EBEBEB;
+    .area {
+        display: block;
+        border: 1px solid #ebebeb;
         border-radius: 2px;
         padding: 24px 36px 30px;
         margin-bottom: 26px;
         position: relative;
         height: 160px;
 
+        transition: all .15s ease-in-out;
+
         .item-title{
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
+            margin-bottom: 8px;
         }
 
-        .item-content{
-            font-size: 14px;
+        .item-content {
+            line-height: 1.5;
+            font-size: 1.16rem;
             color: #999999;
         }
 
-        .item-icon{
+        .item-icon {
             position: absolute;
             bottom: 32px;
             right: 30px;
         }
+        &:hover {
+            box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.15);
+            border-color: transparent;
+            transform: scale(1.01);
+        }
     }
 
-    .area:first-child{ margin-top: 34px;}
+    .area:first-child {
+        margin-top: 34px;
+    }
 }

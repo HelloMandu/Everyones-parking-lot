@@ -1,55 +1,71 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import classNames from 'classnames/bind'
+
+import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken'
+
+import { requestGetUseRental } from '../../../api/rental';
 
 import { Paths } from '../../../paths';
 
-import { numberFormat } from '../../../lib/formatter'
+import { numberFormat } from '../../../lib/formatter';
+import { getFormatDateTime } from '../../../lib/calculateDate';
+import { rentalStatus } from '../../../lib/rentalStatus';
 
-import styles from './UseListContainer.module.scss'
+import classNames from 'classnames/bind';
+import styles from './UseListContainer.module.scss';
+import Notice from '../../../static/asset/svg/Notice';
 
-const cx = classNames.bind(styles)
-
-const list = [
-    {
-        id: 1,
-        title: '길동이 주차 공간',
-        price: 60000,
-        startDate: '2020-10-05 14:00',
-        endDate: '2020-10-05 16:00',
-        status: '이용대기'
-    },
-    {
-        id: 2,
-        title: '길동이 주차 공간',
-        price: 60000,
-        startDate: '2020-10-05 14:00',
-        endDate: '2020-10-05 16:00',
-        status: '이용중'
-    },
-    {
-        id: 3,
-        title: '길동이 주차 공간',
-        price: 60000,
-        startDate: '2020-10-05 14:00',
-        endDate: '2020-10-05 16:00',
-        status: '이용완료'
-    }
-];
+const cx = classNames.bind(styles);
 
 const UseListContainer = () => {
-    return (
-        <div className={cx("container")}>
-            {list.map(item => 
-                <Link to={Paths.main.use.detail + `?id=${item.id}`} className={cx("list-item")} key={item.id}>
-                    <div className={cx("title")}>{item.title}</div>
-                    <div className={cx("price")}>{numberFormat(item.price)}원</div>
-                    <div className={cx("date")}>{item.startDate} ~ {item.endDate}</div>
-                    <div className={cx("status")}>{item.status}</div>
+    const token = useToken()
+    const [list, setList] = useState([]);
+    const openDialog = useDialog();
+
+    const getUseList = useCallback(async () => {
+        const { data } = await requestGetUseRental(token);
+
+        if (data.msg === 'success') setList(data.orders);
+        else openDialog(data.msg);
+    }, [openDialog, token]);
+
+    useEffect(() => {
+        if(token != null) getUseList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return(
+    list.length !== 0 ? 
+        <div className={cx('container')}>
+            {list.map((item) => (
+                <Link
+                    to={Paths.main.use.detail + `?id=${item.rental_id}`}
+                    className={cx('list-item')}
+                    key={item.rental_id}
+                >
+                    <div className={cx('title')}>{item.place.place_name}</div>
+                    <div className={cx('price')}>
+                        {numberFormat(item.payment_price)}원
+                    </div>
+                    <div className={cx('date')}>
+                        {getFormatDateTime(item.rental_start_time)} ~{' '}
+                        {getFormatDateTime(item.rental_end_time)}
+                    </div>
+                    <div className={cx('status')}>{rentalStatus(item)}</div>
                 </Link>
-            )}
+            ))}
         </div>
-    );
+     : 
+        <div className={styles['non-qna']}>
+            <div className={styles['non-container']}>
+                <Notice />
+                <div className={styles['explain']}>
+                    이용내역이 없습니다.
+                </div>
+            </div>
+        </div>
+    )
 };
 
 export default UseListContainer;

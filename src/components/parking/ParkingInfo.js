@@ -1,9 +1,12 @@
 import React from 'react';
+import { Skeleton } from '@material-ui/lab';
 
-import ParkingInfoList from './ParkingInfoList';
+import { getFormatDateTime } from '../../lib/calculateDate';
+import { numberFormat } from '../../lib/formatter';
+
+import { Paths } from '../../paths';
+
 import PleaseRead from './PleaseRead';
-
-import parkingImage from '../../static/asset/png/parking.png';
 
 import styles from './ParkingInfo.module.scss';
 
@@ -25,20 +28,46 @@ const infos = [
     },
 ];
 
-const ParkingInfo = () => {
+const ParkingInfo = ({ parkingInfo }) => {
+    if (!parkingInfo) {
+        return (
+            <>
+                <Skeleton variant="rect" height={200} />
+                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50}/>
+            </>
+        );
+    }
+    const { title, image, price, deposit, start_time, end_time } = parkingInfo;
+    infos[0].description = `${getFormatDateTime(
+        start_time,
+    )} ~ ${getFormatDateTime(end_time)}`;
+    infos[1].description = `${numberFormat(price)}원`;
+    infos[2].description = `${numberFormat(deposit)}원`;
     return (
-        <div className={styles['parkinginfo']}>
-            <img
+        <article className={styles['parkinginfo']}>
+            <div
                 className={styles['image']}
-                src={parkingImage}
-                alt="주차공간이미지"
+                style={{
+                    backgroundImage: `url(${Paths.storage}${image})`,
+                }}
             />
-            <div className={styles['wrapper']}>
-                <div className={styles['title']}>길동이 주차공간</div>
-                <ParkingInfoList list={infos}></ParkingInfoList>
+            <section className={styles['wrapper']}>
+                <h3 className={styles['title']}>{title}</h3>
+                <ul className={styles['infolist']}>
+                    {infos.map(({ id, title, description }) => (
+                        <li className={styles['info']} key={id}>
+                            <div className={styles['info-title']}>{title}</div>
+                            <div className={styles['description']}>
+                                {description}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
                 <PleaseRead></PleaseRead>
-            </div>
-        </div>
+            </section>
+        </article>
     );
 };
 

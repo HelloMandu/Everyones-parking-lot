@@ -1,34 +1,51 @@
-import React, { useState } from 'react';
-import classNames from 'classnames/bind';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 /* Library */
 
 import useInput from '../../../hooks/useInput';
-import InputBox from '../../../components/inputbox/InputBox';
-
-import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
-
-import FixedButton from '../../../components/button/FixedButton';
-
 import { useDialog } from '../../../hooks/useDialog';
 
+import InputBox from '../../../components/inputbox/InputBox';
+import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
+import FixedButton from '../../../components/button/FixedButton';
+
+import { requestPostFindPassword } from '../../../api/user'
+
+import { Paths } from '../../../paths'
+
+import classNames from 'classnames/bind';
 import styles from './FindPasswordContainer.module.scss';
 
 const cx = classNames.bind(styles);
 
 const FindPasswordContainer = () => {
+    const history = useHistory()
     const openDialog = useDialog();
-    const [userID, onChangeUserID] = useInput('');
+    const [email, onChangeEmail] = useInput('');
     const [name, onChangeName] = useInput('');
-    const [isPhone, setIsPhone] = useState(false);
+    const phoneNumber = useRef()
+    const [checkPhone, setCheckPhone] = useState(false);
+    
+    const emailRef = useRef(null)
 
-    const onClickSubmit = () => {
-        console.log(name);
-        if (userID === '') openDialog('아이디를 입력해주세요', '');
-        else {
-            if(name === '') openDialog('이름을 입력해주세요', '');
-            else console.log('onClickSubmit');
+    const onClickSubmit = useCallback(async() => {
+        const {data} = await requestPostFindPassword(name, email, phoneNumber.current.phoneNumber)
+
+        if(data.msg === 'success'){
+            sessionStorage.setItem('session_pw', data.token)
+            history.push(Paths.auth.find.password_complete)
+        } else {
+            if(data.msg === '가입하지 않은 유저입니다.'){
+                onChangeEmail('')
+                onChangeName('')
+                openDialog(data.msg, '', () => emailRef.current.focus(), false, true)
+            } else openDialog(data.msg)
         }
-    };
+    }, [name, email, history, openDialog, onChangeEmail, onChangeName]);
+
+    useEffect(() => {
+        emailRef.current.focus()
+    }, [])
 
     return (
         <>
@@ -37,9 +54,10 @@ const FindPasswordContainer = () => {
                 <InputBox
                     className={'input-bar'}
                     type={'text'}
-                    value={userID}
+                    value={email}
                     placeholder={'아이디를 입력해주세요.'}
-                    onChange={onChangeUserID}
+                    onChange={onChangeEmail}
+                    reference={emailRef}
                 />
 
                 <div className={cx('title')}>이름</div>
@@ -52,11 +70,11 @@ const FindPasswordContainer = () => {
                 />
 
                 <div className={cx('title')}>휴대폰 번호 인증</div>
-                <VerifyPhone setIsPhone={setIsPhone} />
+                <VerifyPhone setCheck={setCheckPhone} ref={phoneNumber} />
             </div>
             <FixedButton
                 button_name={'확인'}
-                disable={!isPhone}
+                disable={!(email !== '' && name !== '' && checkPhone)}
                 onClick={onClickSubmit}
             />
         </>

@@ -14,21 +14,21 @@
         margin-bottom: 20px;
 
         .title{
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #222222;
             margin-bottom: 5px;
         }
 
         .price{
-            font-size: 20px;
+            font-size: 1.66rem;
             font-weight: bold;
             color: #777777;
             margin-bottom: 12px;
         }
 
         .date{
-            font-size: 12px;
+            font-size: 1rem;
             color: #999999;
         }
 
@@ -46,5 +46,25 @@
 
     .list-item:first-child{
         margin-top: 32px;
+    }
+}
+
+.non-qna{
+    width: 100%;
+    height: calc(100vh - 96px - 56px);
+    .non-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        // height: calc(100% - 96px);
+        .explain{
+            font-size: 1.333rem; // 16px;
+            font-weight: 400; // Regular
+            color: #222;
+            margin-top: 28px;
+        }
+
     }
 }

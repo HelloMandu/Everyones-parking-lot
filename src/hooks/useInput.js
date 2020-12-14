@@ -5,18 +5,30 @@ const useInput = (initialValue = '', callback, limit, restrict) => {
     const [check, setCheck] = useState(false);
     const onChange = useCallback(
         (e) => {
-            if(restrict !== undefined){
+            if(!e){
+                setState('');
+                setCheck(false);
+                return;
+            }
+            else if(!e.target){
+                setState(e);
+                if (callback !== undefined) {
+                    setCheck(callback(e));
+                }
+                return;
+            }
+            else if(restrict !== undefined){
                 if(restrict === true){
                     return;
                 }
             }
-            else if(limit !== undefined){
+            else if(limit){
                 if(e.target.value.length > limit){
                     return;
                 }
             }
             setState(e.target.value);
-            if (callback !== undefined) {
+            if (callback) {
                 setCheck(callback(e.target.value));
             }
         },

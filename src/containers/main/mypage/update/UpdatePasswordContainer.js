@@ -1,4 +1,6 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { useCallback, useRef, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../../components/button/FixedButton';
@@ -9,11 +11,27 @@ import styles from './UpdatePasswordContainer.module.scss';
 /* Stylesheets */
 
 import useInput from '../../../../hooks/useInput';
-import { useState } from 'react';
+import { useDialog } from '../../../../hooks/useDialog';
+import useToken from '../../../../hooks/useToken';
 /* Hooks */
+
+import { Paths } from '../../../../paths';
+/* Paths */
+
+import { updateUser } from '../../../../store/user';
+/* Store */
+
+import { requestPutRePassword } from '../../../../api/user';
+/* API */
 
 const UpdatePasswordContainer = () => {
 
+    const history = useHistory();
+    const openDialog = useDialog();
+    const reduxDispatch = useDispatch();
+    const TOKEN = useToken();
+
+    const passwordRef = useRef();
     const toNewPasswordRef = useRef(null);
     const toConfirmPasswordRef = useRef(null);
 
@@ -25,11 +43,17 @@ const UpdatePasswordContainer = () => {
     const [password, setPassword] = useState(false);
     const [messageStyle, setMessageStyle] = useState({});
 
-
-    const onClickButton = useCallback(() => {
+    const onClickButton = useCallback(async () => {
         // 업데이트 요청
-        alert("비밀번호 업데이트");
-    }, []);
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        const response = await requestPutRePassword(JWT_TOKEN, curPassword, newPassword);
+        if (response.msg === 'success') {
+            reduxDispatch(updateUser('password', newPassword));
+            openDialog("비밀번호변경 완료", "", () => history.replace(Paths.main.mypage.index));
+        } else {
+            openDialog(response.msg, response.sub);
+        }
+    }, [history, curPassword, newPassword, openDialog, reduxDispatch]);
 
     useMemo(() => {
         if (confirmPassword !== "") {
@@ -58,52 +82,63 @@ const UpdatePasswordContainer = () => {
         CheckPassword();
     }, [CheckPassword])
 
+    useEffect(() => {
+        if(passwordRef.current){
+            passwordRef.current.focus();
+        }
+    }, []);
+
     return (
         <>
-            <div className={styles['container']}>
-                <div className={styles['input-area']}>
-                    <div className={styles['cur-area']}>
-                        <InputBox
-                            className={'input-box'}
-                            type={'text'}
-                            value={curPassword}
-                            placeholder={'현재 비밀번호'}
-                            onChange={onChangeCurPassword}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') toNewPasswordRef.current.focus();
-                            }}
-                        />
-                    </div>
-                    <div className={styles['new-area']}>
-                        <InputBox
-                            className={'input-box'}
-                            type={'text'}
-                            value={newPassword}
-                            placeholder={'새 비밀번호'}
-                            onChange={onChangeNewPassword}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') toConfirmPasswordRef.current.focus();
-                            }}
-                            reference={toNewPasswordRef}
-                        />
-                    </div>
-                    <div className={styles['confirm-area']}>
-                        <InputBox
-                            className={'input-box'}
-                            type={'text'}
-                            value={confirmPassword}
-                            placeholder={'비밀번호 재확인'}
-                            onChange={onChangeConfirmPassword}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') CheckPassword();
-                            }}
-                            reference={toConfirmPasswordRef}
-                        />
-                    </div>
-                    <div className={styles['text-area']} style={messageStyle}>{message}</div>
-                </div >
-            </div >
-            <FixedButton button_name="변경" disable={!password} onClick={onClickButton} />
+            {TOKEN !== null &&
+                <>
+                    <div className={styles['container']}>
+                        <div className={styles['input-area']}>
+                            <div className={styles['cur-area']}>
+                                <InputBox
+                                    className={'input-box'}
+                                    type={'password'}
+                                    value={curPassword}
+                                    placeholder={'현재 비밀번호'}
+                                    onChange={onChangeCurPassword}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') toNewPasswordRef.current.focus();
+                                    }}
+                                    reference={passwordRef}
+                                />
+                            </div>
+                            <div className={styles['new-area']}>
+                                <InputBox
+                                    className={'input-box'}
+                                    type={'password'}
+                                    value={newPassword}
+                                    placeholder={'새 비밀번호'}
+                                    onChange={onChangeNewPassword}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') toConfirmPasswordRef.current.focus();
+                                    }}
+                                    reference={toNewPasswordRef}
+                                />
+                            </div>
+                            <div className={styles['confirm-area']}>
+                                <InputBox
+                                    className={'input-box'}
+                                    type={'password'}
+                                    value={confirmPassword}
+                                    placeholder={'비밀번호 재확인'}
+                                    onChange={onChangeConfirmPassword}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') CheckPassword();
+                                    }}
+                                    reference={toConfirmPasswordRef}
+                                />
+                            </div>
+                            <div className={styles['text-area']} style={messageStyle}>{message}</div>
+                        </div >
+                    </div >
+                    <FixedButton button_name="변경" disable={!password} onClick={onClickButton} />
+                </>
+            }
         </>
     );
 };

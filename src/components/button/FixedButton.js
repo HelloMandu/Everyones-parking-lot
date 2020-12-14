@@ -14,13 +14,15 @@ const cx = cn.bind(styles);
 const FixedButton = ({ button_name, disable, onClick }) => {
     return (
         <div className={styles["fixed-button-container"]}>
-            <ButtonBase
-                className={cx('fixed-button', { disable })}
-                disableRipple={disable}
-                onClick={onClick}
-            >
-                {button_name}
-            </ButtonBase>
+            <div className={styles['fixed-button-content']}>
+                <ButtonBase
+                    className={cx('fixed-button', { disable })}
+                    disabled={disable}
+                    onClick={onClick}
+                >
+                    {button_name}
+                </ButtonBase>
+            </div>
         </div>
     );
 };

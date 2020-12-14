@@ -6,35 +6,39 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import classNames from 'classnames/bind';
 import { useHistory } from 'react-router-dom';
 /* Library */
 
+import { requestPostAuth } from '../../api/user';
+
 import useInput from '../../hooks/useInput';
 import useBirth from '../../hooks/useBirth';
+import { useDialog } from '../../hooks/useDialog';
+
 import InputBox from '../../components/inputbox/InputBox';
-import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
-
 import Birth from '../../components/birth/Birth';
-
 import CheckBox from '../../components/checkbox/CheckBox';
-
 import VerifyPhone from '../../components/verifyphone/VerifyPhone';
-
 import FixedButton from '../../components/button/FixedButton';
 
-import { requestPostAuth } from '../../api/user';
+import { isEmailForm, isPasswordForm } from '../../lib/formatChecker';
 
 import { Paths } from '../../paths';
 
+import classNames from 'classnames/bind';
 import styles from './SignUpContainer.module.scss';
 
 const cx = classNames.bind(styles);
 
 const Email = forwardRef(({ setCheck, onKeyDown }, ref) => {
     const [email, onChangeEmail, checkEmail] = useInput('', isEmailForm);
+    const emailRef = useRef(null);
     useImperativeHandle(ref, () => ({
-        email: email,
+        email,
+        focusing: () => {
+            onChangeEmail('')
+            emailRef.current.focus()
+        }
     }));
     useEffect(() => setCheck(checkEmail), [setCheck, checkEmail]);
     return (
@@ -47,6 +51,7 @@ const Email = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 placeholder={'이메일을 입력해주세요.'}
                 onChange={onChangeEmail}
                 onKeyDown={onKeyDown}
+                reference={emailRef}
             />
         </div>
     );
@@ -56,7 +61,7 @@ const Name = forwardRef(({ setCheck, onKeyDown }, ref) => {
     const [name, onChangeName] = useInput('');
     useEffect(() => setCheck(name !== '' ? true : false), [setCheck, name]);
     useImperativeHandle(ref, () => ({
-        name: name,
+        name,
     }));
     return (
         <div className={cx('input-wrapper')}>
@@ -73,18 +78,33 @@ const Name = forwardRef(({ setCheck, onKeyDown }, ref) => {
     );
 });
 
+const SAME_TEXT = '비밀번호가 일치합니다.';
+const DIFF_TEXT = '비밀번호가 일치하지 않습니다.';
+
 const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
-    const [password, onChangePassword, checkPasswordForm] = useInput('', isPasswordForm);
+    const [password, onChangePassword, checkPasswordForm] = useInput(
+        '',
+        isPasswordForm,
+    );
     const [passwordCheck, onChangePasswordCheck] = useInput('');
+    const [apear, setApear] = useState(false);
+    const [same, setSame] = useState(false);
+    const pwRef = useRef(null)
+
     useImperativeHandle(ref, () => ({
-        password: password,
-    }));
-    useEffect(() => setCheck(checkPasswordForm && password === passwordCheck), [
-        setCheck,
         password,
-        passwordCheck,
-        checkPasswordForm
-    ]);
+        focusing: () => {
+            onChangePassword('')
+            pwRef.current.focus()
+        }
+    }));
+
+    useEffect(() => {
+        setCheck(checkPasswordForm && password === passwordCheck);
+        setApear(password !== '' && passwordCheck !== '');
+        setSame(password === passwordCheck);
+    }, [setCheck, password, passwordCheck, checkPasswordForm]);
+
     return (
         <div className={cx('input-wrapper')}>
             <div className={cx('input-title')}>비밀번호</div>
@@ -95,6 +115,7 @@ const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 placeholder={'비밀번호를 입력해주세요.'}
                 onChange={onChangePassword}
                 onKeyDown={onKeyDown}
+                reference={pwRef}
             />
             <InputBox
                 className={'input-bar'}
@@ -104,17 +125,13 @@ const Password = forwardRef(({ setCheck, onKeyDown }, ref) => {
                 onChange={onChangePasswordCheck}
                 onKeyDown={onKeyDown}
             />
-            <div
-                className={cx(
-                    'password-check',
-                    { apear: password !== '' || passwordCheck !== '' },
-                    {
-                        same: password !== '' && password === passwordCheck,
-                    },
-                )}
-            >
-                비밀번호가 <span>불</span>일치합니다.
-            </div>
+            <p className={cx('password-check', { apear, same })}>
+                {apear
+                    && (same
+                        ? SAME_TEXT
+                        : DIFF_TEXT
+                    )}
+            </p>
         </div>
     );
 });
@@ -185,21 +202,31 @@ const SignUpContainer = () => {
     const passwordRef = useRef(null);
     const phoneRef = useRef(null);
 
+    const openDialog = useDialog();
+
     const onClickSignUp = useCallback(async () => {
         if (!signUp) {
             return;
         }
-        const response = await requestPostAuth(
+        const { data } = await requestPostAuth(
             emailRef.current.email,
             nameRef.current.name,
             passwordRef.current.password,
             getBirth(),
             phoneRef.current.phoneNumber,
         );
-        if (response.data.msg === 'success')
-            history.push(Paths.auth.sign_complete);
-        else console.log(response.data.msg);
-    }, [history, signUp, getBirth]);
+
+        if (data.msg === 'success'){
+            sessionStorage.setItem('session_token', data.token)
+            sessionStorage.setItem('session_name', nameRef.current.name)
+            history.push(Paths.auth.enrollment);
+        } else {
+            openDialog(data.msg);
+
+            if(data.msg === '이미 가입한 이메일입니다.') emailRef.current.focusing()
+            else if (data.msg === '비밀번호를 설정하지 못했습니다.') passwordRef.current.focusing()
+        }
+    }, [history, signUp, getBirth, openDialog]);
 
     const onKeyDownSignUp = useCallback(
         async (e) => {
@@ -238,10 +265,7 @@ const SignUpContainer = () => {
                     onKeyDown={onKeyDownSignUp}
                     ref={passwordRef}
                 ></Password>
-                <BirthSelector
-                    setCheck={setCheckPhone}
-                    onChangeBirth={onChangeBirth}
-                ></BirthSelector>
+                <BirthSelector onChangeBirth={onChangeBirth}></BirthSelector>
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
                 <VerifyPhone setCheck={setCheckPhone} ref={phoneRef} />
                 <CheckList setCheck={setCheckAree}></CheckList>

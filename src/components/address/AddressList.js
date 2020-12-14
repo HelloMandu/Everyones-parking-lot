@@ -24,8 +24,7 @@ const AddressItem = ({ jibunAddr, roadAddr, distance, onClick }) => {
                     </div>
                 </div>
             </div>
-            {distance &&        <div className={styles['distance']}>12.24km</div>}
-     
+            {distance &&<div className={styles['distance']}>12.24km</div>}
         </ButtonBase>
     );
 };
