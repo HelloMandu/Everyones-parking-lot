@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import FixedButton from '../../components/button/FixedButton';
 
@@ -13,6 +13,14 @@ import Firework from '../../static/asset/svg/auth/firework';
 const cx = classNames.bind(styles);
 
 const SignCompleteContainer = () => {
+    const sessionName = sessionStorage.getItem('session_name')
+    const history = useHistory()
+
+    const signComplete = useCallback(() => {
+        sessionStorage.removeItem('session_name')
+        history.push(Paths.main.index)
+    }, [history])
+
     return (
         <>
             <div className={cx('container')}>
@@ -24,14 +32,12 @@ const SignCompleteContainer = () => {
                     <div className={cx('ment')}>
                         <div className={cx('title')}>가입을 축하합니다.</div>
                         <div className={cx('content')}>
-                            홍길동님 회원가입이 완료되었습니다.
+                            {sessionName}님 회원가입이 완료되었습니다.
                         </div>
                     </div>
                 </div>
             </div>
-            <Link to={Paths.auth.signin}>
-                <FixedButton button_name={'이용하러 가기'} disable={false} />
-            </Link>
+                <FixedButton button_name={'이용하러 가기'} disable={false} onClick={signComplete} />
         </>
     );
 };

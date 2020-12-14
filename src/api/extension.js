@@ -5,9 +5,10 @@ import { Paths } from '../paths';
 export const requestPostExtension = async (
     JWT_TOKEN,
     rental_id,
-    end_time,
-    payment_time,
     extension_price,
+    payment_type,
+    extension_end_time,
+    card_id
 ) => {
     // { headers }: JWT_TOKEN(유저 로그인 토큰)
     // rental_id: 대여 주문 번호
@@ -16,15 +17,15 @@ export const requestPostExtension = async (
     // extension_price: 연장 추가비
 
     // * 응답: success / failure
-
     const URL = Paths.api + 'extension';
     const response = await axios.post(
         URL,
         {
             rental_id,
-            end_time,
-            payment_time,
             extension_price,
+            payment_type,
+            extension_end_time,
+            card_id
         },
         {
             headers: {

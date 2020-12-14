@@ -1,84 +1,103 @@
-import React, { useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
+import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 
-import { requestGetDetailReview } from '../../../api/review'
+import {
+    requestDeleteReview,
+    requestGetDetailReview,
+    requestPostWriteComment,
+} from '../../../api/review';
+
+import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
 
 import classNames from 'classnames/bind';
 import styles from './ReviewDetailContainer.module.scss';
-import Parking from '../../../static/asset/png/parking.png';
 import Profile from '../../../static/asset/png/profile.png';
 import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
 
 const cx = classNames.bind(styles);
 
-const list = [
-    {
-        comment_id: 1,
-        comment_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다~!! 다음에도 다시 이용할거 같아요!! 추천드려요~~',
-        deleted: 0,
-        created_at: '2020/10/00',
-        updated_at: '',
-        review_id: 1,
-        user_id: 1,
-    },
-    {
-        comment_id: 2,
-        comment_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다~!! 다음에도 다시 이용할거 같아요!! 추천드려요~~',
-        deleted: 0,
-        created_at: '2020/10/00',
-        updated_at: '',
-        review_id: 1,
-        user_id: 1,
-    },
-    {
-        comment_id: 3,
-        comment_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다~!! 다음에도 다시 이용할거 같아요!! 추천드려요~~',
-        deleted: 0,
-        created_at: '2020/10/00',
-        updated_at: '',
-        review_id: 1,
-        user_id: 1,
-    },
-];
-
 const ReviewDetailContainer = ({ location }) => {
+    const token = useToken();
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
 
     const { id } = query;
 
+    const [review, setReview] = useState();
+    const [commentList, setCommentList] = useState([]);
     const [comment, onChangeComment] = useInput();
+    const commentRef = useRef()
+    const history = useHistory();
+    const openDialog = useDialog();
 
-    const onClickSubmit = () => {
-        console.log('submit');
-    };
+    const onClickSubmit = useCallback(async () => {
+        const { data } = await requestPostWriteComment(token, id, comment);
 
-    const getReview = useCallback(async() => {
-        const {data} = await requestGetDetailReview(id)
-        console.log(data)
-    }, [id])
+        setCommentList(commentList.concat(data.comment));
+        commentRef.current.value = ''
+
+        if (data.msg !== 'success') {
+            openDialog('댓글 작성을 실패했습니다.');
+        }
+    }, [comment, commentList, id, openDialog, token]);
+
+    const getReview = useCallback(async () => {
+        const { data } = await requestGetDetailReview(id);
+        const { msg, review, comments } = data;
+
+        if (msg === 'success') {
+            setReview(review);
+            setCommentList(comments);
+        } else {
+            openDialog(msg);
+            history.push(Paths.main.index)
+        }
+    }, [history, id, openDialog]);
 
     useEffect(() => {
-        getReview()
-    }, [getReview])
+        getReview();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    // requestGetDetailReview API
-    // requestPostWriteComment API
+    const reviewDelete = useCallback(() => {
+        openDialog(
+            '리뷰를 삭제하시겠습니까 ?',
+            '',
+            async () => {
+                const { data } = await requestDeleteReview(
+                    token,
+                    review.review_id,
+                );
+
+                if (data.msg === 'success') {
+                    history.push(Paths.main.index);
+                } else {
+                    openDialog(data.msg);
+                }
+            },
+            true,
+        );
+    }, [history, openDialog, review, token]);
 
     return (
-        <>
+        review !== undefined && (
             <div className={cx('container')}>
-                <img src={Parking} alt="" />
+                <img
+                    src={
+                        Paths.storage +
+                        review.place.place_images[0].split('\\')[1]
+                    }
+                    alt=""
+                />
                 <div className={cx('area')}>
                     <div className={cx('rental-comment')}>
                         대여시간
@@ -92,26 +111,28 @@ const ReviewDetailContainer = ({ location }) => {
 
                 <div className={cx('area')}>
                     <div className={cx('title')}>
-                        길동이 주차공간
+                        {review.place.place_name}
                         <Rating
                             className={'rating'}
-                            defaultValue={5}
+                            value={parseFloat(review.review_rating)}
                             precision={0.5}
                             readOnly
                         />
                     </div>
                     <div className={cx('date')}>
-                        2020/01/20
+                        {getFormatDateTime(review.createdAt)}
                         <hr />
                     </div>
-                    <div className={cx('body')}>
-                        주차장이 꽤 넓어서 너무 좋았습니다! 다음에도 다시 이용
-                        할거 같아요!!
-                    </div>
+                    <div className={cx('body')}>{review.review_body}</div>
 
                     <div className={cx('button-area')}>
-                        <ButtonBase>삭제</ButtonBase>
-                        <Link to={Paths.main.review.write + `?id=${id}`}>
+                        <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
+                        <Link
+                            to={
+                                Paths.main.review.write +
+                                `?id=${review.rental_id}`
+                            }
+                        >
                             <ButtonBase>수정</ButtonBase>
                         </Link>
                     </div>
@@ -122,7 +143,7 @@ const ReviewDetailContainer = ({ location }) => {
                 <div className={cx('area')}>
                     <div className={cx('title')}>댓글</div>
 
-                    {list.length === 0 ? (
+                    {commentList.length === 0 ? (
                         <div className={cx('comment-none-wrapper')}>
                             <div className={cx('comment-none')}>
                                 등록된 댓글이 없습니다.
@@ -130,20 +151,20 @@ const ReviewDetailContainer = ({ location }) => {
                             </div>
                         </div>
                     ) : (
-                        list.map((item) => (
+                        commentList.map((item) => (
                             <div
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
-                                <img src={Profile} alt="profile" />
+                                <img src={Profile} alt="" />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
                                         {item.user_id}.id
                                     </div>
                                     <div className={cx('date')}>
-                                        {item.updated_at
-                                            ? item.updated_at
-                                            : item.created_at}
+                                        {item.updatedAt
+                                            ? getFormatDateTime(item.updatedAt)
+                                            : getFormatDateTime(item.createdAt)}
                                     </div>
                                 </div>
                                 <div className={cx('comment-body')}>
@@ -164,11 +185,12 @@ const ReviewDetailContainer = ({ location }) => {
                                 onClickSubmit();
                             }
                         }}
+                        ref={commentRef}
                     />
                     <ButtonBase onClick={onClickSubmit}>등록</ButtonBase>
                 </div>
             </div>
-        </>
+        )
     );
 };
 

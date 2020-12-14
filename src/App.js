@@ -9,6 +9,7 @@ import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
+import IntroContainer from './containers/main/IntroContainer'
 
 import Header from './components/header/Header';
 
@@ -20,15 +21,18 @@ import { getUser } from './store/user';
 const App = () => {
     const location = useLocation();
     useEffect(() => {
-        Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
+        // Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
     }, []);
 
     const dispatch = useDispatch()
 
     const judgementLogin = useCallback(() => {
         const token = localStorage.getItem('user_id')
+
+        if(token) {
+            dispatch(getUser(token))
+        }
         
-        dispatch(getUser(token))
     }, [dispatch])
 
     useEffect(() => {
@@ -179,7 +183,10 @@ const App = () => {
         }
     };
 
+    const visited = localStorage.getItem('SpaceStation_visited')
+
     return (
+        visited ?
         <div className="App">
             {renderHeader()}
             <Switch>
@@ -190,6 +197,8 @@ const App = () => {
             <DialogContainer/>
             <LoadingContainer/>
         </div>
+        :
+        <IntroContainer />
     );
 };
 
