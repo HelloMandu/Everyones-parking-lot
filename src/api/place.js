@@ -76,7 +76,12 @@ export const requestGetLikeParkingList = async (JWT_TOKEN) => {
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place/like';
-    const response = await axios.get(URL);
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    };
+    const response = await axios.get(URL, config);
 
     return response;
 };
