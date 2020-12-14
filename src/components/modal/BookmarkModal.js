@@ -67,7 +67,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const BookmarkModal = (props) => {
     const classes = useStyles();
-    const user = useSelector(state=>state.user);
+    const user = useSelector((state) => state.user);
 
     const getCallBookmarkApi = async () => {
 
@@ -85,9 +85,10 @@ const BookmarkModal = (props) => {
 
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getCallBookmarkApi();
-    },[user])
+    }, [user]);
+
     return (
         <Dialog
             fullScreen

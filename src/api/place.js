@@ -81,8 +81,7 @@ export const requestGetLikeParkingList = async (JWT_TOKEN) => {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     };
-    const response = await axios.get(URL,config);
-
+    const response = await axios.get(URL, config);
 
     return response;
 };
