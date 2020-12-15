@@ -56,7 +56,7 @@ html {
             }
           
         }
-  
+        
         .txt-value {
             height: 64px;
             display: flex;
@@ -94,6 +94,11 @@ html {
 html {
     body {
         .swiper{
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            &.open{
+                opacity:1;
+            }
             display: flex;
             justify-content: space-between;
             .day-swiper {

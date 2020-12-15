@@ -215,7 +215,7 @@ const DatePickerModal = (props) => {
                             <Select open={start_open} />
                         </ButtonBase>
                     </div>
-                    <div className={styles['swiper']}>
+                    <div className={cx('swiper',{open:start_open})}>
                         <Swiper
                             direction={'vertical'}
                             initialSlide={0}
@@ -282,7 +282,7 @@ const DatePickerModal = (props) => {
                             <Select open={end_open} />
                         </ButtonBase>
                     </div>
-                    <div className={styles['swiper']}>
+                    <div className={cx('swiper',{open :end_open})}>
                         <Swiper
                             direction={'vertical'}
                             initialSlide={1}
