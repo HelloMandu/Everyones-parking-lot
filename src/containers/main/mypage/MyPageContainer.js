@@ -15,7 +15,7 @@ import Camera from '../../../static/asset/svg/Camera';
 
 import { deleteUser } from '../../../store/user';
 import { getFormatDateString } from '../../../lib/calculateDate';
-import { stringToTel } from '../../../lib/formatter';
+import { DBImageFormat, stringToTel } from '../../../lib/formatter';
 /* Lib */
 
 import useToken from '../../../hooks/useToken';
@@ -64,15 +64,10 @@ const FileItem = ({ file, image }) => {
                     className={styles['img-item']}
                     style={{ backgroundImage: `url(${imgFile})` }}
                 />
-            ) : image ? (
-                <div
-                    className={styles['img-item']}
-                    style={{ backgroundImage: `url(${Paths.storage}${image})` }}
-                />
             ) : (
                 <div
                     className={styles['img-item']}
-                    style={{ backgroundImage: `url(${profile})` }}
+                    style={{ backgroundImage: `url(${image})` }}
                 />
             )}
         </>
@@ -85,8 +80,8 @@ const ProfileImg = ({ image }) => {
 
     useEffect(() => {
         if (image !== undefined && image !== null) {
-            const newImage = image.split('/');
-            setSliceImage(newImage[1]);
+            const newImage = DBImageFormat(image, profile);
+            setSliceImage(newImage);
         }
     }, [image]);
 
