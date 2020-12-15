@@ -47,11 +47,11 @@ const ReviewDetailContainer = ({ location }) => {
             review_id,
             comment,
         );
-
-        setCommentList(commentList.concat(data.comment));
-        commentRef.current.value = '';
-
-        if (data.msg !== 'success') {
+        console.log(data);
+        if (data.msg === 'success') {
+            setCommentList(commentList.concat(data.comment));
+            commentRef.current.value = '';
+        } else {
             openDialog('댓글 작성을 실패했습니다.');
         }
     }, [comment, commentList, review_id, openDialog]);
@@ -59,7 +59,7 @@ const ReviewDetailContainer = ({ location }) => {
     const getReview = useCallback(async () => {
         const { data } = await requestGetDetailReview(review_id);
         const { msg, review, comments } = data;
-
+        console.log(data);
         if (msg === 'success') {
             setReview(review);
             setCommentList(comments);
@@ -106,7 +106,7 @@ const ReviewDetailContainer = ({ location }) => {
                 <img
                     src={
                         Paths.storage +
-                        review.place.place_images[0].split('\\')[1]
+                        review.place.place_images[0].replace('uploads/', '')
                     }
                     alt=""
                 />
@@ -118,9 +118,7 @@ const ReviewDetailContainer = ({ location }) => {
                         </span>
                     </div>
                 </div>
-
                 <div className={cx('bar')} />
-
                 <div className={cx('area')}>
                     <div className={cx('title')}>
                         {review.place.place_name}
@@ -169,10 +167,12 @@ const ReviewDetailContainer = ({ location }) => {
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
-                                <img src={Profile} alt="" />
+                                <img src={(item.user && item.user.profile_image) ?
+                                    Paths.storage + item.user.profile_image.replace('uploads/', '')
+                                    : Profile} alt="" />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
-                                        {item.user_id}.id
+                                        {item.user ? item.user.name : '탈퇴한 회원'}
                                     </div>
                                     <div className={cx('date')}>
                                         {item.updatedAt

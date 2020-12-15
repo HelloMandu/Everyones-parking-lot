@@ -148,17 +148,17 @@ const MyPageContainer = () => {
                     <div className={styles['user-area']}>
                         <ProfileImg image={getUserInfo.profile_image} />
                         <div className={styles['right-wrap']}>
-                            <ButtonBase
-                                component="a"
-                                href={Paths.main.mypage.update.name}
-                            >
-                                <div className={styles['name-wrap']}>
+                            <Link to={Paths.main.mypage.update.name}>
+                                <ButtonBase
+                                    component="div"
+                                    className={styles['name-wrap']}
+                                >
                                     <div className={styles['user-name']}>
                                         <span>{getUserInfo.name}</span>
                                     </div>
                                     <ArrowSmall rotate={90} />
-                                </div>
-                            </ButtonBase>
+                                </ButtonBase>
+                            </Link>
                             <Link to={Paths.main.mypage.update.enrollment}>
                                 <ButtonBase
                                     component="div"

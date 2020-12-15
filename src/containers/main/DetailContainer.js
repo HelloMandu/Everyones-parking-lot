@@ -70,13 +70,7 @@ const DetailContainer = ({ modal, place_id }) => {
         modal,
         `roadview?place_id=${place_id}`,
     );
-    const [openNav, onClickNav] = useModal(
-        location.pathname,
-        modal,
-        `nav?place_id=${place_id}`,
-    );
 
-    const [loading, setLoading] = useState(false);
     const [onLoading, offLoading] = useLoading();
     const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(null);
@@ -101,7 +95,6 @@ const DetailContainer = ({ modal, place_id }) => {
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
         onLoading('detail');
-        setLoading(true);
         try {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
@@ -112,7 +105,6 @@ const DetailContainer = ({ modal, place_id }) => {
             }
         } catch (e) {}
         offLoading('detail');
-        setLoading(false);
     }, [offLoading, onLoading, place_id]);
 
     const onClickSetDate = useCallback((start_date, end_date, total_date) => {

@@ -6,8 +6,6 @@
     & > img {
         width: 100%;
         vertical-align: bottom;
-        height: 120px;
-        object-fit: cover;
     }
 
     .area {
@@ -29,6 +27,7 @@
         .title {
             font-size: 1.5rem;
             font-weight: bold;
+            margin-bottom: 8px;
 
             :global(.rating) {
                 float: right;
@@ -87,12 +86,13 @@
         }
 
         .comment-item {
-            height: 130px;
             margin-top: 26px;
             border-bottom: 1px solid #F0F0F0;
 
             & > img {
-                width: 28px;
+                width: 28px; height: 28px;
+                overflow: hidden;
+                border-radius: 50%;
                 display: inline-block;
                 margin-right: 8px;
             }
@@ -130,6 +130,10 @@
             margin-top: 16px;
             margin-right: 12px;
             vertical-align: bottom;
+            transition: border .15s ease-in-out;
+            &:focus {
+                border-color: #222;
+            }
         }
 
         & > button {

@@ -182,9 +182,7 @@ const AddressModal = (props) => {
                         </>
                     )}
                     {search.length !== 0 && (
-                        <>
-                            <AddressList addr_list={addr_list} onClick={onClickAddressItem} />
-                        </>
+                        <AddressList addr_list={addr_list} onClick={onClickAddressItem} />
                     )}
                 </div>
             </DialogContent>
