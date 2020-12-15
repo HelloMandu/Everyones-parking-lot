@@ -40,6 +40,7 @@ import { imageFormat, numberFormat } from '../../lib/formatter';
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
+import ImageModal from '../../components/modal/ImageModal';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -70,6 +71,11 @@ const DetailContainer = ({ modal, place_id }) => {
         modal,
         `roadview?place_id=${place_id}`,
     );
+    const [isOpenImageView, handleImageView] = useModal(
+        location.pathname,
+        modal,
+        `image_view?place_id=${place_id}`,
+    );
 
     const [onLoading, offLoading] = useLoading();
     const [index, setIndex] = useState(0);
@@ -99,6 +105,8 @@ const DetailContainer = ({ modal, place_id }) => {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
+                console.log(place);
+                imageFormat(place.place_images);
                 setPlace(place);
                 setLikes(likes);
                 setReviews(reviews);
@@ -199,13 +207,15 @@ const DetailContainer = ({ modal, place_id }) => {
                     <Arrow white={true}></Arrow>
                 </IconButton>
                 {place && (
-                    <div
+                    <ButtonBase
+                        component="div"
                         className={styles['parking-img']}
                         style={{
                             backgroundImage: `url('${
                                 place && imageFormat(place.place_images[0])
                             }')`,
                         }}
+                        onClick={handleImageView}
                     />
                 )}
                 <div className={styles['container']}>
@@ -372,6 +382,12 @@ const DetailContainer = ({ modal, place_id }) => {
                 onToggle={handleShare}
                 placeInfo={place}
             ></Shared>
+            <ImageModal
+                title={place && place.place_name}
+                images={place && imageFormat(place.place_images)}
+                open={isOpenImageView}
+                handleClose={handleImageView}
+            ></ImageModal>
         </>
     );
 };

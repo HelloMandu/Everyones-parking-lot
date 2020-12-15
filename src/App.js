@@ -124,8 +124,8 @@ const App = () => {
             return <Header title={HeaderTitle.main.event.detail} />;
         }
         //내 정보 수정
-        else if (pathname === Paths.main.mypage.index) {
-            return <Header title={HeaderTitle.main.mypage.index} />;
+        else if (pathname === Paths.main.mypage.myinfo) {
+            return <Header title={HeaderTitle.main.mypage.myinfo} />;
         }
         //이름 변경
         else if (pathname === Paths.main.mypage.update.name) {

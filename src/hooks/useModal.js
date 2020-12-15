@@ -6,19 +6,23 @@ const useModal = (url, modal, pushUrl) => {
     const [isOpen, setIsOpen] = useState(false);
     const paramQuery = pushUrl.split('?');
     const params = paramQuery[0];
-    const openModal = useCallback(() => {
-        const URL = `${url}/${params}`;
-        if(paramQuery.length > 1){
-            history.push(URL + `?${paramQuery[1]}`);
+    const handleModal = useCallback(() => {
+        if(!isOpen){
+            const URL = `${url}/${params}`;
+            if(paramQuery.length > 1){
+                history.push(URL + `?${paramQuery[1]}`);
+            }
+            else{
+                history.push(URL);
+            }
+        } else{
+            history.goBack();
         }
-        else{
-            history.push(URL);
-        }
-    }, [history, url, params, paramQuery]);
+    }, [isOpen, url, params, paramQuery, history]);
     useEffect(()=>{
         setIsOpen(modal === params);
     },[modal, params])
-    return [isOpen, openModal];
+    return [isOpen, handleModal];
 };
 
 export default useModal;

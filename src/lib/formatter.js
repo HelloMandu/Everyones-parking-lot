@@ -135,13 +135,15 @@ export const telToString = (tel) => (tel ? tel.replace('-', '') : '');
 // 전화번호 표현을 string으로 변경
 
 export const imageFormat = (image) => {
-    if (Array.isArray(image)) {
-        const imgUrl = image.map(
-            (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
-        );
-        return imgUrl;
+    if(image){
+        if (Array.isArray(image)) {
+            const imgUrl = image.map(
+                (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
+            );
+            return imgUrl;
+        }
+        return `${Paths.storage}${image.replace('uploads/', '')}`;
     }
-    return `${Paths.storage}${image.replace('uploads/', '')}`;
 };
 // export const DBImageFormat = (url) => {
 //     if (typeof url === 'string') {
