@@ -146,7 +146,7 @@ const AddressModal = (props) => {
                         <input
                             type="text"
                             className={styles['search-input']}
-                            placeholder="도착지를 알려주세요"
+                            placeholder="도착지를 알려주세요."
                             ref={ref}
                             value={search}
                             onChange={onChangeSearch}

@@ -35,7 +35,7 @@ import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 //componenst
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
-import ParkingItem from '../../components/items/ParkingItem';
+import ParkingItem from '../../components/items/ParkingList';
 import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
@@ -373,7 +373,6 @@ const MapContainer = ({ modal }) => {
                         style={{ width: '100%', height: '100vh', zIndex: 1 }}
                     />
                 </div>
-
                 <ButtonBase
                     className={styles['menu']}
                     onClick={() => {
@@ -391,7 +390,7 @@ const MapContainer = ({ modal }) => {
                     onClick={() => history.push(Paths.main.index + '/address')}
                 >
                     <ButtonBase className={styles['search-box']}>
-                        위치를 입력해주세요
+                        위치를 입력해 주세요.
                     </ButtonBase>
                     <IconButton className={styles['search-btn']}>
                         <img src={SEARCH} alt="search" />

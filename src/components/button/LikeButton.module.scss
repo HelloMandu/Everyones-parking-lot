@@ -9,7 +9,7 @@
     .like-button-content {
         max-width: $max-width;
         background-color: white;
-        padding: 10px 20px;
+        padding: 10px 24px;
         margin: 0 auto;
         width: 100%;
         .box {
@@ -34,7 +34,6 @@ html {
             justify-content: center;
             align-items: center;
             font-size: 17px;
-            margin: 15px 0;
             font-weight: bold;
             transition: all 0.3s ease-in;
             &.disable {

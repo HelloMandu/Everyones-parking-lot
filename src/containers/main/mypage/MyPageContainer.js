@@ -179,7 +179,7 @@ const MyPageContainer = () => {
                                 className={styles['parking-wrap']}
                             >
                                 <div className={styles['text']}>
-                                    <span>내주자창 관리</span>
+                                    <span>내 주자공간 관리</span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>
@@ -190,7 +190,7 @@ const MyPageContainer = () => {
                                 className={styles['use-wrap']}
                             >
                                 <div className={styles['text']}>
-                                    <span>이용내역 관리 항목</span>
+                                    <span>이용내역 관리</span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>

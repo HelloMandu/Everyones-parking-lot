@@ -4,13 +4,9 @@ import React from 'react';
 import MapContainer from '../../containers/main/MapContainer';
 /* Containers */
 
-const MapPage = ({match}) => {
-
+const MapPage = ({ match }) => {
     const modal = match.params.modal;
-
-    return (
-            <MapContainer modal={modal}/>
-    );
-}
+    return <MapContainer modal={modal} />;
+};
 
 export default MapPage;
