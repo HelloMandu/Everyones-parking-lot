@@ -48,7 +48,6 @@ const ReviewDetailContainer = ({ location }) => {
             review_id,
             comment,
         );
-        console.log(data);
         if (data.msg === 'success') {
             setCommentList(commentList.concat(data.comment));
             commentRef.current.value = '';
@@ -60,7 +59,6 @@ const ReviewDetailContainer = ({ location }) => {
     const getReview = useCallback(async () => {
         const { data } = await requestGetDetailReview(review_id);
         const { msg, review, comments } = data;
-        console.log(data);
         if (msg === 'success') {
             setReview(review);
             setCommentList(comments);
