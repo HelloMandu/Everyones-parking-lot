@@ -9,7 +9,7 @@ import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
-import IntroContainer from './containers/main/IntroContainer'
+import IntroContainer from './containers/main/IntroContainer';
 
 import Header from './components/header/Header';
 
@@ -17,14 +17,65 @@ import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
 
+import { set_filters } from './store/main/filters';
+import { set_position } from './store/main/position';
+// import { requestGetUserInfo } from './api/user';
+
 const App = () => {
     const location = useLocation();
     const dispatch = useDispatch();
 
     const judgementLogin = useCallback(() => {
         const token = localStorage.getItem('user_id');
-        if(token){
+        if (token) {
             dispatch(getUser(token));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        const filter_data = JSON.parse(localStorage.getItem('filter_data'));
+        if (filter_data) {
+            const {
+                parking_town,
+                underground_parking,
+                ground_parking,
+                stated_parking,
+            } = filter_data;
+            dispatch(
+                set_filters({ type: 'parking_town', value: parking_town }),
+            );
+            dispatch(
+                set_filters({
+                    type: 'underground_parking',
+                    value: underground_parking,
+                }),
+            );
+            dispatch(
+                set_filters({ type: 'ground_parking', value: ground_parking }),
+            );
+            dispatch(
+                set_filters({ type: 'stated_parking', value: stated_parking }),
+            );
+        } else {
+            const init_filter = {
+                parking_town: true,
+                underground_parking: true,
+                ground_parking: true,
+                stated_parking: true,
+            };
+            localStorage.setItem('filter_data', JSON.stringify(init_filter));
+        }
+
+        const position_data = JSON.parse(localStorage.getItem('position'));
+        if (position_data) {
+            const { lat, lng } = position_data;
+            dispatch(set_position({ lat, lng }));
+        } else {
+            const init_position = {
+                lat: 35.8360328674316,
+                lng: 128.5743408203125,
+            };
+            localStorage.setItem('position', JSON.stringify(init_position));
         }
     }, [dispatch]);
     
@@ -33,7 +84,6 @@ const App = () => {
         judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -182,10 +232,9 @@ const App = () => {
         }
     };
 
-    const visited = localStorage.getItem('SpaceStation_visited')
+    const visited = localStorage.getItem('SpaceStation_visited');
 
-    return (
-        visited ?
+    return visited ? (
         <div className="App">
             {renderHeader()}
             <Switch>
@@ -196,7 +245,7 @@ const App = () => {
             <DialogContainer />
             <LoadingContainer />
         </div>
-        :
+    ) : (
         <IntroContainer />
     );
 };
