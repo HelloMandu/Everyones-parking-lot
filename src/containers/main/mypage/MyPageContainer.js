@@ -7,7 +7,6 @@ import { ButtonBase } from '@material-ui/core';
 import ImageModal from '../../../components/modal/ImageModal';
 /* Components */
 
-import profile from '../../../static/asset/png/profile.png';
 import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 /* Static */
 
@@ -76,7 +75,7 @@ const FileItem = ({ file, image }) => {
             ) : (
                 <div
                     className={styles['img-item']}
-                    style={{ backgroundImage: `url(${profile})` }}
+                    style={{ backgroundImage: `url(${image})` }}
                 />
             )}
         </>

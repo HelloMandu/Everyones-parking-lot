@@ -22,7 +22,7 @@ import styles from './ReviewDetailContainer.module.scss';
 import Profile from '../../../static/asset/png/profile.png';
 import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
-import { imageFormat } from '../../../lib/formatter';
+import { imageFormat, DBImageFormat } from '../../../lib/formatter';
 
 const cx = classNames.bind(styles);
 
@@ -48,7 +48,6 @@ const ReviewDetailContainer = ({ location }) => {
             review_id,
             comment,
         );
-        console.log(data);
         if (data.msg === 'success') {
             setCommentList(commentList.concat(data.comment));
             commentRef.current.value = '';
@@ -60,7 +59,6 @@ const ReviewDetailContainer = ({ location }) => {
     const getReview = useCallback(async () => {
         const { data } = await requestGetDetailReview(review_id);
         const { msg, review, comments } = data;
-        console.log(data);
         if (msg === 'success') {
             setReview(review);
             setCommentList(comments);
@@ -162,12 +160,10 @@ const ReviewDetailContainer = ({ location }) => {
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
-                                <img src={(item.user && item.user.profile_image) ?
-                                    Paths.storage + item.user.profile_image.replace('uploads/', '')
-                                    : Profile} alt="" />
+                                <img src={DBImageFormat(item.user && item.user.profile_image, Profile)} alt="" />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
-                                        {item.user ? item.user.name : '탈퇴한 회원'}
+                                        {item.user ? item.user.name : '탈퇴한 회원입니다.'}
                                     </div>
                                     <div className={cx('date')}>
                                         {item.updatedAt

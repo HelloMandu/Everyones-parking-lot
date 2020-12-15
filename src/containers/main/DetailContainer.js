@@ -105,7 +105,6 @@ const DetailContainer = ({ modal, place_id }) => {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
-                console.log(place);
                 imageFormat(place.place_images);
                 setPlace(place);
                 setLikes(likes);
@@ -228,7 +227,10 @@ const DetailContainer = ({ modal, place_id }) => {
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={3} />
+                                <ReviewRating rating={reviews.length ? 
+                                    reviews.reduce((prev, cur) => prev + parseFloat(cur.review_rating), 0) / reviews.length
+                                    : 0.0
+                                } />
                                 <div className={styles['item-review']}>
                                     리뷰({reviews.length})
                                 </div>
