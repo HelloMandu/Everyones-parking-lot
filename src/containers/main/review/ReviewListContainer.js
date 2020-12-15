@@ -49,8 +49,18 @@ const ReviewItem = ({ review }) => {
 
     return (
         <div className={cx('card')}>
-            <Link to={Paths.main.review.detail + `?review_id=${review.review_id}`}>
-                <img src={imageFormat(review.place.place_images[0])} alt="" />
+            {console.log(review)}
+            <Link
+                to={Paths.main.review.detail + `?review_id=${review.review_id}`}
+            >
+                <div
+                    className={cx('card-img')}
+                    style={{
+                        backgroundImage: `url('${imageFormat(
+                            review.place.place_images[0],
+                        )}')`,
+                    }}
+                />
                 <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
                     <Rating

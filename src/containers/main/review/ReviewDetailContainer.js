@@ -119,7 +119,15 @@ const ReviewDetailContainer = ({ location }) => {
     return (
         review !== undefined && (
             <div className={cx('container')}>
-                <img src={imageFormat(review.place.place_images[0])} alt="" />
+                {console.log(review)}
+                <div
+                    className={cx('card-img')}
+                    style={{
+                        backgroundImage: `url('${imageFormat(
+                            review.place.place_images[0],
+                        )}')`,
+                    }}
+                />
                 <div className={cx('area')}>
                     <div className={cx('rental-comment')}>
                         대여시간

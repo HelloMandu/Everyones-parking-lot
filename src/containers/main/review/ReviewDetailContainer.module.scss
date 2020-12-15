@@ -3,9 +3,13 @@
 .container {
     @include container($pd-top);
 
-    & > img {
+    .card-img {
         width: 100%;
-        vertical-align: bottom;
+        min-height: 120px;
+        padding-top: 35%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .area {

@@ -7,7 +7,7 @@ import Refund from '../../../components/use/Refund';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
@@ -16,13 +16,13 @@ import { numberFormat } from '../../../lib/formatter';
 import { rentalStatus } from '../../../lib/rentalStatus';
 import { paymentType } from '../../../lib/paymentType';
 import { isEmpty } from '../../../lib/formatChecker';
+import { imageFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
 
 import classnames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 import styles from './UseDetailContainer.module.scss';
-import Parking from '../../../static/asset/png/parking.png';
 import Tel from '../../../static/asset/svg/use/Tel';
 import MessageBox from '../../../static/asset/svg/use/MessageBox';
 import XButton from '../../../static/asset/svg/auth/XButton';
@@ -48,13 +48,13 @@ const Button = ({ name, children }) => {
 };
 
 const UseDetailContainer = ({ location }) => {
-    const token = useToken()
+    const token = useToken();
     const history = useHistory();
     const openDialog = useDialog();
     const [order, setOrder] = useState({});
-    const [review, setReview] = useState()
-    const [status, setStatus] = useState(false)
-    const [onLoading, offLoading] = useLoading()
+    const [review, setReview] = useState();
+    const [status, setStatus] = useState(false);
+    const [onLoading, offLoading] = useLoading();
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -73,24 +73,33 @@ const UseDetailContainer = ({ location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
-        onLoading('getUseDetail')
+        onLoading('getUseDetail');
 
-        const { msg, order, review, prev_order } = await requestGetDetailUseRental(rental_id);
+        const {
+            msg,
+            order,
+            review,
+            prev_order,
+        } = await requestGetDetailUseRental(rental_id);
 
         if (msg === 'success') {
             setOrder(order, prev_order);
-            setReview(review)
-            if(rentalStatus(order) === '이용완료' || rentalStatus(order) === '이용취소') setStatus(true)
+            setReview(review);
+            if (
+                rentalStatus(order) === '이용완료' ||
+                rentalStatus(order) === '이용취소'
+            )
+                setStatus(true);
         } else {
             openDialog(msg);
         }
 
-        offLoading('getUseDetail')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        offLoading('getUseDetail');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rental_id, openDialog]);
 
     useEffect(() => {
-        if(token !== null) getUseDetail();
+        if (token !== null) getUseDetail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -113,8 +122,14 @@ const UseDetailContainer = ({ location }) => {
                         <XButton />
                     </div>
                     <div className={cx('card')}>
-                        <img src={Parking} alt="" />
-
+                        <div
+                            className={cx('card-img')}
+                            style={{
+                                backgroundImage: `url('${imageFormat(
+                                    order.place.place_images[0],
+                                )}')`,
+                            }}
+                        />
                         <div className={cx('card-title')}>주차 대여 정보</div>
 
                         <div className={cx('content-area')}>
@@ -163,8 +178,17 @@ const UseDetailContainer = ({ location }) => {
                             <Button name={'고객센터 연결'}>
                                 <Tel />
                             </Button>
-                            <Link to={Paths.main.review.write + `?rental_id=${rental_id}`}>
-                                <Button name={`리뷰 ${review ? '수정' : '작성'} 하기`}>
+                            <Link
+                                to={
+                                    Paths.main.review.write +
+                                    `?rental_id=${rental_id}`
+                                }
+                            >
+                                <Button
+                                    name={`리뷰 ${
+                                        review ? '수정' : '작성'
+                                    } 하기`}
+                                >
                                     <MessageBox />
                                 </Button>
                             </Link>
@@ -189,7 +213,9 @@ const UseDetailContainer = ({ location }) => {
                                             />
                                             <Info
                                                 attribute={'쿠폰 할인'}
-                                                value={`${numberFormat(order.coupon.cp_price)}원`}
+                                                value={`${numberFormat(
+                                                    order.coupon.cp_price,
+                                                )}원`}
                                                 black={true}
                                             />
                                         </>
@@ -198,7 +224,9 @@ const UseDetailContainer = ({ location }) => {
                                     {order.point_price !== 0 && (
                                         <Info
                                             attribute={'포인트 사용'}
-                                            value={`${numberFormat(order.point_price)}원`}
+                                            value={`${numberFormat(
+                                                order.point_price,
+                                            )}원`}
                                             black={true}
                                         />
                                     )}
@@ -231,11 +259,11 @@ const UseDetailContainer = ({ location }) => {
                         </div>
                     </div>
 
-                    
-
                     <div className={cx('button-area')}>
                         <BasicButton
-                            button_name={status ? rentalStatus(order) : '대여 취소하기'}
+                            button_name={
+                                status ? rentalStatus(order) : '대여 취소하기'
+                            }
                             disable={status}
                             color={status ? 'black' : 'white'}
                             onClick={() =>
@@ -246,14 +274,19 @@ const UseDetailContainer = ({ location }) => {
                                 })
                             }
                         />
-                        {!status && 
-                        <Link to={Paths.main.use.extend + `?rental_id=${rental_id}`}>
-                        <BasicButton
-                            button_name={'연장 하기'}
-                            disable={status}
-                        />
-                    </Link>}
-                        
+                        {!status && (
+                            <Link
+                                to={
+                                    Paths.main.use.extend +
+                                    `?rental_id=${rental_id}`
+                                }
+                            >
+                                <BasicButton
+                                    button_name={'연장 하기'}
+                                    disable={status}
+                                />
+                            </Link>
+                        )}
                     </div>
                 </div>
 
@@ -262,7 +295,7 @@ const UseDetailContainer = ({ location }) => {
                     handleClose={() =>
                         dispatchHandle({ type: 'refund', payload: false })
                     }
-                    rentalID = {rental_id}
+                    rentalID={rental_id}
                     paymentPrice={order.total_price}
                     deposit={order.deposit}
                     couponPrice={order.coupon ? order.coupon.cp_price : '-'}
