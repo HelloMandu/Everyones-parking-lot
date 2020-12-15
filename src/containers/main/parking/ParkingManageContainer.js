@@ -6,7 +6,7 @@ import { ButtonBase } from '@material-ui/core';
 import useScrollEnd from '../../../hooks/useScrollEnd';
 import useToken from '../../../hooks/useToken';
 import { requestGetMyParkingList } from '../../../api/place';
-import { numberFormat } from '../../../lib/formatter';
+import { imageFormat, numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
@@ -49,7 +49,7 @@ const Image = ({ src, threshold = 0.5 }) => {
 const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     return (
         <>
-            <Image src={`${Paths.storage}${image}`} threshold={0.3}></Image>
+            <Image src={`${imageFormat(image)}`} threshold={0.3}></Image>
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <span className={cx('status', { status })}>

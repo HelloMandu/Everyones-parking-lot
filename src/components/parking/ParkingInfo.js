@@ -2,9 +2,7 @@ import React from 'react';
 import { Skeleton } from '@material-ui/lab';
 
 import { getFormatDateTime } from '../../lib/calculateDate';
-import { numberFormat } from '../../lib/formatter';
-
-import { Paths } from '../../paths';
+import { numberFormat, imageFormat } from '../../lib/formatter';
 
 import PleaseRead from './PleaseRead';
 
@@ -33,9 +31,9 @@ const ParkingInfo = ({ parkingInfo }) => {
         return (
             <>
                 <Skeleton variant="rect" height={200} />
-                <Skeleton variant="text" height={50}/>
-                <Skeleton variant="text" height={50}/>
-                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50} />
+                <Skeleton variant="text" height={50} />
+                <Skeleton variant="text" height={50} />
             </>
         );
     }
@@ -50,7 +48,7 @@ const ParkingInfo = ({ parkingInfo }) => {
             <div
                 className={styles['image']}
                 style={{
-                    backgroundImage: `url(${Paths.storage}${image})`,
+                    backgroundImage: `url(${imageFormat(image)})`,
                 }}
             />
             <section className={styles['wrapper']}>

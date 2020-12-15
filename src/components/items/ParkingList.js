@@ -6,9 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import cn from 'classnames/bind';
 
 //lib
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 import { getFormatDateTime } from '../../lib/calculateDate';
-import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 const ParkingItem = ({
@@ -21,7 +20,7 @@ const ParkingItem = ({
 }) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
-            <div className={styles['item-img']} style={{ backgroundImage: 'url(' + Paths.storage + place_images[0].replace('uploads/', '') + ')'}}>
+            <div className={styles['item-img']} style={{ backgroundImage: `url('${imageFormat(place_images[0])}')`}}>
             </div>
             <div className={styles['item-info']}>
                 <div className={styles['item-name']}>{place_name}</div>

@@ -10,8 +10,7 @@ import { requestGetDetailEvent } from '../../../api/event';
 
 import styles from './EventDetailContainer.module.scss';
 import { isEmpty } from '../../../lib/formatChecker';
-import { Paths } from '../../../paths';
-import { dateToYYYYMMDD } from '../../../lib/formatter';
+import { dateToYYYYMMDD, imageFormat } from '../../../lib/formatter';
 /* StyleSheets */
 
 const EventDetailContainer = ({ location, history }) => {
@@ -49,7 +48,7 @@ const EventDetailContainer = ({ location, history }) => {
             {!isEmpty(event) &&
             <>
                 <div className={styles['banner']}>
-                    {event_banner_image && <img className={styles['image']} src={`${Paths.storage}${event_banner_image.replace('uploads/', '')}`} alt="banner" />}
+                    {event_banner_image && <img className={styles['image']} src={`${imageFormat(event_banner_image)}}`} alt="banner" />}
                 </div>
                 <div className={styles['content']}>
                     <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 

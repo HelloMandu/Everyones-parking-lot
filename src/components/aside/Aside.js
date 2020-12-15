@@ -26,6 +26,7 @@ import {
 } from '../../static/asset/svg/aside';
 import { Paths } from '../../paths/index';
 import { isEmpty } from '../../lib/formatChecker';
+import { imageFormat } from '../../lib/formatter';
 
 const cx = cn.bind(styles);
 const settings = {
@@ -66,7 +67,7 @@ const Aside = ({ open, handleClose }) => {
                         }
                         >
                             <div className={styles['user-img']}>
-                                <img src={user.profile_image ? `${Paths.storage}${user.profile_image.replace('uploads/', '')}` : profile_icon} alt="notification" />
+                                <img src={user.profile_image ? `${imageFormat(user.profile_image)}` : profile_icon} alt="notification" />
                             </div>
                             <div className={styles['user-profile']}>
                                 <div className={cx('user-name', { login: isEmpty(user) })}>{ !isEmpty(user) ? user.name : '로그인이 필요합니다'}</div>

@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { Backdrop, Fade, IconButton, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Paths, API_SERVER } from '../../paths';
+import { API_SERVER } from '../../paths';
 
 import CloseButton from '../../static/asset/svg/payment/CloseButton';
 
@@ -17,6 +17,7 @@ import {
 } from '../../static/asset/svg/shared';
 
 import styles from './Shared.module.scss';
+import { imageFormat } from '../../lib/formatter';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -46,10 +47,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                 content: {
                     title: `${place_name}`,
                     description: `${place_comment}`,
-                    imageUrl: `${Paths.storage}${place_images[0].replace(
-                        'uploads/',
-                        '',
-                    )}`,
+                    imageUrl: `${imageFormat(place_images[0])}`,
                     link: {
                         mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
                         webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,

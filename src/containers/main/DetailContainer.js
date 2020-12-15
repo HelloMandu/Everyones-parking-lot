@@ -34,7 +34,7 @@ import {
 
 //lib
 import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 
 //hooks
 import useLoading from '../../hooks/useLoading';
@@ -210,9 +210,8 @@ const DetailContainer = ({ modal, place_id }) => {
                     <div
                         className={styles['parking-img']}
                         style={{
-                            backgroundImage: `url('${Paths.storage}${
-                                place &&
-                                place.place_images[0].replace('uploads/', '')
+                            backgroundImage: `url('${
+                                place && imageFormat(place.place_images[0])
                             }')`,
                         }}
                     />

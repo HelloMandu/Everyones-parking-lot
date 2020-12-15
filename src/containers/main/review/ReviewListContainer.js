@@ -5,6 +5,7 @@ import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
+import { imageFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
 
@@ -17,20 +18,23 @@ import Notice from '../../../static/asset/svg/Notice';
 const cx = className.bind(styles);
 
 const ReviewItem = ({ review }) => {
-    const history = useHistory()
+    const history = useHistory();
     const openDialog = useDialog();
     const reviewDelete = useCallback(() => {
         const token = localStorage.getItem('user_id');
         openDialog(
             '리뷰를 삭제하시겠습니까 ?',
             '',
-            async() => {
-                const {data} = await requestDeleteReview(token, review.review_id)
+            async () => {
+                const { data } = await requestDeleteReview(
+                    token,
+                    review.review_id,
+                );
 
-                if(data.msg === 'success') {
-                    openDialog('리뷰가 삭제되었습니다.')
-                    history.push(Paths.main.index)
-                } else openDialog(data.msg)
+                if (data.msg === 'success') {
+                    openDialog('리뷰가 삭제되었습니다.');
+                    history.push(Paths.main.index);
+                } else openDialog(data.msg);
             },
             true,
         );
@@ -39,13 +43,7 @@ const ReviewItem = ({ review }) => {
     return (
         <div className={cx('card')}>
             <Link to={Paths.main.review.detail + `?id=${review.review_id}`}>
-                <img
-                    src={
-                        Paths.storage +
-                        review.place.place_images[0].split('\\')[1]
-                    }
-                    alt=""
-                />
+                <img src={imageFormat(review.place.place_images[0])} alt="" />
                 <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
                     <Rating
@@ -97,7 +95,9 @@ const ReviewListContainer = () => {
         <div className={styles['non-qna']}>
             <div className={styles['non-container']}>
                 <Notice />
-                <div className={styles['explain']}>내가 작성한 리뷰가 없습니다.</div>
+                <div className={styles['explain']}>
+                    내가 작성한 리뷰가 없습니다.
+                </div>
             </div>
         </div>
     );

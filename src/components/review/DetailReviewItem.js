@@ -5,6 +5,7 @@ import { ButtonBase } from '@material-ui/core';
 import ReviewRating from './ReviewRating';
 
 import { getFormatDateNanTime } from '../../lib/calculateDate';
+import { imageFormat } from '../../lib/formatter';
 import { Paths } from '../../paths';
 
 import profile_icon from '../../static/asset/png/profile.png';
@@ -36,10 +37,7 @@ const DetailReviewItem = ({ reviewInfo }) => {
                     <img
                         src={
                             user && user.profile_image
-                                ? `${Paths.storage}${user.profile_image.replace(
-                                      'uploads/',
-                                      '',
-                                  )}`
+                                ? `${imageFormat(user.profile_image)}}`
                                 : profile_icon
                         }
                         alt="profile_icon"

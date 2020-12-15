@@ -22,6 +22,7 @@ import styles from './ReviewDetailContainer.module.scss';
 import Profile from '../../../static/asset/png/profile.png';
 import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
+import { imageFormat } from '../../../lib/formatter';
 
 const cx = classNames.bind(styles);
 
@@ -103,13 +104,7 @@ const ReviewDetailContainer = ({ location }) => {
     return (
         review !== undefined && (
             <div className={cx('container')}>
-                <img
-                    src={
-                        Paths.storage +
-                        review.place.place_images[0].replace('uploads/', '')
-                    }
-                    alt=""
-                />
+                <img src={imageFormat(review.place.place_images[0])} alt="" />
                 <div className={cx('area')}>
                     <div className={cx('rental-comment')}>
                         대여시간
