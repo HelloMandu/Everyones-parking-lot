@@ -30,9 +30,9 @@
     background-color: #222222 !important;
 }
 
-:global(.swiper-slide){
+:global(.swiper-slide) {
     position: relative;
-    
+
     & > img {
         width: 100%;
         position: relative;
@@ -42,26 +42,35 @@
 }
 
 @media (max-width: 320px) {
-    .comment{
+    .comment {
         margin: 0;
         font-size: 1rem;
         position: absolute;
         bottom: 50px;
     }
 
-    :global(.swiper-container){
+    :global(.swiper-container) {
         position: relative;
         height: calc(100vh - 76px - 48px);
 
-        :global(.swiper-pagination){
+        :global(.swiper-pagination) {
             position: absolute;
             bottom: 0 !important;
         }
     }
 }
 
-@media (min-width: 768px){
-    .comment{
+@media (min-width: 768px) {
+    .header {
+        height: 60px;
+
+        & > button {
+            font-size: 2.16rem;
+            line-height: 2.16rem;
+        }
+    }
+
+    .comment {
         position: absolute;
         top: 0;
         left: 120px;
@@ -69,29 +78,29 @@
         font-size: 2.16rem;
     }
 
-    :global(.swiper-container){
+    :global(.swiper-container) {
         position: relative;
         width: 100%;
-        height: calc(100vh - 76px - 48px);
+        height: calc(100vh - 76px - 60px);
 
-        :global(.swiper-pagination){
+        :global(.swiper-pagination) {
             position: absolute;
-            bottom: 10px !important;
+            bottom: 0 !important;
         }
 
-        :global(.swiper-pagination-bullet){
+        :global(.swiper-pagination-bullet) {
             width: 12px !important;
             height: 12px !important;
         }
 
-        :global(.swiper-slide){
+        :global(.swiper-slide) {
             & > img.correction {
-                width: 80%;
+                width: 70%;
             }
         }
     }
 
-    .page-two{
+    .page-two {
         top: unset;
         left: unset;
         text-align: right;
