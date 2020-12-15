@@ -142,7 +142,7 @@ const ReviewDetailContainer = ({ location }) => {
                             <Link
                                 to={
                                     Paths.main.review.write +
-                                    `?id=${review.rental_id}`
+                                    `?rental_id=${review.rental_id}`
                                 }
                             >
                                 <ButtonBase>수정</ButtonBase>

@@ -40,7 +40,7 @@ const UseListContainer = () => {
         <div className={cx('container')}>
             {list.map((item) => (
                 <Link
-                    to={Paths.main.use.detail + `?id=${item.rental_id}`}
+                    to={Paths.main.use.detail + `?rental_id=${item.rental_id}`}
                     className={cx('list-item')}
                     key={item.rental_id}
                 >

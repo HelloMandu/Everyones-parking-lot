@@ -29,7 +29,7 @@ const ReviewWriteContainer = () => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
-    const { id } = query;
+    const { rental_id } = query;
     const history = useHistory();
 
     const [order, setOrder] = useState();
@@ -39,7 +39,7 @@ const ReviewWriteContainer = () => {
     const [review, setReview] = useState();
 
     const getOrder = useCallback(async () => {
-        const { msg, order, review } = await requestGetDetailUseRental(id);
+        const { msg, order, review } = await requestGetDetailUseRental(rental_id);
 
         if (msg === 'success') {
             setOrder(order);
@@ -50,7 +50,7 @@ const ReviewWriteContainer = () => {
                 setReview(review);
             } else setExist(false);
         }
-    }, [id]);
+    }, [rental_id]);
 
     useEffect(() => {
         if (token !== null) getOrder();

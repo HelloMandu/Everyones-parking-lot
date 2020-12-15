@@ -38,7 +38,7 @@ const ReviewItem = ({ review }) => {
 
     return (
         <div className={cx('card')}>
-            <Link to={Paths.main.review.detail + `?id=${review.review_id}`}>
+            <Link to={Paths.main.review.detail + `?review_id=${review.review_id}`}>
                 <img
                     src={
                         Paths.storage +
@@ -63,7 +63,7 @@ const ReviewItem = ({ review }) => {
 
             <div className={cx('button-area')}>
                 <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
-                <Link to={Paths.main.review.write + `?id=${review.rental_id}`}>
+                <Link to={Paths.main.review.write + `?rental_id=${review.rental_id}`}>
                     <ButtonBase>수정</ButtonBase>
                 </Link>
             </div>

@@ -58,7 +58,7 @@ const UseDetailContainer = ({ location }) => {
         ignoreQueryPrefix: true,
     });
 
-    const { id } = query;
+    const { rental_id } = query;
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -71,7 +71,7 @@ const UseDetailContainer = ({ location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
-        const { msg, order, review, prev_order } = await requestGetDetailUseRental(id);
+        const { msg, order, review, prev_order } = await requestGetDetailUseRental(rental_id);
 
         if (msg === 'success') {
             setOrder(order, prev_order);
@@ -80,7 +80,7 @@ const UseDetailContainer = ({ location }) => {
         } else {
             openDialog(msg);
         }
-    }, [id, openDialog]);
+    }, [rental_id, openDialog]);
 
     useEffect(() => {
         if(token !== null) getUseDetail();
@@ -156,7 +156,7 @@ const UseDetailContainer = ({ location }) => {
                             <Button name={'고객센터 연결'}>
                                 <Tel />
                             </Button>
-                            <Link to={Paths.main.review.write + `?id=${id}`}>
+                            <Link to={Paths.main.review.write + `?rental_id=${rental_id}`}>
                                 <Button name={`리뷰 ${review ? '수정' : '작성'} 하기`}>
                                     <MessageBox />
                                 </Button>
@@ -240,7 +240,7 @@ const UseDetailContainer = ({ location }) => {
                             }
                         />
                         {!status && 
-                        <Link to={Paths.main.use.extend + `?id=${id}`}>
+                        <Link to={Paths.main.use.extend + `?rental_id=${rental_id}`}>
                         <BasicButton
                             button_name={'연장 하기'}
                             disable={status}
@@ -255,7 +255,7 @@ const UseDetailContainer = ({ location }) => {
                     handleClose={() =>
                         dispatchHandle({ type: 'refund', payload: false })
                     }
-                    rentalID = {id}
+                    rentalID = {rental_id}
                     paymentPrice={order.total_price}
                     deposit={order.deposit}
                     couponPrice={order.coupon ? order.coupon.cp_price : '-'}
