@@ -33,39 +33,6 @@ const App = () => {
         }
     }, [dispatch]);
 
-    useEffect(()=>{
-
-        const filter_data = JSON.parse(localStorage.getItem('filter_data'));
-        if(filter_data){
-            const {parking_town,underground_parking,ground_parking,stated_parking} = filter_data
-            dispatch(set_filters({type:'parking_town', value:parking_town}));
-            dispatch(set_filters({type:'underground_parking', value:underground_parking}));
-            dispatch(set_filters({type:'ground_parking', value:ground_parking}));
-            dispatch(set_filters({type:'stated_parking', value:stated_parking}));
-        }
-        else{
-            const init_filter = {
-                parking_town: true,
-                underground_parking: true,
-                ground_parking: true,
-                stated_parking: true,
-            }
-            localStorage.setItem('filter_data',JSON.stringify(init_filter));
-        }
-
-        const position_data = JSON.parse(localStorage.getItem('position'));
-        if(position_data){
-            const {lat,lng} =position_data;
-            dispatch(set_position({lat,lng}));
-        }
-        else{
-            const init_position={
-                lat : 35.8360328674316,
-                lng : 128.5743408203125,
-            }
-            localStorage.setItem('position',JSON.stringify(init_position));
-        }
-    },[])
 
     useEffect(() => {
         Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
