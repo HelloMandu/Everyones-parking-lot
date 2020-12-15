@@ -186,10 +186,11 @@ const ReviewDetailContainer = ({ location }) => {
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
+                                {console.log(commentList)}
                                 <img src={Profile} alt="" />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
-                                        {item.user_id}.id
+                                        {item.user.name}
                                     </div>
                                     <div className={cx('date')}>
                                         {item.updatedAt
