@@ -13,6 +13,7 @@ import Intro from '../../static/asset/png/intro_1.png';
 import Intro2 from '../../static/asset/png/intro_2.png';
 import LogoIntro from '../../static/asset/png/logo_intro.png';
 import 'swiper/components/pagination/pagination.scss';
+import { ButtonBase } from '@material-ui/core'
 
 const cx = classNames.bind(styles);
 
@@ -21,7 +22,7 @@ SwiperCore.use([Pagination]);
 const IntroPage = ({ img, comment, comment2, addtion, correction }) => {
     return (
         <>
-            <img className={cx({correction})} src={img} alt="" />
+            <img className={cx({ correction })} src={img} alt="" />
             <div className={cx('comment', addtion)}>
                 {comment}
                 <br />
@@ -48,6 +49,11 @@ const IntroContainer = () => {
 
     return (
         <>
+            <div className={cx('header')}>
+                {tabValue !== 2 && (
+                    <ButtonBase onClick={visit}>건너뛰기</ButtonBase>
+                )}
+            </div>
             <Swiper
                 slidesPerView={1}
                 pagination={{ clickable: true }}
@@ -74,7 +80,7 @@ const IntroContainer = () => {
                     ></IntroPage>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <IntroPage img={LogoIntro} correction={true} ></IntroPage>
+                    <IntroPage img={LogoIntro} correction={true}></IntroPage>
                 </SwiperSlide>
             </Swiper>
             <FixedButton
