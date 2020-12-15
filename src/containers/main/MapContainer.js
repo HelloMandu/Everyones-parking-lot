@@ -35,7 +35,7 @@ import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 //componenst
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
-import ParkingItem from '../../components/items/ParkingList';
+import ParkingList from '../../components/items/ParkingList';
 import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
@@ -43,14 +43,13 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 //lib
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
 //action
-import { set_position, set_level,get_area } from '../../store/main/position';
-import {get_list} from '../../store/main/parking';
-import {set_filters} from '../../store/main/filters';
+import { set_position, set_level, get_area } from '../../store/main/position';
+import { get_list } from '../../store/main/parking';
+import { set_filters } from '../../store/main/filters';
 
 //api
 
 import { getCoordinates } from '../../api/address';
-// import { requsetGetSampleDate, requestGetParkingList, requsetGetAreaInfo } from '../../api/place';
 //hooks
 import useLoading from '../../hooks/useLoading';
 
@@ -62,7 +61,7 @@ const MapContainer = ({ modal }) => {
     const { position, level, address, arrive,area } = useSelector(
         (state) => state.position,
     ); //마지막 좌표 및 레벨
-    const {parking} = useSelector((state)=>state.parking);
+    const { parking } = useSelector((state) => state.parking);
     const { parking_town, underground_parking, ground_parking, stated_parking } = useSelector((state) => state.filters);
 
     const [onLoading, offLoading] = useLoading();
@@ -124,7 +123,7 @@ const MapContainer = ({ modal }) => {
 
     //내위치 마커를 생성하는 함수
     const createMyLocationMarker =(lat,lng)=>{
-        if(location_marker.current.length!==0){
+        if (location_marker.current.length !== 0) {
             location_marker.current.map((marker) => marker.setMap(null));
             location_marker.current = [];
         }
@@ -143,7 +142,6 @@ const MapContainer = ({ modal }) => {
         });
         marker.setMap(kakao_map.current);
         location_marker.current.push(marker);
-
     }
 
     // 도착지 마커를 생성하는 함수.
@@ -202,16 +200,16 @@ const MapContainer = ({ modal }) => {
         });
 
         //마커의 중심좌표가 변경되었을 시 이벤트
-        kakao.maps.event.addListener(map, 'center_changed', async function  () {
+        kakao.maps.event.addListener(map, 'center_changed', async function () {
             let level = map.getLevel();
             let latlng = map.getCenter();
             map_lev.current = level;
             position_ref.current.lat = latlng.getLat();
             position_ref.current.lng = latlng.getLng();
-            const {lat,lng} = position_ref.current;
-            dispatch(get_area({lat,lng}));
-            const new_position ={lat,lng};
-            localStorage.setItem('position',JSON.stringify(new_position));
+            const { lat, lng } = position_ref.current;
+            dispatch(get_area({ lat, lng }));
+            const new_position = { lat, lng };
+            localStorage.setItem('position', JSON.stringify(new_position));
         });
 
         //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
@@ -247,32 +245,34 @@ const MapContainer = ({ modal }) => {
         });
 
         cluster_marker.current.addMarkers(data);
-        kakao.maps.event.addListener(  cluster_marker.current, 'clusterclick', function(cluster) {
-            const overlays = cluster.getMarkers();
+        kakao.maps.event.addListener(cluster_marker.current, 'clusterclick',
+            function (cluster) {
+                const overlays = cluster.getMarkers();
 
-            if(overlays.length > 10){
-                var level = map.getLevel()-1;
-                map.setLevel(level, {anchor: cluster.getCenter(), animate : 300});
-            }
-            else{
-                slide_view.current = !slide_view.current;
-           
-                const slides = overlays.map((overlay) => {
-                    const data = overlay.getContent();
-                    const t_index = data.indexOf('title=');
-                    const close_index = data.indexOf('>');
-                    const str = data.substring(t_index+6, close_index);
-                    return JSON.parse(str);
-                });
-                setSlideList(slides);
-                setOnSlide(slide_view.current);
-            }
+                if (overlays.length > 10) {
+                    var level = map.getLevel() - 1;
+                    map.setLevel(level, {
+                        anchor: cluster.getCenter(),
+                        animate: 300,
+                    });
+                } else {
+                    slide_view.current = !slide_view.current;
 
-        });
+                    const slides = overlays.map((overlay) => {
+                        const data = overlay.getContent();
+                        const t_index = data.indexOf('title=');
+                        const close_index = data.indexOf('>');
+                        const str = data.substring(t_index + 6, close_index);
+                        return JSON.parse(str);
+                    });
+                    setSlideList(slides);
+                    setOnSlide(slide_view.current);
+                }
+            },
+        );
         window.onClickOverlay = (place_id) => {
             history.push(Paths.main.detail+'?place_id='+place_id);
         }
-
         offLoading('parking/GET_LIST');
     }
 
@@ -285,8 +285,8 @@ const MapContainer = ({ modal }) => {
     //지도를 렌더하는 함수
     const mapRender = () => {
         let container = document.getElementById('map');
-        let lat =  position_ref.current.lat;
-        let lng =  position_ref.current.lng;
+        let lat = position_ref.current.lat;
+        let lng = position_ref.current.lng;
         let options = {
             center: new kakao.maps.LatLng(lat, lng),
             level: level !== 0 ? level : map_lev.current,
@@ -391,7 +391,7 @@ const MapContainer = ({ modal }) => {
                 <div className={styles['content']}>
                     <div
                         id="map"
-                        style={{ width: '100vw', height: '100vh', zIndex: 1 }}
+                        style={{ width: '100%', height: '100vh', zIndex: 1 }}
                     />
                 </div>
                 <ButtonBase
@@ -455,8 +455,8 @@ const MapContainer = ({ modal }) => {
                         dispatchHandle({ type: 'aside_', payload: false });
                     }}
                 />
-                <ParkingItem
-                    onClick={() => history.push(Paths.main.detail + '?place_id=1')}
+                <ParkingList
+                    onClick={(id) => history.push(Paths.main.detail + '?place_id=' + id)}
                     view={on_slide}
                     slide_list={slide_list}
                 />

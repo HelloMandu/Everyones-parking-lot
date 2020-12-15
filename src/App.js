@@ -19,8 +19,6 @@ import { getUser } from './store/user';
 
 import { set_filters } from './store/main/filters';
 import { set_position } from './store/main/position';
-// import { requestGetUserInfo } from './api/user';
-
 const App = () => {
     const location = useLocation();
     const dispatch = useDispatch();
@@ -41,21 +39,10 @@ const App = () => {
                 ground_parking,
                 stated_parking,
             } = filter_data;
-            dispatch(
-                set_filters({ type: 'parking_town', value: parking_town }),
-            );
-            dispatch(
-                set_filters({
-                    type: 'underground_parking',
-                    value: underground_parking,
-                }),
-            );
-            dispatch(
-                set_filters({ type: 'ground_parking', value: ground_parking }),
-            );
-            dispatch(
-                set_filters({ type: 'stated_parking', value: stated_parking }),
-            );
+            dispatch(set_filters({ type: 'parking_town', value: parking_town }));
+            dispatch(set_filters({ type: 'underground_parking', value: underground_parking }));
+            dispatch(set_filters({ type: 'ground_parking', value: ground_parking }));
+            dispatch(set_filters({ type: 'stated_parking', value: stated_parking }));
         } else {
             const init_filter = {
                 parking_town: true,
