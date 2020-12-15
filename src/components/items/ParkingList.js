@@ -6,9 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import cn from 'classnames/bind';
 
 //lib
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 import { getFormatDateTime } from '../../lib/calculateDate';
-import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 const ParkingItem = ({
@@ -21,7 +20,7 @@ const ParkingItem = ({
 }) => {
     return (
         <ButtonBase className={styles['parking-item']} onClick={onClick}>
-            <div className={styles['item-img']} style={{ backgroundImage: 'url(' + Paths.storage + place_images[0].replace('uploads/', '') + ')'}}>
+            <div className={styles['item-img']} style={{ backgroundImage: `url('${imageFormat(place_images[0])}')`}}>
             </div>
             <div className={styles['item-info']}>
                 <div className={styles['item-name']}>{place_name}</div>
@@ -44,15 +43,15 @@ const ParkingItem = ({
 };
 
 const ParkingList = ({ onClick, view, slide_list }) => {
-    const list = slide_list.map((slide) => (
-        <SwiperSlide className={styles['swiper-slide']} key={slide.place_id}>
+    const list = slide_list.map(({ place_id, place_name, place_fee, place_images, oper_start_time, oper_end_time }) => (
+        <SwiperSlide className={styles['swiper-slide']} key={place_id}>
             <ParkingItem
-                place_name={slide.place_name}
-                place_fee={slide.place_fee}
-                place_images={slide.place_images}
-                oper_start={slide.oper_start_time}
-                oper_end={slide.oper_end_time}
-                onClick={onClick}
+                place_name={place_name}
+                place_fee={place_fee}
+                place_images={place_images}
+                oper_start={oper_start_time}
+                oper_end={oper_end_time}
+                onClick={() => onClick(place_id)}
             />
         </SwiperSlide>
     ));

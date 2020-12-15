@@ -83,7 +83,6 @@ const NotificationContainer = () => {
 
     const handleAllRead = useCallback(async () => {
         const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
-        console.log(data);
         if (data.msg !== 'success') {
             openDialog('통신 불량', '네트워크 상태를 확인하세요.', () =>
                 history.goBack(),

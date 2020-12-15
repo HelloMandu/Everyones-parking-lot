@@ -77,15 +77,10 @@ const SettingContainer = () => {
             </section>
             {!isEmpty(user) && (
                 <section className={styles['selector-wrapper']}>
-                    <p className={styles['selector-agree']}>
-                        <div className={styles['title']}>
-                            마케팅 정보 수신 동의
-                        </div>
-                        <div className={styles['description']}>
-                            이벤트 및 할인 혜택에 대한 정보를 받으실 수
-                            있습니다.
-                        </div>
-                    </p>
+                    <div className={styles['selector-agree']}>
+                        <p className={styles['title']}>마케팅 정보 수신 동의</p>
+                        <p className={styles['description']}>이벤트 및 할인 혜택에 대한 정보를 받으실 수 있습니다.</p>
+                    </div>
                     <Selector
                         name={'메일 수신 동의'}
                         checked={agree_mail}

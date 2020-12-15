@@ -7,7 +7,7 @@ import qs from 'qs';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
 
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
 import { requestPostRental } from '../../api/rental';
 
@@ -22,6 +22,7 @@ import CheckBox from '../../components/checkbox/CheckBox';
 import FixedButton from '../../components/button/FixedButton';
 import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
+import ImageModal from '../../components/modal/ImageModal';
 
 import styles from './PaymentContainer.module.scss';
 import useToken from '../../hooks/useToken';
@@ -164,16 +165,24 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const { url, params } = match;
     const history = useHistory();
     const openDialog = useDialog();
-    const [isOpenCouponModal, openCouponModal] = useModal(
+    const [isOpenCouponModal, handleCouponModal] = useModal(
         url,
         params.modal,
         `coupon${location.search}`,
     );
-    const [isOpenTypeModal, openTypeModal] = useModal(
+    const [isOpenTypeModal, handleTypeModal] = useModal(
         url,
         params.modal,
         `type${location.search}`,
     );
+
+    const [isOpenImageModal, handleImageModal] = useModal(
+        url,
+        params.modal,
+        `image_view${location.search}`,
+    );
+
+    const [parkingImages, setParkingImages] = useState([]);
 
     const [parkingInfo, setParkingInfo] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
@@ -261,13 +270,11 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 start_time,
                 end_time,
             );
-            console.log(data);
             if (data.msg === 'success') {
                 const { deposit, place, total_price: price } = data;
                 const { place_name: title, place_images } = place;
-                const image = Array.isArray(place_images)
-                    ? place_images[0].replace('uploads/', '')
-                    : '';
+                const image = place_images[0];
+                setParkingImages(imageFormat(place_images));
                 setParkingInfo({
                     title,
                     image,
@@ -292,7 +299,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
         <>
             <main className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
-                    <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
+                    <ParkingInfo parkingInfo={parkingInfo} onClick={handleImageModal}></ParkingInfo>
                     <section className={styles['parking-payment-wrapper']}>
                         <h3 className={styles['title']}>{'대여자 연락처'}</h3>
                         <VerifyPhone
@@ -304,7 +311,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         <h3 className={styles['title']}>{'쿠폰 할인'}</h3>
                         <ButtonBase
                             className={styles['coupon']}
-                            onClick={openCouponModal}
+                            onClick={handleCouponModal}
                         >
                             {selectedCoupon.cp_subject}
                         </ButtonBase>
@@ -324,7 +331,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 <div className={styles['bar']}></div>
                 <PaymentType
                     paymentType={paymentType}
-                    openTypeModal={openTypeModal}
+                    openTypeModal={handleTypeModal}
                 />
                 <Price
                     totalPrice={totalPrice}
@@ -356,6 +363,12 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 match={match}
                 setPaymentType={setPaymentType}
             ></PaymentTypeModal>
+            <ImageModal
+                open={isOpenImageModal}
+                images={parkingImages}
+                title={parkingInfo.title}
+                handleClose={handleImageModal}
+            ></ImageModal>
         </>
     );
 };

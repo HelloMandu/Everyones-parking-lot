@@ -22,6 +22,7 @@ import styles from './ReviewDetailContainer.module.scss';
 import Profile from '../../../static/asset/png/profile.png';
 import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
+import { imageFormat, DBImageFormat } from '../../../lib/formatter';
 
 const cx = classNames.bind(styles);
 
@@ -47,11 +48,10 @@ const ReviewDetailContainer = ({ location }) => {
             review_id,
             comment,
         );
-
-        setCommentList(commentList.concat(data.comment));
-        commentRef.current.value = '';
-
-        if (data.msg !== 'success') {
+        if (data.msg === 'success') {
+            setCommentList(commentList.concat(data.comment));
+            commentRef.current.value = '';
+        } else {
             openDialog('댓글 작성을 실패했습니다.');
         }
     }, [comment, commentList, review_id, openDialog]);
@@ -59,7 +59,6 @@ const ReviewDetailContainer = ({ location }) => {
     const getReview = useCallback(async () => {
         const { data } = await requestGetDetailReview(review_id);
         const { msg, review, comments } = data;
-
         if (msg === 'success') {
             setReview(review);
             setCommentList(comments);
@@ -103,13 +102,7 @@ const ReviewDetailContainer = ({ location }) => {
     return (
         review !== undefined && (
             <div className={cx('container')}>
-                <img
-                    src={
-                        Paths.storage +
-                        review.place.place_images[0].replace('uploads/', '')
-                    }
-                    alt=""
-                />
+                <img src={imageFormat(review.place.place_images[0])} alt="" />
                 <div className={cx('area')}>
                     <div className={cx('rental-comment')}>
                         대여시간
@@ -118,9 +111,7 @@ const ReviewDetailContainer = ({ location }) => {
                         </span>
                     </div>
                 </div>
-
                 <div className={cx('bar')} />
-
                 <div className={cx('area')}>
                     <div className={cx('title')}>
                         {review.place.place_name}
@@ -169,10 +160,10 @@ const ReviewDetailContainer = ({ location }) => {
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
-                                <img src={Profile} alt="" />
+                                <img src={DBImageFormat(item.user && item.user.profile_image, Profile)} alt="" />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
-                                        {item.user_id}.id
+                                        {item.user ? item.user.name : '탈퇴한 회원입니다.'}
                                     </div>
                                     <div className={cx('date')}>
                                         {item.updatedAt

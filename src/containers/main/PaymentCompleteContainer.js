@@ -12,7 +12,7 @@ import {
     getFormatNewDate,
     getFormatNewTime,
 } from '../../lib/calculateDate';
-import { numberFormat, stringToTel } from '../../lib/formatter';
+import { imageFormat, numberFormat, stringToTel } from '../../lib/formatter';
 
 import PleaseRead from '../../components/parking/PleaseRead';
 
@@ -66,9 +66,7 @@ const PaymentCompleteContainer = ({ location }) => {
                     <div
                         className={styles['image']}
                         style={{
-                            backgroundImage: `url(${Paths.storage}${
-                                place_images[0].split('\\')[1]
-                            })`,
+                            backgroundImage: `url(${imageFormat(place_images[0])})`,
                         }}
                     />
                     <section className={styles['parking-info']}>

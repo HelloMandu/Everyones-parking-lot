@@ -22,7 +22,7 @@ SwiperCore.use([Pagination]);
 const IntroPage = ({ img, comment, comment2 }) => {
     return (
         <>
-            <img src={img} alt="" />
+            <img className={styles['banner-image']} src={img} alt="" />
             <div className={cx('comment')}>
                 {comment}
                 <br />
@@ -49,39 +49,43 @@ const IntroContainer = () => {
 
     return (
         <>
-            <div className={cx('header')}>
-                {tabValue !== 2 && (
-                    <ButtonBase onClick={visit}>건너뛰기</ButtonBase>
-                )}
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <div className={cx('header')}>
+                        {tabValue !== 2 && (
+                            <ButtonBase onClick={visit}>건너뛰기</ButtonBase>
+                        )}
+                    </div>
+                    <Swiper
+                        slidesPerView={1}
+                        pagination={{ clickable: true }}
+                        onSlideChange={(swiper) =>
+                            handleSwiperIndex(swiper.activeIndex)
+                        }
+                        onSwiper={(swiper) => {
+                            swiperRef.current = swiper;
+                        }}
+                    >
+                        <SwiperSlide>
+                            <IntroPage
+                                img={Intro}
+                                comment={'아직도 주차때문에'}
+                                comment2={'매번 고민하시나요?'}
+                            ></IntroPage>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <IntroPage
+                                img={Intro2}
+                                comment={'주차고민?'}
+                                comment2={'공유주차장으로 해결하세요.'}
+                            ></IntroPage>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <IntroPage img={LogoIntro}></IntroPage>
+                        </SwiperSlide>
+                    </Swiper>
+                </div>
             </div>
-            <Swiper
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-                onSlideChange={(swiper) =>
-                    handleSwiperIndex(swiper.activeIndex)
-                }
-                onSwiper={(swiper) => {
-                    swiperRef.current = swiper;
-                }}
-            >
-                <SwiperSlide>
-                    <IntroPage
-                        img={Intro}
-                        comment={'아직도 주차때문에'}
-                        comment2={'매번 고민하시나요?'}
-                    ></IntroPage>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <IntroPage
-                        img={Intro2}
-                        comment={'주차고민?'}
-                        comment2={'공유주차장으로 해결하세요.'}
-                    ></IntroPage>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <IntroPage img={LogoIntro}></IntroPage>
-                </SwiperSlide>
-            </Swiper>
             <FixedButton
                 button_name={'시작하기'}
                 disable={tabValue !== 2}

@@ -34,12 +34,13 @@ import {
 
 //lib
 import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 
 //hooks
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
+import ImageModal from '../../components/modal/ImageModal';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -70,13 +71,12 @@ const DetailContainer = ({ modal, place_id }) => {
         modal,
         `roadview?place_id=${place_id}`,
     );
-    const [openNav, onClickNav] = useModal(
+    const [isOpenImageView, handleImageView] = useModal(
         location.pathname,
         modal,
-        `nav?place_id=${place_id}`,
+        `image_view?place_id=${place_id}`,
     );
 
-    const [loading, setLoading] = useState(false);
     const [onLoading, offLoading] = useLoading();
     const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(null);
@@ -101,18 +101,17 @@ const DetailContainer = ({ modal, place_id }) => {
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
         onLoading('detail');
-        setLoading(true);
         try {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
                 const { likes, place, reviews } = res.data;
+                imageFormat(place.place_images);
                 setPlace(place);
                 setLikes(likes);
                 setReviews(reviews);
             }
         } catch (e) {}
         offLoading('detail');
-        setLoading(false);
     }, [offLoading, onLoading, place_id]);
 
     const onClickSetDate = useCallback((start_date, end_date, total_date) => {
@@ -207,14 +206,15 @@ const DetailContainer = ({ modal, place_id }) => {
                     <Arrow white={true}></Arrow>
                 </IconButton>
                 {place && (
-                    <div
+                    <ButtonBase
+                        component="div"
                         className={styles['parking-img']}
                         style={{
-                            backgroundImage: `url('${Paths.storage}${
-                                place &&
-                                place.place_images[0].replace('uploads/', '')
+                            backgroundImage: `url('${
+                                place && imageFormat(place.place_images[0])
                             }')`,
                         }}
+                        onClick={handleImageView}
                     />
                 )}
                 <div className={styles['container']}>
@@ -227,7 +227,10 @@ const DetailContainer = ({ modal, place_id }) => {
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={3} />
+                                <ReviewRating rating={reviews.length ? 
+                                    reviews.reduce((prev, cur) => prev + parseFloat(cur.review_rating), 0) / reviews.length
+                                    : 0.0
+                                } />
                                 <div className={styles['item-review']}>
                                     리뷰({reviews.length})
                                 </div>
@@ -381,6 +384,12 @@ const DetailContainer = ({ modal, place_id }) => {
                 onToggle={handleShare}
                 placeInfo={place}
             ></Shared>
+            <ImageModal
+                title={place && place.place_name}
+                images={place && imageFormat(place.place_images)}
+                open={isOpenImageView}
+                handleClose={handleImageView}
+            ></ImageModal>
         </>
     );
 };
