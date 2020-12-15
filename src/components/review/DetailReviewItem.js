@@ -71,8 +71,8 @@ const DetailReviewList = ({ review_list }) => {
         return (
             <div className={styles['comment-none-wrapper']}>
                 <div className={styles['comment-none']}>
-                    등록된 댓글이 없습니다.
-                    <br />첫 댓글을 남겨주세요!
+                    등록된 리뷰가 없습니다.
+                    <br />첫 리뷰를 남겨주세요!
                 </div>
             </div>
         );

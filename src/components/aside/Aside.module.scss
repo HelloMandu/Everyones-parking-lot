@@ -36,7 +36,13 @@ $aside-pd: 20px;
                 display: flex;
                 align-items: center;
                 .user-img {
-                    padding: 0;
+                    width: 56px; height: 56px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    border: solid 1px #dbdbdb;
+                    img {
+                        width: 100%; height: 100%;
+                    }
                 }
                 .user-profile {
                     text-align: left;

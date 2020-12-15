@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import { Map, Detail, Payment, PaymentComplete, Use, Review, Mypage, Parking, Coupon, Notification, Event, Support, Setting } from './main';
 import OAuthPage from './OAuthPage';
 
-
 const { Paths } = require('../paths');
 
 const MainPage = ({ history }) => {

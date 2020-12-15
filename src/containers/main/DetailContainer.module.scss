@@ -13,7 +13,7 @@ html {
 }
 .parking-img {
     max-width: $max-width;
-    background-color: #fff;
+    background-color: #dbdbdb;
     width: 100%;
     min-height: 260px;
     padding-top: 70%;
@@ -25,6 +25,7 @@ html {
     width: 100%;
     margin: 0 auto;
     max-width: $max-width;
+    position: relative;
 }
 
 .container {
@@ -155,7 +156,7 @@ html {
                 display: flex;
                 justify-content: space-between;
                 font-size: 14px;
-                padding: 2.5px 0;
+                padding: 4px 0;
                 .txt {
                     font-weight: bold;
                     color: #aaa;
@@ -182,39 +183,41 @@ html {
     transition: all 0.15s ease-in;
     .content {
         max-width: $max-width;
-        width: 100%; height: 100%;
+        width: 100%;
+        height: 100%;
         margin: 0 auto;
         position: relative;
         background-color: #fff;
         box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    .title {
-        display: flex;
-        width: calc(100% - 80px);
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-size: 17px;
-        font-weight: bold;
-        text-align: left;
-        color: #333;
-        margin-left: 48px;
-        letter-spacing: -0.5px;
-        height: 100%;
-        align-items: center;
+        .title {
+            display: flex;
+            width: calc(100% - 80px);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: left;
+            color: #333;
+            margin-left: 48px;
+            letter-spacing: -0.5px;
+            height: 100%;
+            align-items: center;
+        }
     }
 }
-}
-.headerOn{
+.headerOn {
     top: 0px;
 }
 
-html{
-    body{
-        .back-btn{
-            width: $header; height: 100%;
+html {
+    body {
+        .back-btn {
+            width: $header;
+            height: 100%;
             position: absolute;
-            top:0;
-            left:0;
+            top: 0;
+            left: 0;
         }
     }
 }

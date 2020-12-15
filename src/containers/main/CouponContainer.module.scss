@@ -35,12 +35,11 @@
     }
 
     .coupon-input {
-        position: absolute;
+        position: fixed;
         z-index: $level0;
         width: 75px;
         height: 48px;
         top: 0;
         right: 0;
-        border-radius: 25px;
     }
 }

@@ -27,7 +27,7 @@ import POSITION from '../../static/asset/svg/main/location.svg';
 // import TIME from '../../static/asset/svg/main/time.svg';
 import BOOKMARK from '../../static/asset/svg/main/like.svg';
 
-// marker
+//marker
 // import PARKING_MARKER from '../../static/asset/svg/main/marker2.svg';
 import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
 import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
@@ -35,7 +35,7 @@ import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 //componenst
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
-import ParkingItem from '../../components/items/ParkingItem';
+import ParkingItem from '../../components/items/ParkingList';
 import CircleButton from '../../components/button/CircleButton';
 import AddressModal from '../../components/modal/AddressModal';
 import BookmarkModal from '../../components/modal/BookmarkModal';
@@ -45,6 +45,7 @@ import { getDistanceFromLatLonInKm } from '../../lib/distance';
 //action
 import { set_position, set_level,get_area } from '../../store/main/position';
 import {get_list} from '../../store/main/parking';
+import {set_filters} from '../../store/main/filters';
 
 //api
 
@@ -58,29 +59,24 @@ const cx = cn.bind(styles);
 
 const MapContainer = ({ modal }) => {
     const dispatch = useDispatch();
-    const { position, level, address, arrive, area } = useSelector(
+    const { position, level, address, arrive,area } = useSelector(
         (state) => state.position,
     ); //마지막 좌표 및 레벨
-    const { parking } = useSelector((state) => state.parking);
-    const {
-        parking_town,
-        underground_parking,
-        ground_parking,
-        stated_parking,
-    } = useSelector((state) => state.filters);
+    const {parking} = useSelector((state)=>state.parking);
+    const { parking_town, underground_parking, ground_parking, stated_parking } = useSelector((state) => state.filters);
 
     const [onLoading, offLoading] = useLoading();
 
-    const position_ref = useRef(null); //지도 첫렌더시 좌표
-    const map_lev = useRef(5); // 디폴트 레벨
-    const slide_view = useRef(false); // 슬라이드 여부
-    const arrive_markers = useRef([]); //도착지 마커
-    const location_marker = useRef([]); // 유저 위치 마커
-    const cluster_marker = useRef(null);
+    let position_ref = useRef(null); //지도 첫렌더시 좌표
+    let map_lev = useRef(5); // 디폴트 레벨
+    let slide_view = useRef(false); // 슬라이드 여부
+    let arrive_markers = useRef([]); //도착지 마커
+    let location_marker = useRef([]); // 유저 위치 마커
+    let cluster_marker = useRef(null);
     const kakao_map = useRef(null); //카카오 맵
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
-    const [slide_list, setSlideList] = useState([]);
+    const [slide_list,setSlideList] = useState([]);
 
     // 모달을 제어하는 리듀서
     const [modalState, dispatchHandle] = useReducer(
@@ -93,7 +89,7 @@ const MapContainer = ({ modal }) => {
         { aside_: false, filter_: false },
     );
 
-    // 지도 레벨을 조정하는 함수
+    //지도 레벨을 조정하는 함수
     const zoomMap = (type) => {
         let level = kakao_map.current.getLevel();
         level = type === 'zoomin' ? level - 1 : level + 1;
@@ -105,7 +101,7 @@ const MapContainer = ({ modal }) => {
         dispatch(set_level(level));
     };
 
-    // 현재 위치를 받아오는 함수.
+    //현재 위치를 받아오는 함수.
     const callGetCoordinates = async () => {
         if ('geolocation' in navigator) {
             try {
@@ -178,6 +174,7 @@ const MapContainer = ({ modal }) => {
 
     //주차장 마커를 생성하는 함수
     const createParkingMarker =()=>{
+
         onLoading('parking/GET_LIST');
         if(cluster_marker.current!==null){
             cluster_marker.current.clear();
@@ -205,16 +202,16 @@ const MapContainer = ({ modal }) => {
         });
 
         //마커의 중심좌표가 변경되었을 시 이벤트
-        kakao.maps.event.addListener(map, 'center_changed', async function () {
+        kakao.maps.event.addListener(map, 'center_changed', async function  () {
             let level = map.getLevel();
             let latlng = map.getCenter();
             map_lev.current = level;
             position_ref.current.lat = latlng.getLat();
             position_ref.current.lng = latlng.getLng();
-            const { lat, lng } = position_ref.current;
-            dispatch(get_area({ lat, lng }));
-            const new_position = { lat, lng };
-            localStorage.setItem('position', JSON.stringify(new_position));
+            const {lat,lng} = position_ref.current;
+            dispatch(get_area({lat,lng}));
+            const new_position ={lat,lng};
+            localStorage.setItem('position',JSON.stringify(new_position));
         });
 
         //슬라이드가 켜진상태로 지도를 클릭하면 슬라이드를 끄는 이벤트
@@ -250,33 +247,32 @@ const MapContainer = ({ modal }) => {
         });
 
         cluster_marker.current.addMarkers(data);
-        kakao.maps.event.addListener(cluster_marker.current, 'clusterclick', function (cluster) {
-                const overlays = cluster.getMarkers();
+        kakao.maps.event.addListener(  cluster_marker.current, 'clusterclick', function(cluster) {
+            const overlays = cluster.getMarkers();
 
-                if (overlays.length > 10) {
-                    var level = map.getLevel() - 1;
-                    map.setLevel(level, {
-                        anchor: cluster.getCenter(),
-                        animate: 300,
-                    });
-                } else {
-                    slide_view.current = !slide_view.current;
+            if(overlays.length > 10){
+                var level = map.getLevel()-1;
+                map.setLevel(level, {anchor: cluster.getCenter(), animate : 300});
+            }
+            else{
+                slide_view.current = !slide_view.current;
+           
+                const slides = overlays.map((overlay) => {
+                    const data = overlay.getContent();
+                    const t_index = data.indexOf('title=');
+                    const close_index = data.indexOf('>');
+                    const str = data.substring(t_index+6, close_index);
+                    return JSON.parse(str);
+                });
+                setSlideList(slides);
+                setOnSlide(slide_view.current);
+            }
 
-                    const slides = overlays.map((overlay) => {
-                        const data = overlay.getContent();
-                        const t_index = data.indexOf('title=');
-                        const close_index = data.indexOf('>');
-                        const str = data.substring(t_index + 6, close_index);
-                        return JSON.parse(str);
-                    });
-                    setSlideList(slides);
-                    setOnSlide(slide_view.current);
-                }
-            },
-        );
+        });
         window.onClickOverlay = (place_id) => {
             history.push(Paths.main.detail+'?place_id='+place_id);
         }
+
         offLoading('parking/GET_LIST');
     }
 
@@ -289,35 +285,60 @@ const MapContainer = ({ modal }) => {
     //지도를 렌더하는 함수
     const mapRender = () => {
         let container = document.getElementById('map');
-        let lat = position.lat !== 0 ? position.lat : position_ref.current.lat;
-        let lng = position.lng !== 0 ? position.lng : position_ref.current.lng;
+        let lat =  position_ref.current.lat;
+        let lng =  position_ref.current.lng;
         let options = {
             center: new kakao.maps.LatLng(lat, lng),
             level: level !== 0 ? level : map_lev.current,
         };
         const map = new kakao.maps.Map(container, options);
-        map.setMaxLevel(7);
+        map.setMaxLevel(8);
         kakao_map.current = map;
-
-        kakao.maps.event.addListener(map, 'zoom_start', function() {
-            let level = kakao_map.current.getLevel();
-            console.log(level);
-        });
-        kakao.maps.event.addListener(map, 'tilesloaded', function() {
-            let level = kakao_map.current.getLevel();
-            console.log(level);
-        });
-
     };
 
  
     useEffect(() => {
         const storage_position = JSON.parse(localStorage.getItem('position'));
-        position_ref.current = storage_position;
-        const { lat, lng } = position_ref.current;
+        if (storage_position) {
+            position_ref.current = storage_position;
+            const { lat, lng } = position_ref.current;
+            dispatch(get_area({ lat, lng }));
+        } else {
+            const init_position = {
+                lat: 35.8360328674316,
+                lng: 128.5743408203125,
+            };
+            position_ref.current = init_position;
+            const { lat, lng } = init_position;
+            localStorage.setItem('position', JSON.stringify(init_position));
+            dispatch(get_area({ lat, lng }));
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        const storage_filter = JSON.parse(localStorage.getItem('filter_data'));
+        if (storage_filter) {
+            const {parking_town,underground_parking,ground_parking,stated_parking} = storage_filter
+            dispatch(set_filters({type:'parking_town', value:parking_town}));
+            dispatch(set_filters({type:'underground_parking', value:underground_parking}));
+            dispatch(set_filters({type:'ground_parking', value:ground_parking}));
+            dispatch(set_filters({type:'stated_parking', value:stated_parking}));
+        }
+        else {
+            const init_filter = {
+                parking_town: true,
+                underground_parking: true,
+                ground_parking: true,
+                stated_parking: true,
+            };
+            localStorage.setItem('filter_data', JSON.stringify(init_filter));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         mapRender();
-        dispatch(get_area({ lat, lng }));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -370,10 +391,9 @@ const MapContainer = ({ modal }) => {
                 <div className={styles['content']}>
                     <div
                         id="map"
-                        style={{ width: '100%', height: '100vh', zIndex: 1 }}
+                        style={{ width: '100vw', height: '100vh', zIndex: 1 }}
                     />
                 </div>
-
                 <ButtonBase
                     className={styles['menu']}
                     onClick={() => {
@@ -391,7 +411,7 @@ const MapContainer = ({ modal }) => {
                     onClick={() => history.push(Paths.main.index + '/address')}
                 >
                     <ButtonBase className={styles['search-box']}>
-                        위치를 입력해주세요
+                        위치를 입력해 주세요.
                     </ButtonBase>
                     <IconButton className={styles['search-btn']}>
                         <img src={SEARCH} alt="search" />

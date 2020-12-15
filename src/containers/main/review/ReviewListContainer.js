@@ -97,7 +97,7 @@ const ReviewListContainer = () => {
         <div className={styles['non-qna']}>
             <div className={styles['non-container']}>
                 <Notice />
-                <div className={styles['explain']}>리뷰가 없습니다.</div>
+                <div className={styles['explain']}>내가 작성한 리뷰가 없습니다.</div>
             </div>
         </div>
     );

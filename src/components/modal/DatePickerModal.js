@@ -7,7 +7,6 @@ import cn from 'classnames/bind';
 
 //components
 import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
 import { ButtonBase /*, IconButton */ } from '@material-ui/core';
@@ -18,7 +17,6 @@ import FixedButton from '../button/FixedButton';
 
 //lib
 import { getDateRange, calculateDate } from '../../lib/calculateDate';
-import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 
@@ -99,8 +97,6 @@ const DatePickerModal = (props) => {
     const [e_date, setEndDate] = useState(end_date ? end_date : 0);
     const [total_date, setTotalDate] = useState(0);
     const [date_result, setDateResult] = useState(false);
-    const [calc_price, setCaclPrice] = useState(null);
-
     const day_list = date_list.map((data, index) => (
         <SwiperSlide className={styles['swiper-slide']} key={index}>
             <DateItem value={data.DAY} />
@@ -151,6 +147,7 @@ const DatePickerModal = (props) => {
             setStartDate(newStartState);
             setEndDate(newEndState);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [date_index, date_list]);
 
     useEffect(() => {

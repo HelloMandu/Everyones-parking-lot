@@ -1,7 +1,7 @@
-import React,{useEffect,useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 //styles
 
@@ -16,11 +16,11 @@ import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
 
 //lib
-import {isEmpty} from '../../lib/formatChecker';
+import { isEmpty } from '../../lib/formatChecker';
 
 //api
-import {requestGetLikeParkingList} from '../../api/place';
-import {Paths} from '../../paths';
+import { requestGetLikeParkingList } from '../../api/place';
+import { Paths } from '../../paths';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -98,6 +98,7 @@ const BookmarkModal = (props) => {
 
     useEffect(() => {
         getCallBookmarkApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     return (

@@ -1,4 +1,3 @@
-/*global kakao*/
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -146,7 +145,7 @@ const AddressModal = (props) => {
                         <input
                             type="text"
                             className={styles['search-input']}
-                            placeholder="도착지를 알려주세요"
+                            placeholder="도착지를 알려주세요."
                             ref={ref}
                             value={search}
                             onChange={onChangeSearch}

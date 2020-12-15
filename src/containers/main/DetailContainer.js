@@ -347,7 +347,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         button_name={
                             start_date && end_date
                                 ? `${numberFormat(price)}원 대여신청`
-                                : '대여시간을 설정해주세요'
+                                : '대여시간을 설정해 주세요.'
                         }
                         disable={start_date ? false : true}
                         likeStatus={likeStatus}
