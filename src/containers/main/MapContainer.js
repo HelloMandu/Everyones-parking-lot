@@ -292,18 +292,8 @@ const MapContainer = ({ modal }) => {
             level: level !== 0 ? level : map_lev.current,
         };
         const map = new kakao.maps.Map(container, options);
-        map.setMaxLevel(10);
+        map.setMaxLevel(8);
         kakao_map.current = map;
-
-        kakao.maps.event.addListener(map, 'zoom_start', function() {
-            let level = kakao_map.current.getLevel();
-            console.log(level);
-        });
-        kakao.maps.event.addListener(map, 'tilesloaded', function() {
-            let level = kakao_map.current.getLevel();
-            console.log(level);
-        });
-
     };
 
  
