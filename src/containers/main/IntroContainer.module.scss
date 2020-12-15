@@ -20,10 +20,16 @@
 .comment {
     width: 100%;
     text-align: center;
-    margin-top: 70px;
-    margin-bottom: 55px;
+    margin-top: 2%;
+    margin-bottom: 10%;
     font-size: 22px;
     color: #222222;
+}
+.container {
+    @include container(0);
+    .banner-image {
+        width: 100%;
+    }
 }
 
 :global(.swiper-pagination-bullet-active) {

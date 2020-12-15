@@ -23,6 +23,7 @@ export const Paths = {
         mypage: {
             index: '/mypage',
             point: '/mypage/point',
+            myinfo: '/mypage/myinfo',
             update: {
                 index: '/mypage/update',
                 name: '/mypage/update/name',
@@ -97,8 +98,9 @@ export const HeaderTitle = {
             detail: '리뷰 상세보기',
         },
         mypage: {
-            index: '내 정보 수정',
+            index: '',
             point: '',
+            myinfo: '내 정보 수정',
             update: {
                 index: '',
                 name: '이름 변경',

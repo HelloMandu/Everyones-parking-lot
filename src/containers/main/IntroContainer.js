@@ -12,7 +12,6 @@ import styles from './IntroContainer.module.scss';
 import Intro from '../../static/asset/png/intro_1.png';
 import Intro2 from '../../static/asset/png/intro_2.png';
 import LogoIntro from '../../static/asset/png/logo_intro.png';
-import { ButtonBase } from '@material-ui/core';
 import 'swiper/components/pagination/pagination.scss';
 
 const cx = classNames.bind(styles);
@@ -49,11 +48,6 @@ const IntroContainer = () => {
 
     return (
         <>
-            <div className={cx('header')}>
-                {tabValue !== 2 && (
-                    <ButtonBase onClick={visit}>건너뛰기</ButtonBase>
-                )}
-            </div>
             <Swiper
                 slidesPerView={1}
                 pagination={{ clickable: true }}

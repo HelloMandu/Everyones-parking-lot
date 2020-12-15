@@ -6,7 +6,6 @@ import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
-
 import { imageFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
@@ -50,10 +49,8 @@ const ReviewItem = ({ review }) => {
 
     return (
         <div className={cx('card')}>
-            <Link
-                to={Paths.main.review.detail + `?review_id=${review.review_id}`}
-            >
-                <img src={imageFormat(review.place.place_images)} alt="" />
+            <Link to={Paths.main.review.detail + `?review_id=${review.review_id}`}>
+                <img src={imageFormat(review.place.place_images[0])} alt="" />
                 <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
                     <Rating

@@ -124,8 +124,7 @@ export const secondsToMMSS = (second) => {
 };
 
 export const stringToTel = (str) =>
-    str
-        ? str.replace(
+    str ? str.replace(
               /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
               '$1-$2-$3',
           )
@@ -134,30 +133,24 @@ export const stringToTel = (str) =>
 export const telToString = (tel) => (tel ? tel.replace('-', '') : '');
 // 전화번호 표현을 string으로 변경
 
-export const imageFormat = (image) => {
-    if (Array.isArray(image)) {
-        const imgUrl = image.map(
-            (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
-        );
-        return imgUrl;
+export const DBImageFormat = (image, default_image) => {
+    if (!image) {
+        return default_image;
+    } else if (image.indexOf('http://') !== -1 || image.indexOf('https://') !== -1) {
+        return image;
+    } else {
+        return Paths.storage + image.replace('uploads/', '');
     }
-    return `${Paths.storage}${image.replace('uploads/', '')}`;
-};
-// export const DBImageFormat = (url) => {
-//     if (typeof url === 'string') {
-//         const URL_FORMAT = url
-//             .replace(/\\/g, '')
-//             .replace(/\[/g, '')
-//             .replace(/\]/g, '')
-//             .replace(/"/g, '')
-//             .replace(/ /g, '');
-//         const IMAGES = URL_FORMAT.split(',');
-//         return IMAGES.map(IMAGE => Paths.storage + IMAGE);
-//     }
-//     return '';
-// };
+}
 
-// export const hideEmail = (email) => {
-//     const s = email.indexOf('@');
-//     return email.substr(0, s - 2) + '**';
-// };
+export const imageFormat = (image) => {
+    if(image){
+        if (Array.isArray(image)) {
+            const imgUrl = image.map(
+                (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
+            );
+            return imgUrl;
+        }
+        return `${Paths.storage}${image.replace('uploads/', '')}`;
+    }
+};
