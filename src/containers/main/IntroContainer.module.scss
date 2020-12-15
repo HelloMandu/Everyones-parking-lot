@@ -26,17 +26,76 @@
     color: #222222;
 }
 
-:global(#parking
-        > div
-        > div.swiper-container.swiper-container-initialized.swiper-container-horizontal.swiper-container-ios
-        > div.swiper-wrapper
-        > div.swiper-slide.swiper-slide-active) {
-    width: 100%;
+:global(.swiper-pagination-bullet-active) {
+    background-color: #222222 !important;
 }
 
-:global(#parking
-        > div.swiper-container.swiper-container-initialized.swiper-container-horizontal.swiper-container-ios
-        > div.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets
-        > span.swiper-pagination-bullet.swiper-pagination-bullet-active) {
-    background-color: #222222;
+:global(.swiper-slide){
+    position: relative;
+    
+    & > img {
+        width: 100%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 320px) {
+    .comment{
+        margin: 0;
+        font-size: 1rem;
+        position: absolute;
+        bottom: 50px;
+    }
+
+    :global(.swiper-container){
+        position: relative;
+        height: calc(100vh - 76px - 48px);
+
+        :global(.swiper-pagination){
+            position: absolute;
+            bottom: 0 !important;
+        }
+    }
+}
+
+@media (min-width: 768px){
+    .comment{
+        position: absolute;
+        top: 0;
+        left: 120px;
+        text-align: left;
+        font-size: 2.16rem;
+    }
+
+    :global(.swiper-container){
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 76px - 48px);
+
+        :global(.swiper-pagination){
+            position: absolute;
+            bottom: 10px !important;
+        }
+
+        :global(.swiper-pagination-bullet){
+            width: 12px !important;
+            height: 12px !important;
+        }
+
+        :global(.swiper-slide){
+            & > img.correction {
+                width: 80%;
+            }
+        }
+    }
+
+    .page-two{
+        top: unset;
+        left: unset;
+        text-align: right;
+        bottom: 50px !important;
+        right: 120px !important;
+    }
 }

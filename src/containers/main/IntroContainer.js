@@ -19,11 +19,11 @@ const cx = classNames.bind(styles);
 
 SwiperCore.use([Pagination]);
 
-const IntroPage = ({ img, comment, comment2 }) => {
+const IntroPage = ({ img, comment, comment2, addtion, correction }) => {
     return (
         <>
-            <img src={img} alt="" />
-            <div className={cx('comment')}>
+            <img className={cx({correction})} src={img} alt="" />
+            <div className={cx('comment', addtion)}>
                 {comment}
                 <br />
                 {comment2}
@@ -76,10 +76,11 @@ const IntroContainer = () => {
                         img={Intro2}
                         comment={'주차고민?'}
                         comment2={'공유주차장으로 해결하세요.'}
+                        addtion={'page-two'}
                     ></IntroPage>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <IntroPage img={LogoIntro}></IntroPage>
+                    <IntroPage img={LogoIntro} correction={true} ></IntroPage>
                 </SwiperSlide>
             </Swiper>
             <FixedButton
