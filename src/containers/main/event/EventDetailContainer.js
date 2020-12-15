@@ -47,15 +47,17 @@ const EventDetailContainer = ({ location, history }) => {
     return (
         <div className={styles['container']}>
             {!isEmpty(event) &&
-            <div className={styles['banner']}>
-                {event_banner_image && <img className={styles['image']} src={`${Paths.storage}${event_banner_image.replace('uploads/', '')}`} alt="banner" />}
-            </div>}
-            <div className={styles['content']}>
-                <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 
-                <h3 className={styles['title']}>{event_title}</h3>
-                <div className={styles['body']}>{event_body}</div>
-                {warn && <div className={styles['warn']}>{warn}</div>}
-            </div>
+            <>
+                <div className={styles['banner']}>
+                    {event_banner_image && <img className={styles['image']} src={`${Paths.storage}${event_banner_image.replace('uploads/', '')}`} alt="banner" />}
+                </div>
+                <div className={styles['content']}>
+                    <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 
+                    <h3 className={styles['title']}>{event_title}</h3>
+                    <div className={styles['body']}>{event_body}</div>
+                    {warn && <div className={styles['warn']}>{warn}</div>}
+                </div>
+            </>}
         </div>
     );
 };

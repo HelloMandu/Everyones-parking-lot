@@ -6,6 +6,7 @@ import OAuthPage from './OAuthPage';
 const { Paths } = require('../paths');
 
 const MainPage = ({ history }) => {
+
     return (
         <Switch>
             <Route path={Paths.main.index + '/:modal?'} component={Map} />

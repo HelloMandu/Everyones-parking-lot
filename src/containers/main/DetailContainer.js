@@ -110,8 +110,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 setLikes(likes);
                 setReviews(reviews);
             }
-        } catch (e) {
-        }
+        } catch (e) {}
         offLoading('detail');
         setLoading(false);
     }, [offLoading, onLoading, place_id]);
@@ -124,13 +123,15 @@ const DetailContainer = ({ modal, place_id }) => {
 
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = useCallback(() => {
-        Kakao.Navi.start({
-            name: '현대백화점 판교점', // 도착지 지번
-            x: 127.11205203011632, //도착지 x좌표
-            y: 37.39279717586919, //도착지 y 좌표
-            coordType: 'wgs84',
-        });
-    }, []);
+        if (place) {
+            Kakao.Navi.start({
+                name: place.addr, // 도착지 지번
+                x: parseFloat(place.lng), //도착지 x좌표
+                y: parseFloat(place.lat), //도착지 y 좌표
+                coordType: 'wgs84',
+            });
+        }
+    }, [place]);
 
     const likeCheck = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
@@ -346,7 +347,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         button_name={
                             start_date && end_date
                                 ? `${numberFormat(price)}원 대여신청`
-                                : '대여시간을 설정해주세요'
+                                : '대여시간을 설정해 주세요.'
                         }
                         disable={start_date ? false : true}
                         likeStatus={likeStatus}

@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ButtonBase } from '@material-ui/core';
 /* Library */
 
@@ -13,6 +13,7 @@ import Car from '../../../static/asset/svg/Car';
 import Camera from '../../../static/asset/svg/Camera';
 /* StyleSheets */
 
+import { deleteUser } from '../../../store/user';
 import { getFormatDateString } from '../../../lib/calculateDate';
 import { stringToTel } from '../../../lib/formatter';
 /* Lib */
@@ -24,11 +25,10 @@ import { useDialog } from '../../../hooks/useDialog';
 import { requestPutProfile } from '../../../api/user';
 /* API */
 
-import { Paths } from '../../../paths'
+import { Paths } from '../../../paths';
 /* Paths */
 
 const FileItem = ({ file, image }) => {
-
     const openDialog = useDialog();
     const [imgFile, setImgfile] = useState(null);
 
@@ -47,38 +47,38 @@ const FileItem = ({ file, image }) => {
                 reader.readAsDataURL(file);
             }
         }
-    }, [file, setImgfile])
+    }, [file, setImgfile]);
 
     useEffect(() => {
         try {
             UpdateProfile();
         } catch (e) {
-            openDialog("프로필 사진 업로드 오류");
+            openDialog('프로필 사진 업로드 오류');
         }
     }, [UpdateProfile, openDialog]);
 
     return (
         <>
-            {imgFile
-                ? <div
+            {imgFile ? (
+                <div
                     className={styles['img-item']}
                     style={{ backgroundImage: `url(${imgFile})` }}
                 />
-                : image
-                    ? <div
-                        className={styles['img-item']}
-                        style={{ backgroundImage: `url(${Paths.storage}${image})` }}
-                    />
-                    : <div
-                        className={styles['img-item']}
-                        style={{ backgroundImage: `url(${profile})` }}
-                    />
-            }
+            ) : image ? (
+                <div
+                    className={styles['img-item']}
+                    style={{ backgroundImage: `url(${Paths.storage}${image})` }}
+                />
+            ) : (
+                <div
+                    className={styles['img-item']}
+                    style={{ backgroundImage: `url(${profile})` }}
+                />
+            )}
         </>
-    )
-}
+    );
+};
 const ProfileImg = ({ image }) => {
-
     const fileRef = useRef();
     const [imgFile, setImgFile] = useState([]);
     const [sliceImage, setSliceImage] = useState('');
@@ -88,7 +88,7 @@ const ProfileImg = ({ image }) => {
             const newImage = image.split('/');
             setSliceImage(newImage[1]);
         }
-    }, [image])
+    }, [image]);
 
     const onChangeImgFile = useCallback((e) => {
         const { files } = e.target;
@@ -99,10 +99,7 @@ const ProfileImg = ({ image }) => {
 
     return (
         <div className={styles['img-wrap']}>
-            <FileItem
-                file={imgFile[0]}
-                image={sliceImage}
-            />
+            <FileItem file={imgFile[0]} image={sliceImage} />
             <ButtonBase
                 component="div"
                 className={styles['camera']}
@@ -120,25 +117,33 @@ const ProfileImg = ({ image }) => {
                 <Camera />
             </ButtonBase>
         </div>
-
-    )
-}
+    );
+};
 
 const MyPageContainer = () => {
-
-    const getUserInfo = useSelector(state => state.user);
+    const getUserInfo = useSelector((state) => state.user);
 
     const openDialog = useDialog();
     const history = useHistory();
     const TOKEN = useToken();
+    const dispatch = useDispatch();
 
     const onClickLogout = () => {
-        openDialog("로그아웃 하시겠습니까?", '', () => { localStorage.removeItem('user_id'); history.replace(Paths.main.index); }, true);
-    }
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        openDialog(
+            '로그아웃 하시겠습니까?',
+            '',
+            () => {
+                dispatch(deleteUser(JWT_TOKEN));
+                history.replace(Paths.main.index);
+            },
+            true,
+        );
+    };
 
     return (
         <>
-            {TOKEN !== null &&
+            {TOKEN !== null && (
                 <div className={styles['container']}>
                     <div className={styles['user-area']}>
                         <ProfileImg image={getUserInfo.profile_image} />
@@ -173,8 +178,8 @@ const MyPageContainer = () => {
                                 component="div"
                                 className={styles['parking-wrap']}
                             >
-                                <div className={styles['text']} >
-                                    <span>내주자창 관리</span>
+                                <div className={styles['text']}>
+                                    <span>내 주자공간 관리</span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>
@@ -184,8 +189,8 @@ const MyPageContainer = () => {
                                 component="div"
                                 className={styles['use-wrap']}
                             >
-                                <div className={styles['text']} >
-                                    <span>이용내역 관리 항목</span>
+                                <div className={styles['text']}>
+                                    <span>이용내역 관리</span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>
@@ -197,27 +202,38 @@ const MyPageContainer = () => {
                                 component="div"
                                 className={styles['hp-wrap']}
                             >
-                                <div className={styles['text']} >
+                                <div className={styles['text']}>
                                     <span>휴대폰번호</span>
-                                    <span className={styles['user-text']}>{stringToTel(getUserInfo.phone_number)}</span>
+                                    <span className={styles['user-text']}>
+                                        {stringToTel(getUserInfo.phone_number)}
+                                    </span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>
                         </Link>
                         <div className={styles['email-wrap']}>
-                            <div className={styles['text']} >
+                            <div className={styles['text']}>
                                 <span>이메일 주소</span>
-                                <span className={styles['user-text']}>{getUserInfo.email}</span>
+                                <span className={styles['user-text']}>
+                                    {getUserInfo.email}
+                                </span>
                             </div>
                         </div>
-                        <Link to={{ pathname: Paths.main.mypage.update.birthday, state: getUserInfo.birth }}>
+                        <Link
+                            to={{
+                                pathname: Paths.main.mypage.update.birthday,
+                                state: getUserInfo.birth,
+                            }}
+                        >
                             <ButtonBase
                                 component="div"
                                 className={styles['birthday-wrap']}
                             >
-                                <div className={styles['text']} >
+                                <div className={styles['text']}>
                                     <span>생년월일</span>
-                                    <span className={styles['user-text']}>{getFormatDateString(getUserInfo.birth)}</span>
+                                    <span className={styles['user-text']}>
+                                        {getFormatDateString(getUserInfo.birth)}
+                                    </span>
                                     <ArrowSmall rotate={90} />
                                 </div>
                             </ButtonBase>
@@ -229,7 +245,7 @@ const MyPageContainer = () => {
                                 component="div"
                                 className={styles['password-wrap']}
                             >
-                                <div className={styles['text']} >
+                                <div className={styles['text']}>
                                     <span>비밀번호 변경</span>
                                     <ArrowSmall rotate={90} />
                                 </div>
@@ -255,8 +271,8 @@ const MyPageContainer = () => {
                             </ButtonBase>
                         </div>
                     </Link>
-                </div >
-            }
+                </div>
+            )}
         </>
     );
 };

@@ -59,7 +59,7 @@ export const requestGetCouponUse = async () => {
     return response.data;
 };
 
-export const requestPostCouponCode = async (cp_code) => {
+export const requestPostCouponCode = async (JWT_TOKEN, cp_code) => {
     /*
         쿠폰 코드 입력 요청 API(POST): /api/coupon
         { headers }: JWT_TOKEN(유저 로그인 토큰)
@@ -69,7 +69,6 @@ export const requestPostCouponCode = async (cp_code) => {
         * 응답: success / failure
     */
     const URL = Paths.api + 'coupon';
-    const JWT_TOKEN = localStorage.getItem('user_id');
     const response = await axios.post(
         URL,
         { cp_code },

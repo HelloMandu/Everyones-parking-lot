@@ -1,6 +1,7 @@
-import React,{useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 //styles
 
@@ -15,11 +16,11 @@ import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
 
 //lib
-import {isEmpty} from '../../lib/formatChecker';
+import { isEmpty } from '../../lib/formatChecker';
 
 //api
-import {requestGetLikeParkingList} from '../../api/place';
-
+import { requestGetLikeParkingList } from '../../api/place';
+import { Paths } from '../../paths';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -68,6 +69,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const BookmarkModal = (props) => {
     const classes = useStyles();
     const user = useSelector((state) => state.user);
+    const history= useHistory();
+    const [bookmark,setBookmark] = useState([]);
 
     const getCallBookmarkApi = async () => {
 
@@ -77,16 +80,25 @@ const BookmarkModal = (props) => {
             try {
                 const res = await requestGetLikeParkingList(JWT_TOKEN);
                 console.log(res);
+                if(res.data.msg==='success'){
+                    const {places} = res.data;
+                    setBookmark(places);
+                }
             }
             catch (e) {
-
+                console.error(e)
             }
         }
 
     }
 
+    const onClickBookmarkItem =(place_id)=>{
+        history.push(Paths.main.detail+'?place_id='+place_id);
+    }
+
     useEffect(() => {
         getCallBookmarkApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     return (
@@ -101,12 +113,7 @@ const BookmarkModal = (props) => {
             <DialogContent className={classes.content}>
                 <div className={styles['container']}>
                     <div className={styles['item-list']}>
-                    <AddressList addr_list ={[]}/>
-                        {/* <AddressList />
-                        <AddressList />
-                        <AddressList />
-                        <AddressList />
-                        <AddressList /> */}
+                    <AddressList addr_list ={bookmark} type={2} onClick={onClickBookmarkItem}/>
                     </div>
                 </div>
             </DialogContent>

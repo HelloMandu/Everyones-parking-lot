@@ -6,9 +6,6 @@ html {
             min-height: 100vh;
             // z-index: $level2 !important;
         }
-        .dim {
-            // z-index: $level2;
-        }
     }
 }
 
@@ -50,7 +47,6 @@ html {
             position: absolute;
             transition: all 0.3s ease-in-out;
             transform: translateY(-100%);
-            // z-index: -15;
             padding: 0 15px;
             .line {
                 width: 100%;
@@ -60,7 +56,7 @@ html {
             }
           
         }
-  
+        
         .txt-value {
             height: 64px;
             display: flex;
@@ -76,6 +72,9 @@ html {
                 font-size: 14px;
                 font-weight: bold;
                 color: #333;
+                svg{
+                    margin-left: 8px;
+                }
             }
         }
         &.open {
@@ -95,6 +94,11 @@ html {
 html {
     body {
         .swiper{
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            &.open{
+                opacity:1;
+            }
             display: flex;
             justify-content: space-between;
             .day-swiper {

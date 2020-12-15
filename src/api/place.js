@@ -41,11 +41,7 @@ export const requestGetParkingList = async (
     lat,
     lng,
     range,
-    min_price,
-    max_price,
-    start_date,
-    end_date,
-    filter,
+    filter
 ) => {
     // lat: 요청할 주차공간의 기준 위도(Float, 필수) => 세로
     // lng: 요청할 주차공간의 기준 경도(Float, 필수) => 가로
@@ -59,13 +55,15 @@ export const requestGetParkingList = async (
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place';
+    console.log(filter);
     const params = {
         lat,
         lng,
         range: 1000,
+        filter
     };
     const response = await axios.get(URL, { params });
-
+    console.log(response);
     return response;
 };
 

@@ -3,7 +3,7 @@
 $side: 15px;
 
 @mixin side-bar {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: column;
     top: 40px + 24px + 48px;
@@ -14,10 +14,8 @@ $side: 15px;
     overflow: hidden;
     position: relative;
 
-    .content {
-    }
     .menu {
-        position: absolute;
+        position: fixed;
         top: 24px;
         left: $side;
         width: 48px;
@@ -46,7 +44,7 @@ $side: 15px;
         }
     }
     .search {
-        position: absolute;
+        position: fixed;
         top: 24px;
         box-sizing: border-box;
         width: calc(100% - #{$side * 2});

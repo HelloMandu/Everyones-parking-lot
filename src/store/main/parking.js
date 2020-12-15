@@ -21,8 +21,9 @@ const initState={
 function *getParkingList(action){
     yield put(startLoading(GET_LIST));
     try{
-        const {lat,lng,range} = action.payload;
-        const res = yield call(requestGetParkingList , lat,lng,range);
+        const {lat,lng,range,filter} = action.payload;
+        console.log(filter);
+        const res = yield call(requestGetParkingList , lat,lng,range,filter);
         yield put({
             type: GET_LIST_SUCCESS,
             payload: res.data.places,

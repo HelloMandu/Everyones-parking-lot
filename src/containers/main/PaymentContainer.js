@@ -24,6 +24,7 @@ import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
 
 import styles from './PaymentContainer.module.scss';
+import useToken from '../../hooks/useToken';
 
 const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
 
@@ -158,6 +159,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
+    const JWT_TOKEN = useToken();
     const { place_id, start_time, end_time } = query;
     const { url, params } = match;
     const history = useHistory();
@@ -226,7 +228,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
     }, [parkingInfo, selectedCoupon, usePoint]);
 
     const handlePayment = useCallback(async () => {
-        const JWT_TOKEN = localStorage.getItem('user_id');
         const { price, deposit } = parkingInfo;
         const { type, card_id } = paymentType;
         const { cp_id } = selectedCoupon;
@@ -250,27 +251,17 @@ const ParkingEnrollContainer = ({ location, match }) => {
         } else {
             openDialog('결제실패', msg);
         }
-    }, [
-        end_time,
-        history,
-        openDialog,
-        parkingInfo,
-        paymentType,
-        place_id,
-        selectedCoupon,
-        start_time,
-        usePoint,
-    ]);
+    }, [JWT_TOKEN, end_time, history, openDialog, parkingInfo, paymentType, place_id, selectedCoupon, start_time, usePoint]);
 
     const getPaymentInfo = useCallback(
         async (place_id, start_time, end_time) => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
             const { data } = await requestGetPayInfo(
                 JWT_TOKEN,
                 place_id,
                 start_time,
                 end_time,
             );
+            console.log(data);
             if (data.msg === 'success') {
                 const { deposit, place, total_price: price } = data;
                 const { place_name: title, place_images } = place;
@@ -293,7 +284,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
+        [JWT_TOKEN],
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
