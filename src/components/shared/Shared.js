@@ -1,5 +1,5 @@
 /*global Kakao*/
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Backdrop, Fade, IconButton, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 

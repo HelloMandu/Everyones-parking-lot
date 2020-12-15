@@ -106,7 +106,7 @@ const ReviewDetailContainer = ({ location }) => {
                 <img
                     src={
                         Paths.storage +
-                        review.place.place_images[0].split('\\')[1]
+                        review.place.place_images[0].replace('uploads/', '')
                     }
                     alt=""
                 />
@@ -206,7 +206,11 @@ const ReviewDetailContainer = ({ location }) => {
                                 등록
                             </ButtonBase>
                         </>
-                    ) : <p className={styles['not-user']}>로그인 후 댓글을 남기실 수 있습니다.</p>}
+                    ) : (
+                        <p className={styles['not-user']}>
+                            로그인 후 댓글을 남기실 수 있습니다.
+                        </p>
+                    )}
                 </div>
             </div>
         )

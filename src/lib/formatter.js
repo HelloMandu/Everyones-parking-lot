@@ -1,3 +1,4 @@
+import { Paths } from '../paths';
 
 export function stringNumberToInt(strNumber) {
     // 구분자가 들어간 수치 데이터를 숫자로 변경
@@ -32,7 +33,8 @@ export function numberToKorean(number) {
     }
     for (let i = 0; i < resultArray.length; i++) {
         if (!resultArray[i]) continue;
-        resultString = String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
+        resultString =
+            String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
     }
     return resultString;
 }
@@ -42,7 +44,7 @@ const DIF_MINUTES = 60 * MS;
 const DIF_HOURS = 60 * DIF_MINUTES;
 const DIF_DAYS = 24 * DIF_HOURS;
 
-const crossBrowsingDate = date => {
+const crossBrowsingDate = (date) => {
     if (date) {
         let setDate = null;
         if (typeof date === 'string') {
@@ -53,7 +55,7 @@ const crossBrowsingDate = date => {
         return new Date(setDate);
     }
     return new Date(0);
-}
+};
 const dateFormatting = (date) => (date < 10 ? '0' + date : date); // 달력의 수치를 두 자리로 변환해주는 함수
 export const dateToYYYYMMDD = (date, join = '-') => {
     // Javascript Date 객체를 형식에 맞게 변환하여 표현함.
@@ -121,13 +123,26 @@ export const secondsToMMSS = (second) => {
     }`;
 };
 
-export const stringToTel = str => str ? str.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/, '$1-$2-$3')
-    : '';
+export const stringToTel = (str) =>
+    str
+        ? str.replace(
+              /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
+              '$1-$2-$3',
+          )
+        : '';
 // string을 전화번호 표현(구분자 '-' 추가)으로 변경
-export const telToString = tel => tel ? tel.replace('-', '') : '';
+export const telToString = (tel) => (tel ? tel.replace('-', '') : '');
 // 전화번호 표현을 string으로 변경
 
-
+export const imageFormat = (image) => {
+    if (Array.isArray(image)) {
+        const imgUrl = image.map(
+            (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
+        );
+        return imgUrl;
+    }
+    return `${Paths.storage}${image.replace('uploads/', '')}`;
+};
 // export const DBImageFormat = (url) => {
 //     if (typeof url === 'string') {
 //         const URL_FORMAT = url
