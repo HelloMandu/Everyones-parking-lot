@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import useInput from '../../hooks/useInput';
 import { useDialog } from '../../hooks/useDialog'
+import useLoading from '../../hooks/useLoading'
 
 import InputBox from '../../components/inputbox/InputBox';
 
@@ -36,8 +37,11 @@ const SignInContainer = () => {
     const passwordRef = useRef(null);
 
     const openDialog = useDialog()
+    const [onLoading, offLoading] = useLoading()
 
     const onClickLogin = useCallback(async () => {
+        onLoading('signIp')
+
         const response = await requestPostSignIn(email, password)
         if (response.data.msg === 'success') {
             localStorage.setItem("user_id", response.data.token)
@@ -53,6 +57,9 @@ const SignInContainer = () => {
                 openDialog(response.data.msg, '', () => passwordRef.current.focus(), false, true)
             } else openDialog(response.data.msg)
         }
+
+        offLoading('signIp')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email, password, dispatch, history, openDialog, onChangeEmail, onChangePassword]);
 
     useEffect(() => {

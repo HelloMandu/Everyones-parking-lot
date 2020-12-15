@@ -7,6 +7,7 @@ import Refund from '../../../components/use/Refund';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
@@ -53,6 +54,7 @@ const UseDetailContainer = ({ location }) => {
     const [order, setOrder] = useState({});
     const [review, setReview] = useState()
     const [status, setStatus] = useState(false)
+    const [onLoading, offLoading] = useLoading()
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -71,6 +73,8 @@ const UseDetailContainer = ({ location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
+        onLoading('getUseDetail')
+
         const { msg, order, review, prev_order } = await requestGetDetailUseRental(rental_id);
 
         if (msg === 'success') {
@@ -80,6 +84,9 @@ const UseDetailContainer = ({ location }) => {
         } else {
             openDialog(msg);
         }
+
+        offLoading('getUseDetail')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rental_id, openDialog]);
 
     useEffect(() => {

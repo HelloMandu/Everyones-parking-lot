@@ -14,6 +14,7 @@ import { requestPostAuth } from '../../api/user';
 import useInput from '../../hooks/useInput';
 import useBirth from '../../hooks/useBirth';
 import { useDialog } from '../../hooks/useDialog';
+import useLoading from '../../hooks/useLoading'
 
 import InputBox from '../../components/inputbox/InputBox';
 import Birth from '../../components/birth/Birth';
@@ -203,8 +204,11 @@ const SignUpContainer = () => {
     const phoneRef = useRef(null);
 
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading()
 
     const onClickSignUp = useCallback(async () => {
+        onLoading('signUp')
+
         if (!signUp) {
             return;
         }
@@ -226,6 +230,9 @@ const SignUpContainer = () => {
             if(data.msg === '이미 가입한 이메일입니다.') emailRef.current.focusing()
             else if (data.msg === '비밀번호를 설정하지 못했습니다.') passwordRef.current.focusing()
         }
+
+        offLoading('signUp')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, signUp, getBirth, openDialog]);
 
     const onKeyDownSignUp = useCallback(

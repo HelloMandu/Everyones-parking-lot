@@ -7,6 +7,7 @@ import FixedButton from '../../../components/button/FixedButton';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import {
@@ -31,6 +32,7 @@ const ReviewWriteContainer = () => {
     });
     const { rental_id } = query;
     const history = useHistory();
+    const [onLoading, offLoading] = useLoading()
 
     const [order, setOrder] = useState();
     const [exist, setExist] = useState(false);
@@ -39,6 +41,8 @@ const ReviewWriteContainer = () => {
     const [review, setReview] = useState();
 
     const getOrder = useCallback(async () => {
+        onLoading('getOrder')
+
         const { msg, order, review } = await requestGetDetailUseRental(rental_id);
 
         if (msg === 'success') {
@@ -50,6 +54,9 @@ const ReviewWriteContainer = () => {
                 setReview(review);
             } else setExist(false);
         }
+
+        offLoading('getOrder')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rental_id]);
 
     useEffect(() => {
@@ -58,6 +65,8 @@ const ReviewWriteContainer = () => {
     }, []);
 
     const writeReview = useCallback(async () => {
+        onLoading('writeReview')
+
         const { data } = await requestPostWriteReview(
             token,
             order.rental_id,
@@ -76,9 +85,14 @@ const ReviewWriteContainer = () => {
                 true,
             );
         } else openDialog(data.msg)
+
+        offLoading('writeReview')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, order, rating, reviewBody, token]);
 
     const modifyReview = useCallback(async () => {
+        onLoading('modifyReview')
+
         const { data } = await requestPutModifyReview(
             token,
             review.review_id,
@@ -96,6 +110,9 @@ const ReviewWriteContainer = () => {
                 true,
             );
         } else openDialog(data.msg)
+
+        offLoading('modifyReview')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, rating, review, reviewBody, token]);
 
     return (

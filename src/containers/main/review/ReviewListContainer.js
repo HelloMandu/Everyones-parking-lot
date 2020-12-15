@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 
@@ -19,7 +20,10 @@ const cx = className.bind(styles);
 const ReviewItem = ({ review }) => {
     const history = useHistory()
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading()
     const reviewDelete = useCallback(() => {
+        onLoading('reviewDelete')
+
         const token = localStorage.getItem('user_id');
         openDialog(
             '리뷰를 삭제하시겠습니까 ?',
@@ -34,6 +38,9 @@ const ReviewItem = ({ review }) => {
             },
             true,
         );
+
+        offLoading('reviewDelete')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
     return (
@@ -74,11 +81,17 @@ const ReviewItem = ({ review }) => {
 const ReviewListContainer = () => {
     const token = useToken();
     const [list, setList] = useState([]);
+    const [onLoading, offLoading] = useLoading()
 
     const getReviewList = useCallback(async () => {
+        onLoading('getReviewList')
+
         const { data } = await requestGetReviewList(token);
 
         setList(data.reviews);
+
+        offLoading('getReviewList')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     useEffect(() => {

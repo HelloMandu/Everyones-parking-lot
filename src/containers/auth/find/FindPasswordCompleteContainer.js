@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading'
 
 import InputBox from '../../../components/inputbox/InputBox';
 
@@ -23,6 +24,7 @@ const FindPasswordCompleteContainer = () => {
     const history = useHistory()
     const openDialog = useDialog();
     const token = sessionStorage.getItem('session_pw')
+    const [onLoading, offLoading] = useLoading()
 
     if(token === null){
         openDialog('잘못된 접근입니다.');
@@ -37,6 +39,8 @@ const FindPasswordCompleteContainer = () => {
     const [submit, setSubmit] = useState(false)
 
     const onClickSignUp = useCallback(async() => {
+        onLoading('reviewDelete')
+
         const resetPW = await requestPutRePassword(token, password)
 
         if(resetPW.msg === "success"){
@@ -45,6 +49,9 @@ const FindPasswordCompleteContainer = () => {
         } else {
             openDialog(resetPW.msg, "")
         }
+
+        offLoading('reviewDelete')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token, password, history, openDialog])
 
     useEffect(() => {

@@ -11,6 +11,7 @@ import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import useModal from '../../../hooks/useModal';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import { requestPostExtension } from '../../../api/extension';
@@ -99,6 +100,7 @@ const UseExtendContainer = ({ match, location }) => {
     const [checkPhone, setCheckPhone] = useState(false);
     const phoneRef = useRef(null);
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading()
 
     const onClickExtend = useCallback(
         (ext, term) => {
@@ -109,6 +111,8 @@ const UseExtendContainer = ({ match, location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
+        onLoading('getUseDetail')
+
         const resOrder = await requestGetDetailUseRental(rental_id);
         
         if (resOrder.msg === 'success') {
@@ -117,6 +121,8 @@ const UseExtendContainer = ({ match, location }) => {
         } else {
             openDialog(resOrder.msg);
         }
+
+        offLoading('getUseDetail')
     }, [rental_id, openDialog]);
 
     useEffect(() => {
@@ -129,6 +135,8 @@ const UseExtendContainer = ({ match, location }) => {
             if (!(checkPhone && type !== -1 && checked))
                 return;
             else {
+                onLoading('extension')
+        
                 const {data} = await requestPostExtension(
                     token,
                     rental_id,
@@ -141,6 +149,8 @@ const UseExtendContainer = ({ match, location }) => {
                 if(data.msg === 'success') {
                     openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?rental_id=${rental_id}`), false, true)
                 } else openDialog(data.msg)
+
+                offLoading('extension')
             }
         },
         [order, checkPhone, paymentType, checked],
