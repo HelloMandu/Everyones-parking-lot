@@ -119,7 +119,6 @@ const ReviewDetailContainer = ({ location }) => {
     return (
         review !== undefined && (
             <div className={cx('container')}>
-                {console.log(review)}
                 <div
                     className={cx('card-img')}
                     style={{

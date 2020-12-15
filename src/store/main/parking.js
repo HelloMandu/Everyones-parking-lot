@@ -22,7 +22,6 @@ function *getParkingList(action){
     yield put(startLoading(GET_LIST));
     try{
         const {lat,lng,range,filter} = action.payload;
-        console.log(filter);
         const res = yield call(requestGetParkingList , lat,lng,range,filter);
         yield put({
             type: GET_LIST_SUCCESS,

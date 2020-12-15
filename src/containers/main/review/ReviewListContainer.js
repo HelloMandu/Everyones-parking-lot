@@ -49,7 +49,6 @@ const ReviewItem = ({ review }) => {
 
     return (
         <div className={cx('card')}>
-            {console.log(review)}
             <Link
                 to={Paths.main.review.detail + `?review_id=${review.review_id}`}
             >

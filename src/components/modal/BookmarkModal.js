@@ -79,7 +79,6 @@ const BookmarkModal = (props) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             try {
                 const res = await requestGetLikeParkingList(JWT_TOKEN);
-                console.log(res);
                 if(res.data.msg==='success'){
                     const {places} = res.data;
                     setBookmark(places);
