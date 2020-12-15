@@ -17,14 +17,9 @@ import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
 
-import {set_filters} from './store/main/filters';
-import { set_position, set_level,get_area } from './store/main/position';
-// import { requestGetUserInfo } from './api/user';
-
 const App = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-
 
     const judgementLogin = useCallback(() => {
         const token = localStorage.getItem('user_id');
@@ -32,14 +27,9 @@ const App = () => {
             dispatch(getUser(token));
         }
     }, [dispatch]);
-
-
-    useEffect(() => {
-        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
-    }, []);
-
     
     useEffect(() => {
+        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
         judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

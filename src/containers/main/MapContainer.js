@@ -24,11 +24,11 @@ import ZOOMIN from '../../static/asset/svg/main/plus.svg';
 import ZOOMOUT from '../../static/asset/svg/main/minus.svg';
 import FILTER from '../../static/asset/svg/main/filter.svg';
 import POSITION from '../../static/asset/svg/main/location.svg';
-import TIME from '../../static/asset/svg/main/time.svg';
+// import TIME from '../../static/asset/svg/main/time.svg';
 import BOOKMARK from '../../static/asset/svg/main/like.svg';
 
 //marker
-import PARKING_MARKER from '../../static/asset/svg/main/marker2.svg';
+// import PARKING_MARKER from '../../static/asset/svg/main/marker2.svg';
 import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
 import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 
@@ -50,7 +50,7 @@ import {set_filters} from '../../store/main/filters';
 //api
 
 import { getCoordinates } from '../../api/address';
-import {requsetGetSampleDate,requestGetParkingList,requsetGetAreaInfo} from '../../api/place';
+// import { requsetGetSampleDate, requestGetParkingList, requsetGetAreaInfo } from '../../api/place';
 //hooks
 import useLoading from '../../hooks/useLoading';
 
@@ -221,7 +221,7 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-        const markdata = parking.slice(0,1000).filter(
+        const markdata = parking.filter(
             (item) => item.addr.indexOf(area) !== -1,
         );
         // 주차장 마커 생성
@@ -309,78 +309,82 @@ const MapContainer = ({ modal }) => {
  
     useEffect(() => {
         const storage_position = JSON.parse(localStorage.getItem('position'));
-        if(storage_position){
-            position_ref.current=storage_position;
-            const {lat,lng} = position_ref.current; 
-            dispatch(get_area({lat,lng}));
+        if (storage_position) {
+            position_ref.current = storage_position;
+            const { lat, lng } = position_ref.current;
+            dispatch(get_area({ lat, lng }));
+        } else {
+            const init_position = {
+                lat: 35.8360328674316,
+                lng: 128.5743408203125,
+            };
+            position_ref.current = init_position;
+            const { lat, lng } = init_position;
+            localStorage.setItem('position', JSON.stringify(init_position));
+            dispatch(get_area({ lat, lng }));
         }
-        else{
-            const init_position={
-                lat : 35.8360328674316,
-                lng : 128.5743408203125,
-            }
-            position_ref.current=init_position;
-            const {lat,lng} = init_position;
-            localStorage.setItem('position',JSON.stringify(init_position));
-            dispatch(get_area({lat,lng}));
-        }
-     
-    }, []);
+    }, [dispatch]);
 
-    useEffect(()=>{
+    useEffect(() => {
         const storage_filter = JSON.parse(localStorage.getItem('filter_data'));
-        if(storage_filter){
+        if (storage_filter) {
             const {parking_town,underground_parking,ground_parking,stated_parking} = storage_filter
             dispatch(set_filters({type:'parking_town', value:parking_town}));
             dispatch(set_filters({type:'underground_parking', value:underground_parking}));
             dispatch(set_filters({type:'ground_parking', value:ground_parking}));
             dispatch(set_filters({type:'stated_parking', value:stated_parking}));
         }
-        else{
+        else {
             const init_filter = {
                 parking_town: true,
                 underground_parking: true,
                 ground_parking: true,
                 stated_parking: true,
-            }
-            localStorage.setItem('filter_data',JSON.stringify(init_filter));
+            };
+            localStorage.setItem('filter_data', JSON.stringify(init_filter));
         }
-    },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    useEffect(()=>{
-       mapRender();
-    },[])
+    useEffect(() => {
+        mapRender();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    useEffect(()=>{
-        const {lat,lng} = position_ref.current; 
-        let filter_arr =[];
-        if(parking_town){
+    useEffect(() => {
+        const { lat, lng } = position_ref.current;
+        let filter_arr = [];
+        if (parking_town) {
             filter_arr.push(1);
         }
-        if(underground_parking){
+        if (underground_parking) {
             filter_arr.push(2);
         }
-        if(ground_parking){
+        if (ground_parking) {
             filter_arr.push(3);
         }
-        if(stated_parking){
+        if (stated_parking) {
             filter_arr.push(4);
         }
-        dispatch(get_list({lat,lng,range :3000,filter:filter_arr} ));
-    },[parking_town,underground_parking,ground_parking,stated_parking])
+        dispatch(get_list({ lat, lng, range: 3000, filter: filter_arr }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parking_town, underground_parking, ground_parking, stated_parking]);
 
-    useEffect(()=>{
+    useEffect(() => {
         createParkingMarker();
-    },[parking,area,position])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parking, area, position]);
 
     useEffect(() => {
         if (address) createArriveMarker();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address, arrive]);
 
     useEffect(() => {
         if (position.lat !== 0 && position.lng !== 0) {
             setCoordinates(position.lat, position.lng);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [position]);
 
     useEffect(() => {

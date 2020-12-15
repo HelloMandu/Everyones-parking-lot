@@ -1,6 +1,6 @@
 import React from 'react';
-import {useSelector} from 'react-redux'; 
-import { ButtonBase} from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { ButtonBase } from '@material-ui/core';
 import styles from './AddressList.module.scss';
 
 import address_icon from '../../static/asset/svg/main/address.svg';
@@ -34,7 +34,7 @@ const AddressItem = ({ jibunAddr, roadAddr, distance, onClick }) => {
 };
 
 const BookmarkItem = ({notification_id,place, onClick }) => {
-    const {addr,addr_detail,place_name,lat,lng} = place;
+    const { addr, place_name, lat, lng } = place;
     const { position } = useSelector(
         (state) => state.position,
     ); //마지막 좌표 및 레벨
@@ -44,11 +44,6 @@ const BookmarkItem = ({notification_id,place, onClick }) => {
         position.lat,
         position.lng,
     );
-    console.log(lat);
-    console.log(lng);
-    console.log(position.lat);
-    console.log(position.lng);
-    console.log(distance);
     return (
         <ButtonBase className={styles['address-item']} onClick={onClick}>
             <div className={styles['icon']}>
@@ -67,10 +62,10 @@ const BookmarkItem = ({notification_id,place, onClick }) => {
     );
 };
 
-export default ({addr_list,onClick,type=1})=>{
-    let list =null;
-    if(type===1){
-        list = addr_list.map((addr,index)=>(
+const AddressList = ({ addr_list, onClick, type = 1 }) => {
+    let list = null;
+    if (type === 1) {
+        list = addr_list.map((addr, index) => (
             <AddressItem
                 key={index}
                 index={index}
@@ -80,26 +75,21 @@ export default ({addr_list,onClick,type=1})=>{
                 distance={addr.distance}
                 onClick={() => onClick(addr.jibunAddr)}
             />
-        ))
-    }
-    else if (type===2){
-        list = addr_list.map((item)=>(
+        ));
+    } else if (type === 2) {
+        list = addr_list.map((item) => (
             <BookmarkItem
                 key={item.id}
                 notification_id={item.notification_id}
                 place={item.place}
                 onClick={() => onClick(item.place_id)}
             />
-        ))
+        ));
+    } else if (type === 3) {
+        
     }
-    else if(type===3){
+    return <>{list}</>;
+};
 
-    }
-
-    return(
-        <>
-        {list}
-        </>
-    )
-}
+export default AddressList;
 
