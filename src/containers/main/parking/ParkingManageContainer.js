@@ -100,6 +100,7 @@ const ParkingManageContainer = () => {
         const getParkingList = async () => {
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
             allParkingList.current = places;
+            console.log(places);
             fetchParkingList();
         };
         getParkingList();

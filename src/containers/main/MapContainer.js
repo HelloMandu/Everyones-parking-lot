@@ -220,7 +220,7 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-        const markdata = parking.slice(0,1000).filter(
+        const markdata = parking.filter(
             (item) => item.addr.indexOf(area) !== -1,
         );
         // 주차장 마커 생성

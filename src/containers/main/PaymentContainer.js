@@ -261,6 +261,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 start_time,
                 end_time,
             );
+            console.log(data);
             if (data.msg === 'success') {
                 const { deposit, place, total_price: price } = data;
                 const { place_name: title, place_images } = place;
