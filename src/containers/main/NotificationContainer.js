@@ -7,6 +7,7 @@ import { useDialog } from '../../hooks/useDialog';
 import useScrollEnd from '../../hooks/useScrollEnd';
 import {
     requestGetNotifications,
+    requestPutNotificationAllRead,
     requestPutNotificationRead,
 } from '../../api/notification';
 import { getFormatDateDetailTime } from '../../lib/calculateDate';
@@ -15,6 +16,7 @@ import Ad from '../../static/asset/svg/notification/Ad';
 import Heart from '../../static/asset/svg/notification/Heart';
 
 import styles from './NotificationContainer.module.scss';
+import useToken from '../../hooks/useToken';
 
 const cx = cn.bind(styles);
 
@@ -34,25 +36,25 @@ const NotificationItem = ({ type, description, date, read }) => {
 
 const NotificationContainer = () => {
     const allnotifications = useRef([]);
+    const JWT_TOKEN = useToken();
     const dataLength = useRef(0);
     const [notifications, setNotifications] = useState([]);
     const openDialog = useDialog();
     const history = useHistory();
 
-    const handleReadNotification = useCallback(
-        async (id) => {
-            const { data } = await requestPutNotificationRead(id);
-            if (data.msg === 'success') {
-                const newNotifications = notifications.map((noti) =>
-                    noti.notification_id === id
-                        ? { ...noti, read_at: new Date() }
-                        : noti,
-                );
-                setNotifications(newNotifications);
-            }
-        },
-        [notifications],
-    );
+    const handleReadNotification = useCallback(async (id) => {
+        const { data } = await requestPutNotificationRead(JWT_TOKEN, id);
+        if (data.msg === 'success') {
+            const newNotifications = notifications.map((noti) =>
+                noti.notification_id === id
+                    ? { ...noti, read_at: new Date() }
+                    : noti,
+            );
+            setNotifications(newNotifications);
+        }
+    },
+    [JWT_TOKEN, notifications]);
+
     const fetchNotificationList = useCallback(() => {
         const LIMIT = 10;
         const allLength = allnotifications.current.length;
@@ -64,31 +66,28 @@ const NotificationContainer = () => {
         setNotifications((notification) => notification.concat(fetchData));
         dataLength.current += LIMIT;
     }, []);
+
     const getNotification = useCallback(async () => {
-        const { data } = await requestGetNotifications();
+        const { data } = await requestGetNotifications(JWT_TOKEN);
         if (data.msg === 'success') {
             allnotifications.current = data.notifications;
             fetchNotificationList();
         } else {
-            openDialog('알림정보를 가져올 수 없습니다', '', () =>
+            openDialog('알림 정보를 가져올 수 없습니다', '', () =>
                 history.goBack(),
             );
         }
-    }, [fetchNotificationList, history, openDialog]);
+    }, [fetchNotificationList, history, openDialog, JWT_TOKEN]);
 
     const handleAllRead = useCallback(async () => {
-        await notifications.forEach(async (noti) => {
-            const { data } = await requestPutNotificationRead(
-                noti.notification_id,
+        const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
+        if (data.msg !== 'success') {
+            openDialog('통신 불량', '네트워크 상태를 확인하세요.', () =>
+                history.goBack(),
             );
-            if (data.msg !== 'success') {
-                openDialog('통신 불량', '네트워크 상태를 확인하세요.', () =>
-                    history.goBack(),
-                );
-            }
-        });
+        }
         await getNotification();
-    }, [getNotification, history, notifications, openDialog]);
+    }, [JWT_TOKEN, getNotification, history, openDialog]);
 
 
     const notiRef = useRef(null);
