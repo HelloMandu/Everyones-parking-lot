@@ -1,5 +1,5 @@
 /*global Kakao*/
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Backdrop, Fade, IconButton, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -34,28 +34,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Share = ({ open, onToggle, placeInfo }) => {
     const classes = useStyles();
-    const handleKakaoShare = useCallback(() => {
-        // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
-        if (!placeInfo) {
-            return;
-        }
-        const { place_name, place_id, place_images, place_comment } = placeInfo;
-        if (Kakao) {
-            Kakao.Link.createDefaultButton({
-                container: '#kakao-link-btn',
-                objectType: 'feed',
-                content: {
-                    title: `${place_name}`,
-                    description: `${place_comment}`,
-                    imageUrl: `${imageFormat(place_images[0])}`,
-                    link: {
-                        mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
-                        webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
-                    },
-                },
-            });
-        }
-    }, [placeInfo]);
     const handleTwitterShare = useCallback(() => {
         if (!placeInfo) {
             return;
@@ -92,13 +70,46 @@ const Share = ({ open, onToggle, placeInfo }) => {
             `https://share.naver.com/web/shareView.nhn?url=${API_SERVER}/detail?place_id=${place_id}"&title=${place_name}"`,
         );
     }, [placeInfo]);
-    const handleBandShare = (url, content) => {
+    const handleBandShare = () => {
         const { place_id, place_name } = placeInfo;
         window.open(
             `http://band.us/plugin/share?body=${place_name}&route=${API_SERVER}/detail?place_id=${place_id}`,
             'share',
         );
     };
+
+    useEffect(() => {
+        if (!placeInfo) {
+            console.log('failed');
+            return;
+        }
+        if (Kakao) {
+            if (!Kakao.isInitialized()) {
+                Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
+            }
+            const {
+                place_name,
+                place_id,
+                place_images,
+                place_comment,
+            } = placeInfo;
+            console.log(placeInfo);
+            console.log('created');
+            Kakao.Link.createDefaultButton({
+                container: '#kakao-link-btn',
+                objectType: 'feed',
+                content: {
+                    title: `${place_name}`,
+                    description: `${place_comment}`,
+                    imageUrl: `${imageFormat(place_images[0])}`,
+                    link: {
+                        mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
+                        webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
+                    },
+                },
+            });
+        }
+    }, [placeInfo]);
     return (
         <>
             <Modal
@@ -129,9 +140,8 @@ const Share = ({ open, onToggle, placeInfo }) => {
                                 <ul className={styles['share-list']}>
                                     <li className={styles['share-item']}>
                                         <IconButton
-                                            id="kakao-link-btn"
+                                            id={'kakao-link-btn'}
                                             className={styles['circle-btn']}
-                                            onClick={handleKakaoShare}
                                         >
                                             <img src={kakao} alt="alt" />
                                         </IconButton>
