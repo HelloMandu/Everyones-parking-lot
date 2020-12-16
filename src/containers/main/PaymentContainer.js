@@ -5,10 +5,9 @@ import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
 import useModal from '../../hooks/useModal';
-import useLoading from '../../hooks/useLoading';
 import { useDialog } from '../../hooks/useDialog';
 
-import { numberFormat } from '../../lib/formatter';
+import { imageFormat, numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
 import { requestPostRental } from '../../api/rental';
 
@@ -23,8 +22,10 @@ import CheckBox from '../../components/checkbox/CheckBox';
 import FixedButton from '../../components/button/FixedButton';
 import InputBox from '../../components/inputbox/InputBox';
 import ConfirmButton from '../../components/button/ConfirmButton';
+import ImageModal from '../../components/modal/ImageModal';
 
 import styles from './PaymentContainer.module.scss';
+import useToken from '../../hooks/useToken';
 
 const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
 
@@ -159,20 +160,29 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
+    const JWT_TOKEN = useToken();
     const { place_id, start_time, end_time } = query;
     const { url, params } = match;
     const history = useHistory();
     const openDialog = useDialog();
-    const [isOpenCouponModal, openCouponModal] = useModal(
+    const [isOpenCouponModal, handleCouponModal] = useModal(
         url,
         params.modal,
         `coupon${location.search}`,
     );
-    const [isOpenTypeModal, openTypeModal] = useModal(
+    const [isOpenTypeModal, handleTypeModal] = useModal(
         url,
         params.modal,
         `type${location.search}`,
     );
+
+    const [isOpenImageModal, handleImageModal] = useModal(
+        url,
+        params.modal,
+        `image_view${location.search}`,
+    );
+
+    const [parkingImages, setParkingImages] = useState([]);
 
     const [parkingInfo, setParkingInfo] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
@@ -227,7 +237,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
     }, [parkingInfo, selectedCoupon, usePoint]);
 
     const handlePayment = useCallback(async () => {
-        const JWT_TOKEN = localStorage.getItem('user_id');
         const { price, deposit } = parkingInfo;
         const { type, card_id } = paymentType;
         const { cp_id } = selectedCoupon;
@@ -251,23 +260,10 @@ const ParkingEnrollContainer = ({ location, match }) => {
         } else {
             openDialog('결제실패', msg);
         }
-    }, [
-        end_time,
-        history,
-        openDialog,
-        parkingInfo,
-        paymentType,
-        place_id,
-        selectedCoupon,
-        start_time,
-        usePoint,
-    ]);
+    }, [JWT_TOKEN, end_time, history, openDialog, parkingInfo, paymentType, place_id, selectedCoupon, start_time, usePoint]);
 
-    const [onLoading, offLoading] = useLoading();
-    useEffect(() => {
-        const getPaymentInfo = async (place_id, start_time, end_time) => {
-            onLoading('payment');
-            const JWT_TOKEN = localStorage.getItem('user_id');
+    const getPaymentInfo = useCallback(
+        async (place_id, start_time, end_time) => {
             const { data } = await requestGetPayInfo(
                 JWT_TOKEN,
                 place_id,
@@ -277,9 +273,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
             if (data.msg === 'success') {
                 const { deposit, place, total_price: price } = data;
                 const { place_name: title, place_images } = place;
-                const image = Array.isArray(place_images)
-                    ? place_images[0].split('\\')[1]
-                    : '';
+                const image = place_images[0];
+                setParkingImages(imageFormat(place_images));
                 setParkingInfo({
                     title,
                     image,
@@ -290,20 +285,21 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 });
                 setTotalPrice(price + deposit);
             } else {
-                openDialog('결제정보를 불러오는데 실패했습니다.', '', () =>
+                openDialog(data.msg, '', () =>
                     history.goBack(),
                 );
             }
-            offLoading('payment');
-        };
-        getPaymentInfo(place_id, start_time, end_time);
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        [JWT_TOKEN],
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
     return (
         <>
             <main className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
-                    <ParkingInfo parkingInfo={parkingInfo}></ParkingInfo>
+                    <ParkingInfo parkingInfo={parkingInfo} onClick={handleImageModal}></ParkingInfo>
                     <section className={styles['parking-payment-wrapper']}>
                         <h3 className={styles['title']}>{'대여자 연락처'}</h3>
                         <VerifyPhone
@@ -315,7 +311,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         <h3 className={styles['title']}>{'쿠폰 할인'}</h3>
                         <ButtonBase
                             className={styles['coupon']}
-                            onClick={openCouponModal}
+                            onClick={handleCouponModal}
                         >
                             {selectedCoupon.cp_subject}
                         </ButtonBase>
@@ -335,7 +331,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 <div className={styles['bar']}></div>
                 <PaymentType
                     paymentType={paymentType}
-                    openTypeModal={openTypeModal}
+                    openTypeModal={handleTypeModal}
                 />
                 <Price
                     totalPrice={totalPrice}
@@ -367,6 +363,12 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 match={match}
                 setPaymentType={setPaymentType}
             ></PaymentTypeModal>
+            <ImageModal
+                open={isOpenImageModal}
+                images={parkingImages}
+                title={parkingInfo.title}
+                handleClose={handleImageModal}
+            ></ImageModal>
         </>
     );
 };

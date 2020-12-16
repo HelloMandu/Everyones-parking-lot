@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 /* Library */
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading'
 
 import InputBox from '../../../components/inputbox/InputBox';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -22,22 +23,36 @@ const FindEmailContainer = () => {
     const history = useHistory();
     const openDialog = useDialog();
     const [name, onChangeName] = useInput('');
+    const nameRef = useRef()
     const phoneNumber = useRef();
-    const [isPhone, setIsPhone] = useState(false);
+    const [checkPhone, setCheckPhone] = useState(false);
+    const [onLoading, offLoading] = useLoading()
 
     const onClickSubmit = useCallback(async () => {
-        const userEmail = await requestPostFindId(
+        onLoading('findEmail')
+
+        const {data} = await requestPostFindId(
             name,
             phoneNumber.current.phoneNumber,
         );
 
-        if (userEmail.status === 200) {
-            sessionStorage.setItem('session_email', userEmail.data.email);
+        if (data.msg === 'success') {
+            sessionStorage.setItem('session_email', data.email);
             history.push(Paths.auth.find.email_complete);
         } else {
-            openDialog(userEmail.data.msg, '');
+            if(data.msg === '가입하지 않은 유저입니다.') {
+                onChangeName('')
+                openDialog(data.msg, '', () => nameRef.current.focus(), false, true)
+            } else openDialog(data.msg)
         }
-    }, [name, openDialog, history]);
+
+        offLoading('findEmail')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [name, history, openDialog, onChangeName]);
+
+    useEffect(() => {
+        nameRef.current.focus()
+    }, [])
 
     return (
         <>
@@ -49,14 +64,15 @@ const FindEmailContainer = () => {
                     value={name}
                     placeholder={'이름을 입력해주세요.'}
                     onChange={onChangeName}
+                    reference={nameRef}
                 />
 
                 <div className={cx('title')}>휴대폰 번호 인증</div>
-                <VerifyPhone setCheck={setIsPhone} ref={phoneNumber} />
+                <VerifyPhone setCheck={setCheckPhone} ref={phoneNumber} />
             </div>
             <FixedButton
                 button_name={'확인'}
-                disable={name === '' && !isPhone}
+                disable={!(name !== '' && checkPhone)}
                 onClick={onClickSubmit}
             />
         </>

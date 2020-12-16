@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken'
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetUseRental } from '../../../api/rental';
 
@@ -22,13 +23,18 @@ const UseListContainer = () => {
     const token = useToken()
     const [list, setList] = useState([]);
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading()
 
     const getUseList = useCallback(async () => {
+        onLoading('getUseList')
+
         const { data } = await requestGetUseRental(token);
 
         if (data.msg === 'success') setList(data.orders);
         else openDialog(data.msg);
-    }, [openDialog, token]);
+
+        offLoading('getUseList')
+    }, [offLoading, onLoading, openDialog, token]);
 
     useEffect(() => {
         if(token != null) getUseList();
@@ -40,7 +46,7 @@ const UseListContainer = () => {
         <div className={cx('container')}>
             {list.map((item) => (
                 <Link
-                    to={Paths.main.use.detail + `?id=${item.rental_id}`}
+                    to={Paths.main.use.detail + `?rental_id=${item.rental_id}`}
                     className={cx('list-item')}
                     key={item.rental_id}
                 >

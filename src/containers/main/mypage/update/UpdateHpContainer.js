@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 /* Library */
@@ -33,9 +33,6 @@ const UpdateHpContainer = () => {
     const phoneRef = useRef();
     const [phoneCheck, setPhoneCheck] = useState(false);
 
-    useEffect(() => {
-        console.log(phoneRef)
-    }, []);
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
@@ -43,7 +40,7 @@ const UpdateHpContainer = () => {
         const response = await requestPutRePhoneNumber(JWT_TOKEN, phoneRef.current.phoneNumber);
         if (response.msg === 'success') {
             reduxDispatch(updateUser('phone_number', phoneRef.current.phoneNumber));
-            openDialog("연락처변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("연락처변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }

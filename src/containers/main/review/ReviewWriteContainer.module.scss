@@ -11,13 +11,13 @@
 
         .date {
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 1.16rem;
             color: #777777;
         }
 
         .title {
             margin-bottom: 60px;
-            font-size: 24px;
+            font-size: 2rem;
             font-weight: bold;
             color: #222222;
         }
@@ -35,7 +35,7 @@
             }
 
             .rating-comment {
-                font-size: 12px;
+                font-size: 1rem;
                 color: #cccccc;
             }
             :global(.MuiRating-decimal) {

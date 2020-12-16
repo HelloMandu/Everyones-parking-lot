@@ -1,10 +1,9 @@
 import React from 'react';
 import { Skeleton } from '@material-ui/lab';
+import { ButtonBase } from '@material-ui/core';
 
 import { getFormatDateTime } from '../../lib/calculateDate';
-import { numberFormat } from '../../lib/formatter';
-
-import { Paths } from '../../paths';
+import { numberFormat, imageFormat } from '../../lib/formatter';
 
 import PleaseRead from './PleaseRead';
 
@@ -28,14 +27,14 @@ const infos = [
     },
 ];
 
-const ParkingInfo = ({ parkingInfo }) => {
+const ParkingInfo = ({ parkingInfo, onClick }) => {
     if (!parkingInfo) {
         return (
             <>
                 <Skeleton variant="rect" height={200} />
-                <Skeleton variant="text" height={50}/>
-                <Skeleton variant="text" height={50}/>
-                <Skeleton variant="text" height={50}/>
+                <Skeleton variant="text" height={50} />
+                <Skeleton variant="text" height={50} />
+                <Skeleton variant="text" height={50} />
             </>
         );
     }
@@ -47,11 +46,13 @@ const ParkingInfo = ({ parkingInfo }) => {
     infos[2].description = `${numberFormat(deposit)}원`;
     return (
         <article className={styles['parkinginfo']}>
-            <div
+            <ButtonBase
+                component="div"
                 className={styles['image']}
                 style={{
-                    backgroundImage: `url(${Paths.storage}${image})`,
+                    backgroundImage: `url(${imageFormat(image)})`,
                 }}
+                onClick={onClick}
             />
             <section className={styles['wrapper']}>
                 <h3 className={styles['title']}>{title}</h3>

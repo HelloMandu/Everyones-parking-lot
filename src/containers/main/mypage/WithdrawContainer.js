@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import classnames from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 /* Library */
 
 import FixedButton from '../../../components/button/FixedButton';
@@ -19,6 +20,9 @@ import { useDialog } from '../../../hooks/useDialog';
 import { Paths } from '../../../paths';
 /* Paths */
 
+import { deleteUser } from '../../../store/user';
+/* Store */
+
 import { requestDeleteUser } from '../../../api/user';
 /* API */
 
@@ -27,6 +31,7 @@ const cn = classnames.bind(styles);
 const WithdrawContainer = () => {
 
     const openDialog = useDialog();
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const [click, setClick] = useState(false);
@@ -37,11 +42,12 @@ const WithdrawContainer = () => {
         const response = await requestDeleteUser(JWT_TOKEN);
         if (response.msg === 'success') {
             localStorage.removeItem('user_id');
+            dispatch(deleteUser(JWT_TOKEN));
             openDialog("회원탈퇴가 완료되었습니다.", "", () => history.replace(Paths.main.index));
         } else {
             openDialog(response.msg, response.sub);
         }
-    }, [history, openDialog]);
+    }, [history, openDialog, dispatch]);
 
     return (
         <>

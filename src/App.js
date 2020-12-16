@@ -9,36 +9,34 @@ import ErrorPage from './pages/ErrorPage';
 
 import DialogContainer from './containers/assets/DialogContainer';
 import LoadingContainer from './containers/assets/LoadingContainer';
-import IntroContainer from './containers/main/IntroContainer'
+import IntroContainer from './containers/main/IntroContainer';
 
 import Header from './components/header/Header';
 
 import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
-// import { requestGetUserInfo } from './api/user';
 
 const App = () => {
     const location = useLocation();
-    useEffect(() => {
-        // Kakao.init('0815c7dd16d65edd7726166c40c5ce1f');
-    }, []);
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const judgementLogin = useCallback(() => {
-        const token = localStorage.getItem('user_id')
-
-        if(token) {
-            dispatch(getUser(token))
+        const token = localStorage.getItem('user_id');
+        if (token) {
+            dispatch(getUser(token));
         }
-        
-    }, [dispatch])
+    }, [dispatch]);
 
     useEffect(() => {
-        judgementLogin()
+        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
+        judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -126,8 +124,8 @@ const App = () => {
             return <Header title={HeaderTitle.main.event.detail} />;
         }
         //내 정보 수정
-        else if (pathname === Paths.main.mypage.index) {
-            return <Header title={HeaderTitle.main.mypage.index} />;
+        else if (pathname === Paths.main.mypage.myinfo) {
+            return <Header title={HeaderTitle.main.mypage.myinfo} />;
         }
         //이름 변경
         else if (pathname === Paths.main.mypage.update.name) {
@@ -145,7 +143,7 @@ const App = () => {
         else if (pathname === Paths.main.mypage.update.enrollment) {
             return <Header title={HeaderTitle.main.mypage.update.enrollment} />;
         }
-        //생년월일 변경 
+        //생년월일 변경
         else if (pathname === Paths.main.mypage.update.birthday) {
             return <Header title={HeaderTitle.main.mypage.update.birthday} />;
         }
@@ -165,7 +163,7 @@ const App = () => {
         else if (pathname === Paths.main.support.notice_detail) {
             return <Header title={HeaderTitle.main.support.notice_detail} />;
         }
-        //자주 묻는 질문 리스트 뷰 
+        //자주 묻는 질문 리스트 뷰
         else if (pathname === Paths.main.support.faq) {
             return <Header title={HeaderTitle.main.support.faq} />;
         }
@@ -173,7 +171,7 @@ const App = () => {
         else if (pathname === Paths.main.support.qna) {
             return <Header title={HeaderTitle.main.support.qna} />;
         }
-        //1:1문의 상세보기 
+        //1:1문의 상세보기
         else if (pathname === Paths.main.support.qna_detail) {
             return <Header title={HeaderTitle.main.support.qna_detail} />;
         }
@@ -183,10 +181,9 @@ const App = () => {
         }
     };
 
-    const visited = localStorage.getItem('SpaceStation_visited')
+    const visited = localStorage.getItem('SpaceStation_visited');
 
-    return (
-        visited ?
+    return visited ? (
         <div className="App">
             {renderHeader()}
             <Switch>
@@ -194,13 +191,12 @@ const App = () => {
                 <Route path={Paths.index} component={MainPage} />
                 <Route component={ErrorPage} />
             </Switch>
-            <DialogContainer/>
-            <LoadingContainer/>
+            <DialogContainer />
+            <LoadingContainer />
         </div>
-        :
+    ) : (
         <IntroContainer />
     );
 };
 
 export default App;
- 

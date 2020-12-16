@@ -40,7 +40,9 @@ const UpdateNameContainer = () => {
     const nameRef = useRef();
 
     useEffect(() => {
-        nameRef.current.focus();
+        if (nameRef.current) {
+            nameRef.current.focus();
+        }
     }, [])
 
     const onClickButton = useCallback(async () => {
@@ -49,7 +51,7 @@ const UpdateNameContainer = () => {
         const response = await requestPutReName(JWT_TOKEN, name);
         if (response.msg === 'success') {
             reduxDispatch(updateUser('name', name));
-            openDialog("이름변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("이름변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg);
         }

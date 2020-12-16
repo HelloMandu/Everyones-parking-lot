@@ -162,7 +162,7 @@ const UpdateCar = () => {
             car_image: parkingPicture.current.fileList[0],
         });
         if (response.msg === 'success') {
-            openDialog("차량정보변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("차량정보변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -176,7 +176,9 @@ const UpdateCar = () => {
         setCheckAll(carNum && carPicture);
     }, [carNum, carPicture]);
     useEffect(() => {
-        carRef.current.focus();
+        if (carRef.current) {
+            carRef.current.focus();
+        }
     }, []);
 
     return (

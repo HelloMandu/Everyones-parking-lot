@@ -7,21 +7,20 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
 import { ButtonBase, IconButton } from '@material-ui/core';
-
-import { Paths } from '../../../paths';
+import qs from 'qs';
 
 import {
     requestGetAddressInfo,
-    requestPostEnrollParking,
+    requestGetDetailParking,
 } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
-import { useDialog } from '../../../hooks/useDialog';
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
+import useModal from '../../../hooks/useModal';
 
+import ParkingPreviewModal from './ParkingPreviewModal';
 import InputBox from '../../../components/inputbox/InputBox';
 import FixedButton from '../../../components/button/FixedButton';
 
@@ -49,13 +48,13 @@ const typeList = [
     },
 ];
 
-const BasicInfo = forwardRef(({ setCheck }, ref) => {
+const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
     const [name, onChangeName, checkName] = useInput(
         '',
         (state) => state.length > 0,
     );
     const [type, onChangeType] = useInput('0');
-    const [address, setAddress] = useState('');
+    const [address, onChangeAddress] = useInput('');
     const [postNum, setPostNum] = useState();
     const [addressDetail, onChangeAddressDetail, checkAddressDetail] = useInput(
         '',
@@ -77,12 +76,12 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                     x: lng,
                     y: lat,
                 } = response.data.documents[0];
-                setAddress(address_name);
+                onChangeAddress(address_name);
                 setLat(lat);
                 setLng(lng);
             }
         },
-        [setAddress],
+        [onChangeAddress],
     );
 
     const onClickAddressSearch = useCallback(() => {
@@ -92,9 +91,9 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                     setPostNum(data.zonecode);
                     getAddressInfo(data.address);
                 },
-            }).open();
+            }).open({ q: address });
         });
-    }, [getAddressInfo]);
+    }, [address, getAddressInfo]);
 
     const typeSelectList = typeList.map(({ id, type }) => (
         <option className={styles['select-item']} key={id} value={id}>
@@ -118,6 +117,29 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
             checkName && address.length > 0 && checkAddressDetail && checkPrice,
         );
     }, [setCheck, checkName, address, checkAddressDetail, checkPrice]);
+    useEffect(() => {
+        if (parkingInfoInit) {
+            const {
+                addr,
+                addr_detail,
+                lat,
+                lng,
+                place_fee,
+                place_name,
+                place_type,
+                post_num,
+            } = parkingInfoInit;
+            onChangeName(place_name);
+            onChangeType(place_type);
+            onChangeAddress(addr);
+            setPostNum(post_num);
+            onChangeAddressDetail(addr_detail);
+            setLat(lat);
+            setLng(lng);
+            onChangePrice(place_fee.toString());
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit]);
 
     return (
         <section className={styles['parking-enroll-area']}>
@@ -143,6 +165,7 @@ const BasicInfo = forwardRef(({ setCheck }, ref) => {
                 value={address}
                 name={'address'}
                 placeholder={'주차장 주소를 입력해주세요'}
+                onChange={onChangeAddress}
             ></InputBox>
             <ButtonBase
                 className={styles['button']}
@@ -268,11 +291,11 @@ const OperatingTime = forwardRef((props, ref) => {
         }
         setMinuteList(newMinuteList);
     }, []);
-    useEffect(()=>{
+    useEffect(() => {
         setStartTimeFormat(
             `${startTime.day} ${startTime.hour}:${startTime.minute}`,
         );
-    }, [startTime])
+    }, [startTime]);
     useEffect(() => {
         setEndTimeFormat(`${endTime.day} ${endTime.hour}:${endTime.minute}`);
     }, [endTime]);
@@ -297,11 +320,17 @@ const OperatingTime = forwardRef((props, ref) => {
     );
 });
 
-const ExtraInfo = forwardRef((props, ref) => {
+const ExtraInfo = forwardRef(({ parkingInfoInit }, ref) => {
     const [extraInfo, onChangeExtraInfo] = useInput('');
     useImperativeHandle(ref, () => ({
         extraInfo,
     }));
+    useEffect(() => {
+        if (parkingInfoInit) {
+            onChangeExtraInfo(parkingInfoInit.place_comment);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [parkingInfoInit]);
     return (
         <section className={styles['parking-enroll-area']}>
             <h3 className={styles['title']}>추가정보</h3>
@@ -423,7 +452,14 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
     );
 });
 
-const ParkingEnrollContainer = () => {
+//TODO: place_id를 이용해 수정하기, 등록하기 구분
+const ParkingEnrollContainer = ({ location, match }) => {
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    const { place_id } = query;
+    const { url, params } = match;
+    const [parkingInfoInit, setParkingInfoInit] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
     const [checkBasicInfo, setCheckBasicInfo] = useState(false);
     const [checkParkingPicture, setCheckParkingPicture] = useState(false);
@@ -433,59 +469,101 @@ const ParkingEnrollContainer = () => {
     const extraInfo = useRef(null);
     const parkingPicture = useRef(null);
 
-    const openDialog = useDialog();
-    const history = useHistory();
+    const [isOpenPreview, openPreviewModal] = useModal(
+        url,
+        params.modal,
+        `preview${place_id ? `?place_id=${place_id}` : ``}`,
+    );
 
-    const onClickEnrollParking = useCallback(async () => {
-        if (checkAll) {
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestPostEnrollParking(JWT_TOKEN, {
-                addr: basicInfo.current.address,
-                addr_detail: basicInfo.current.addressDetail,
-                post_num: basicInfo.current.postNum,
-                place_type: basicInfo.current.type,
-                lat: basicInfo.current.lat,
-                lng: basicInfo.current.lng,
-                place_name: basicInfo.current.name,
-                place_comment: extraInfo.current.extraInfo,
-                place_images: parkingPicture.current.fileList,
-                place_fee: basicInfo.current.price,
-                oper_start_time: operatingTime.current.startTimeFormat,
-                oper_end_time: operatingTime.current.endTimeFormat,
-            });
-            if (response.data.msg === 'success') {
-                openDialog('등록완료', '주차공간 등록을 완료했습니다');
-                history.replace(Paths.main.parking.manage);
-            } else {
-                openDialog('등록실패', '주차공간 등록에 실패했습니다');
-            }
+    const getDetailParking = useCallback(async () => {
+        if (!place_id) {
+            return;
         }
-    }, [checkAll, history, openDialog]);
+        try {
+            const { data } = await requestGetDetailParking(place_id);
+            const { msg, place } = data;
+            if (msg === 'success') {
+                const {
+                    addr,
+                    addr_detail,
+                    lat,
+                    lng,
+                    place_comment,
+                    place_fee,
+                    place_name,
+                    place_type,
+                    post_num,
+                } = place;
+                setParkingInfoInit({
+                    addr,
+                    addr_detail,
+                    lat,
+                    lng,
+                    place_comment,
+                    place_fee,
+                    place_name,
+                    place_type,
+                    post_num,
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, [place_id]);
 
-    useEffect(() => {
-        setCheckAll(checkBasicInfo && checkParkingPicture);
-    }, [checkBasicInfo, checkParkingPicture]);
+    useEffect(() => setCheckAll(checkBasicInfo && checkParkingPicture), [
+        checkBasicInfo,
+        checkParkingPicture,
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getDetailParking, []);
     return (
         <>
             <main className={styles['parking-enroll-container']}>
                 <BasicInfo
                     setCheck={setCheckBasicInfo}
+                    parkingInfoInit={parkingInfoInit}
                     ref={basicInfo}
                 ></BasicInfo>
                 <div className={styles['bar']} />
                 <OperatingTime ref={operatingTime}></OperatingTime>
                 <div className={styles['bar']} />
-                <ExtraInfo ref={extraInfo}></ExtraInfo>
+                <ExtraInfo
+                    ref={extraInfo}
+                    parkingInfoInit={parkingInfoInit}
+                ></ExtraInfo>
                 <ParkingPicture
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
                 ></ParkingPicture>
             </main>
-            <FixedButton
-                button_name={'작성완료'}
-                disable={!checkAll}
-                onClick={onClickEnrollParking}
-            ></FixedButton>
+            {!isOpenPreview && (
+                <FixedButton
+                    button_name={'작성완료'}
+                    disable={!checkAll}
+                    onClick={openPreviewModal}
+                ></FixedButton>
+            )}
+            <ParkingPreviewModal
+                open={isOpenPreview}
+                placeId={place_id}
+                parkingInfo={
+                    checkAll && {
+                        addr: basicInfo.current.address,
+                        addr_detail: basicInfo.current.addressDetail,
+                        post_num: basicInfo.current.postNum,
+                        place_type: basicInfo.current.type,
+                        lat: basicInfo.current.lat,
+                        lng: basicInfo.current.lng,
+                        place_name: basicInfo.current.name,
+                        place_comment: extraInfo.current.extraInfo,
+                        place_images: parkingPicture.current.fileList,
+                        place_fee: basicInfo.current.price,
+                        oper_start_time: operatingTime.current.startTimeFormat,
+                        oper_end_time: operatingTime.current.endTimeFormat,
+                    }
+                }
+            ></ParkingPreviewModal>
         </>
     );
 };
