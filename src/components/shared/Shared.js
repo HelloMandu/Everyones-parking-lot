@@ -1,5 +1,5 @@
 /*global Kakao*/
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Backdrop, Fade, IconButton, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -77,10 +77,8 @@ const Share = ({ open, onToggle, placeInfo }) => {
             'share',
         );
     };
-
-    useEffect(() => {
+    const kakaoShare = useCallback(() => {
         if (!placeInfo) {
-            console.log('failed');
             return;
         }
         if (Kakao) {
@@ -93,10 +91,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
                 place_images,
                 place_comment,
             } = placeInfo;
-            console.log(placeInfo);
-            console.log('created');
-            Kakao.Link.createDefaultButton({
-                container: '#kakao-link-btn',
+            Kakao.Link.sendDefault({
                 objectType: 'feed',
                 content: {
                     title: `${place_name}`,
@@ -110,6 +105,7 @@ const Share = ({ open, onToggle, placeInfo }) => {
             });
         }
     }, [placeInfo]);
+
     return (
         <>
             <Modal
@@ -138,10 +134,12 @@ const Share = ({ open, onToggle, placeInfo }) => {
                             </div>
                             <div className={styles['share-content']}>
                                 <ul className={styles['share-list']}>
-                                    <li className={styles['share-item']}>
+                                    <li
+                                        className={styles['share-item']}
+                                    >
                                         <IconButton
-                                            id={'kakao-link-btn'}
                                             className={styles['circle-btn']}
+                                            onClick={kakaoShare}
                                         >
                                             <img src={kakao} alt="alt" />
                                         </IconButton>
