@@ -17,7 +17,7 @@ import Camera from '../../../static/asset/svg/Camera';
 
 import { deleteUser } from '../../../store/user';
 import { getFormatDateString } from '../../../lib/calculateDate';
-import { imageFormat, stringToTel } from '../../../lib/formatter';
+import { DBImageFormat, stringToTel } from '../../../lib/formatter';
 /* Lib */
 
 import useToken from '../../../hooks/useToken';
@@ -67,15 +67,10 @@ const FileItem = ({ file, image }) => {
                     className={styles['img-item']}
                     style={{ backgroundImage: `url(${imgFile})` }}
                 />
-            ) : image ? (
-                <div
-                    className={styles['img-item']}
-                    style={{ backgroundImage: `url(${imageFormat(image)})` }}
-                />
             ) : (
                 <div
                     className={styles['img-item']}
-                    style={{ backgroundImage: `url(${image})` }}
+                    style={{ backgroundImage: `url(${DBImageFormat(image)})` }}
                 />
             )}
         </>
@@ -296,7 +291,7 @@ const MyPageContainer = ({ match }) => {
                     <ImageModal
                         open={isOpenProfile}
                         title={'프로필 이미지'}
-                        images={imageFormat(getUserInfo.profile_image)}
+                        images={DBImageFormat(getUserInfo.profile_image)}
                         handleClose={handleOpenProfile}
                     ></ImageModal>
                 </>

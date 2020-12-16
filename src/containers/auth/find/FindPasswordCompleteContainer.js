@@ -38,21 +38,21 @@ const FindPasswordCompleteContainer = () => {
     const [passwordCheck, onChangePasswordCheck] = useInput('');
     const [submit, setSubmit] = useState(false)
 
-    const onClickSignUp = useCallback(async() => {
-        onLoading('reviewDelete')
+    const onClickSignUp = useCallback(async () => {
+        onLoading('reviewDelete');
 
-        const resetPW = await requestPutRePassword(token, password)
+        const resetPW = await requestPutRePassword(token, '', password); // prev_password 빈칸 채워야 함
 
-        if(resetPW.msg === "success"){
-            sessionStorage.removeItem('session_pw')
-            history.push(Paths.auth.signin)
+        if (resetPW.msg === 'success') {
+            sessionStorage.removeItem('session_pw');
+            history.push(Paths.auth.signin);
         } else {
-            openDialog(resetPW.msg, "")
+            openDialog(resetPW.msg, '');
         }
 
-        offLoading('reviewDelete')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, password, history, openDialog])
+        offLoading('reviewDelete');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token, password, history, openDialog]);
 
     useEffect(() => {
         if(password !== '' && passwordCheck !== '' && password === passwordCheck) setSubmit(true)

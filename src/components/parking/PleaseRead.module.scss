@@ -1,8 +1,8 @@
 .information {
     margin-top: 17px;
-    .title{
+    .title {
         margin-bottom: 8px;
-        svg{
+        svg {
             display: inline-block;
             vertical-align: middle;
         }
@@ -15,8 +15,9 @@
             color: #777777;
         }
     }
-    .description{
-        color: #CCCCCC;
+    .description {
+        color: #cccccc;
         font-size: 11px;
+        line-height: 1.5;
     }
 }

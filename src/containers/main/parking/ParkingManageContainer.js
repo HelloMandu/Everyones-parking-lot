@@ -99,6 +99,8 @@ const ParkingManageContainer = () => {
     useEffect(() => {
         const getParkingList = async () => {
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
+            console.log(places[7139]);
+            console.log(places[0]);
             allParkingList.current = places;
             fetchParkingList();
         };

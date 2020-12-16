@@ -8,19 +8,21 @@ html {
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 20;
+        }
+        .parking-img {
+            max-width: $max-width;
+            background-color: #dbdbdb;
+            width: 100%;
+            min-height: 260px;
+            padding-top: 70%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
     }
 }
-.parking-img {
-    max-width: $max-width;
-    background-color: #dbdbdb;
-    width: 100%;
-    min-height: 260px;
-    padding-top: 70%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
+
 .wrapper {
     width: 100%;
     margin: 0 auto;
