@@ -5,6 +5,7 @@ import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading'
 
 import {
     requestDeleteReview,
@@ -40,8 +41,11 @@ const ReviewDetailContainer = ({ location }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const user = useSelector((state) => state.user);
+    const [onLoading, offLoading] = useLoading()
 
     const onClickSubmit = useCallback(async () => {
+        onLoading('writeComment')
+
         const token = localStorage.getItem('user_id');
         const { data } = await requestPostWriteComment(
             token,
@@ -54,9 +58,14 @@ const ReviewDetailContainer = ({ location }) => {
         } else {
             openDialog('댓글 작성을 실패했습니다.');
         }
+
+        offLoading('writeComment')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comment, commentList, review_id, openDialog]);
 
     const getReview = useCallback(async () => {
+        onLoading('getReview')
+
         const { data } = await requestGetDetailReview(review_id);
         const { msg, review, comments } = data;
         if (msg === 'success') {
@@ -71,6 +80,9 @@ const ReviewDetailContainer = ({ location }) => {
                 true,
             );
         }
+
+        offLoading('getReview')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, review_id, openDialog]);
 
     useEffect(() => {
@@ -79,6 +91,8 @@ const ReviewDetailContainer = ({ location }) => {
     }, []);
 
     const reviewDelete = useCallback(() => {
+        onLoading('deletComment')
+
         const token = localStorage.getItem('user_id');
         openDialog(
             '리뷰를 삭제하시겠습니까 ?',
@@ -97,12 +111,22 @@ const ReviewDetailContainer = ({ location }) => {
             },
             true,
         );
+
+        offLoading('deletComment')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
     return (
         review !== undefined && (
             <div className={cx('container')}>
-                <img src={imageFormat(review.place.place_images[0])} alt="" />
+                <div
+                    className={cx('card-img')}
+                    style={{
+                        backgroundImage: `url('${imageFormat(
+                            review.place.place_images[0],
+                        )}')`,
+                    }}
+                />
                 <div className={cx('area')}>
                     <div className={cx('rental-comment')}>
                         대여시간
@@ -133,7 +157,7 @@ const ReviewDetailContainer = ({ location }) => {
                             <Link
                                 to={
                                     Paths.main.review.write +
-                                    `?id=${review.rental_id}`
+                                    `?rental_id=${review.rental_id}`
                                 }
                             >
                                 <ButtonBase>수정</ButtonBase>

@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
@@ -20,7 +21,10 @@ const cx = className.bind(styles);
 const ReviewItem = ({ review }) => {
     const history = useHistory();
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading();
     const reviewDelete = useCallback(() => {
+        onLoading('reviewDelete');
+
         const token = localStorage.getItem('user_id');
         openDialog(
             '리뷰를 삭제하시겠습니까 ?',
@@ -38,12 +42,24 @@ const ReviewItem = ({ review }) => {
             },
             true,
         );
+
+        offLoading('reviewDelete');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
     return (
         <div className={cx('card')}>
-            <Link to={Paths.main.review.detail + `?id=${review.review_id}`}>
-                <img src={imageFormat(review.place.place_images[0])} alt="" />
+            <Link
+                to={Paths.main.review.detail + `?review_id=${review.review_id}`}
+            >
+                <div
+                    className={cx('card-img')}
+                    style={{
+                        backgroundImage: `url('${imageFormat(
+                            review.place.place_images[0],
+                        )}')`,
+                    }}
+                />
                 <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
                     <Rating
@@ -61,7 +77,12 @@ const ReviewItem = ({ review }) => {
 
             <div className={cx('button-area')}>
                 <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
-                <Link to={Paths.main.review.write + `?id=${review.rental_id}`}>
+                <Link
+                    to={
+                        Paths.main.review.write +
+                        `?rental_id=${review.rental_id}`
+                    }
+                >
                     <ButtonBase>수정</ButtonBase>
                 </Link>
             </div>
@@ -72,11 +93,17 @@ const ReviewItem = ({ review }) => {
 const ReviewListContainer = () => {
     const token = useToken();
     const [list, setList] = useState([]);
+    const [onLoading, offLoading] = useLoading();
 
     const getReviewList = useCallback(async () => {
+        onLoading('getReviewList');
+
         const { data } = await requestGetReviewList(token);
 
         setList(data.reviews);
+
+        offLoading('getReviewList');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     useEffect(() => {

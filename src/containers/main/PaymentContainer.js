@@ -282,7 +282,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 });
                 setTotalPrice(price + deposit);
             } else {
-                openDialog('결제정보를 불러오는데 실패했습니다.', '', () =>
+                openDialog(data.msg, '', () =>
                     history.goBack(),
                 );
             }

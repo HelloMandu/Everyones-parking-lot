@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading'
 
 import InputBox from '../../../components/inputbox/InputBox';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -25,8 +26,11 @@ const FindEmailContainer = () => {
     const nameRef = useRef()
     const phoneNumber = useRef();
     const [checkPhone, setCheckPhone] = useState(false);
+    const [onLoading, offLoading] = useLoading()
 
     const onClickSubmit = useCallback(async () => {
+        onLoading('findEmail')
+
         const {data} = await requestPostFindId(
             name,
             phoneNumber.current.phoneNumber,
@@ -41,6 +45,9 @@ const FindEmailContainer = () => {
                 openDialog(data.msg, '', () => nameRef.current.focus(), false, true)
             } else openDialog(data.msg)
         }
+
+        offLoading('findEmail')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, history, openDialog, onChangeName]);
 
     useEffect(() => {

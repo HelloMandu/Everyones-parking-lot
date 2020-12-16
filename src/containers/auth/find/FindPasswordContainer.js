@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useLoading from '../../../hooks/useLoading'
 
 import InputBox from '../../../components/inputbox/InputBox';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -25,10 +26,13 @@ const FindPasswordContainer = () => {
     const [name, onChangeName] = useInput('');
     const phoneNumber = useRef()
     const [checkPhone, setCheckPhone] = useState(false);
+    const [onLoading, offLoading] = useLoading()
     
     const emailRef = useRef(null)
 
     const onClickSubmit = useCallback(async() => {
+        onLoading('findPassword')
+
         const {data} = await requestPostFindPassword(name, email, phoneNumber.current.phoneNumber)
 
         if(data.msg === 'success'){
@@ -41,6 +45,9 @@ const FindPasswordContainer = () => {
                 openDialog(data.msg, '', () => emailRef.current.focus(), false, true)
             } else openDialog(data.msg)
         }
+
+        offLoading('findPassword')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, email, history, openDialog, onChangeEmail, onChangeName]);
 
     useEffect(() => {

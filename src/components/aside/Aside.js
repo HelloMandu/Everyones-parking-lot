@@ -62,7 +62,7 @@ const Aside = ({ open, handleClose }) => {
                             </IconButton>
                         </div>
                         <ButtonBase className={styles['aside-profile']} onClick={
-                            () => !isEmpty(user) ? onClickLink(Paths.main.mypage.index) : onClickLink(Paths.auth.login)
+                            () => !isEmpty(user) ? onClickLink(Paths.main.mypage.myinfo) : onClickLink(Paths.auth.login)
                         }
                         >
                             <div className={styles['user-img']}>

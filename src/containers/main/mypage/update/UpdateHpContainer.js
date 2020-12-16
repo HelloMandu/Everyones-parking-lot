@@ -40,7 +40,7 @@ const UpdateHpContainer = () => {
         const response = await requestPutRePhoneNumber(JWT_TOKEN, phoneRef.current.phoneNumber);
         if (response.msg === 'success') {
             reduxDispatch(updateUser('phone_number', phoneRef.current.phoneNumber));
-            openDialog("연락처변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("연락처변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }

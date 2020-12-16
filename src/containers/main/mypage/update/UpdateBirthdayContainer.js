@@ -50,7 +50,7 @@ const UpdateBirthdayContiner = () => {
         const response = await requestPutReBirth(JWT_TOKEN, getBirth());
         if (response.msg === 'success') {
             reduxDispatch(updateUser('birth', getBirth()));
-            openDialog("생년월일변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("생년월일변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }

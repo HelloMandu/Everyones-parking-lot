@@ -11,6 +11,7 @@ import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import useModal from '../../../hooks/useModal';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading'
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import { requestPostExtension } from '../../../api/extension';
@@ -78,13 +79,13 @@ const UseExtendContainer = ({ match, location }) => {
         ignoreQueryPrefix: true,
     });
 
-    const { id } = query;
+    const { rental_id } = query;
     const history = useHistory()
 
     const [isOpenTypeModal, openTypeModal] = useModal(
         url,
         params.modal,
-        `type?id=${id}`,
+        `type?rental_id=${rental_id}`,
     );
 
     const [order, setOrder] = useState();
@@ -99,6 +100,7 @@ const UseExtendContainer = ({ match, location }) => {
     const [checkPhone, setCheckPhone] = useState(false);
     const phoneRef = useRef(null);
     const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading()
 
     const onClickExtend = useCallback(
         (ext, term) => {
@@ -109,7 +111,9 @@ const UseExtendContainer = ({ match, location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
-        const resOrder = await requestGetDetailUseRental(id);
+        onLoading('getUseDetail')
+
+        const resOrder = await requestGetDetailUseRental(rental_id);
         
         if (resOrder.msg === 'success') {
             setOrder(resOrder);
@@ -117,7 +121,9 @@ const UseExtendContainer = ({ match, location }) => {
         } else {
             openDialog(resOrder.msg);
         }
-    }, [id, openDialog]);
+
+        offLoading('getUseDetail')
+    }, [rental_id, openDialog]);
 
     useEffect(() => {
         if(token !== null) getUseDetail();
@@ -129,6 +135,8 @@ const UseExtendContainer = ({ match, location }) => {
             if (!(checkPhone && type !== -1 && checked))
                 return;
             else {
+                onLoading('extension')
+        
                 const {data} = await requestPostExtension(
                     token,
                     rental_id,
@@ -139,8 +147,10 @@ const UseExtendContainer = ({ match, location }) => {
                 );
 
                 if(data.msg === 'success') {
-                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?id=${rental_id}`), false, true)
+                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?rental_id=${rental_id}`), false, true)
                 } else openDialog(data.msg)
+
+                offLoading('extension')
             }
         },
         [order, checkPhone, paymentType, checked],
