@@ -13,9 +13,12 @@ import ArrowSmall from '../../../static/asset/svg/ArrowSmall';
 import styles from './MyPageContainer.module.scss';
 import Car from '../../../static/asset/svg/Car';
 import Camera from '../../../static/asset/svg/Camera';
+import default_image from '../../../static/asset/png/profile.png';
 /* StyleSheets */
 
-import { deleteUser } from '../../../store/user';
+import { deleteUser, updateUser } from '../../../store/user';
+/* Store */
+
 import { getFormatDateString } from '../../../lib/calculateDate';
 import { DBImageFormat, stringToTel } from '../../../lib/formatter';
 /* Lib */
@@ -32,13 +35,16 @@ import { Paths } from '../../../paths';
 /* Paths */
 
 const FileItem = ({ file, image }) => {
+
     const openDialog = useDialog();
+    const reduxDispatch = useDispatch();
     const [imgFile, setImgfile] = useState(null);
 
     const UpdateProfile = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPutProfile(JWT_TOKEN, file);
         if (response.msg === 'success') {
+            reduxDispatch(updateUser('profile_image', response.profile_image));
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64 = reader.result;
@@ -50,7 +56,7 @@ const FileItem = ({ file, image }) => {
                 reader.readAsDataURL(file);
             }
         }
-    }, [file, setImgfile]);
+    }, [file, setImgfile, reduxDispatch]);
 
     useEffect(() => {
         try {
@@ -68,11 +74,11 @@ const FileItem = ({ file, image }) => {
                     style={{ backgroundImage: `url(${imgFile})` }}
                 />
             ) : (
-                <div
-                    className={styles['img-item']}
-                    style={{ backgroundImage: `url(${DBImageFormat(image)})` }}
-                />
-            )}
+                    <div
+                        className={styles['img-item']}
+                        style={{ backgroundImage: `url(${DBImageFormat(image, default_image)})` }}
+                    />
+                )}
         </>
     );
 };
@@ -95,12 +101,14 @@ const ProfileImg = ({ image, onClick }) => {
     }, []);
 
     return (
-        <ButtonBase
-            component="div"
-            className={styles['img-wrap']}
-            onClick={onClick}
-        >
-            <FileItem file={imgFile[0]} image={sliceImage} />
+        <div className={styles['add-wrap']}>
+            <ButtonBase
+                component="div"
+                className={styles['img-wrap']}
+                onClick={onClick}
+            >
+                <FileItem file={imgFile[0]} image={sliceImage} />
+            </ButtonBase>
             <ButtonBase
                 component="div"
                 className={styles['camera']}
@@ -117,7 +125,7 @@ const ProfileImg = ({ image, onClick }) => {
                 />
                 <Camera />
             </ButtonBase>
-        </ButtonBase>
+        </div>
     );
 };
 
@@ -291,7 +299,7 @@ const MyPageContainer = ({ match }) => {
                     <ImageModal
                         open={isOpenProfile}
                         title={'프로필 이미지'}
-                        images={DBImageFormat(getUserInfo.profile_image)}
+                        images={DBImageFormat(getUserInfo.profile_image, default_image)}
                         handleClose={handleOpenProfile}
                     ></ImageModal>
                 </>

@@ -49,7 +49,7 @@ const UpdatePasswordContainer = () => {
         const response = await requestPutRePassword(JWT_TOKEN, curPassword, newPassword);
         if (response.msg === 'success') {
             reduxDispatch(updateUser('password', newPassword));
-            openDialog("비밀번호변경 완료", "", () => history.replace(Paths.main.mypage.index));
+            openDialog("비밀번호변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -83,7 +83,7 @@ const UpdatePasswordContainer = () => {
     }, [CheckPassword])
 
     useEffect(() => {
-        if(passwordRef.current){
+        if (passwordRef.current) {
             passwordRef.current.focus();
         }
     }, []);
