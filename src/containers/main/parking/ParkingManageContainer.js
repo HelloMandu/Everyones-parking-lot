@@ -4,7 +4,9 @@ import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
+import useToken from '../../../hooks/useToken';
 import { requestGetMyParkingList } from '../../../api/place';
+import { imageFormat, numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
@@ -47,11 +49,11 @@ const Image = ({ src, threshold = 0.5 }) => {
 const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     return (
         <>
-            <Image src={`${Paths.storage}${image}`} threshold={0.3}></Image>
+            <Image src={`${imageFormat(image)}`} threshold={0.3}></Image>
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <span className={cx('status', { status })}>
-                        {status === 0 ? '대여중' : '대여종료'}
+                        {status !== 0 ? '대여중' : '대여종료'}
                     </span>
                     <h2 className={styles['title']}>{title}</h2>
                 </div>
@@ -65,7 +67,9 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
                     </div>
                     <div className={styles['per-price']}>
                         <div className={styles['per']}>30분당</div>
-                        <div className={styles['price']}>{price}원</div>
+                        <div className={styles['price']}>
+                            {numberFormat(price)}원
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,6 +79,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
 
 //TODO: 주차공간 클릭시 상세보기 페이지가 나오며, 수정하기 버튼생성
 const ParkingManageContainer = () => {
+    const JWT_TOKEN = useToken();
     const history = useHistory();
     const allParkingList = useRef([]);
     const dataLength = useRef(0);
@@ -93,14 +98,13 @@ const ParkingManageContainer = () => {
     useScrollEnd(fetchParkingList);
     useEffect(() => {
         const getParkingList = async () => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
             allParkingList.current = places;
             fetchParkingList();
         };
         getParkingList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [JWT_TOKEN]);
     return (
         <main className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>
@@ -113,12 +117,12 @@ const ParkingManageContainer = () => {
                     {parkingList.map(
                         ({
                             place_id,
-                            place_status,
                             place_images,
                             place_name,
                             oper_start_time,
                             oper_end_time,
                             place_fee,
+                            rental_orders
                         }) => (
                             <ButtonBase
                                 className={styles['parking-item']}
@@ -132,7 +136,7 @@ const ParkingManageContainer = () => {
                                 }
                             >
                                 <ParkingItem
-                                    status={place_status}
+                                    status={rental_orders.length}
                                     image={
                                         Array.isArray(place_images)
                                             ? place_images[0].replace(

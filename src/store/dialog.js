@@ -5,11 +5,12 @@ const CLOSE = 'dialog/CLOSE';
 
 export const dialogOpen = createAction(
     OPEN,
-    (confirm, title, text, handleClick) => ({
+    (confirm, title, text, handleClick, handleBackDrop) => ({
         confirm,
         title,
         text,
         handleClick,
+        handleBackDrop
     }),
 );
 
@@ -20,19 +21,20 @@ const initialState = {
     confirm: false,
     title: '',
     text: '',
-    handleClick: () => {},
+    handleBackDrop: false
 };
 
 const dialog = handleActions(
     {
         [OPEN]: (state, action) => {
-            const { confirm, title, text, handleClick } = action.payload;
+            const { confirm, title, text, handleClick, handleBackDrop } = action.payload;
             return {
                 ...state,
                 open: true,
                 confirm,
                 title,
                 text,
+                handleBackDrop,
                 handleClick,
             };
         },

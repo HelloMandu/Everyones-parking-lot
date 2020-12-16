@@ -1,12 +1,16 @@
 import React from 'react';
 
-const Select = () => {
+const Select = ({ open }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width="9.414"
             height="5.207"
             viewBox="0 0 9.414 5.207"
+            style={{
+                transition: 'transform .3s ease-in-out',
+                transform: 'rotate(' + (!open ? '180deg' : '0deg') + ')'
+            }}
         >
             <path
                 id="패스_168"

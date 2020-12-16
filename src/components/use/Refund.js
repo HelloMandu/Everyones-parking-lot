@@ -6,6 +6,7 @@ import { numberFormat } from '../../lib/formatter';
 import BasicButton from '../../components/button/BasicButton';
 
 import { useDialog } from '../../hooks/useDialog'
+import useLoading from '../../hooks/useLoading'
 
 import { requestPutCancelRental } from '../../api/rental'
 
@@ -38,13 +39,21 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
 
     const openDialog = useDialog()
     const history = useHistory()
+    const [onLoading, offLoading] = useLoading()
 
     const cancelRental = useCallback(async() => {
+        onLoading('cancelRental')
+
         const token = localStorage.getItem('user_id')
         const {data} = await requestPutCancelRental(token, rentalID)
 
-        openDialog(data.msg)
-        history.push(Paths.main.use.list)
+        if(data.msg === 'success'){
+            openDialog('환불되었습니다.', '', () => history.replace(Paths.main.use.list), false, true)
+        } else if(data.msg === '이미 대여 중인 주차공간입니다.') openDialog(data.msg)
+        else openDialog(data.msg, '', () => history.replace(Paths.main.index))
+
+        offLoading('cancelRental')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, rentalID])
 
     return (

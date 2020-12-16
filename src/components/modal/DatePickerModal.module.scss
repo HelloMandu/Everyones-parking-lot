@@ -6,15 +6,12 @@ html {
             min-height: 100vh;
             // z-index: $level2 !important;
         }
-        .dim {
-            // z-index: $level2;
-        }
     }
 }
 
 .container {
-    padding-top:76px;
-    padding-left:24px;
+    padding-top: 76px;
+    padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 0px;
     flex: '0 0 auto';
@@ -50,17 +47,16 @@ html {
             position: absolute;
             transition: all 0.3s ease-in-out;
             transform: translateY(-100%);
-            // z-index: -15;
             padding: 0 15px;
+            z-index: 0;
             .line {
                 width: 100%;
                 height: 100%;
-                background-color: #F7F8F9;
+                background-color: #f7f8f9;
                 border-radius: 10px;
             }
-          
         }
-  
+
         .txt-value {
             height: 64px;
             display: flex;
@@ -76,17 +72,18 @@ html {
                 font-size: 14px;
                 font-weight: bold;
                 color: #333;
+                svg {
+                    margin-left: 8px;
+                }
             }
         }
         &.open {
             height: 200px;
-            .select-line{
-                transform: translateY(-210%);
-                z-index: 0;
+            .select-line {
+                transform: translateY(-200%);
             }
-         
         }
-        &.end-box{
+        &.end-box {
             overflow: hidden;
             box-sizing: border-box;
         }
@@ -94,33 +91,36 @@ html {
 }
 html {
     body {
-        .swiper{
+        .swiper {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            &.open {
+                opacity: 1;
+            }
             display: flex;
             justify-content: space-between;
             .day-swiper {
                 max-height: 121px;
                 position: relative;
             }
-            .hour-swiper{
+            .hour-swiper {
                 max-height: 121px;
-    
             }
-            .minute-swiper{
+            .minute-swiper {
                 max-height: 121px;
             }
         }
-
     }
 }
 html {
     body {
         .swiper-slide {
             border-radius: 100px;
-            color: #6f6f6f;
             .date-item {
-                color:gray;
                 display: flex;
-                width: 100%;
+                justify-content: center;
+                align-items: center;
+                width: 100%; height: 100%;
                 letter-spacing: -0.5px;
                 font-size: 18px;
                 font-weight: bold;

@@ -1,91 +1,88 @@
-import React, { useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
-import { requestGetReviewList } from '../../../api/review';
+import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
+import useLoading from '../../../hooks/useLoading';
+
+import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
+import { imageFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
 
 import className from 'classnames/bind';
 import styles from './ReviewListContainer.module.scss';
-import Parking from '../../../static/asset/png/parking.png';
 import { ButtonBase } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
+import Notice from '../../../static/asset/svg/Notice';
 
 const cx = className.bind(styles);
 
-const reviewList = [
-    {
-        review_id: 1,
-        review_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다! 다음에도 다시 이용 할거 같아요!!',
-        review_rating: 5.0,
-        review_img: 'parking',
-        hit: 123,
-        deleted: 1,
-        created_at: '2020/01/20',
-        updated_at: '2020/01/20',
-        rental_id: 1,
-        user_id: 1,
-        place_id: 1,
-    },
-    {
-        review_id: 2,
-        review_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다! 다음에도 다시 이용 할거 같아요!!',
-        review_rating: 1.7,
-        review_img: 'reviewItem2',
-        hit: 123,
-        deleted: 2,
-        created_at: '2020/01/20',
-        updated_at: '2020/01/20',
-        rental_id: 2,
-        user_id: 2,
-        place_id: 2,
-    },
-    {
-        review_id: 3,
-        review_body:
-            '주차장이 꽤 넓어서 너무 좋았습니다! 다음에도 다시 이용 할거 같아요!!',
-        review_rating: 3.5,
-        review_img: 'reviewItem',
-        hit: 123,
-        deleted: 3,
-        created_at: '2020/01/20',
-        updated_at: '2020/02/10',
-        rental_id: 3,
-        user_id: 3,
-        place_id: 3,
-    },
-];
+const ReviewItem = ({ review }) => {
+    const history = useHistory();
+    const openDialog = useDialog();
+    const [onLoading, offLoading] = useLoading();
+    const reviewDelete = useCallback(() => {
+        onLoading('reviewDelete');
 
-const ReviewItem = ({
-    review_id,
-    review_body,
-    review_rating,
-    review_img,
-    created_at,
-    updated_at,
-    place_id,
-}) => {
+        const token = localStorage.getItem('user_id');
+        openDialog(
+            '리뷰를 삭제하시겠습니까 ?',
+            '',
+            async () => {
+                const { data } = await requestDeleteReview(
+                    token,
+                    review.review_id,
+                );
+
+                if (data.msg === 'success') {
+                    openDialog('리뷰가 삭제되었습니다.');
+                    history.push(Paths.main.index);
+                } else openDialog(data.msg);
+            },
+            true,
+        );
+
+        offLoading('reviewDelete');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [history, openDialog, review]);
+
     return (
         <div className={cx('card')}>
-            <Link to={Paths.main.review.detail + `?id=${review_id}`}>
-                <img src={`${Parking}`} alt={`${review_img}`} />
-                <div className={cx('title')}>{place_id}.title</div>
+            <Link
+                to={Paths.main.review.detail + `?review_id=${review.review_id}`}
+            >
+                <div
+                    className={cx('card-img')}
+                    style={{
+                        backgroundImage: `url('${imageFormat(
+                            review.place.place_images[0],
+                        )}')`,
+                    }}
+                />
+                <div className={cx('title')}>{review.place.place_name}</div>
                 <div className={cx('rating')}>
-                    <Rating defaultValue={review_rating}
-                        precision={0.5} readOnly />
+                    <Rating
+                        value={parseFloat(review.review_rating)}
+                        precision={0.5}
+                        readOnly
+                    />
                 </div>
                 <div className={cx('date')}>
-                    {updated_at ? updated_at : created_at}
+                    {review.updated_at ? review.updated_at : review.created_at}
                     <hr />
                 </div>
-                <div className={cx('body')}>{review_body}</div>
+                <div className={cx('body')}>{review.review_body}</div>
             </Link>
 
             <div className={cx('button-area')}>
-                <ButtonBase>삭제</ButtonBase>
-                <Link to={Paths.main.review.write + `?id=${review_id}`}>
+                <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
+                <Link
+                    to={
+                        Paths.main.review.write +
+                        `?rental_id=${review.rental_id}`
+                    }
+                >
                     <ButtonBase>수정</ButtonBase>
                 </Link>
             </div>
@@ -94,40 +91,41 @@ const ReviewItem = ({
 };
 
 const ReviewListContainer = () => {
-    const getReviewList = useCallback(async (token) => {
-        const {data} = await requestGetReviewList(token);
-        console.log(data);
-    }, []);
+    const token = useToken();
+    const [list, setList] = useState([]);
+    const [onLoading, offLoading] = useLoading();
+
+    const getReviewList = useCallback(async () => {
+        onLoading('getReviewList');
+
+        const { data } = await requestGetReviewList(token);
+
+        setList(data.reviews);
+
+        offLoading('getReviewList');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token]);
 
     useEffect(() => {
-        const token = localStorage.getItem('user_id');
-        getReviewList(token);
-    }, [getReviewList]);
+        if (token !== null) getReviewList();
 
-    return (
+        return;
+    }, [getReviewList, token]);
+
+    return list.length !== 0 ? (
         <div className={cx('container')}>
-            {reviewList.map(
-                ({
-                    review_id,
-                    review_body,
-                    review_rating,
-                    review_img,
-                    created_at,
-                    updated_at,
-                    place_id,
-                }) => (
-                    <ReviewItem
-                        key={review_id}
-                        review_id={review_id}
-                        review_body={review_body}
-                        review_rating={review_rating}
-                        review_img={review_img}
-                        created_at={created_at}
-                        updated_at={updated_at}
-                        place_id={place_id}
-                    />
-                ),
-            )}
+            {list.map((item) => (
+                <ReviewItem key={item.review_id} review={item} />
+            ))}
+        </div>
+    ) : (
+        <div className={styles['non-qna']}>
+            <div className={styles['non-container']}>
+                <Notice />
+                <div className={styles['explain']}>
+                    내가 작성한 리뷰가 없습니다.
+                </div>
+            </div>
         </div>
     );
 };

@@ -12,6 +12,9 @@ import styles from './QNAContainer.module.scss';
 import Notice from '../../../static/asset/svg/Notice';
 /* StyleSheets */
 
+import useToken from '../../../hooks/useToken';
+/* hooks */
+
 import { Paths } from '../../../paths';
 /* Paths */
 
@@ -61,10 +64,12 @@ const QNAItems = ({ QNAList }) => {
 
 const QNAContainer = () => {
 
-    const [QNAList, setQNSList] = useState([]);
     const history = useHistory();
     const openDialog = useDialog();
+    const TOKEN = useToken();
     const [onLoading, offLoading] = useLoading();
+
+    const [QNAList, setQNSList] = useState([]);
 
     const getQNAList = useCallback(async () => {
         onLoading('qna');
@@ -76,30 +81,31 @@ const QNAContainer = () => {
     }, []);
 
     useEffect(() => {
-        try {
-            getQNAList();
-        } catch (e) {
-            openDialog("1:1문의 오류", "", () => history.goBack());
+        if (TOKEN !== null) {
+            try {
+                getQNAList();
+            } catch (e) {
+                openDialog("1:1문의 오류", "", () => history.goBack());
+            }
         }
-    }, [getQNAList, openDialog, history]);
+    }, [getQNAList, openDialog, history, TOKEN]);
 
-    if (QNAList.length !== 0) {
-        return (
-            <>
-                <Header />
-                <QNAItems QNAList={QNAList} />
-            </>
-        )
-    }
     return (
         <>
-            <Header />
-            <div className={styles['non-qna']}>
-                <div className={styles['non-container']}>
-                    <Notice />
-                    <div className={styles['explain']}>등록된 1:1 문의가 없습니다.</div>
-                </div>
-            </div>
+            {TOKEN !== null &&
+                <>
+                    <Header />
+                    {QNAList.length !== 0
+                        ? <QNAItems QNAList={QNAList} />
+                        : <div className={styles['non-qna']}>
+                            <div className={styles['non-container']}>
+                                <Notice />
+                                <div className={styles['explain']}>등록된 1:1 문의가 없습니다.</div>
+                            </div>
+                        </div>
+                    }
+                </>
+            }
         </>
     );
 };

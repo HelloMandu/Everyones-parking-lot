@@ -1,5 +1,5 @@
-// const API_SERVER ='http://localhost:8080';
-const API_SERVER= 'https://intospace.kr';
+// export const API_SERVER ='http://localhost:8080';
+export const API_SERVER = 'https://intospace.kr';
 export const Paths = {
     index: '/',
     main: {
@@ -23,6 +23,7 @@ export const Paths = {
         mypage: {
             index: '/mypage',
             point: '/mypage/point',
+            myinfo: '/mypage/myinfo',
             update: {
                 index: '/mypage/update',
                 name: '/mypage/update/name',
@@ -55,7 +56,7 @@ export const Paths = {
             qna: '/support/qna',
             qna_detail: '/support/qna_detail',
             qna_write: '/support/qna_write',
-        }
+        },
     },
     auth: {
         index: '/auth',
@@ -72,8 +73,9 @@ export const Paths = {
             password_complete: '/auth/find/password_complete',
         },
     },
-    api: API_SERVER +'/api/',
-    storage: API_SERVER+'/uploads/',
+    Oauth: '/Oauth',
+    api: API_SERVER + '/api/',
+    storage: API_SERVER + '/uploads/',
 };
 
 export const HeaderTitle = {
@@ -96,8 +98,9 @@ export const HeaderTitle = {
             detail: '리뷰 상세보기',
         },
         mypage: {
-            index: '내 정보 수정',
+            index: '',
             point: '',
+            myinfo: '내 정보 수정',
             update: {
                 index: '',
                 name: '이름 변경',
@@ -131,7 +134,7 @@ export const HeaderTitle = {
             qna: '고객센터 ',
             qna_detail: '고객센터',
             qna_write: '1:1 문의 작성',
-        }
+        },
     },
     auth: {
         index: '',

@@ -1,3 +1,4 @@
+import { Paths } from '../paths';
 
 export function stringNumberToInt(strNumber) {
     // 구분자가 들어간 수치 데이터를 숫자로 변경
@@ -32,7 +33,8 @@ export function numberToKorean(number) {
     }
     for (let i = 0; i < resultArray.length; i++) {
         if (!resultArray[i]) continue;
-        resultString = String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
+        resultString =
+            String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
     }
     return resultString;
 }
@@ -42,7 +44,7 @@ const DIF_MINUTES = 60 * MS;
 const DIF_HOURS = 60 * DIF_MINUTES;
 const DIF_DAYS = 24 * DIF_HOURS;
 
-const crossBrowsingDate = date => {
+const crossBrowsingDate = (date) => {
     if (date) {
         let setDate = null;
         if (typeof date === 'string') {
@@ -53,11 +55,12 @@ const crossBrowsingDate = date => {
         return new Date(setDate);
     }
     return new Date(0);
-}
+};
 const dateFormatting = (date) => (date < 10 ? '0' + date : date); // 달력의 수치를 두 자리로 변환해주는 함수
 export const dateToYYYYMMDD = (date, join = '-') => {
     // Javascript Date 객체를 형식에 맞게 변환하여 표현함.
-    const absolute = crossBrowsingDate(date); // 만약에 Date 객체가 넘어오지 않을 것을 대비
+    // const absolute = crossBrowsingDate(date); // 만약에 Date 객체가 넘어오지 않을 것을 대비
+    const absolute = new Date(date);
     const monthFormatting = dateFormatting(absolute.getMonth() + 1); // 월을 두 자리로 변환
     const dayFormatting = dateFormatting(absolute.getDate()); // 일을 두 자리로 변환
     return (
@@ -120,28 +123,34 @@ export const secondsToMMSS = (second) => {
     }`;
 };
 
-export const stringToTel = str => str ? str.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/, '$1-$2-$3')
-    : '';
+export const stringToTel = (str) =>
+    str ? str.replace(
+              /(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,
+              '$1-$2-$3',
+          )
+        : '';
 // string을 전화번호 표현(구분자 '-' 추가)으로 변경
-export const telToString = tel => tel ? tel.replace('-', '') : '';
+export const telToString = (tel) => (tel ? tel.replace('-', '') : '');
 // 전화번호 표현을 string으로 변경
 
+export const DBImageFormat = (image, default_image) => {
+    if (!image) {
+        return default_image;
+    } else if (image.indexOf('http://') !== -1 || image.indexOf('https://') !== -1) {
+        return image;
+    } else {
+        return Paths.storage + image.replace('uploads/', '');
+    }
+}
 
-// export const DBImageFormat = (url) => {
-//     if (typeof url === 'string') {
-//         const URL_FORMAT = url
-//             .replace(/\\/g, '')
-//             .replace(/\[/g, '')
-//             .replace(/\]/g, '')
-//             .replace(/"/g, '')
-//             .replace(/ /g, '');
-//         const IMAGES = URL_FORMAT.split(',');
-//         return IMAGES.map(IMAGE => Paths.storage + IMAGE);
-//     }
-//     return '';
-// };
-
-// export const hideEmail = (email) => {
-//     const s = email.indexOf('@');
-//     return email.substr(0, s - 2) + '**';
-// };
+export const imageFormat = (image) => {
+    if(image){
+        if (Array.isArray(image)) {
+            const imgUrl = image.map(
+                (img) => `${Paths.storage}${img.replace('uploads/', '')}`,
+            );
+            return imgUrl;
+        }
+        return `${Paths.storage}${image.replace('uploads/', '')}`;
+    }
+};

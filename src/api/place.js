@@ -3,49 +3,12 @@ import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
 
-export const requsetGetSampleDate = () => {
-    // const url ='http://apis.map.kakao.com/download/web/data/chicken.json';
-    // const res = await axios.get(url);
-    // console.log(res);
-    const markerdata = [
-        {
-            title: '승학주차장',
-            distance: 300,
-            lat: 35.1158949746728,
-            lng: 128.966901860943,
-        },
-        {
-            title: '하남돼지집',
-            distance: 300,
-            lat: 37.620842424005616,
-            lng: 127.1583774403176,
-        },
-        {
-            title: '수유리우동',
-            distance: 300,
-            lat: 37.624915253753194,
-            lng: 127.15122688059974,
-        },
-        {
-            title: '맛닭꼬',
-            distance: 300,
-            lat: 37.62456273069659,
-            lng: 127.15211256646381,
-        },
-    ];
-
-    return markerdata;
-};
 
 export const requestGetParkingList = async (
     lat,
     lng,
     range,
-    min_price,
-    max_price,
-    start_date,
-    end_date,
-    filter,
+    filter
 ) => {
     // lat: 요청할 주차공간의 기준 위도(Float, 필수) => 세로
     // lng: 요청할 주차공간의 기준 경도(Float, 필수) => 가로
@@ -63,9 +26,9 @@ export const requestGetParkingList = async (
         lat,
         lng,
         range: 1000,
+        filter
     };
     const response = await axios.get(URL, { params });
-
     return response;
 };
 
@@ -76,7 +39,12 @@ export const requestGetLikeParkingList = async (JWT_TOKEN) => {
     // * 응답: places: [주차공간 Array…]
 
     const URL = Paths.api + 'place/like';
-    const response = await axios.get(URL);
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    };
+    const response = await axios.get(URL, config);
 
     return response;
 };
@@ -151,7 +119,6 @@ export const requestPostEnrollParking = async (
 
         *응답: success / failure
     */
-   console.log('post')
     const formData = makeFormData({
         addr,
         addr_detail,
@@ -220,7 +187,6 @@ export const requestPutModifyParking = async (
 
         *응답: success / failure
     */
-    console.log('put')
     const formData = makeFormData({
         addr,
         addr_detail,

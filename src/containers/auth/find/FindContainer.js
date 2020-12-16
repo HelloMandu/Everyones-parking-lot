@@ -8,19 +8,20 @@ import styles from './FindContainer.module.scss';
 
 import FindId from '../../../static/asset/svg/auth/FindId';
 import FindPassword from '../../../static/asset/svg/auth/FindPassword';
+import { ButtonBase } from '@material-ui/core';
 
 const cx = classNames.bind(styles);
 
 const FindItem = ({ title, content, content2, children }) => {
     return (
-        <div className={cx('area')}>
+        <ButtonBase component="div" className={cx('area')}>
             <div className={cx('wrapper')}>
                 <div className={cx('item-title')}>{title}</div>
                 <div className={cx('item-content')}>{content}</div>
                 <div className={cx('item-content')}>{content2}</div>
                 <div className={cx('item-icon')}>{children}</div>
             </div>
-        </div>
+        </ButtonBase>
     );
 };
 

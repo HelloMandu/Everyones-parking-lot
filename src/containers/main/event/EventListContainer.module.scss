@@ -1,0 +1,24 @@
+@import '../../../static/stylesheets/Root.scss';
+
+.container {
+    @include container($header);
+    .list {
+        padding: 24px;
+        .item {
+            display: block;
+            width: 100%;
+            .content {
+                width: 100%;
+                .banner-image {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.item {
+    & + & {
+        margin-top: 16px;
+    }
+}

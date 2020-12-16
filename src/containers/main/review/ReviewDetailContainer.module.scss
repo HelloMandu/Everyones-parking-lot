@@ -3,21 +3,25 @@
 .container {
     @include container($pd-top);
 
-    & > img {
+    .card-img {
         width: 100%;
-        vertical-align: bottom;
+        min-height: 120px;
+        padding-top: 35%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .area {
         padding: $padding;
 
         .rental-comment {
-            font-size: 14px;
+            font-size: 1.16rem;
             color: #777777;
             display: inline-block;
 
             .rental-date {
-                font-size: 14px;
+                font-size: 1.16rem;
                 font-weight: bold;
                 color: #777777;
                 margin-left: 10px;
@@ -25,8 +29,9 @@
         }
 
         .title {
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
+            margin-bottom: 8px;
 
             :global(.rating) {
                 float: right;
@@ -35,7 +40,7 @@
         }
 
         .date {
-            font-size: 12px;
+            font-size: 1rem;
             color: #777777;
 
             & > hr {
@@ -46,7 +51,7 @@
         }
 
         .body {
-            font-size: 14px;
+            font-size: 1.16rem;
             color: #333333;
             word-break: keep-all;
             margin-bottom: 40px;
@@ -75,7 +80,7 @@
             border-bottom: 1px solid #e9ebed;
 
             .comment-none {
-                font-size: 14px;
+                font-size: 1.16rem;
                 color: #cccccc;
                 text-align: center;
                 position: relative;
@@ -85,12 +90,13 @@
         }
 
         .comment-item {
-            height: 130px;
             margin-top: 26px;
             border-bottom: 1px solid #F0F0F0;
 
             & > img {
-                width: 28px;
+                width: 28px; height: 28px;
+                overflow: hidden;
+                border-radius: 50%;
                 display: inline-block;
                 margin-right: 8px;
             }
@@ -100,12 +106,12 @@
                 margin-bottom: 10px;
 
                 .user-id {
-                    font-size: 14px;
+                    font-size: 1.16rem;
                     color: #555555;
                 }
 
                 .date {
-                    font-size: 12px;
+                    font-size: 1rem;
                     color: #999999;
                 }
             }
@@ -113,7 +119,7 @@
             .comment-body{
                 margin-left: 36px;
                 margin-bottom: 24px;
-                font-size: 16px;
+                font-size: 1.33rem;
                 color: #222222;
                 word-break: keep-all;
             }
@@ -128,6 +134,10 @@
             margin-top: 16px;
             margin-right: 12px;
             vertical-align: bottom;
+            transition: border .15s ease-in-out;
+            &:focus {
+                border-color: #222;
+            }
         }
 
         & > button {
@@ -136,6 +146,13 @@
             background-color: #222222;
             color: white;
             border-radius: 2px;
+        }
+        .not-user {
+            font-size: 1.167rem;
+            font-weight: 500;
+            color: #777;
+            text-align: center;
+            margin-top: 40px;
         }
     }
 

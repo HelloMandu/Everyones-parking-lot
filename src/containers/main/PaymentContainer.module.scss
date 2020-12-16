@@ -2,10 +2,10 @@
 
 .parking-payment-container {
     @include container($pd-top);
-    margin-bottom: 140px;
     .parking-payment-area {
         padding: $padding-side;
     }
+    padding-bottom: 140px;
     .parking-payment-wrapper {
         position: relative;
         width: 100%;

@@ -20,7 +20,7 @@ export const getUser = createAction(GET_USER);
 export const updateUser = createAction(UPDATE_USER, (target, value) => ({
     [target]: value
 }));
-export const deleteUser = createAction(DELETE_USER);
+export const deleteUser = createAction(DELETE_USER, token => token);
 
 function* getUserSaga(action) {
     yield put(startLoading(GET_USER));
@@ -45,6 +45,7 @@ function* deleteUserSaga(action) {
     yield put(startLoading(DELETE_USER));
     try {
         const { payload: JWT_TOKEN } = action;
+        localStorage.removeItem('user_id');
         yield call(() => { }, JWT_TOKEN);
         yield put({
             type: DELETE_USER_SUCCESS,

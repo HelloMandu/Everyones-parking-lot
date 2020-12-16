@@ -17,6 +17,7 @@ const SupportContainer = () => {
 
     const location = useLocation();
     const history = useHistory();
+
     const [mode, setMode] = useState(null);
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -47,13 +48,13 @@ const SupportContainer = () => {
                 value={tabIndex}
                 onChange={(e, index) => {
                     if (index === 0) {
-                        history.replace(Paths.main.support.notice);
+                        history.push(Paths.main.support.notice);
                     }
                     else if (index === 1) {
-                        history.replace(Paths.main.support.faq + '?type=0');
+                        history.push(Paths.main.support.faq + '?type=0');
                     }
                     else if (index === 2) {
-                        history.replace(Paths.main.support.qna);
+                        history.push(Paths.main.support.qna);
                     }
                 }}
                 TabIndicatorProps={{

@@ -18,6 +18,7 @@ const RoadviewModal = (props) => {
 
     useEffect(() => {
         roadView();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
 
     const roadView = () => {

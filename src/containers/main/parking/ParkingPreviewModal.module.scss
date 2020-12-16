@@ -8,6 +8,7 @@ html{
             position: absolute;
             top:0;
             left:0;
+            z-index: 1;
         }
     }
 }
@@ -15,19 +16,16 @@ html{
     max-width: $max-width;
     background-color: #fff;
     width: 100%;
-    min-height: 260px;
+    padding-top: 70%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     margin: 0 auto;
-    img{
-        min-height: 260px;
-        width: 100%;
-        height: 100%;
-    }
 }
 .wrapper{
     width: 100%;
     margin: 0 auto;
     max-width:  $max-width;
-    // transform: translateX(-500px);
 }
 
 .container{
@@ -74,6 +72,17 @@ html{
             display: flex;
             justify-content: center;
             align-items: center;
+            :global(.MuiRating-root) {
+                margin-right: 10px;
+                :global(.MuiRating-decimal) {
+                    width: 24px;
+                    height: 24px;
+                    :global(.MuiSvgIcon-root) {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+            }
             .item-review{
                 font-size: 14px;
                 color:#999;
@@ -170,9 +179,6 @@ html{
               }
 
           }
-      }
-      .review-list{
-
       }
   }
 }

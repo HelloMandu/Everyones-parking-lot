@@ -3,11 +3,12 @@ import cn from 'classnames/bind';
 import { ButtonBase, IconButton } from '@material-ui/core';
 import { Dialog, Slide } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import Rating from '@material-ui/lab/Rating';
 
-import ReviewRating from '../../../components/review/ReviewRating';
 import CircleButton from '../../../components/button/CircleButton';
 import CustomTabs from '../../../components/nav/CustomTabs';
 import FixedButton from '../../../components/button/FixedButton';
+import { numberFormat } from '../../../lib/formatter';
 
 import { Paths } from '../../../paths';
 
@@ -105,9 +106,10 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                 >
                     <Arrow white={true}></Arrow>
                 </IconButton>
-                <div className={styles['parking-img']}>
-                    {imgFile && <img src={imgFile} alt="img" />}
-                </div>
+                <div
+                    className={styles['parking-img']}
+                    style={{ backgroundImage: `url(${imgFile})` }}
+                />
                 <div className={styles['container']}>
                     <div className={styles['pd-box']}>
                         <div className={styles['item-table']}>
@@ -118,7 +120,11 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={5} />
+                                <Rating
+                                    name="half-rating"
+                                    defaultValue={5}
+                                    precision={0.5}
+                                />
                                 <div className={styles['item-review']}>
                                     리뷰
                                 </div>
@@ -138,7 +144,7 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                             <div className={styles['txt']}>주차요금</div>
                             <div className={styles['value']}>
                                 <div className={styles['item-price']}>
-                                    {place_fee}원
+                                    {numberFormat(place_fee)}원
                                 </div>
                                 <div className={styles['item-base-time']}>
                                     /30분 기준

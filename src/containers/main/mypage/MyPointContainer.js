@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import classnames from 'classnames/bind';
 import { ButtonBase, Backdrop, makeStyles } from '@material-ui/core';
 /* Library */
@@ -14,6 +15,7 @@ import XIcon from '../../../static/asset/svg/X_button';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
+import useToken from '../../../hooks/useToken';
 /* Hooks */
 
 import { getFormatDateDetailTime } from '../../../lib/calculateDate';
@@ -22,6 +24,9 @@ import { numberFormat } from '../../../lib/formatter';
 
 import { updateUser } from '../../../store/user';
 /* Store */
+
+import { Paths } from '../../../paths';
+/* Paths */
 
 import { requestGetMyPoint } from '../../../api/point';
 import { requestPostWithdraw } from '../../../api/withdraw';
@@ -57,6 +62,7 @@ const WithdrawModal = ({ click, setClick, point }) => {
     const [account, onChangeAccount] = useInput('');
     const [price, onChangePrice] = useInput('');
 
+    const withdrawPrice = useRef();
     const [check, setCheck] = useState(false);
 
     const onClickButton = useCallback(async () => {
@@ -102,6 +108,9 @@ const WithdrawModal = ({ click, setClick, point }) => {
                                 value={account}
                                 placeholder={'계좌번호 입력'}
                                 onChange={onChangeAccount}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') withdrawPrice.current.focus();
+                                }}
                             />
                         </div>
                     </div>
@@ -114,6 +123,10 @@ const WithdrawModal = ({ click, setClick, point }) => {
                             type={'number'}
                             value={price}
                             onChange={onChangePrice}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') onClickButton();
+                            }}
+                            reference={withdrawPrice}
                         />
                         <span>원</span>
                     </div>
@@ -150,6 +163,9 @@ const PointItem = ({ item }) => {
 
 const MyPointContainer = () => {
 
+    const history = useHistory();
+    const TOKEN = useToken();
+
     const getUserInfo = useSelector(state => state.user);
 
     const allPointList = useRef([]);
@@ -169,60 +185,66 @@ const MyPointContainer = () => {
     }, []);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const endPoint =
-                Math.ceil(
-                    window.innerHeight + document.documentElement.scrollTop,
-                ) === document.documentElement.offsetHeight;
-            if (endPoint) {
+        if (TOKEN !== null) {
+            const handleScroll = () => {
+                const endPoint =
+                    Math.ceil(
+                        window.innerHeight + document.documentElement.scrollTop,
+                    ) === document.documentElement.offsetHeight;
+                if (endPoint) {
+                    fetchPointList();
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            const getPointList = async () => {
+                const JWT_TOKEN = localStorage.getItem('user_id');
+                const response = await requestGetMyPoint(JWT_TOKEN);
+                allPointList.current = response;
                 fetchPointList();
             }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        const getPointList = async () => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestGetMyPoint(JWT_TOKEN);
-            allPointList.current = response;
-            fetchPointList();
+            getPointList();
+            return () => window.removeEventListener('scroll', handleScroll);
         }
-        getPointList();
-        return () => window.removeEventListener('scroll', handleScroll);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
         <>
-            <div className={styles['container']}>
-                <div className={styles['fixed']}>
-                    <div className={styles['show-area']}>
-                        <div className={styles['button']}>
-                            <ButtonBase component='div' className={styles['btn']} onClick={() => console.log('click')}>
-                                <XIcon />
-                            </ButtonBase>
+            {TOKEN !== null &&
+                <>
+                    <div className={styles['container']}>
+                        <div className={styles['fixed']}>
+                            <div className={styles['show-area']}>
+                                <div className={styles['button']}>
+                                    <ButtonBase component='div' className={styles['btn']} onClick={() => history.replace(Paths.main.index)}>
+                                        <XIcon />
+                                    </ButtonBase>
+                                </div>
+                                <div className={styles['content']}>
+                                    <div className={styles['mypoint']}>나의 수익금</div>
+                                    <div className={styles['total_point']}>{numberFormat(getUserInfo.point)} P</div>
+                                </div>
+                                <ButtonBase className={styles['withdraw']} onClick={() => setClick(true)}>출금 신청</ButtonBase>
+                            </div>
                         </div>
-                        <div className={styles['content']}>
-                            <div className={styles['mypoint']}>나의 수익금</div>
-                            <div className={styles['total_point']}>{numberFormat(getUserInfo.point)} P</div>
-                        </div>
-                        <ButtonBase className={styles['withdraw']} onClick={() => setClick(true)}>출금 신청</ButtonBase>
-                    </div>
-                </div>
-                <div className={styles['point-area']}>
-                    <div className={styles['point-text']}>
-                        수익금 내역
+                        <div className={styles['point-area']}>
+                            <div className={styles['point-text']}>
+                                수익금 내역
                         <div className={styles['under-line']}></div>
+                            </div>
+                            <ul>
+                                {pointList.map((item) => (
+                                    <li className={styles['point-item']} key={item.plog_id}>
+                                        <PointItem item={item} />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
-                    <ul>
-                        {pointList.map((item) => (
-                            <li className={styles['point-item']} key={item.plog_id}>
-                                <PointItem item={item} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-            <WithdrawModal click={click} setClick={setClick} point={getUserInfo.point} />
+                    <WithdrawModal click={click} setClick={setClick} point={getUserInfo.point} />
+                </>
+            }
         </>
     );
 };

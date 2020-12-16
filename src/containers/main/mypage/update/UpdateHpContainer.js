@@ -11,6 +11,7 @@ import styles from './UpdateHpContainer.module.scss';
 /* StyleSheets */
 
 import { useDialog } from '../../../../hooks/useDialog';
+import useToken from '../../../../hooks/useToken';
 /* Hooks */
 
 import { Paths } from '../../../../paths';
@@ -23,12 +24,15 @@ import { requestPutRePhoneNumber } from '../../../../api/user';
 /* API */
 
 const UpdateHpContainer = () => {
-    const phoneRef = useRef();
+
     const history = useHistory();
     const openDialog = useDialog();
     const reduxDispatch = useDispatch();
+    const TOKEN = useToken();
 
+    const phoneRef = useRef();
     const [phoneCheck, setPhoneCheck] = useState(false);
+
 
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
@@ -36,7 +40,7 @@ const UpdateHpContainer = () => {
         const response = await requestPutRePhoneNumber(JWT_TOKEN, phoneRef.current.phoneNumber);
         if (response.msg === 'success') {
             reduxDispatch(updateUser('phone_number', phoneRef.current.phoneNumber));
-            openDialog("연락처변경 완료", "", () => history.push(Paths.main.mypage.index));
+            openDialog("연락처변경 완료", "", () => history.replace(Paths.main.mypage.myinfo));
         } else {
             openDialog(response.msg, response.sub);
         }
@@ -44,12 +48,16 @@ const UpdateHpContainer = () => {
 
     return (
         <>
-            <div className={styles['container']}>
-                <div className={styles['input-area']}>
-                    <VerifyPhone setCheck={setPhoneCheck} ref={phoneRef} />
-                </div>
-            </div>
-            <FixedButton button_name="변경" disable={!phoneCheck} onClick={onClickButton} />
+            {TOKEN !== null &&
+                <>
+                    <div className={styles['container']}>
+                        <div className={styles['input-area']}>
+                            <VerifyPhone setCheck={setPhoneCheck} ref={phoneRef} />
+                        </div>
+                    </div>
+                    <FixedButton button_name="변경" disable={!phoneCheck} onClick={onClickButton} />
+                </>
+            }
         </>
     );
 };

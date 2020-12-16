@@ -12,7 +12,7 @@
         position: relative;
 
         .title{
-            font-size: 24px;
+            font-size: 2rem;
             font-weight: bold;
             margin-bottom: 34px;
             margin-top: $padding;
@@ -27,7 +27,7 @@
             right: 0;
             transform: translateY(-50%);
             text-align: center;
-            font-size: 13px;
+            font-size: 1.08rem;
             line-height: 22px;
         }
     }
@@ -43,13 +43,17 @@
         box-shadow: 0px 5px 10px rgba($color: #000000, $alpha: 0.05);
         margin-bottom: 16px;
 
-        & > img{
-            margin-bottom: 24px;
+        .card-img {
             width: 100%;
+            min-height: 120px;
+            padding-top: 35%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         .card-title{
-            font-size: 18px;
+            font-size: 1.5rem;
             font-weight: bold;
             margin-left: 20px;
             margin-bottom: 18px;
@@ -85,7 +89,7 @@
         margin-bottom: 14px;
         .attribute-wrapper{
             .attribute{
-                font-size: 14px;
+                font-size: 1.16rem;
                 font-weight: bold;
                 color: #AAAAAA;
                 display: inline-block;
@@ -93,7 +97,7 @@
             }
 
             .value{
-                font-size: 14px;
+                font-size: 1.16rem;
                 color: #777777;
                 float: right;
                 margin-bottom: 10px;
@@ -111,7 +115,7 @@
     }
 
     .discount-title{
-        font-size: 18px;
+        font-size: 1.5rem;
         font-weight: bold;
         color: #222222;
         margin-bottom: 18px;

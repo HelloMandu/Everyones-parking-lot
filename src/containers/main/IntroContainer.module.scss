@@ -1,0 +1,114 @@
+@import '../../static/stylesheets/Root.scss';
+
+.header {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    color: #999999;
+    line-height: 48px;
+    position: relative;
+
+    & > button {
+        padding: 8px 10px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: $padding;
+    }
+}
+
+.comment {
+    width: 100%;
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 10%;
+    font-size: 22px;
+    color: #222222;
+}
+.container {
+    @include container(0);
+    .banner-image {
+        width: 100%;
+    }
+}
+
+:global(.swiper-pagination-bullet-active) {
+    background-color: #222222 !important;
+}
+
+:global(.swiper-slide) {
+    position: relative;
+
+    & > img {
+        width: 100%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 320px) {
+    .comment {
+        margin: 0;
+        font-size: 1rem;
+        position: absolute;
+        bottom: 50px;
+    }
+
+    :global(.swiper-container) {
+        position: relative;
+
+        :global(.swiper-pagination) {
+            position: absolute;
+            bottom: 0 !important;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .header {
+        height: 60px;
+
+        & > button {
+            font-size: 2.16rem;
+            line-height: 2.16rem;
+        }
+    }
+
+    .comment {
+        position: absolute;
+        top: 0;
+        left: 120px;
+        text-align: left;
+        font-size: 2.16rem;
+    }
+
+    :global(.swiper-container) {
+        position: relative;
+        width: 100%;
+
+        :global(.swiper-pagination) {
+            position: absolute;
+            bottom: 0 !important;
+        }
+
+        :global(.swiper-pagination-bullet) {
+            width: 12px !important;
+            height: 12px !important;
+        }
+
+        :global(.swiper-slide) {
+            & > img.correction {
+                width: 70%;
+            }
+        }
+    }
+
+    .page-two {
+        top: unset;
+        left: unset;
+        text-align: right;
+        bottom: 50px !important;
+        right: 120px !important;
+    }
+}

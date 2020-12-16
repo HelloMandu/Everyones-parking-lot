@@ -21,9 +21,8 @@ const initState={
 function *getParkingList(action){
     yield put(startLoading(GET_LIST));
     try{
-        const {lat,lng,range} = action.payload;
-        const res = yield call(requestGetParkingList , lat,lng,range);
-        console.log(res.data.places);
+        const {lat,lng,range,filter} = action.payload;
+        const res = yield call(requestGetParkingList , lat,lng,range,filter);
         yield put({
             type: GET_LIST_SUCCESS,
             payload: res.data.places,
@@ -48,7 +47,6 @@ export function *parkingSaga(){
 const parking = handleActions(
     {
         [GET_LIST_SUCCESS] : (state,action)=>{
-            console.log(action.payload[0]);
             return{
                 ...state,
                 parking : action.payload
