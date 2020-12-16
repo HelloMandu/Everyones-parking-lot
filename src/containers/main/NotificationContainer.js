@@ -42,18 +42,20 @@ const NotificationContainer = () => {
     const openDialog = useDialog();
     const history = useHistory();
 
-    const handleReadNotification = useCallback(async (id) => {
-        const { data } = await requestPutNotificationRead(JWT_TOKEN, id);
-        if (data.msg === 'success') {
-            const newNotifications = notifications.map((noti) =>
-                noti.notification_id === id
-                    ? { ...noti, read_at: new Date() }
-                    : noti,
-            );
-            setNotifications(newNotifications);
-        }
-    },
-    [JWT_TOKEN, notifications]);
+    const handleReadNotification = useCallback(
+        async (id) => {
+            const { data } = await requestPutNotificationRead(JWT_TOKEN, id);
+            if (data.msg === 'success') {
+                const newNotifications = notifications.map((noti) =>
+                    noti.notification_id === id
+                        ? { ...noti, read_at: new Date() }
+                        : noti,
+                );
+                setNotifications(newNotifications);
+            }
+        },
+        [JWT_TOKEN, notifications],
+    );
 
     const fetchNotificationList = useCallback((isAdd = true) => {
         const LIMIT = 10;
@@ -62,24 +64,30 @@ const NotificationContainer = () => {
         if (length >= allLength) {
             return;
         }
-        if(isAdd){
-            const fetchData = allnotifications.current.slice(length, length + LIMIT);
+        if (isAdd) {
+            const fetchData = allnotifications.current.slice(
+                length,
+                length + LIMIT,
+            );
             setNotifications((notification) => notification.concat(fetchData));
             dataLength.current += LIMIT;
         }
     }, []);
 
-    const getNotification = useCallback(async (isAdd = true) => {
-        const { data } = await requestGetNotifications(JWT_TOKEN);
-        if (data.msg === 'success') {
-            allnotifications.current = data.notifications;
-            fetchNotificationList(isAdd);
-        } else {
-            openDialog('알림 정보를 가져올 수 없습니다', '', () =>
-                history.goBack(),
-            );
-        }
-    }, [fetchNotificationList, history, openDialog, JWT_TOKEN]);
+    const getNotification = useCallback(
+        async (isAdd = true) => {
+            const { data } = await requestGetNotifications(JWT_TOKEN);
+            if (data.msg === 'success') {
+                allnotifications.current = data.notifications;
+                fetchNotificationList(isAdd);
+            } else {
+                openDialog('알림 정보를 가져올 수 없습니다', '', () =>
+                    history.goBack(),
+                );
+            }
+        },
+        [fetchNotificationList, history, openDialog, JWT_TOKEN],
+    );
 
     const handleAllRead = useCallback(async () => {
         const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
@@ -88,9 +96,10 @@ const NotificationContainer = () => {
                 history.goBack(),
             );
         }
-        await getNotification(false);
-    }, [JWT_TOKEN, getNotification, history, openDialog]);
-
+        setNotifications((notification) =>
+            notification.map((noti) => ({ ...noti, read_at: new Date() })),
+        );
+    }, [JWT_TOKEN, history, openDialog]);
 
     const notiRef = useRef(null);
     useScrollEnd(fetchNotificationList, notiRef.current);

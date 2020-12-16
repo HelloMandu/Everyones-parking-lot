@@ -64,10 +64,7 @@ const Point = ({
     onChange,
 }) => {
     const [isTotal, setIsTotal] = useState(false);
-    const handleTotalPoint = useCallback(() => setUsePoint(maxPrice), [
-        setUsePoint,
-        maxPrice,
-    ]);
+    const handleTotalPoint = useCallback(() => setUsePoint(point >= maxPrice ? maxPrice : point), [setUsePoint, point, maxPrice]);
     useEffect(
         () =>
             setIsTotal(

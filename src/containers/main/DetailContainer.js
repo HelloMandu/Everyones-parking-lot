@@ -227,10 +227,22 @@ const DetailContainer = ({ modal, place_id }) => {
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={reviews.length ? 
-                                    reviews.reduce((prev, cur) => prev + parseFloat(cur.review_rating), 0) / reviews.length
-                                    : 0.0
-                                } />
+                                <ReviewRating
+                                    rating={
+                                        reviews.length
+                                            ? parseFloat(
+                                                  reviews.reduce(
+                                                      (prev, cur) =>
+                                                          prev +
+                                                          parseFloat(
+                                                              cur.review_rating,
+                                                          ),
+                                                      0,
+                                                  ) / reviews.length,
+                                              ).toPrecision(2)
+                                            : 0.0
+                                    }
+                                />
                                 <div className={styles['item-review']}>
                                     리뷰({reviews.length})
                                 </div>

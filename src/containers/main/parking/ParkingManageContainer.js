@@ -53,7 +53,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
                     <span className={cx('status', { status })}>
-                        {status === 0 ? '대여중' : '대여종료'}
+                        {status !== 0 ? '대여중' : '대여종료'}
                     </span>
                     <h2 className={styles['title']}>{title}</h2>
                 </div>
@@ -117,12 +117,12 @@ const ParkingManageContainer = () => {
                     {parkingList.map(
                         ({
                             place_id,
-                            place_status,
                             place_images,
                             place_name,
                             oper_start_time,
                             oper_end_time,
                             place_fee,
+                            rental_orders
                         }) => (
                             <ButtonBase
                                 className={styles['parking-item']}
@@ -136,7 +136,7 @@ const ParkingManageContainer = () => {
                                 }
                             >
                                 <ParkingItem
-                                    status={place_status}
+                                    status={rental_orders.length}
                                     image={
                                         Array.isArray(place_images)
                                             ? place_images[0].replace(
