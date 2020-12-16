@@ -168,10 +168,10 @@ const CheckList = ({ setCheck }) => {
                 'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
         },
     ]);
-    useEffect(() => setCheck(checkList[0].checked && checkList[1].checked), [
-        setCheck,
-        checkList,
-    ]);
+    useEffect(() =>
+        setCheck(checkList[0].checked && checkList[1].checked),
+    [setCheck, checkList]);
+
     return (
         <div className={cx('check-box-wrapper')}>
             <CheckBox

@@ -81,8 +81,7 @@ const dateReducer = (state, action) => {
     };
 };
 const DatePickerModal = (props) => {
-    let minute = [],
-        hour = [];
+    let minute = [], hour = [];
     for (let i = 0; i < 6; i++) minute.push(`${i}0`);
     for (let i = 0; i < 24; i++) hour.push(i < 10 ? `0${i}` : `${i}`);
 
