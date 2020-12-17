@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 //styles
@@ -80,10 +80,10 @@ const AddressModal = (props) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [index, setIndex] = useState(0);
-    const { address } = useSelector((state) => state.position);
+    // const { address } = useSelector((state) => state.position);
     const [search, setSearch] = useState('');
     const [isSearch, setIsSearch] = useState(false);
-    const [space_list, setSpaceList] = useState([]);
+    const [space_list/*, setSpaceList*/] = useState([]);
     const [addr_list, setAddrList] = useState([]);
     const classes = useStyles();
     const ref = useRef(null);
