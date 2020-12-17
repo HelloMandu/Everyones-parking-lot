@@ -82,9 +82,6 @@ const Share = ({ open, onToggle, placeInfo }) => {
             return;
         }
         if (Kakao) {
-            if (!Kakao.isInitialized()) {
-                Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
-            }
             const {
                 place_name,
                 place_id,
@@ -98,8 +95,8 @@ const Share = ({ open, onToggle, placeInfo }) => {
                     description: `${place_comment}`,
                     imageUrl: `${imageFormat(place_images[0])}`,
                     link: {
-                        mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
-                        webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
+                        mobileWebUrl: `https://intospace.kr/detail?place_id=${place_id}`,
+                        webUrl: `https://intospace.kr/detail?place_id=${place_id}`,
                     },
                 },
             });

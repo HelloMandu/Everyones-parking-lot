@@ -29,7 +29,7 @@ const App = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
+        Kakao.init('69ea25b2ec2f6bd52476ec619d899dda');
         judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
