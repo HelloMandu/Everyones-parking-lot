@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { /*useSelector, */useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 //styles
@@ -15,12 +15,10 @@ import search_icon from '../../static/asset/svg/main/search.svg';
 import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
 import AddressList from '../../components/address/AddressList';
-// import { Backdrop } from '@material-ui/core';
 
 //asset
 import banner_img from '../../static/asset/png/event.png';
 import space_zone from '../../static/asset/png/space_zone.png';
-// import FixedButton from '../button/FixedButton';
 
 //api
 import { requestAddress } from '../../api/address';
@@ -80,10 +78,10 @@ const AddressModal = (props) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [index, setIndex] = useState(0);
-    const { address } = useSelector((state) => state.position);
+    // const { address } = useSelector((state) => state.position);
     const [search, setSearch] = useState('');
     const [isSearch, setIsSearch] = useState(false);
-    const [space_list, setSpaceList] = useState([]);
+    const [space_list/*, setSpaceList*/] = useState([]);
     const [addr_list, setAddrList] = useState([]);
     const classes = useStyles();
     const ref = useRef(null);
