@@ -338,6 +338,26 @@ const MapContainer = ({ modal }) => {
 
     useEffect(() => {
         mapRender();
+        window.setGps = (latitude, longitude) => {
+            // Gps 지정 함수
+        }
+
+        const interval = setInterval(() => {
+            if (login_os === 'Android') {
+                if (typeof window.myJs === 'undefined') {
+                    window.myJs.getGps();
+                }
+            } else if (login_os === 'iOS') {
+                if (typeof window.webkit !== 'undefined') {
+                    if (typeof window.webkit.messageHandlers !== 'undefined') {
+                        window.webkit.messageHandlers.getGps.postMessage("");
+                    }
+                }
+            }
+        });
+        return () => {
+            clearInterval(interval);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -22,6 +22,7 @@ import Logo from '../../static/asset/svg/Logo';
 import Naver from '../../static/asset/svg/auth/naver';
 import Kakao from '../../static/asset/svg/auth/kakao';
 import Facebook from '../../static/asset/svg/auth/facebook';
+import { getMobileOperatingSystem } from '../../lib/os';
 
 const cx = classNames.bind(styles);
 
@@ -37,29 +38,56 @@ const SignInContainer = () => {
     const passwordRef = useRef(null);
 
     const openDialog = useDialog()
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
+
+    const LoginOs = useCallback(JWT_TOKEN => {
+        window.setToken = async token => {
+            try {
+                // 푸쉬 토큰 보내기
+                // const res = await requestPOSTPushToken(JWT_TOKEN, token);
+                // if (res.data.msg !== "success") {
+                //     alert(res.data.msg);
+                // }
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        const login_os = getMobileOperatingSystem();
+        if (login_os === 'Android') {
+            if (typeof window.myJs === 'undefined') {
+                window.myJs.requestToken();
+            }
+        } else if (login_os === 'iOS') {
+            if (typeof window.webkit !== 'undefined') {
+                if (typeof window.webkit.messageHandlers !== 'undefined') {
+                    window.webkit.messageHandlers.requestToken.postMessage("");
+                }
+            }
+        }
+    }, []);
 
     const onClickLogin = useCallback(async () => {
         onLoading('signIp')
 
         const response = await requestPostSignIn(email, password)
         if (response.data.msg === 'success') {
-            localStorage.setItem("user_id", response.data.token)
-            dispatch(getUser(response.data.token))
-            history.push(Paths.main.index)
+            localStorage.setItem("user_id", response.data.token);
+            dispatch(getUser(response.data.token));
+            LoginOs(response.data.token);
+            history.push(Paths.main.index);
         } else {
-
-            if(response.data.msg === '가입하지 않은 이메일입니다.') {
+            if (response.data.msg === '가입하지 않은 이메일입니다.') {
                 onChangeEmail('')
                 openDialog(response.data.msg, '', () => emailRef.current.focus(), false, true)
-            } else if(response.data.msg === '비밀번호가 일치하지 않습니다.') {
+            } else if (response.data.msg === '비밀번호가 일치하지 않습니다.') {
                 onChangePassword('')
                 openDialog(response.data.msg, '', () => passwordRef.current.focus(), false, true)
             } else openDialog(response.data.msg)
         }
 
         offLoading('signIp')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email, password, dispatch, history, openDialog, onChangeEmail, onChangePassword]);
 
     useEffect(() => {
