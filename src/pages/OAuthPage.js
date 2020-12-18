@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import qs from 'qs';
 import { getUser } from '../store/user';
 import { useDispatch } from 'react-redux';
 import { Paths } from '../paths';
 import { useDialog } from '../hooks/useDialog';
+import { getMobileOperatingSystem } from '../lib/os';
 
 const OAuthPage = ({ location, history }) => {
     const dispatch = useDispatch();

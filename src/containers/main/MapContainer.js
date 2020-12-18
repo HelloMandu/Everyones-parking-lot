@@ -42,6 +42,7 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 
 //lib
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
+import { getMobileOperatingSystem } from '../../lib/os';
 //action
 import { set_position, set_level, get_area } from '../../store/main/position';
 import { get_list } from '../../store/main/parking';
@@ -342,6 +343,7 @@ const MapContainer = ({ modal }) => {
             // Gps 지정 함수
         }
 
+        const login_os = getMobileOperatingSystem();
         const interval = setInterval(() => {
             if (login_os === 'Android') {
                 if (typeof window.myJs === 'undefined') {
