@@ -114,7 +114,7 @@ const DatePickerModal = (props) => {
 
     useEffect(() => {
         if (oper_start && oper_end) {
-            const res = getDateRange(oper_start, oper_end);
+            const res = getDateRange(new Date(), oper_end);
             setDateList(res);
         }
     }, [oper_start, oper_end]);

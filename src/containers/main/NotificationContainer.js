@@ -57,37 +57,30 @@ const NotificationContainer = () => {
         [JWT_TOKEN, notifications],
     );
 
-    const fetchNotificationList = useCallback((isAdd = true) => {
+    const fetchNotificationList = useCallback(() => {
         const LIMIT = 10;
-        const allLength = allnotifications.current.length;
         const length = dataLength.current;
-        if (length >= allLength) {
-            return;
-        }
-        if (isAdd) {
-            const fetchData = allnotifications.current.slice(
-                length,
-                length + LIMIT,
-            );
+        const fetchData = allnotifications.current.slice(
+            length,
+            length + LIMIT,
+        );
+        if (fetchData.length > 0) {
             setNotifications((notification) => notification.concat(fetchData));
             dataLength.current += LIMIT;
         }
     }, []);
 
-    const getNotification = useCallback(
-        async (isAdd = true) => {
-            const { data } = await requestGetNotifications(JWT_TOKEN);
-            if (data.msg === 'success') {
-                allnotifications.current = data.notifications;
-                fetchNotificationList(isAdd);
-            } else {
-                openDialog('알림 정보를 가져올 수 없습니다', '', () =>
-                    history.goBack(),
-                );
-            }
-        },
-        [fetchNotificationList, history, openDialog, JWT_TOKEN],
-    );
+    const getNotification = useCallback(async () => {
+        const { data } = await requestGetNotifications(JWT_TOKEN);
+        if (data.msg === 'success') {
+            allnotifications.current = data.notifications;
+            fetchNotificationList();
+        } else {
+            openDialog('알림 정보를 가져올 수 없습니다', '', () =>
+                history.goBack(),
+            );
+        }
+    }, [fetchNotificationList, history, openDialog, JWT_TOKEN]);
 
     const handleAllRead = useCallback(async () => {
         const { data } = await requestPutNotificationAllRead(JWT_TOKEN);

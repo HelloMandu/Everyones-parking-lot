@@ -5,7 +5,7 @@ const useScrollEnd = (callback, root) => {
         const endPoint = root
             ? Math.round(root.clientHeight + root.scrollTop) ===
               root.scrollHeight
-            : Math.round(
+            : Math.ceil(
                   window.innerHeight + document.documentElement.scrollTop,
               ) === document.documentElement.scrollHeight;
         if (endPoint) {
