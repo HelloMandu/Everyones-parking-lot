@@ -114,29 +114,30 @@ const MapContainer = ({ modal }) => {
             // 구글 스토어 기기
             if (typeof window.myJs === 'undefined') {
                 window.myJs.requestToken();
+                return;
             }
         } else if (login_os === 'iOS') {
             // 애플 앱 스토어 기기
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
                     window.webkit.messageHandlers.requestToken.postMessage("");
+                    return;
                 }
             }
-        } else {
-            // 브라우저 기기
-            if ('geolocation' in navigator) {
-                try {
-                    const p = await getCoordinates();
-                    const lat = p.coords.latitude;
-                    const lng = p.coords.longitude;
-                    window.setGps(lat, lng);
-                } catch (e) {
-                    if (e.code === 3) {
-                        // 요청 시간 초과
-                    } else {
-                        alert(e.message);
-                        // 위치접근 거부
-                    }
+        }
+        // 브라우저 기기
+        if ('geolocation' in navigator) {
+            try {
+                const p = await getCoordinates();
+                const lat = p.coords.latitude;
+                const lng = p.coords.longitude;
+                window.setGps(lat, lng);
+            } catch (e) {
+                if (e.code === 3) {
+                    // 요청 시간 초과
+                } else {
+                    alert(e.message);
+                    // 위치접근 거부
                 }
             }
         }
@@ -365,28 +366,29 @@ const MapContainer = ({ modal }) => {
             if (login_os === 'Android') {
                 if (typeof window.myJs === 'undefined') {
                     window.myJs.getGps();
+                    return;
                 }
             } else if (login_os === 'iOS') {
                 if (typeof window.webkit !== 'undefined') {
                     if (typeof window.webkit.messageHandlers !== 'undefined') {
                         window.webkit.messageHandlers.getGps.postMessage("");
+                        return;
                     }
                 }
-            } else {
-                if ('geolocation' in navigator) {
-                    getCoordinates().then(result => {
-                        const lat = result.coords.latitude;
-                        const lng = result.coords.longitude;
-                        window.setGps(lat, lng);
-                    }).catch(e => {
-                        if (e.code === 3) {
-                            //요청 시간 초과
-                        } else {
-                            alert(e.message);
-                            //위치접근 거부
-                        }
-                    });
-                }
+            }
+            if ('geolocation' in navigator) {
+                getCoordinates().then(result => {
+                    const lat = result.coords.latitude;
+                    const lng = result.coords.longitude;
+                    window.setGps(lat, lng);
+                }).catch(e => {
+                    console.log(e.message);
+                    if (e.code === 3) {
+                        //요청 시간 초과
+                    } else {
+                        //위치접근 거부
+                    }
+                });
             }
         }, 300); // 계속해서 현재 위치를 반복으로 찍음.
         return () => {
