@@ -390,7 +390,7 @@ const MapContainer = ({ modal }) => {
                     }
                 });
             }
-        }, 300); // 계속해서 현재 위치를 반복으로 찍음.
+        }, 2000); // 계속해서 현재 위치를 반복으로 찍음.
         return () => {
             clearInterval(interval);
         }
