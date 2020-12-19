@@ -15,10 +15,12 @@ import search_icon from '../../static/asset/svg/main/search.svg';
 import Slide from '@material-ui/core/Slide';
 import styles from './AddressModal.module.scss';
 import AddressList from '../../components/address/AddressList';
+// import { Backdrop } from '@material-ui/core';
 
 //asset
 import banner_img from '../../static/asset/png/event.png';
 import space_zone from '../../static/asset/png/space_zone.png';
+// import FixedButton from '../button/FixedButton';
 
 //api
 import { requestAddress } from '../../api/address';

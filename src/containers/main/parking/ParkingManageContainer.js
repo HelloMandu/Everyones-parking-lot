@@ -5,6 +5,7 @@ import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
 import useToken from '../../../hooks/useToken';
+
 import { requestGetMyParkingList } from '../../../api/place';
 import { imageFormat, numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
@@ -77,7 +78,6 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     );
 });
 
-//TODO: 주차공간 클릭시 상세보기 페이지가 나오며, 수정하기 버튼생성
 const ParkingManageContainer = () => {
     const JWT_TOKEN = useToken();
     const history = useHistory();
@@ -86,14 +86,12 @@ const ParkingManageContainer = () => {
     const [parkingList, setParkingList] = useState([]);
     const fetchParkingList = useCallback(() => {
         const LIMIT = 3;
-        const allLength = allParkingList.current.length;
         const length = dataLength.current;
-        if (length >= allLength) {
-            return;
-        }
         const fetchData = allParkingList.current.slice(length, length + LIMIT);
-        setParkingList((parkingList) => parkingList.concat(fetchData));
-        dataLength.current += LIMIT;
+        if (fetchData.length > 0) {
+            setParkingList((parkingList) => parkingList.concat(fetchData));
+            dataLength.current = dataLength.current + LIMIT;
+        }
     }, []);
     useScrollEnd(fetchParkingList);
     useEffect(() => {
@@ -122,7 +120,7 @@ const ParkingManageContainer = () => {
                             oper_start_time,
                             oper_end_time,
                             place_fee,
-                            rental_orders
+                            rental_orders,
                         }) => (
                             <ButtonBase
                                 className={styles['parking-item']}

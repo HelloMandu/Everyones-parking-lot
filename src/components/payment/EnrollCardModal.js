@@ -102,28 +102,28 @@ const EnrollCardModal = ({ open, setCardList }) => {
                     <h3 className={styles['enroll-title']}>카드번호</h3>
                     <div className={styles['card-input']}>
                         <input
-                            type={'text'}
+                            type={'number'}
                             name={'card1'}
                             value={card1}
                             onChange={onChangeCardNum}
                         />
                         -
                         <input
-                            type={'text'}
+                            type={'number'}
                             name={'card2'}
                             value={card2}
                             onChange={onChangeCardNum}
                         />
                         -
                         <input
-                            type={'text'}
+                            type={'number'}
                             name={'card3'}
                             value={card3}
                             onChange={onChangeCardNum}
                         />
                         -
                         <input
-                            type={'text'}
+                            type={'number'}
                             name={'card4'}
                             value={card4}
                             onChange={onChangeCardNum}
@@ -136,7 +136,7 @@ const EnrollCardModal = ({ open, setCardList }) => {
                         <div className={styles['card-period-wrapper']}>
                             <InputBox
                                 className={'input-box'}
-                                type={'text'}
+                                type={'number'}
                                 name={'month'}
                                 value={month}
                                 placeholder={'MM'}
@@ -147,7 +147,7 @@ const EnrollCardModal = ({ open, setCardList }) => {
                         <div className={styles['card-period-wrapper']}>
                             <InputBox
                                 className={'input-box'}
-                                type={'text'}
+                                type={'number'}
                                 name={'year'}
                                 value={year}
                                 placeholder={'YY'}
