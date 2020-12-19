@@ -112,15 +112,19 @@ const MapContainer = ({ modal }) => {
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
             // 구글 스토어 기기
+            alert(window.myJS)
+            alert(window.myJs)
+            alert(window.requestToken)
+            alert(window.getGps)
             if (typeof window.myJs === 'undefined') {
-                window.myJs.requestToken();
+                window.myJs.getGps();
                 return;
             }
         } else if (login_os === 'iOS') {
             // 애플 앱 스토어 기기
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
-                    window.webkit.messageHandlers.requestToken.postMessage("");
+                    window.webkit.messageHandlers.getGps.postMessage("");
                     return;
                 }
             }
