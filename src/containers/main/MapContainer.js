@@ -113,6 +113,12 @@ const MapContainer = ({ modal }) => {
         if (login_os === 'Android') {
             // 구글 스토어 기기
             if (typeof window.myJs !== 'undefined') {
+                window.myJs.setGps = (lat, lng) => {
+                    // Gps 지정 함수
+                    dispatch(set_position({ lat, lng }));
+                    setCoordinates(lat, lng);
+                    alert(lat, lng);
+                }
                 alert(window.myJs.getGps);
                 window.myJs.getGps();
                 return;
