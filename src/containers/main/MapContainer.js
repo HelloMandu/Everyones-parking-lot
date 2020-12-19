@@ -112,11 +112,7 @@ const MapContainer = ({ modal }) => {
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
             // 구글 스토어 기기
-            alert(window.myJS)
-            alert(window.myJs)
-            alert(window.requestToken)
-            alert(window.getGps)
-            if (typeof window.myJs === 'undefined') {
+            if (typeof window.myJs !== 'undefined') {
                 window.myJs.getGps();
                 return;
             }
@@ -368,7 +364,7 @@ const MapContainer = ({ modal }) => {
                 createMyLocationMarker(latitude, longitude);
             }
             if (login_os === 'Android') {
-                if (typeof window.myJs === 'undefined') {
+                if (typeof window.myJs !== 'undefined') {
                     window.myJs.getGps();
                     return;
                 }
