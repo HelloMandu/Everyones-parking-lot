@@ -103,20 +103,40 @@ const MapContainer = ({ modal }) => {
 
     //현재 위치를 받아오는 함수.
     const callGetCoordinates = async () => {
-        if ('geolocation' in navigator) {
-            try {
-                const p = await getCoordinates();
-                const lat = p.coords.latitude;
-                const lng = p.coords.longitude;
-                dispatch(set_position({lat,lng}));
-                setCoordinates(lat, lng);
-                createMyLocationMarker(lat,lng);
-            } catch (e) {
-                if (e.code === 3) {
-                    //요청 시간 초과
-                } else {
-                    alert(e.message);
-                    //위치접근 거부
+        window.setGps = (lat, lng) => {
+            // Gps 지정 함수
+            dispatch(set_position({ lat, lng }));
+            setCoordinates(lat, lng);
+            // createMyLocationMarker(latitude, longitude);
+        }
+        const login_os = getMobileOperatingSystem();
+        if (login_os === 'Android') {
+            // 구글 스토어 기기
+            if (typeof window.myJs === 'undefined') {
+                window.myJs.requestToken();
+            }
+        } else if (login_os === 'iOS') {
+            // 애플 앱 스토어 기기
+            if (typeof window.webkit !== 'undefined') {
+                if (typeof window.webkit.messageHandlers !== 'undefined') {
+                    window.webkit.messageHandlers.requestToken.postMessage("");
+                }
+            }
+        } else {
+            // 브라우저 기기
+            if ('geolocation' in navigator) {
+                try {
+                    const p = await getCoordinates();
+                    const lat = p.coords.latitude;
+                    const lng = p.coords.longitude;
+                    window.setGps(lat, lng);
+                } catch (e) {
+                    if (e.code === 3) {
+                        // 요청 시간 초과
+                    } else {
+                        alert(e.message);
+                        // 위치접근 거부
+                    }
                 }
             }
         }
@@ -173,9 +193,8 @@ const MapContainer = ({ modal }) => {
 
     //주차장 마커를 생성하는 함수
     const createParkingMarker =()=>{
-
         onLoading('parking/GET_LIST');
-        if(cluster_marker.current!==null){
+        if (cluster_marker.current !== null) {
             cluster_marker.current.clear();
         };
         const map = kakao_map.current;
@@ -199,11 +218,10 @@ const MapContainer = ({ modal }) => {
             }
         ]
         });
-
         //마커의 중심좌표가 변경되었을 시 이벤트
-        kakao.maps.event.addListener(map, 'center_changed', async function () {
-            let level = map.getLevel();
-            let latlng = map.getCenter();
+        kakao.maps.event.addListener(map, 'center_changed', function () {
+            const level = map.getLevel();
+            const latlng = map.getCenter();
             map_lev.current = level;
             position_ref.current.lat = latlng.getLat();
             position_ref.current.lng = latlng.getLng();
@@ -232,7 +250,7 @@ const MapContainer = ({ modal }) => {
                 position_ref.current.lat,
                 position_ref.current.lng,
             );
-            let content = `<div onclick="onClickOverlay(${el.place_id})" class="custom-overlay" title=${JSON.stringify(el)} ><span>${distance}Km</span></div>`;
+            const content = `<div onclick="onClickOverlay(${el.place_id})" class="custom-overlay" title=${JSON.stringify(el)} ><span>${distance}Km</span></div>`;
             var customOverlay = new kakao.maps.CustomOverlay({
                 map: map,
                 position: new kakao.maps.LatLng(el.lat, el.lng),
@@ -297,10 +315,9 @@ const MapContainer = ({ modal }) => {
         kakao_map.current = map;
     };
 
- 
     useEffect(() => {
         const storage_position = JSON.parse(localStorage.getItem('position'));
-        if (storage_position) {
+        if (storage_position && storage_position.lat && storage_position.lng) {
             position_ref.current = storage_position;
             const { lat, lng } = position_ref.current;
             dispatch(get_area({ lat, lng }));
@@ -319,11 +336,11 @@ const MapContainer = ({ modal }) => {
     useEffect(() => {
         const storage_filter = JSON.parse(localStorage.getItem('filter_data'));
         if (storage_filter) {
-            const {parking_town,underground_parking,ground_parking,stated_parking} = storage_filter
-            dispatch(set_filters({type:'parking_town', value:parking_town}));
-            dispatch(set_filters({type:'underground_parking', value:underground_parking}));
-            dispatch(set_filters({type:'ground_parking', value:ground_parking}));
-            dispatch(set_filters({type:'stated_parking', value:stated_parking}));
+            const { parking_town, underground_parking, ground_parking, stated_parking } = storage_filter
+            dispatch(set_filters({ type: 'parking_town', value: parking_town }));
+            dispatch(set_filters({ type: 'underground_parking', value: underground_parking }));
+            dispatch(set_filters({ type: 'ground_parking', value: ground_parking }));
+            dispatch(set_filters({ type: 'stated_parking', value: stated_parking }));
         }
         else {
             const init_filter = {
@@ -339,12 +356,12 @@ const MapContainer = ({ modal }) => {
 
     useEffect(() => {
         mapRender();
-        window.setGps = (latitude, longitude) => {
-            // Gps 지정 함수
-        }
-
         const login_os = getMobileOperatingSystem();
         const interval = setInterval(() => {
+            window.setGps = (latitude, longitude) => {
+                // Gps 지정 함수
+                createMyLocationMarker(latitude, longitude);
+            }
             if (login_os === 'Android') {
                 if (typeof window.myJs === 'undefined') {
                     window.myJs.getGps();
@@ -355,8 +372,23 @@ const MapContainer = ({ modal }) => {
                         window.webkit.messageHandlers.getGps.postMessage("");
                     }
                 }
+            } else {
+                if ('geolocation' in navigator) {
+                    getCoordinates().then(result => {
+                        const lat = result.coords.latitude;
+                        const lng = result.coords.longitude;
+                        window.setGps(lat, lng);
+                    }).catch(e => {
+                        if (e.code === 3) {
+                            //요청 시간 초과
+                        } else {
+                            alert(e.message);
+                            //위치접근 거부
+                        }
+                    });
+                }
             }
-        });
+        }, 300); // 계속해서 현재 위치를 반복으로 찍음.
         return () => {
             clearInterval(interval);
         }

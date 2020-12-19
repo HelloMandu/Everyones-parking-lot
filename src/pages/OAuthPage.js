@@ -15,7 +15,6 @@ const OAuthPage = ({ location, history }) => {
     });
     const { msg, token } = query;
 
-    
     const LoginOs = useCallback(JWT_TOKEN => {
         window.setToken = async token => {
             try {
