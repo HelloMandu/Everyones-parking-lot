@@ -63,7 +63,6 @@ export function* areaSaga() {
 const position = handleActions(
     {
         [SET_POSITION]: (state, action) => {
-            console.log(action.payload)
             return {
                 ...state,
                 position: action.payload,

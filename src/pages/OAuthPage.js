@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Paths } from '../paths';
 import { useDialog } from '../hooks/useDialog';
 import { getMobileOperatingSystem } from '../lib/os';
+import { requestPutNativeToken } from '../api/user';
 
 const OAuthPage = ({ location, history }) => {
     const dispatch = useDispatch();
@@ -16,9 +17,13 @@ const OAuthPage = ({ location, history }) => {
     const { msg, token } = query;
 
     const LoginOs = useCallback(JWT_TOKEN => {
-        window.setToken = async token => {
+        window.setToken = async native_token => {
             try {
                 // 푸쉬 토큰 보내기
+                const res = await requestPutNativeToken(JWT_TOKEN, native_token);
+                if (res.data.msg !== 'success') {
+                    alert(res.data.msg);
+                }
             } catch (e) {
                 alert(e);
             }

@@ -314,3 +314,28 @@ export const requestPutAgreeMail = async (JWT_TOKEN, state, type) => {
 
     return response;
 };
+
+export const requestPutNativeToken = async (JWT_TOKEN, native_token) => {
+    /*
+        푸시알림 디바이스 토큰 등록 요청 API(PUT): /api/user/native_token
+        { headers }: JWT_TOKEN(유저 로그인 토큰)
+
+        native_token: 디바이스의 native_token
+
+        * 응답: success / failure
+    */
+    const URL = Paths.api + `user/native_token`;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${JWT_TOKEN}`,
+        },
+    };
+    const response = await axios.put(
+        URL,
+        {
+            native_token,
+        },
+        config,
+    );
+    return response;
+}

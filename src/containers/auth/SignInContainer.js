@@ -9,7 +9,7 @@ import useLoading from '../../hooks/useLoading'
 
 import InputBox from '../../components/inputbox/InputBox';
 
-import { requestPostSignIn } from '../../api/user'
+import { requestPostSignIn, requestPutNativeToken } from '../../api/user'
 
 import { getUser } from '../../store/user';
 
@@ -41,13 +41,13 @@ const SignInContainer = () => {
     const [onLoading, offLoading] = useLoading();
 
     const LoginOs = useCallback(JWT_TOKEN => {
-        window.setToken = async token => {
+        window.setToken = async native_token => {
             try {
                 // 푸쉬 토큰 보내기
-                // const res = await requestPOSTPushToken(JWT_TOKEN, token);
-                // if (res.data.msg !== "success") {
-                //     alert(res.data.msg);
-                // }
+                const res = await requestPutNativeToken(JWT_TOKEN, native_token);
+                if (res.data.msg !== 'success') {
+                    alert(res.data.msg);
+                }
             } catch (e) {
                 alert(e);
             }
