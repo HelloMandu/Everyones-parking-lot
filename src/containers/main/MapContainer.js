@@ -107,12 +107,13 @@ const MapContainer = ({ modal }) => {
             // Gps 지정 함수
             dispatch(set_position({ lat, lng }));
             setCoordinates(lat, lng);
-            // createMyLocationMarker(latitude, longitude);
+            alert(lat, lng);
         }
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
             // 구글 스토어 기기
             if (typeof window.myJs !== 'undefined') {
+                alert(window.myJs.getGps);
                 window.myJs.getGps();
                 return;
             }
