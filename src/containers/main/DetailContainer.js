@@ -92,10 +92,12 @@ const DetailContainer = ({ modal, place_id }) => {
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
     useEffect(() => {
-        const headerHeight = headerRef.current.getBoundingClientRect().height;
-        const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
-        window.addEventListener('scroll', headerControll);
-        return () => window.removeEventListener('scroll', headerControll);
+        if(headerRef.current){
+            const headerHeight = headerRef.current.getBoundingClientRect().height;
+            const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
+            window.addEventListener('scroll', headerControll);
+            return () => window.removeEventListener('scroll', headerControll);
+        }
     }, []);
 
     // 상세보기 할 주차공간 api 호출

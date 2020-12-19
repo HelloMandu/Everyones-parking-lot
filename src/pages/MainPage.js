@@ -21,7 +21,7 @@ const MainPage = ({ history }) => {
             <Route path={Paths.main.notification} component={Notification} />
             <Route path={Paths.main.coupon + '/:modal?'} component={Coupon} />
             <Route path={Paths.main.support.index} component={Support} />
-            <Route path={Paths.main.setting} component={Setting} />
+            <Route path={Paths.main.setting + '/:modal?'} component={Setting} />
             <Route path={Paths.Oauth} component={OAuthPage} />
             <Route render={()=> history.replace(Paths.main.index)} />
         </Switch>

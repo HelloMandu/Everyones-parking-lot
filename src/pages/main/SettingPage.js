@@ -4,9 +4,8 @@ import React from 'react';
 import SettingContainer from '../../containers/main/SettingContainer';
 /* Containers */
 
-const SettingPage = () => {
-
-    return <SettingContainer/>
+const SettingPage = ({ match }) => {
+    return <SettingContainer match={match} />;
 };
 
 export default SettingPage;
