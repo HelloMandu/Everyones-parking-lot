@@ -26,6 +26,9 @@ const UseListContainer = () => {
     const [onLoading, offLoading] = useLoading()
 
     const getUseList = useCallback(async () => {
+        if(!token){
+            return;
+        }
         onLoading('getUseList')
 
         const { data } = await requestGetUseRental(token);
@@ -36,10 +39,8 @@ const UseListContainer = () => {
         offLoading('getUseList')
     }, [offLoading, onLoading, openDialog, token]);
 
-    useEffect(() => {
-        if(token != null) getUseList();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getUseList, []);
 
     return(
     list.length !== 0 ? 

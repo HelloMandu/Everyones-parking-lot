@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
@@ -21,6 +21,7 @@ import { isEmpty } from '../../lib/formatChecker';
 //api
 import { requestGetLikeParkingList } from '../../api/place';
 import { Paths } from '../../paths';
+import Notice from '../../static/asset/svg/Notice';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -69,36 +70,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const BookmarkModal = (props) => {
     const classes = useStyles();
     const user = useSelector((state) => state.user);
-    const history= useHistory();
-    const [bookmark,setBookmark] = useState([]);
+    const history = useHistory();
+    const [bookmark, setBookmark] = useState([]);
 
-    const getCallBookmarkApi = async () => {
-
-        //작업중
+    const getCallBookmarkApi = useCallback(async () => {
         if (!isEmpty(user)) {
             const JWT_TOKEN = localStorage.getItem('user_id');
             try {
                 const res = await requestGetLikeParkingList(JWT_TOKEN);
-                if(res.data.msg==='success'){
-                    const {places} = res.data;
+                if (res.data.msg === 'success') {
+                    const { places } = res.data;
                     setBookmark(places);
                 }
-            }
-            catch (e) {
-                console.error(e)
+            } catch (e) {
+                console.error(e);
             }
         }
-
-    }
-
-    const onClickBookmarkItem =(place_id)=>{
-        history.push(Paths.main.detail+'?place_id='+place_id);
-    }
-
-    useEffect(() => {
-        getCallBookmarkApi();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
+
+    const onClickBookmarkItem = useCallback(
+        (place_id) => history.push(Paths.main.detail + '?place_id=' + place_id),
+        [history],
+    );
+
+    useEffect(getCallBookmarkApi, [getCallBookmarkApi]);
 
     return (
         <Dialog
@@ -109,13 +104,30 @@ const BookmarkModal = (props) => {
             className={classes.dialog}
         >
             <Header title={'즐겨찾는 주차장'} />
-            <DialogContent className={classes.content}>
-                <div className={styles['container']}>
-                    <div className={styles['item-list']}>
-                    <AddressList addr_list ={bookmark} type={2} onClick={onClickBookmarkItem}/>
+            {bookmark.length ? (
+                <DialogContent className={classes.content}>
+                    <div className={styles['container']}>
+                        <div className={styles['item-list']}>
+                            <AddressList
+                                addr_list={bookmark}
+                                type={2}
+                                onClick={onClickBookmarkItem}
+                            />
+                        </div>
+                    </div>
+                </DialogContent>
+            ) : (
+                <div className={styles['non-qna']}>
+                    <div className={styles['non-container']}>
+                        <Notice />
+                        <div className={styles['explain']}>
+                            {!isEmpty(user)
+                                ? '즐겨찾는 주차공간이 없습니다.'
+                                : '로그인 후 이용해 주세요.'}
+                        </div>
                     </div>
                 </div>
-            </DialogContent>
+            )}
         </Dialog>
     );
 };

@@ -85,10 +85,8 @@ const ReviewDetailContainer = ({ location }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, review_id, openDialog]);
 
-    useEffect(() => {
-        getReview();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getReview, []);
 
     const reviewDelete = useCallback(() => {
         onLoading('deletComment')

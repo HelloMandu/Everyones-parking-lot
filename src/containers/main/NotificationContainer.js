@@ -14,13 +14,15 @@ import { getFormatDateDetailTime } from '../../lib/calculateDate';
 
 import Ad from '../../static/asset/svg/notification/Ad';
 import Heart from '../../static/asset/svg/notification/Heart';
+import Notice from '../../static/asset/svg/Notice';
 
 import styles from './NotificationContainer.module.scss';
 import useToken from '../../hooks/useToken';
+import useLoading from '../../hooks/useLoading';
 
 const cx = cn.bind(styles);
 
-const NotificationItem = ({ type, description, date, read }) => {
+const NotificationItem = ({ type, description, date }) => {
     return (
         <>
             <div className={styles['icon']}>{type ? <Ad /> : <Heart />}</div>
@@ -34,6 +36,8 @@ const NotificationItem = ({ type, description, date, read }) => {
     );
 };
 
+const LOADING_NOTIFICATION = 'notification';
+
 const NotificationContainer = () => {
     const allnotifications = useRef([]);
     const JWT_TOKEN = useToken();
@@ -41,6 +45,7 @@ const NotificationContainer = () => {
     const [notifications, setNotifications] = useState([]);
     const openDialog = useDialog();
     const history = useHistory();
+    const [onLoading, offLoading, isLoading] = useLoading();
 
     const handleReadNotification = useCallback(
         async (id) => {
@@ -71,6 +76,7 @@ const NotificationContainer = () => {
     }, []);
 
     const getNotification = useCallback(async () => {
+        onLoading(LOADING_NOTIFICATION);
         const { data } = await requestGetNotifications(JWT_TOKEN);
         if (data.msg === 'success') {
             allnotifications.current = data.notifications;
@@ -80,7 +86,15 @@ const NotificationContainer = () => {
                 history.goBack(),
             );
         }
-    }, [fetchNotificationList, history, openDialog, JWT_TOKEN]);
+        offLoading(LOADING_NOTIFICATION);
+    }, [
+        onLoading,
+        JWT_TOKEN,
+        offLoading,
+        fetchNotificationList,
+        openDialog,
+        history,
+    ]);
 
     const handleAllRead = useCallback(async () => {
         const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
@@ -89,6 +103,10 @@ const NotificationContainer = () => {
                 history.goBack(),
             );
         }
+        allnotifications.current = allnotifications.current.map((noti) => ({
+            ...noti,
+            read_at: new Date(),
+        }));
         setNotifications((notification) =>
             notification.map((noti) => ({ ...noti, read_at: new Date() })),
         );
@@ -103,36 +121,54 @@ const NotificationContainer = () => {
             <ButtonBase className={styles['read-all']} onClick={handleAllRead}>
                 전체읽음
             </ButtonBase>
-            <ul className={styles['notification-list']} ref={notiRef}>
-                {notifications.map(
-                    ({
-                        notification_id,
-                        notification_type,
-                        notification_body,
-                        createdAt,
-                        read_at,
-                    }) => {
-                        const read = read_at !== null;
-                        return (
-                            <ButtonBase
-                                component="li"
-                                className={cx('notification-item', { read })}
-                                key={notification_id}
-                                onClick={() =>
-                                    handleReadNotification(notification_id)
-                                }
-                            >
-                                <NotificationItem
-                                    type={notification_type === 'rental'}
-                                    description={notification_body}
-                                    date={createdAt}
-                                    read={read_at !== null}
-                                />
-                            </ButtonBase>
-                        );
-                    },
-                )}
-            </ul>
+            {!isLoading[LOADING_NOTIFICATION] &&
+                (notifications.length ? (
+                    <ul className={styles['notification-list']} ref={notiRef}>
+                        {notifications.map(
+                            ({
+                                notification_id,
+                                notification_type,
+                                notification_body,
+                                createdAt,
+                                read_at,
+                            }) => {
+                                const read = read_at !== null;
+                                return (
+                                    <ButtonBase
+                                        component="li"
+                                        className={cx('notification-item', {
+                                            read,
+                                        })}
+                                        key={notification_id}
+                                        onClick={() =>
+                                            handleReadNotification(
+                                                notification_id,
+                                            )
+                                        }
+                                    >
+                                        <NotificationItem
+                                            type={
+                                                notification_type === 'rental'
+                                            }
+                                            description={notification_body}
+                                            date={createdAt}
+                                            read={read_at !== null}
+                                        />
+                                    </ButtonBase>
+                                );
+                            },
+                        )}
+                    </ul>
+                ) : (
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                이용내역이 없습니다.
+                            </div>
+                        </div>
+                    </div>
+                ))}
         </div>
     );
 };

@@ -4,6 +4,7 @@ import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
+import useLoading from '../../../hooks/useLoading';
 import useToken from '../../../hooks/useToken';
 
 import { requestGetMyParkingList } from '../../../api/place';
@@ -78,6 +79,8 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     );
 });
 
+const LOADING_NAME = 'parking/MANAGE';
+
 const ParkingManageContainer = () => {
     const JWT_TOKEN = useToken();
     const history = useHistory();
@@ -93,12 +96,15 @@ const ParkingManageContainer = () => {
             dataLength.current = dataLength.current + LIMIT;
         }
     }, []);
+    const [onLoading, offLoading, isLoading] = useLoading();
     useScrollEnd(fetchParkingList);
     useEffect(() => {
         const getParkingList = async () => {
+            onLoading(LOADING_NAME);
             const { places } = await requestGetMyParkingList(JWT_TOKEN);
             allParkingList.current = places;
             fetchParkingList();
+            offLoading(LOADING_NAME);
         };
         getParkingList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,58 +116,59 @@ const ParkingManageContainer = () => {
                     <span className={styles['plus']}>+</span>주차공간 등록하기
                 </ButtonBase>
             </Link>
-            {parkingList.length ? (
-                <ul className={styles['parking-list']}>
-                    {parkingList.map(
-                        ({
-                            place_id,
-                            place_images,
-                            place_name,
-                            oper_start_time,
-                            oper_end_time,
-                            place_fee,
-                            rental_orders,
-                        }) => (
-                            <ButtonBase
-                                className={styles['parking-item']}
-                                component="li"
-                                key={place_id}
-                                onClick={() =>
-                                    history.push(
-                                        Paths.main.detail +
-                                            `?place_id=${place_id}`,
-                                    )
-                                }
-                            >
-                                <ParkingItem
-                                    status={rental_orders.length}
-                                    image={
-                                        Array.isArray(place_images)
-                                            ? place_images[0].replace(
-                                                  'uploads/',
-                                                  '',
-                                              )
-                                            : ''
+            {!isLoading[LOADING_NAME] &&
+                (parkingList.length ? (
+                    <ul className={styles['parking-list']}>
+                        {parkingList.map(
+                            ({
+                                place_id,
+                                place_images,
+                                place_name,
+                                oper_start_time,
+                                oper_end_time,
+                                place_fee,
+                                rental_orders,
+                            }) => (
+                                <ButtonBase
+                                    className={styles['parking-item']}
+                                    component="li"
+                                    key={place_id}
+                                    onClick={() =>
+                                        history.push(
+                                            Paths.main.detail +
+                                                `?place_id=${place_id}`,
+                                        )
                                     }
-                                    title={place_name}
-                                    start={oper_start_time}
-                                    end={oper_end_time}
-                                    price={place_fee}
-                                ></ParkingItem>
-                            </ButtonBase>
-                        ),
-                    )}
-                </ul>
-            ) : (
-                <div className={styles['non-qna']}>
-                    <div className={styles['non-container']}>
-                        <Notice />
-                        <div className={styles['explain']}>
-                            등록된 주차공간이 없습니다.
+                                >
+                                    <ParkingItem
+                                        status={rental_orders.length}
+                                        image={
+                                            Array.isArray(place_images)
+                                                ? place_images[0].replace(
+                                                      'uploads/',
+                                                      '',
+                                                  )
+                                                : ''
+                                        }
+                                        title={place_name}
+                                        start={oper_start_time}
+                                        end={oper_end_time}
+                                        price={place_fee}
+                                    ></ParkingItem>
+                                </ButtonBase>
+                            ),
+                        )}
+                    </ul>
+                ) : (
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                등록된 주차공간이 없습니다.
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                ))}
         </main>
     );
 };
