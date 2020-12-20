@@ -2,14 +2,6 @@
 
 html {
     body {
-        :global(.MuiDialog-root) {
-            min-height: 100vh;
-            z-index: $level2 !important;
-        }
-    }
-}
-html {
-    body {
         .distance-item {
             transition: all 0.3s ease-in-out;
             box-sizing: border-box;

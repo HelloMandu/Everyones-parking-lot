@@ -1,3 +1,13 @@
+
+@mixin focus-animate {
+    transition-property: border;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-out;
+    &:focus {
+        border-color: #222;
+    }
+}
+
 .input-box {
     width: 100%;
     height: 48px;
@@ -32,8 +42,9 @@
     width: 100%;
     height: 48px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
     padding: 0 12px;
+    @include focus-animate();
 }
 
 .verify-box {

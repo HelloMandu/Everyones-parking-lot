@@ -1,29 +1,23 @@
 import React, { useCallback, useEffect } from 'react';
 import classnames from 'classnames/bind';
-import { makeStyles } from '@material-ui/core/styles';
 /* Library */
 
 import { useDispatch } from 'react-redux';
 import { dialogClose } from '../../store/dialog';
 /* Redux */
 
-import { Backdrop, ButtonBase } from '@material-ui/core';
+import { ButtonBase, Dialog as MaterialDialog } from '@material-ui/core';
 /* Components */
 
 import styles from './Dialog.module.scss';
+// import { useLocation } from 'react-router-dom';
 /* StyleSheets */
-
-const useStyles = makeStyles((theme) => ({
-    backdrop: {
-        zIndex: 5000,
-    },
-}));
 
 const cn = classnames.bind(styles);
 
 const Dialog = ({ confirm, title, text, handleClick, open, handleBackDrop }) => {
-    const classes = useStyles();
     const dispatch = useDispatch();
+    // const location = useLocation();
 
     const onClose = useCallback(() => dispatch(dialogClose()), [dispatch]);
     const onClick = useCallback(() => {
@@ -36,13 +30,11 @@ const Dialog = ({ confirm, title, text, handleClick, open, handleBackDrop }) => 
             if (open) {
                 if (e.key === 'Enter') {
                     onClick();
-                } else if (e.key === 'Escape') {
-                    onClose();
                 }
                 e.stopPropagation();
             }
         },
-        [onClick, onClose, open],
+        [onClick, open],
     );
 
     useEffect(() => {
@@ -51,7 +43,10 @@ const Dialog = ({ confirm, title, text, handleClick, open, handleBackDrop }) => 
     }, [onKeyDown]);
 
     return (
-        <>
+        <MaterialDialog
+            onClose={handleBackDrop ? onClick : onClose}
+            open={open}
+        >
             <div className={cn('dialog', { confirm, open })}>
                 <div className={styles['area']}>
                     <div className={cn('content')}>
@@ -76,12 +71,7 @@ const Dialog = ({ confirm, title, text, handleClick, open, handleBackDrop }) => 
                     </div>
                 </div>
             </div>
-            <Backdrop
-                className={classes.backdrop}
-                open={open}
-                onClick={handleBackDrop ? onClick : onClose}
-            />
-        </>
+        </MaterialDialog>
     );
 };
 

@@ -12,7 +12,7 @@ import Kakao from '../../static/asset/svg/auth/kakao'
 import Facebook from '../../static/asset/svg/auth/facebook'
 import Email from '../../static/asset/svg/auth/mail'
 import XButton from '../../static/asset/svg/auth/XButton'
-import { ButtonBase } from '@material-ui/core'
+import { ButtonBase, IconButton } from '@material-ui/core'
 
 const cx = classNames.bind(styles)
 
@@ -36,7 +36,7 @@ const LoginContainer = () => {
                 <Logo />
             </div>
 
-            <ButtonBase onClick={onClickBack} ><XButton /></ButtonBase>
+            <IconButton onClick={onClickBack} ><XButton /></IconButton>
 
             <div className={cx("area")}>
                 <Button name={"네이버로 주차하기"} color={"#EBEBEB"} backgroundColor={"#00BF19"} linkTo={Paths.api + 'Oauth/naver'} ><Naver /></Button>
