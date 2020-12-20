@@ -31,7 +31,7 @@ const OAuthPage = ({ location, history }) => {
 
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
-            if (typeof window.myJs === 'undefined') {
+            if (typeof window.myJs !== 'undefined') {
                 window.myJs.requestToken();
             }
         } else if (login_os === 'iOS') {

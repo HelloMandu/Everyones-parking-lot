@@ -107,20 +107,20 @@ const MapContainer = ({ modal }) => {
             // Gps 지정 함수
             dispatch(set_position({ lat, lng }));
             setCoordinates(lat, lng);
-            // createMyLocationMarker(latitude, longitude);
+            alert(lat, lng);
         }
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
             // 구글 스토어 기기
-            if (typeof window.myJs === 'undefined') {
-                window.myJs.requestToken();
+            if (typeof window.myJs !== 'undefined') {
+                window.myJs.getGps();
                 return;
             }
         } else if (login_os === 'iOS') {
             // 애플 앱 스토어 기기
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
-                    window.webkit.messageHandlers.requestToken.postMessage("");
+                    window.webkit.messageHandlers.getGps.postMessage("");
                     return;
                 }
             }
@@ -136,7 +136,6 @@ const MapContainer = ({ modal }) => {
                 if (e.code === 3) {
                     // 요청 시간 초과
                 } else {
-                    alert(e.message);
                     // 위치접근 거부
                 }
             }
@@ -364,7 +363,7 @@ const MapContainer = ({ modal }) => {
                 createMyLocationMarker(latitude, longitude);
             }
             if (login_os === 'Android') {
-                if (typeof window.myJs === 'undefined') {
+                if (typeof window.myJs !== 'undefined') {
                     window.myJs.getGps();
                     return;
                 }
