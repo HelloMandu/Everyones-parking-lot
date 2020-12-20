@@ -30,6 +30,8 @@ const getTime = (timer) =>
         ((timer % 60000) % 10000) / 1000,
     )}`;
 
+const LOADING_PHONE = 'sendVerify'
+
 const VerifyPhone = ({ setCheck }, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
@@ -51,7 +53,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
     const verifyRef = useRef()
 
     const onClickSendVerify = useCallback(async () => {
-        onLoading('sendVerify')
+        onLoading(LOADING_PHONE)
 
         if (sendCheck) {
             const response = await requestPostAuth(phoneNumber);
@@ -66,7 +68,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
             }
         }
 
-        offLoading('sendVerify')
+        offLoading(LOADING_PHONE)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sendCheck, phoneNumber, openDialog]);
     const [sendFocus, sendKeyDown] = useKeyDown(onClickSendVerify);

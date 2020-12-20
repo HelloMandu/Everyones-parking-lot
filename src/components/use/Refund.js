@@ -32,6 +32,8 @@ const Info = ({ attribute, value, black }) => {
     );
 };
 
+const LOADING_CANCLE = 'cancelRental'
+
 const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPrice, pointPrice }) => {
     let price = paymentPrice + deposit
     if(couponPrice !== '-') price -= couponPrice
@@ -42,7 +44,7 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
     const [onLoading, offLoading] = useLoading()
 
     const cancelRental = useCallback(async() => {
-        onLoading('cancelRental')
+        onLoading(LOADING_CANCLE)
 
         const token = localStorage.getItem('user_id')
         const {data} = await requestPutCancelRental(token, rentalID)
@@ -52,7 +54,7 @@ const Refund = ({ open, handleClose, rentalID, paymentPrice, deposit, couponPric
         } else if(data.msg === '이미 대여 중인 주차공간입니다.') openDialog(data.msg)
         else openDialog(data.msg, '', () => history.replace(Paths.main.index))
 
-        offLoading('cancelRental')
+        offLoading(LOADING_CANCLE)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, rentalID])
 

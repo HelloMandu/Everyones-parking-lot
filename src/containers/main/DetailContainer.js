@@ -55,6 +55,9 @@ const getParkingType = (type) => {
             return '지정주차';
     }
 };
+
+const LOADING_DETAIL = 'detail'
+
 const DetailContainer = ({ modal, place_id }) => {
     const { user_id } = useSelector((state) => state.user);
     const history = useHistory();
@@ -102,7 +105,7 @@ const DetailContainer = ({ modal, place_id }) => {
 
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
-        onLoading('detail');
+        onLoading(LOADING_DETAIL);
         try {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
@@ -113,7 +116,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 setReviews(reviews);
             }
         } catch (e) {}
-        offLoading('detail');
+        offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);
 
     const onClickSetDate = useCallback((start_date, end_date, total_date) => {
