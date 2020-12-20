@@ -55,8 +55,10 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
     useEffect(() => {
         const getCouponList = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
-            const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
-            setCouponList(coupons);
+            if(JWT_TOKEN){
+                const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
+                setCouponList(coupons);
+            }
         };
         getCouponList();
         // eslint-disable-next-line react-hooks/exhaustive-deps

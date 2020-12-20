@@ -76,17 +76,19 @@ const NotificationContainer = () => {
     }, []);
 
     const getNotification = useCallback(async () => {
-        onLoading(LOADING_NOTIFICATION);
-        const { data } = await requestGetNotifications(JWT_TOKEN);
-        if (data.msg === 'success') {
-            allnotifications.current = data.notifications;
-            fetchNotificationList();
-        } else {
-            openDialog('알림 정보를 가져올 수 없습니다', '', () =>
-                history.goBack(),
-            );
+        if(JWT_TOKEN){
+            onLoading(LOADING_NOTIFICATION);
+            const { data } = await requestGetNotifications(JWT_TOKEN);
+            if (data.msg === 'success') {
+                allnotifications.current = data.notifications;
+                fetchNotificationList();
+            } else {
+                openDialog('알림 정보를 가져올 수 없습니다', '', () =>
+                    history.goBack(),
+                );
+            }
+            offLoading(LOADING_NOTIFICATION);
         }
-        offLoading(LOADING_NOTIFICATION);
     }, [
         onLoading,
         JWT_TOKEN,

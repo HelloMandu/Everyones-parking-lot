@@ -63,14 +63,16 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
     const openDialog = useDialog();
     const onClickEnrollParking = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await (placeId
-            ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
-            : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
-        if (response.data.msg === 'success') {
-            openDialog('등록완료', '주차공간 등록을 완료했습니다.');
-            history.replace(Paths.main.parking.manage);
-        } else {
-            openDialog('등록실패', '주차공간 등록에 실패했습니다.');
+        if (JWT_TOKEN) {
+            const response = await (placeId
+                ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
+                : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
+            if (response.data.msg === 'success') {
+                openDialog('등록완료', '주차공간 등록을 완료했습니다.');
+                history.replace(Paths.main.parking.manage);
+            } else {
+                openDialog('등록실패', '주차공간 등록에 실패했습니다.');
+            }
         }
     }, [history, openDialog, parkingInfo, placeId]);
     const [imgFile, setImgFile] = useState(null);

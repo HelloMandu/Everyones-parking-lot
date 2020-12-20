@@ -100,11 +100,13 @@ const ParkingManageContainer = () => {
     useScrollEnd(fetchParkingList);
     useEffect(() => {
         const getParkingList = async () => {
-            onLoading(LOADING_NAME);
-            const { places } = await requestGetMyParkingList(JWT_TOKEN);
-            allParkingList.current = places;
-            fetchParkingList();
-            offLoading(LOADING_NAME);
+            if(JWT_TOKEN){
+                onLoading(LOADING_NAME);
+                const { places } = await requestGetMyParkingList(JWT_TOKEN);
+                allParkingList.current = places;
+                fetchParkingList();
+                offLoading(LOADING_NAME);
+            }
         };
         getParkingList();
         // eslint-disable-next-line react-hooks/exhaustive-deps

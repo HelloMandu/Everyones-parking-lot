@@ -112,13 +112,15 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
     const handleDeleteCard = useCallback(
         async (id) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestDeleteCard(JWT_TOKEN, id);
-            const { msg } = response.data;
-            if (msg === 'success') {
-                const newCardList = cardList.filter(
-                    ({ card_id }) => card_id !== id,
-                );
-                setCardList(newCardList);
+            if(JWT_TOKEN){
+                const response = await requestDeleteCard(JWT_TOKEN, id);
+                const { msg } = response.data;
+                if (msg === 'success') {
+                    const newCardList = cardList.filter(
+                        ({ card_id }) => card_id !== id,
+                    );
+                    setCardList(newCardList);
+                }
             }
         },
         [cardList],
@@ -162,14 +164,16 @@ const PaymentContainer = ({ open, match, setPaymentType }) => {
     useEffect(() => {
         const requestCardInfo = async () => {
             const JWT_TOKEN = localStorage.getItem('user_id');
-            const response = await requestGetCardInfo(JWT_TOKEN);
-            const { cards } = response.data;
-            const newCardList = cards.map((card, index) => ({
-                ...card,
-                checked: false,
-                active: activeCard === index,
-            }));
-            setCardList(newCardList);
+            if(JWT_TOKEN){
+                const response = await requestGetCardInfo(JWT_TOKEN);
+                const { cards } = response.data;
+                const newCardList = cards.map((card, index) => ({
+                    ...card,
+                    checked: false,
+                    active: activeCard === index,
+                }));
+                setCardList(newCardList);
+            }
         };
         requestCardInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
