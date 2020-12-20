@@ -19,11 +19,12 @@
 }
 @mixin close-icon {
     position: absolute;
-    top: 50%; right: 24px;
+    top: 50%;
+    right: 24px;
     transform: translateY(-50%);
     cursor: pointer;
 }
-@mixin modal-container{
+@mixin modal-container {
     width: 100%;
     min-height: 100vh;
     z-index: 4500 !important;

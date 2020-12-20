@@ -27,6 +27,11 @@ $aside-pd: 20px;
             height: 221px;
             .aside-icon {
                 padding: $aside-pd 12px;
+                position: relative;
+                .aside-close {
+                    position: absolute;
+                    right: 12px;
+                }
             }
             .aside-profile {
                 width: 100%;

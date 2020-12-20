@@ -1,57 +1,58 @@
 @import '../../static/stylesheets/Root.scss';
 
-.container{
+.container {
     padding: $padding;
 
     @include container($pd-top);
 
-    .input-wrapper{
+    .input-wrapper {
         margin-bottom: 20px;
 
-        .password-check{
+        .password-check {
             color: #953120;
             height: 0px;
             transition: height 0.3s ease-in-out;
         }
 
-        .apear{
+        .apear {
             height: 30px;
         }
 
-        .same{
-            color: #2966B4;
+        .same {
+            color: #2966b4;
         }
     }
 
-    .input-wrapper:first-child{
+    .input-wrapper:first-child {
         margin-top: 20px;
     }
 
-    .input-title{
+    .input-title {
         font-size: 1.16rem;
         font-weight: bold;
-        color: #999999;
+        color: #999;
+        margin-bottom: 8px;
     }
 
-    .select-wrapper{
+    .select-wrapper {
         text-align: center;
         width: 100%;
 
-        .select-item{
+        .select-item {
             position: relative;
             width: 30%;
             height: 48px;
             display: inline-block;
 
-            .select{
+            .select {
                 width: 100%;
                 height: 100%;
                 padding: 5px 10px;
-                border: 1px solid #EBEBEB;
+                border: 1px solid #ebebeb;
                 font-size: 1.33rem;
             }
 
-            & > svg{
+            & > svg {
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -59,12 +60,12 @@
             }
         }
 
-        .select-item:first-child{
+        .select-item:first-child {
             width: 40%;
         }
     }
 
-    .check-box-wrapper{
+    .check-box-wrapper {
         position: relative;
         margin-bottom: 200px;
     }

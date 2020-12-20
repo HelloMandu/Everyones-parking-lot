@@ -1,93 +1,83 @@
 @import '../../static/stylesheets/Root.scss';
 
-.coupon-list{
+.coupon-list {
     width: 100%;
     padding: 0px 24px;
     height: calc(100vh - 132px);
     overflow-y: scroll;
-    .coupon-item{
+    .coupon-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
         height: 160px;
-        border: 1px solid #E9EBED;
+        border: 1px solid #e9ebed;
         border-left: 4px solid #222222;
         margin: 32px auto;
-        .default{
+        .default {
             writing-mode: vertical-rl;
             font-size: 18px;
             font-weight: 500;
             transform: rotate(180deg);
         }
-        .description{
+        .description {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
             height: 60%;
-            .subject{
+            .subject {
                 font-size: 16px;
             }
-            .price{
+            .price {
                 font-size: 36px;
                 font-weight: bold;
-                span{
+                span {
                     font-size: 20px;
                     font-weight: bold;
                 }
             }
-            .end-date{
+            .end-date {
                 font-size: 12px;
                 color: #999999;
             }
         }
-        .state-box{
+        .state-box {
             position: relative;
-            .check{
+            .check {
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 opacity: 0;
-                transition: opacity .15s ease-in;
+                transition: opacity 0.15s ease-in;
             }
-            .checked{
+            .checked {
                 opacity: 1;
             }
-            .book{
+            .book {
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 opacity: 0;
-                transition: opacity .15s ease-in;
+                transition: opacity 0.15s ease-in;
             }
-            .bookCheck{
+            .bookCheck {
                 opacity: 1;
             }
         }
     }
 }
 
-.coupon-box{
+.coupon-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: calc(100vh - 132px);
-    .explain{
+    .explain {
         font-size: 16px;
         margin-top: 20px;
-    }
-}
-
-html {
-    body {
-        :global(.MuiDialog-root) {
-            min-height: 100vh;
-            z-index: $level2 !important;
-        }
-     
     }
 }

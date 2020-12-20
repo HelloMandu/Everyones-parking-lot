@@ -1,5 +1,5 @@
 @import '../../static/stylesheets/Root.scss';
-.enroll-coupon{
+.enroll-coupon {
     margin-top: 48px;
     height: calc(100vh - 48px);
     overflow-y: scroll;
@@ -11,9 +11,7 @@
 html {
     body {
         :global(.MuiDialog-root) {
-            min-height: 100vh;
-            z-index: $level2 !important;
+            z-index: $level0 !important;
         }
-     
     }
 }

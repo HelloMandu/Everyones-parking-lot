@@ -8,6 +8,7 @@ import cn from 'classnames/bind';
 //components
 import { ButtonBase, IconButton, Backdrop } from '@material-ui/core';
 import Slider from "react-slick";
+import XButton from '../../static/asset/svg/auth/XButton';
 
 //icon
 import banner from '../../static/asset/png/banner.png';
@@ -59,6 +60,12 @@ const Aside = ({ open, handleClose }) => {
                             </IconButton>
                             <IconButton onClick={() => { onClickLink(Paths.main.setting) }}>
                                 <img src={SettingIcon} alt="setting" />
+                            </IconButton>
+                            <IconButton
+                                className={styles['aside-close']}
+                                onClick={handleClose}
+                            >
+                                <XButton />
                             </IconButton>
                         </div>
                         <ButtonBase className={styles['aside-profile']} onClick={
