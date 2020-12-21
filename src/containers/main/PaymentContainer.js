@@ -241,25 +241,29 @@ const ParkingEnrollContainer = ({ location, match }) => {
         const { price, deposit } = parkingInfo;
         const { type, card_id } = paymentType;
         const { cp_id } = selectedCoupon;
-        const { msg, rental_id } = await requestPostRental(
-            JWT_TOKEN,
-            place_id,
-            cp_id,
-            start_time,
-            end_time,
-            price,
-            usePoint,
-            deposit,
-            type,
-            card_id,
-            phoneRef.current.phoneNumber,
-        );
-        if (msg === 'success') {
-            history.push(
-                `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+        try {
+            const { msg, rental_id } = await requestPostRental(
+                JWT_TOKEN,
+                place_id,
+                cp_id,
+                start_time,
+                end_time,
+                price,
+                usePoint,
+                deposit,
+                type,
+                card_id,
+                phoneRef.current.phoneNumber,
             );
-        } else {
-            openDialog('결제실패', msg);
+            if (msg === 'success') {
+                history.push(
+                    `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+                );
+            } else {
+                openDialog('결제실패', msg);
+            }
+        } catch (e) {
+            console.error(e);
         }
     }, [
         JWT_TOKEN,

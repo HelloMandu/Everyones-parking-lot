@@ -32,12 +32,16 @@ const UseListContainer = () => {
             return;
         }
         onLoading(LOADING_USE_LIST);
-        const { data } = await requestGetUseRental(token);
-        if (data.msg === 'success') {
-            setList(data.orders);
-        } else {
-            openDialog(data.msg);
-        };
+        try {
+            const { data } = await requestGetUseRental(token);
+            if (data.msg === 'success') {
+                setList(data.orders);
+            } else {
+                openDialog(data.msg);
+            }
+        } catch (e) {
+            console.error(e);
+        }
         offLoading(LOADING_USE_LIST);
     }, [offLoading, onLoading, openDialog, token]);
 

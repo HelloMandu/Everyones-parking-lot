@@ -54,9 +54,13 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
     }, [couponList, price, setCoupon, history, openDialog]);
     const getCouponList = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
-        if(JWT_TOKEN){
-            const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
-            setCouponList(coupons);
+        if (JWT_TOKEN) {
+            try {
+                const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
+                setCouponList(coupons);
+            } catch (e) {
+                console.error(e);
+            }
         }
     }, [placeId]);
     useEffect(getCouponList, [getCouponList]);

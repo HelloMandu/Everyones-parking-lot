@@ -76,14 +76,16 @@ const BookmarkModal = (props) => {
     const getCallBookmarkApi = useCallback(async () => {
         if (!isEmpty(user)) {
             const JWT_TOKEN = localStorage.getItem('user_id');
-            try {
-                const res = await requestGetLikeParkingList(JWT_TOKEN);
-                if (res.data.msg === 'success') {
-                    const { places } = res.data;
-                    setBookmark(places);
+            if (JWT_TOKEN) {
+                try {
+                    const res = await requestGetLikeParkingList(JWT_TOKEN);
+                    if (res.data.msg === 'success') {
+                        const { places } = res.data;
+                        setBookmark(places);
+                    }
+                } catch (e) {
+                    console.error(e);
                 }
-            } catch (e) {
-                console.error(e);
             }
         }
     }, [user]);

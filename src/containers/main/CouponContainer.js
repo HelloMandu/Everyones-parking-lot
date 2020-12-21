@@ -63,23 +63,27 @@ const CouponContainer = ({ match }) => {
     const handleCouponEnroll = useCallback(
         async (id, isInput) => {
             if (JWT_TOKEN) {
-                const { msg, coupon } = await requestPostCouponCode(
-                    JWT_TOKEN,
-                    id,
-                );
-                if (msg === 'success') {
-                    const newCouponList = couponBook.map((coupon) =>
-                        coupon.cz_id === id
-                            ? { ...coupon, checked: !coupon.checked }
-                            : coupon,
+                try {
+                    const { msg, coupon } = await requestPostCouponCode(
+                        JWT_TOKEN,
+                        id,
                     );
-                    setCouponBook(newCouponList);
-                    setMyCoupon((myCoupon) => myCoupon.concat(coupon));
-                    if (isInput) {
-                        history.goBack();
+                    if (msg === 'success') {
+                        const newCouponList = couponBook.map((coupon) =>
+                            coupon.cz_id === id
+                                ? { ...coupon, checked: !coupon.checked }
+                                : coupon,
+                        );
+                        setCouponBook(newCouponList);
+                        setMyCoupon((myCoupon) => myCoupon.concat(coupon));
+                        if (isInput) {
+                            history.goBack();
+                        }
+                    } else {
+                        openDialog(msg);
                     }
-                } else {
-                    openDialog(msg);
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },
@@ -87,34 +91,38 @@ const CouponContainer = ({ match }) => {
     );
     const getCouponList = useCallback(async () => {
         onLoading(LOADING_COUPON);
-        const book = await requestGetCouponBook();
-        const my = await requestGetCouponMy();
-        const use = await requestGetCouponUse();
-        if (book.msg === my.msg && my.msg === use.msg) {
-            const couponBook = book.coupons.map(
-                (
-                    {
+        try {
+            const book = await requestGetCouponBook();
+            const my = await requestGetCouponMy();
+            const use = await requestGetCouponUse();
+            if (book.msg === my.msg && my.msg === use.msg) {
+                const couponBook = book.coupons.map(
+                    (
+                        {
+                            cz_id,
+                            cz_subject,
+                            cz_start_date,
+                            cz_end_date,
+                            cz_price,
+                            down_status,
+                        },
+                        index,
+                    ) => ({
                         cz_id,
-                        cz_subject,
-                        cz_start_date,
-                        cz_end_date,
-                        cz_price,
-                        down_status,
-                    },
-                    index,
-                ) => ({
-                    cz_id,
-                    cp_id: index,
-                    cp_subject: cz_subject,
-                    cp_start_date: cz_start_date,
-                    cp_end_date: cz_end_date,
-                    cp_price: cz_price,
-                    checked: down_status,
-                }),
-            );
-            setCouponBook(couponBook);
-            setMyCoupon(my.coupons);
-            setuseCoupon(use.coupons);
+                        cp_id: index,
+                        cp_subject: cz_subject,
+                        cp_start_date: cz_start_date,
+                        cp_end_date: cz_end_date,
+                        cp_price: cz_price,
+                        checked: down_status,
+                    }),
+                );
+                setCouponBook(couponBook);
+                setMyCoupon(my.coupons);
+                setuseCoupon(use.coupons);
+            }
+        } catch (e) {
+            console.error(e);
         }
         offLoading(LOADING_COUPON);
     }, [offLoading, onLoading]);

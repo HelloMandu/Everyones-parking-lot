@@ -74,15 +74,19 @@ const SettingContainer = ({ match }) => {
         async (state, type) => {
             const JWT_TOKEN = localStorage.getItem('user_id');
             if (JWT_TOKEN) {
-                const { data } = await requestPutAgreeMail(
-                    JWT_TOKEN,
-                    !state,
-                    type,
-                );
-                if (data.msg === 'success') {
-                    dispatch(updateUser(type, !state));
-                } else {
-                    openDialog('통신 불량', '네트워크 상태를 확인해주세요');
+                try {
+                    const { data } = await requestPutAgreeMail(
+                        JWT_TOKEN,
+                        !state,
+                        type,
+                    );
+                    if (data.msg === 'success') {
+                        dispatch(updateUser(type, !state));
+                    } else {
+                        openDialog('통신 불량', '네트워크 상태를 확인해주세요');
+                    }
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },

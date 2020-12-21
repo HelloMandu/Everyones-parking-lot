@@ -7,6 +7,7 @@ import useLoading from '../../../hooks/useLoading';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
+import { getFormatDateNanTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
 
@@ -73,7 +74,9 @@ const ReviewItem = ({ setList, review }) => {
                     />
                 </div>
                 <div className={cx('date')}>
-                    {review.updated_at ? review.updated_at : review.created_at}
+                    {getFormatDateNanTime(
+                        review.updatedAt ? review.updatedAt : review.createdAt,
+                    )}
                     <hr />
                 </div>
                 <div className={cx('body')}>{review.review_body}</div>
@@ -83,7 +86,7 @@ const ReviewItem = ({ setList, review }) => {
                 <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
                 <Link
                     to={
-                        Paths.main.review.write +
+                        Paths.main.review.modify +
                         `?rental_id=${review.rental_id}`
                     }
                 >

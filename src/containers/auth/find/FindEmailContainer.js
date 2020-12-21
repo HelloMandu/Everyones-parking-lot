@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import InputBox from '../../../components/inputbox/InputBox';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
@@ -23,36 +23,44 @@ const FindEmailContainer = () => {
     const history = useHistory();
     const openDialog = useDialog();
     const [name, onChangeName] = useInput('');
-    const nameRef = useRef()
+    const nameRef = useRef();
     const phoneNumber = useRef();
     const [checkPhone, setCheckPhone] = useState(false);
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
 
     const onClickSubmit = useCallback(async () => {
-        onLoading('findEmail')
+        onLoading('findEmail');
+        try {
+            const { data } = await requestPostFindId(
+                name,
+                phoneNumber.current.phoneNumber,
+            );
 
-        const {data} = await requestPostFindId(
-            name,
-            phoneNumber.current.phoneNumber,
-        );
-
-        if (data.msg === 'success') {
-            sessionStorage.setItem('session_email', data.email);
-            history.push(Paths.auth.find.email_complete);
-        } else {
-            if(data.msg === '가입하지 않은 유저입니다.') {
-                onChangeName('')
-                openDialog(data.msg, '', () => nameRef.current.focus(), false, true)
-            } else openDialog(data.msg)
+            if (data.msg === 'success') {
+                sessionStorage.setItem('session_email', data.email);
+                history.push(Paths.auth.find.email_complete);
+            } else {
+                if (data.msg === '가입하지 않은 유저입니다.') {
+                    onChangeName('');
+                    openDialog(
+                        data.msg,
+                        '',
+                        () => nameRef.current.focus(),
+                        false,
+                        true,
+                    );
+                } else openDialog(data.msg);
+            }
+        } catch (e) {
+            console.error(e);
         }
-
-        offLoading('findEmail')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        offLoading('findEmail');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, history, openDialog, onChangeName]);
 
     useEffect(() => {
-        nameRef.current.focus()
-    }, [])
+        nameRef.current.focus();
+    }, []);
 
     return (
         <>

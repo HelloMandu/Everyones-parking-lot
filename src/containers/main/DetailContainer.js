@@ -43,7 +43,6 @@ import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
 import { useScrollRemember } from '../../hooks/useScroll';
 
-
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
     switch (type) {
@@ -58,7 +57,7 @@ const getParkingType = (type) => {
     }
 };
 
-const LOADING_DETAIL = 'detail'
+const LOADING_DETAIL = 'detail';
 
 const DetailContainer = ({ modal, place_id }) => {
     const { user_id } = useSelector((state) => state.user);
@@ -97,9 +96,11 @@ const DetailContainer = ({ modal, place_id }) => {
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
     useEffect(() => {
-        if(headerRef.current){
-            const headerHeight = headerRef.current.getBoundingClientRect().height;
-            const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
+        if (headerRef.current) {
+            const headerHeight = headerRef.current.getBoundingClientRect()
+                .height;
+            const headerControll = () =>
+                setHeaderOn(window.scrollY > headerHeight);
             window.addEventListener('scroll', headerControll);
             return () => window.removeEventListener('scroll', headerControll);
         }
@@ -117,7 +118,9 @@ const DetailContainer = ({ modal, place_id }) => {
                 setLikes(likes);
                 setReviews(reviews);
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error(e);
+        }
         offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);
 
@@ -181,7 +184,7 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
-    useScrollRemember()
+    useScrollRemember();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callGetDetailParking, []);

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import qs from 'qs';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 
 import BasicButton from '../../../components/button/BasicButton';
 import PaymentTypeModal from '../../../components/payment/PaymentTypeModal';
@@ -11,7 +11,7 @@ import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import useModal from '../../../hooks/useModal';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import { requestPostExtension } from '../../../api/extension';
@@ -73,14 +73,14 @@ const PaymentType = ({ paymentType, openTypeModal }) => {
 };
 
 const UseExtendContainer = ({ match, location }) => {
-    const token = useToken()
+    const token = useToken();
     const { url, params } = match;
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
 
     const { rental_id } = query;
-    const history = useHistory()
+    const history = useHistory();
 
     const [isOpenTypeModal, openTypeModal] = useModal(
         url,
@@ -100,7 +100,7 @@ const UseExtendContainer = ({ match, location }) => {
     const [checkPhone, setCheckPhone] = useState(false);
     const phoneRef = useRef(null);
     const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
 
     const onClickExtend = useCallback(
         (ext, term) => {
@@ -111,46 +111,58 @@ const UseExtendContainer = ({ match, location }) => {
     );
 
     const getUseDetail = useCallback(async () => {
-        onLoading('getUseDetail')
+        onLoading('getUseDetail');
+        try {
+            const resOrder = await requestGetDetailUseRental(rental_id);
 
-        const resOrder = await requestGetDetailUseRental(rental_id);
-        
-        if (resOrder.msg === 'success') {
-            setOrder(resOrder);
-            setEndTime(new Date(resOrder.order.rental_end_time).getTime());
-        } else {
-            openDialog(resOrder.msg);
+            if (resOrder.msg === 'success') {
+                setOrder(resOrder);
+                setEndTime(new Date(resOrder.order.rental_end_time).getTime());
+            } else {
+                openDialog(resOrder.msg);
+            }
+        } catch (e) {
+            console.error(e);
         }
-
-        offLoading('getUseDetail')
+        offLoading('getUseDetail');
     }, [rental_id, openDialog]);
 
     useEffect(() => {
-        if(token !== null) getUseDetail();
+        if (token !== null) getUseDetail();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onClickExtendPayment = useCallback(
         async (rental_id, extensionPrice, type, endTime, card_id) => {
-            if (!(checkPhone && type !== -1 && checked))
-                return;
+            if (!(checkPhone && type !== -1 && checked)) return;
             else {
-                onLoading('extension')
-        
-                const {data} = await requestPostExtension(
-                    token,
-                    rental_id,
-                    extensionPrice,
-                    type,
-                    endTime,
-                    card_id,
-                );
+                onLoading('extension');
+                try {
+                    const { data } = await requestPostExtension(
+                        token,
+                        rental_id,
+                        extensionPrice,
+                        type,
+                        endTime,
+                        card_id,
+                    );
 
-                if(data.msg === 'success') {
-                    openDialog(`${getFormatDateTime(endTime)}까지 연장되었습니다.`, '', () => history.push(`${Paths.main.use.detail}?rental_id=${rental_id}`), false, true)
-                } else openDialog(data.msg)
-
-                offLoading('extension')
+                    if (data.msg === 'success') {
+                        openDialog(
+                            `${getFormatDateTime(endTime)}까지 연장되었습니다.`,
+                            '',
+                            () =>
+                                history.push(
+                                    `${Paths.main.use.detail}?rental_id=${rental_id}`,
+                                ),
+                            false,
+                            true,
+                        );
+                    } else openDialog(data.msg);
+                } catch (e) {
+                    console.error(e);
+                }
+                offLoading('extension');
             }
         },
         [order, checkPhone, paymentType, checked],
@@ -302,11 +314,7 @@ const UseExtendContainer = ({ match, location }) => {
                     <BasicButton
                         button_name={`${extensionPrice}원 결제`}
                         disable={
-                            !(
-                                checkPhone &&
-                                paymentType.type !== -1 &&
-                                checked
-                            )
+                            !(checkPhone && paymentType.type !== -1 && checked)
                         }
                         onClick={() =>
                             onClickExtendPayment(

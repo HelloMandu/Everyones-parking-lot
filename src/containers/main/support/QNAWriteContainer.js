@@ -1,4 +1,11 @@
-import React, { useState, useRef, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, {
+    useState,
+    useRef,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    forwardRef,
+} from 'react';
 import { ButtonBase, IconButton } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 /* Library */
@@ -57,8 +64,7 @@ const FileItem = ({ file, onDelete }) => {
 };
 
 // eslint-disable-next-line
-const FilesPicture = forwardRef(({ }, ref) => {
-
+const FilesPicture = forwardRef(({}, ref) => {
     const [fileList, setFileList] = useState([]); //파일
 
     const onChangeFileList = useCallback((e) => {
@@ -105,7 +111,6 @@ const FilesPicture = forwardRef(({ }, ref) => {
 });
 
 const QNAWriteContainer = () => {
-
     const openDialog = useDialog();
     const history = useHistory();
 
@@ -123,11 +128,27 @@ const QNAWriteContainer = () => {
     const onClickButton = useCallback(async () => {
         // 업데이트 요청
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestPostWriteQNA(JWT_TOKEN, email, subject, question, parkingPicture.current !== undefined ? parkingPicture.current.fileList : null);
-        if (response.msg === 'success') {
-            openDialog("1:1문의 작성 완료", "", () => history.replace(Paths.main.support.qna));
-        } else {
-            openDialog(response.msg, response.sub);
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestPostWriteQNA(
+                    JWT_TOKEN,
+                    email,
+                    subject,
+                    question,
+                    parkingPicture.current !== undefined
+                        ? parkingPicture.current.fileList
+                        : null,
+                );
+                if (response.msg === 'success') {
+                    openDialog('1:1문의 작성 완료', '', () =>
+                        history.replace(Paths.main.support.qna),
+                    );
+                } else {
+                    openDialog(response.msg, response.sub);
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
     }, [history, openDialog, email, question, subject]);
 
@@ -140,10 +161,10 @@ const QNAWriteContainer = () => {
     }, [email, subject, question]);
 
     useEffect(() => {
-        if(emailRef.current){
+        if (emailRef.current) {
             emailRef.current.focus();
         }
-    }, [])
+    }, []);
 
     return (
         <>
@@ -158,7 +179,8 @@ const QNAWriteContainer = () => {
                             placeholder={'이메일을 입력해주세요.'}
                             onChange={onChangeEmail}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter') subjectRef.current.focus();
+                                if (e.key === 'Enter')
+                                    subjectRef.current.focus();
                             }}
                             reference={emailRef}
                         />
@@ -196,8 +218,11 @@ const QNAWriteContainer = () => {
                     </div>
                 </div>
             </div>
-            <FixedButton button_name="문의하기" disable={!checkAll} onClick={onClickButton} />
-
+            <FixedButton
+                button_name="문의하기"
+                disable={!checkAll}
+                onClick={onClickButton}
+            />
         </>
     );
 };

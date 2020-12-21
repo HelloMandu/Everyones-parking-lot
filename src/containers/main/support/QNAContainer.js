@@ -85,8 +85,14 @@ const QNAContainer = () => {
     const getQNAList = useCallback(async () => {
         onLoading(LOADING_QNA);
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestGetQNAList(JWT_TOKEN);
-        setQNSList(response.qnas);
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestGetQNAList(JWT_TOKEN);
+                setQNSList(response.qnas);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         offLoading(LOADING_QNA);
         // eslint-disable-next-line
     }, []);

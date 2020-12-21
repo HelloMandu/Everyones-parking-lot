@@ -4,15 +4,15 @@ import { useHistory } from 'react-router-dom';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import InputBox from '../../../components/inputbox/InputBox';
 import VerifyPhone from '../../../components/verifyphone/VerifyPhone';
 import FixedButton from '../../../components/button/FixedButton';
 
-import { requestPostFindPassword } from '../../../api/user'
+import { requestPostFindPassword } from '../../../api/user';
 
-import { Paths } from '../../../paths'
+import { Paths } from '../../../paths';
 
 import classNames from 'classnames/bind';
 import styles from './FindPasswordContainer.module.scss';
@@ -20,39 +20,51 @@ import styles from './FindPasswordContainer.module.scss';
 const cx = classNames.bind(styles);
 
 const FindPasswordContainer = () => {
-    const history = useHistory()
+    const history = useHistory();
     const openDialog = useDialog();
     const [email, onChangeEmail] = useInput('');
     const [name, onChangeName] = useInput('');
-    const phoneNumber = useRef()
+    const phoneNumber = useRef();
     const [checkPhone, setCheckPhone] = useState(false);
-    const [onLoading, offLoading] = useLoading()
-    
-    const emailRef = useRef(null)
+    const [onLoading, offLoading] = useLoading();
 
-    const onClickSubmit = useCallback(async() => {
-        onLoading('findPassword')
+    const emailRef = useRef(null);
 
-        const {data} = await requestPostFindPassword(name, email, phoneNumber.current.phoneNumber)
+    const onClickSubmit = useCallback(async () => {
+        onLoading('findPassword');
+        try {
+            const { data } = await requestPostFindPassword(
+                name,
+                email,
+                phoneNumber.current.phoneNumber,
+            );
 
-        if(data.msg === 'success'){
-            sessionStorage.setItem('session_pw', data.token)
-            history.push(Paths.auth.find.password_complete)
-        } else {
-            if(data.msg === '가입하지 않은 유저입니다.'){
-                onChangeEmail('')
-                onChangeName('')
-                openDialog(data.msg, '', () => emailRef.current.focus(), false, true)
-            } else openDialog(data.msg)
+            if (data.msg === 'success') {
+                sessionStorage.setItem('session_pw', data.token);
+                history.push(Paths.auth.find.password_complete);
+            } else {
+                if (data.msg === '가입하지 않은 유저입니다.') {
+                    onChangeEmail('');
+                    onChangeName('');
+                    openDialog(
+                        data.msg,
+                        '',
+                        () => emailRef.current.focus(),
+                        false,
+                        true,
+                    );
+                } else openDialog(data.msg);
+            }
+        } catch (e) {
+            console.error(e);
         }
-
-        offLoading('findPassword')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        offLoading('findPassword');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name, email, history, openDialog, onChangeEmail, onChangeName]);
 
     useEffect(() => {
-        emailRef.current.focus()
-    }, [])
+        emailRef.current.focus();
+    }, []);
 
     return (
         <>

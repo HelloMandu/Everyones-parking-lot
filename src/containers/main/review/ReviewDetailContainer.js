@@ -5,7 +5,7 @@ import qs from 'qs';
 
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import {
     requestDeleteReview,
@@ -41,78 +41,90 @@ const ReviewDetailContainer = ({ location }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const user = useSelector((state) => state.user);
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
 
     const onClickSubmit = useCallback(async () => {
-        onLoading('writeComment')
-
         const token = localStorage.getItem('user_id');
-        const { data } = await requestPostWriteComment(
-            token,
-            review_id,
-            comment,
-        );
-        if (data.msg === 'success') {
-            setCommentList(commentList.concat(data.comment));
-            onChangeComment('');
-            commentRef.current.value = '';
-        } else {
-            openDialog('댓글 작성을 실패했습니다.');
+        if (token) {
+            onLoading('writeComment');
+            try {
+                const { data } = await requestPostWriteComment(
+                    token,
+                    review_id,
+                    comment,
+                );
+                if (data.msg === 'success') {
+                    setCommentList(commentList.concat(data.comment));
+                    onChangeComment('');
+                    commentRef.current.value = '';
+                } else {
+                    openDialog('댓글 작성을 실패했습니다.');
+                }
+                offLoading('writeComment');
+            } catch (error) {
+                console.error(error);
+            }
         }
 
-        offLoading('writeComment')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comment, commentList, review_id, openDialog]);
 
     const getReview = useCallback(async () => {
-        onLoading('getReview')
-
-        const { data } = await requestGetDetailReview(review_id);
-        const { msg, review, comments } = data;
-        if (msg === 'success') {
-            setReview(review);
-            setCommentList(comments);
-        } else {
-            openDialog(
-                msg,
-                '',
-                () => history.push(Paths.main.index),
-                false,
-                true,
-            );
+        onLoading('getReview');
+        try {
+            const { data } = await requestGetDetailReview(review_id);
+            const { msg, review, comments } = data;
+            if (msg === 'success') {
+                setReview(review);
+                setCommentList(comments);
+            } else {
+                openDialog(
+                    msg,
+                    '',
+                    () => history.push(Paths.main.index),
+                    false,
+                    true,
+                );
+            }
+        } catch (e) {
+            console.error(e);
         }
-
-        offLoading('getReview')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        offLoading('getReview');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, review_id, openDialog]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(getReview, []);
 
     const reviewDelete = useCallback(() => {
-        onLoading('deletComment')
-
         const token = localStorage.getItem('user_id');
-        openDialog(
-            '리뷰를 삭제하시겠습니까 ?',
-            '',
-            async () => {
-                const { data } = await requestDeleteReview(
-                    token,
-                    review.review_id,
-                );
+        if (token) {
+            onLoading('deletComment');
+            openDialog(
+                '리뷰를 삭제하시겠습니까 ?',
+                '',
+                async () => {
+                    try {
+                        const { data } = await requestDeleteReview(
+                            token,
+                            review.review_id,
+                        );
 
-                if (data.msg === 'success') {
-                    history.push(Paths.main.index);
-                } else {
-                    openDialog(data.msg);
-                }
-            },
-            true,
-        );
+                        if (data.msg === 'success') {
+                            history.push(Paths.main.index);
+                        } else {
+                            openDialog(data.msg);
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                },
+                true,
+            );
+            offLoading('deletComment');
+        }
 
-        offLoading('deletComment')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
     return (
@@ -183,10 +195,18 @@ const ReviewDetailContainer = ({ location }) => {
                                 key={item.comment_id}
                                 className={cx('comment-item')}
                             >
-                                <img src={DBImageFormat(item.user && item.user.profile_image, Profile)} alt="" />
+                                <img
+                                    src={DBImageFormat(
+                                        item.user && item.user.profile_image,
+                                        Profile,
+                                    )}
+                                    alt=""
+                                />
                                 <div className={cx('user-area')}>
                                     <div className={cx('user-id')}>
-                                        {item.user ? item.user.name : '탈퇴한 회원입니다.'}
+                                        {item.user
+                                            ? item.user.name
+                                            : '탈퇴한 회원입니다.'}
                                     </div>
                                     <div className={cx('date')}>
                                         {item.updatedAt

@@ -17,6 +17,7 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
+            margin-bottom: 20px;
         }
 
         .title {
@@ -35,7 +36,7 @@
             font-size: 1rem;
             color: #777777;
             margin: 0 16px 20px;
-
+            margin-top: 8px;
             & > hr {
                 border-bottom: 1px solid #e9ebed;
                 padding-top: 20px;

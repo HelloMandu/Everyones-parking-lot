@@ -83,7 +83,8 @@ const App = () => {
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
-        } else if (pathname === Paths.main.use.extend) {
+        } 
+        else if (pathname === Paths.main.use.extend) {
             return <Header title={HeaderTitle.main.use.extend} />;
         }
         // 내가 작성한 리뷰
@@ -93,6 +94,10 @@ const App = () => {
         // 리뷰 쓰기
         else if (pathname === Paths.main.review.write) {
             return <Header title={HeaderTitle.main.review.write} />;
+        }
+        // 리뷰 수정
+        else if (pathname === Paths.main.review.modify) {
+            return <Header title={HeaderTitle.main.review.modify} />;
         }
         // 리뷰 상세 보기
         else if (pathname === Paths.main.review.detail) {

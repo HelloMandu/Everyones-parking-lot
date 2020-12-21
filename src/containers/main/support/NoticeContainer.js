@@ -85,9 +85,13 @@ const NoticeContainer = () => {
     useEffect(() => {
         const getNoticeList = async () => {
             onLoading(LOADING_NOTICE);
-            const response = await requestGetNoticeList();
-            allNoticeList.current = response;
-            fetchNoticeList();
+            try {
+                const response = await requestGetNoticeList();
+                allNoticeList.current = response;
+                fetchNoticeList();
+            } catch (e) {
+                console.error(e);
+            }
             offLoading(LOADING_NOTICE);
         };
         getNoticeList();

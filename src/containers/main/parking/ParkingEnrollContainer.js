@@ -72,16 +72,20 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
 
     const getAddressInfo = useCallback(
         async (address) => {
-            const response = await requestGetAddressInfo(address);
-            if (response.data.documents) {
-                const {
-                    address_name,
-                    x: lng,
-                    y: lat,
-                } = response.data.documents[0];
-                onChangeAddress(address_name);
-                setLat(lat);
-                setLng(lng);
+            try {
+                const response = await requestGetAddressInfo(address);
+                if (response.data.documents) {
+                    const {
+                        address_name,
+                        x: lng,
+                        y: lat,
+                    } = response.data.documents[0];
+                    onChangeAddress(address_name);
+                    setLat(lat);
+                    setLng(lng);
+                }
+            } catch (e) {
+                console.error(e);
             }
         },
         [onChangeAddress],
@@ -386,17 +390,20 @@ const FileItem = ({ file, onDelete }) => {
 
 const ParkingPicture = forwardRef(({ images, setCheck }, ref) => {
     const [fileList, setFileList] = useState([]);
-    const onChangeFileList = useCallback((e) => {
-        const { files } = e.target;
-        if (files) {
-            const newFileList = [];
-            const idx = fileList.length;
-            for (let i = 0; i < files.length; i++) {
-                newFileList.push({ id: idx + i + 1, file: files[i] });
+    const onChangeFileList = useCallback(
+        (e) => {
+            const { files } = e.target;
+            if (files) {
+                const newFileList = [];
+                const idx = fileList.length;
+                for (let i = 0; i < files.length; i++) {
+                    newFileList.push({ id: idx + i + 1, file: files[i] });
+                }
+                setFileList((fileList) => fileList.concat(newFileList));
             }
-            setFileList(fileList => fileList.concat(newFileList));
-        }
-    }, [fileList.length]);
+        },
+        [fileList.length],
+    );
     const handleDeleteFile = useCallback(
         (id) => setFileList(fileList.filter((file) => file.id !== id)),
         [fileList],
@@ -407,19 +414,23 @@ const ParkingPicture = forwardRef(({ images, setCheck }, ref) => {
     useEffect(() => {
         setCheck(fileList.length >= 2);
     }, [setCheck, fileList]);
-    useEffect(()=>{
-        const initImage = async () =>{
-            if(images){
-                const placeImages = [];
-                for (let i = 0; i < images.length; i++) {
-                    const res = await requestGetImageFile(images[i]);
-                    placeImages.push({ id: i + 1, file: res });
+    useEffect(() => {
+        const initImage = async () => {
+            if (images) {
+                try {
+                    const placeImages = [];
+                    for (let i = 0; i < images.length; i++) {
+                        const res = await requestGetImageFile(images[i]);
+                        placeImages.push({ id: i + 1, file: res });
+                    }
+                    setFileList(placeImages);
+                } catch (e) {
+                    console.error(e);
                 }
-                setFileList(placeImages);
             }
-        }
+        };
         initImage();
-    }, [images])
+    }, [images]);
     return (
         <section className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
@@ -523,7 +534,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_name,
                     place_type,
                     post_num,
-                    place_images
+                    place_images,
                 });
             }
         } catch (e) {

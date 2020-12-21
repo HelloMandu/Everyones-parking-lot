@@ -18,7 +18,6 @@ import { isEmpty } from '../../../lib/formatChecker';
 /* StyleSheets */
 
 const NoticeDetailContainer = () => {
-
     const location = useLocation();
     const history = useHistory();
     const openDialog = useDialog();
@@ -32,38 +31,55 @@ const NoticeDetailContainer = () => {
 
     const getNoticeDetail = useCallback(async () => {
         onLoading('notice_detail');
-        const response = await requestGetDetailNotice(notice_id);
-        setDetailNotice(response.notice);
+        try {
+            const response = await requestGetDetailNotice(notice_id);
+            setDetailNotice(response.notice);
+        } catch (e) {
+            console.error(e);
+        }
         offLoading('notice_detail');
         // eslint-disable-next-line
-    }, [notice_id])
+    }, [notice_id]);
 
     useEffect(() => {
         try {
             getNoticeDetail();
         } catch (e) {
-            openDialog("공지사항을 가지고 오는 도중에 오류가 발생했습니다.", "잠시 후에 다시 시도해 주세요.", history.goBack());
+            openDialog(
+                '공지사항을 가지고 오는 도중에 오류가 발생했습니다.',
+                '잠시 후에 다시 시도해 주세요.',
+                history.goBack(),
+            );
         }
-    }, [getNoticeDetail, openDialog, history])
+    }, [getNoticeDetail, openDialog, history]);
 
     return (
         <div className={styles['container']}>
-            {!isEmpty(detailNotice) &&
-            <>
-                <div className={styles['header-area']}>
-                    <div className={styles['header-text']}>
-                        <div className={styles['header-time']}>{getFormatDateNanTime(detailNotice.updatedAt)}</div>
-                        <div className={styles['header-title']}>{detailNotice.notice_title}</div>
-                        <div className={styles['header-bottom']}>
-                            <div className={styles['header-name']}>운영자</div>
-                            <div className={styles['header-cnt']}>조회수 {detailNotice.hit}</div>
+            {!isEmpty(detailNotice) && (
+                <>
+                    <div className={styles['header-area']}>
+                        <div className={styles['header-text']}>
+                            <div className={styles['header-time']}>
+                                {getFormatDateNanTime(detailNotice.updatedAt)}
+                            </div>
+                            <div className={styles['header-title']}>
+                                {detailNotice.notice_title}
+                            </div>
+                            <div className={styles['header-bottom']}>
+                                <div className={styles['header-name']}>
+                                    운영자
+                                </div>
+                                <div className={styles['header-cnt']}>
+                                    조회수 {detailNotice.hit}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className={styles['text-area']}>
-                    {detailNotice.notice_body}
-                </div>
-            </>}
+                    <div className={styles['text-area']}>
+                        {detailNotice.notice_body}
+                    </div>
+                </>
+            )}
         </div>
     );
 };

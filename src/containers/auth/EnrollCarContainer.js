@@ -24,7 +24,7 @@ import styles from './EnrollCarContainer.module.scss';
 
 import useInput from '../../hooks/useInput';
 import { useDialog } from '../../hooks/useDialog';
-import useLoading from '../../hooks/useLoading'
+import useLoading from '../../hooks/useLoading';
 /* Hooks */
 
 import { requestPutReCarInfo } from '../../api/user';
@@ -147,7 +147,7 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
 const UpdateCar = () => {
     const history = useHistory();
     const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
 
     const sessionToken = sessionStorage.getItem('session_token');
     if (sessionToken === null) {
@@ -165,33 +165,37 @@ const UpdateCar = () => {
     const parkingPicture = useRef();
 
     const onClickButton = useCallback(async () => {
-        onLoading('carInfo')
-
         // 업데이트 요청
         if (sessionToken) {
-            const response = await requestPutReCarInfo(sessionToken, {
-                car_location:
-                    area === 'default'
-                        ? undefined
-                        : area === ''
-                        ? undefined
-                        : area,
-                car_num: carNumber,
-                car_image: parkingPicture.current.fileList[0],
-            });
-            if (response.msg === 'success') {
-                sessionStorage.removeItem('session_token');
-                openDialog('차량정보등록 완료');
-                history.push(Paths.auth.sign_complete);
-            } else {
-                openDialog(response.msg, response.sub);
+            onLoading('carInfo');
+            try {
+                const response = await requestPutReCarInfo(sessionToken, {
+                    car_location:
+                        area === 'default'
+                            ? undefined
+                            : area === ''
+                            ? undefined
+                            : area,
+                    car_num: carNumber,
+                    car_image: parkingPicture.current.fileList[0],
+                });
+                if (response.msg === 'success') {
+                    sessionStorage.removeItem('session_token');
+                    openDialog('차량정보등록 완료');
+                    history.push(Paths.auth.sign_complete);
+                } else {
+                    openDialog(response.msg, response.sub);
+                }
+            } catch (e) {
+                console.error(e);
             }
+            offLoading('carInfo');
         } else {
-            openDialog('로그인이 필요합니다', '', () => history.push(Paths.auth.signin));
+            openDialog('로그인이 필요합니다', '', () =>
+                history.push(Paths.auth.signin),
+            );
         }
-
-        offLoading('carInfo')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionToken, area, carNumber, openDialog, history]);
 
     useEffect(() => {

@@ -6,7 +6,6 @@ import React, {
     useState,
 } from 'react';
 import cn from 'classnames/bind';
-// import { useSnackbar } from 'notistack';
 
 import { requestPostAuth, requestPostConfirm } from '../../api/mobile';
 
@@ -14,7 +13,7 @@ import useInput from '../../hooks/useInput';
 import useKeyDown from '../../hooks/useKeyDown';
 import useInterval from '../../hooks/useInterval';
 import { useDialog } from '../../hooks/useDialog';
-import useLoading from '../../hooks/useLoading'
+import useLoading from '../../hooks/useLoading';
 
 import { isCellPhoneForm } from '../../lib/formatChecker';
 
@@ -30,12 +29,11 @@ const getTime = (timer) =>
         ((timer % 60000) % 10000) / 1000,
     )}`;
 
-const LOADING_PHONE = 'sendVerify'
+const LOADING_PHONE = 'sendVerify';
 
 const VerifyPhone = ({ setCheck }, ref) => {
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
-    // const { enqueueSnackbar } = useSnackbar();
     const [
         phoneNumber,
         handleChangePhoneNumber,
@@ -49,37 +47,41 @@ const VerifyPhone = ({ setCheck }, ref) => {
     );
     const [buttonTitle, setButtonTitle] = useState('인증번호 발송');
     const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading()
-    const verifyRef = useRef()
+    const [onLoading, offLoading] = useLoading();
+    const verifyRef = useRef();
 
     const onClickSendVerify = useCallback(async () => {
-        onLoading(LOADING_PHONE)
-
         if (sendCheck) {
-            const response = await requestPostAuth(phoneNumber);
-            if (response.data.msg === 'success') {
-                openDialog('인증번호를 전송했습니다.')
-                setSent(true);
-                setButtonTitle('인증번호 재발송');
-                setTimer(180000);
-                verifyRef.current.focus()
-            } else {
-                openDialog('전송실패', '인증번호 전송에 실패했습니다');
+            onLoading(LOADING_PHONE);
+            try {
+                const response = await requestPostAuth(phoneNumber);
+                if (response.data.msg === 'success') {
+                    openDialog('인증번호를 전송했습니다.');
+                    setSent(true);
+                    setButtonTitle('인증번호 재발송');
+                    setTimer(180000);
+                    verifyRef.current.focus();
+                } else {
+                    openDialog('전송실패', '인증번호 전송에 실패했습니다.');
+                }
+            } catch {
+                openDialog(
+                    '전송실패',
+                    '인증번호를 전송하는 도중 오류가 발생했습니다.',
+                );
             }
+            offLoading(LOADING_PHONE);
         }
-
-        offLoading(LOADING_PHONE)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sendCheck, phoneNumber, openDialog]);
     const [sendFocus, sendKeyDown] = useKeyDown(onClickSendVerify);
 
     const onClickVerify = useCallback(async () => {
-        onLoading('verify')
-
         if (verifyCheck) {
+            onLoading('verify');
             const response = await requestPostConfirm(phoneNumber, verify);
             if (response.data.msg === 'success') {
-                openDialog('인증완료하였습니다.')
+                openDialog('인증완료하였습니다.');
                 setIsConfirm(true);
                 setSendCheck(!sendCheck);
                 setButtonTitle('인증완료');
@@ -89,12 +91,10 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 }
             } else {
                 openDialog('인증실패', '인증번호가 다릅니다');
-                // enqueueSnackbar('인증번호가 다릅니다.', { variant: 'error' } );
             }
+            offLoading('verify');
         }
-
-        offLoading('verify')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         verifyCheck,
         phoneNumber,

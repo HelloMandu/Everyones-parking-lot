@@ -74,26 +74,28 @@ const UseDetailContainer = ({ location }) => {
 
     const getUseDetail = useCallback(async () => {
         onLoading('getUseDetail');
-
-        const {
-            msg,
-            order,
-            review,
-            prev_order,
-        } = await requestGetDetailUseRental(rental_id);
-
-        if (msg === 'success') {
-            setOrder(order, prev_order);
-            setReview(review);
-            if (
-                rentalStatus(order) === '이용완료' ||
-                rentalStatus(order) === '이용취소'
-            )
-                setStatus(true);
-        } else {
-            openDialog(msg);
+        try{
+            const {
+                msg,
+                order,
+                review,
+                prev_order,
+            } = await requestGetDetailUseRental(rental_id);
+    
+            if (msg === 'success') {
+                setOrder(order, prev_order);
+                setReview(review);
+                if (
+                    rentalStatus(order) === '이용완료' ||
+                    rentalStatus(order) === '이용취소'
+                )
+                    setStatus(true);
+            } else {
+                openDialog(msg);
+            }
+        } catch(e){
+            console.error(e);
         }
-
         offLoading('getUseDetail');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rental_id, openDialog]);

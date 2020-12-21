@@ -49,14 +49,21 @@ const NotificationContainer = () => {
 
     const handleReadNotification = useCallback(
         async (id) => {
-            const { data } = await requestPutNotificationRead(JWT_TOKEN, id);
-            if (data.msg === 'success') {
-                const newNotifications = notifications.map((noti) =>
-                    noti.notification_id === id
-                        ? { ...noti, read_at: new Date() }
-                        : noti,
+            try {
+                const { data } = await requestPutNotificationRead(
+                    JWT_TOKEN,
+                    id,
                 );
-                setNotifications(newNotifications);
+                if (data.msg === 'success') {
+                    const newNotifications = notifications.map((noti) =>
+                        noti.notification_id === id
+                            ? { ...noti, read_at: new Date() }
+                            : noti,
+                    );
+                    setNotifications(newNotifications);
+                }
+            } catch (e) {
+                console.error(e);
             }
         },
         [JWT_TOKEN, notifications],
