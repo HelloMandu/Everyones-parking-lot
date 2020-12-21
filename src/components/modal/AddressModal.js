@@ -166,16 +166,18 @@ const AddressModal = (props) => {
                             </div>
                             <p>최근 이용 스페이스 존</p>
                             <div className={styles['space-list']}>
-                                <AddressList addr_list={space_list} />
+                                {space_list.length !== 0 ?
+                                    <AddressList addr_list={space_list} />
+                                :   <div className={styles['none-list']}>최근 이용 스페이스 존이 없습니다.</div>}
                             </div>
                             <div className={styles['event-zone']}>
-                                <ButtonBase className={styles['event-img']}>
+                                <ButtonBase className={styles['event-img']} onClick={() => history.push(Paths.main.event.detail + '?id=3')}>
                                     <img src={banner_img} alt="event" />
                                 </ButtonBase>
                             </div>
                             <div className={styles['space-zone']}>
                                 <p>스페이스 이벤트존</p>
-                                <ButtonBase className={styles['event-img']}>
+                                <ButtonBase className={styles['event-img']}  onClick={() => history.push(Paths.main.event.detail + '?id=2')}>
                                     <img src={space_zone} alt="event" />
                                 </ButtonBase>
                             </div>

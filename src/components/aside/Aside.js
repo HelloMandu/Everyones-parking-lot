@@ -27,7 +27,7 @@ import {
 } from '../../static/asset/svg/aside';
 import { Paths } from '../../paths/index';
 import { isEmpty } from '../../lib/formatChecker';
-import { DBImageFormat } from '../../lib/formatter';
+import { DBImageFormat, numberFormat } from '../../lib/formatter';
 
 const cx = cn.bind(styles);
 const settings = {
@@ -82,15 +82,23 @@ const Aside = ({ open, handleClose }) => {
                                 </div>
                             </div>
                         </ButtonBase>
+                        {!isEmpty(user) && <ButtonBase className={styles['user-point']} component="div" onClick={() => onClickLink(Paths.main.mypage.point)} >
+                            <span className={styles['point-title']}>수익금</span>
+                            <span className={styles['point-value']}>{numberFormat(user.point)}P</span>
+                        </ButtonBase>}
                     </div>
                     <div className={styles['aside-event']}>
                         <Slider {...settings}>
-                            <div className={styles['banner-item']}>
-                                <img src={banner} alt="배너" />
-                            </div>
-                            <div className={styles['banner-item']}>
-                                <img src={banner} alt="배너" />
-                            </div>
+                            <a href="https://m.naver.com">
+                                <div className={styles['banner-item']}>
+                                    <img src={banner} alt="배너" />
+                                </div>
+                            </a>
+                            <a href="https://www.daum.net">
+                                <div className={styles['banner-item']}>
+                                    <img src={banner} alt="배너" />
+                                </div>
+                            </a>
                         </Slider>
                     </div>
                     <div className={styles['aside-list']}>

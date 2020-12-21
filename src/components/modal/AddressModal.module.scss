@@ -32,6 +32,9 @@ html {
         max-height: 200px;
         overflow: hidden;
         overflow-y: scroll;
+        .none-list {
+            color: #777;
+        }
     }
     p {
         font-size: 14px;
