@@ -44,7 +44,12 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
 import { getMobileOperatingSystem } from '../../lib/os';
 //action
-import { set_position, set_level, get_area } from '../../store/main/position';
+import {
+    set_position,
+    set_level,
+    get_area,
+    set_user_location,
+} from '../../store/main/position';
 import { get_list } from '../../store/main/parking';
 import { set_filters } from '../../store/main/filters';
 
@@ -58,9 +63,14 @@ const cx = cn.bind(styles);
 
 const MapContainer = ({ modal }) => {
     const dispatch = useDispatch();
-    const { position, level, address, arrive, area } = useSelector(
-        (state) => state.position,
-    ); //마지막 좌표 및 레벨
+    const {
+        position,
+        level,
+        address,
+        arrive,
+        area,
+        user_location,
+    } = useSelector((state) => state.position); //마지막 좌표 및 레벨
     const { parking } = useSelector((state) => state.parking);
     const {
         parking_town,
@@ -94,16 +104,19 @@ const MapContainer = ({ modal }) => {
     );
 
     //지도 레벨을 조정하는 함수
-    const zoomMap = useCallback((type) => {
-        let level = kakao_map.current.getLevel();
-        level = type === 'zoomin' ? level - 1 : level + 1;
-        kakao_map.current.setLevel(level, {
-            animate: {
-                duration: 300,
-            },
-        });
-        dispatch(set_level(level));
-    }, [dispatch]);
+    const zoomMap = useCallback(
+        (type) => {
+            let level = kakao_map.current.getLevel();
+            level = type === 'zoomin' ? level - 1 : level + 1;
+            kakao_map.current.setLevel(level, {
+                animate: {
+                    duration: 300,
+                },
+            });
+            dispatch(set_level(level));
+        },
+        [dispatch],
+    );
 
     // 맵 중심좌표를 설정하는 함수
     const setCoordinates = useCallback((lat, lng) => {
@@ -116,6 +129,7 @@ const MapContainer = ({ modal }) => {
         window.setGps = (lat, lng) => {
             // Gps 지정 함수
             if (lat && lng) {
+                dispatch(set_user_location({ lat, lng }));
                 dispatch(set_position({ lat, lng }));
                 setCoordinates(lat, lng);
             }
@@ -256,65 +270,74 @@ const MapContainer = ({ modal }) => {
             (item) => item.addr.indexOf(area) !== -1,
         );
         // 주차장 마커 생성
-        const data = markdata.map((el) => {
-            // const distance ='300';
-            const distance = getDistanceFromLatLonInKm(
-                el.lat,
-                el.lng,
-                position_ref.current.lat,
-                position_ref.current.lng,
-            );
-            const content = `<div onclick="onClickOverlay(${
-                el.place_id
-            })" class="custom-overlay" title=${JSON.stringify(
-                el,
-            )} ><span>${distance}Km</span></div>`;
-            var customOverlay = new kakao.maps.CustomOverlay({
-                map: map,
-                position: new kakao.maps.LatLng(el.lat, el.lng),
-                content: content,
-                yAnchor: 1,
-                clickable: true,
-                zIndex: 1600,
-            });
-            customOverlay.setMap(map);
-            return customOverlay;
-        });
-
-        cluster_marker.current.addMarkers(data);
-        kakao.maps.event.addListener(
-            cluster_marker.current,
-            'clusterclick',
-            (cluster) => {
-                const overlays = cluster.getMarkers();
-
-                if (overlays.length > 10) {
-                    var level = map.getLevel() - 1;
-                    map.setLevel(level, {
-                        anchor: cluster.getCenter(),
-                        animate: 300,
-                    });
-                } else {
-                    slide_view.current = !slide_view.current;
-
-                    const slides = overlays.map((overlay) => {
-                        const data = overlay.getContent();
-                        const t_index = data.indexOf('title=');
-                        const close_index = data.indexOf('>');
-                        const str = data.substring(t_index + 6, close_index);
-                        return JSON.parse(str);
-                    });
-                    setSlideList(slides);
-                    setOnSlide(slide_view.current);
-                }
-            },
+        const storage_position = JSON.parse(
+            sessionStorage.getItem('user_position'),
         );
+        if (storage_position) {
+            const data = markdata.map((el) => {
+                // const distance ='300';
+
+                const distance = getDistanceFromLatLonInKm(
+                    el.lat,
+                    el.lng,
+                    storage_position.lat,
+                    storage_position.lng,
+                );
+                const content = `<div onclick="onClickOverlay(${
+                    el.place_id
+                })" class="custom-overlay" title=${JSON.stringify(
+                    el,
+                )} ><span>${distance}Km</span></div>`;
+                var customOverlay = new kakao.maps.CustomOverlay({
+                    map: map,
+                    position: new kakao.maps.LatLng(el.lat, el.lng),
+                    content: content,
+                    yAnchor: 1,
+                    clickable: true,
+                    zIndex: 1600,
+                });
+                customOverlay.setMap(map);
+                return customOverlay;
+            });
+            cluster_marker.current.addMarkers(data);
+            kakao.maps.event.addListener(
+                cluster_marker.current,
+                'clusterclick',
+                (cluster) => {
+                    const overlays = cluster.getMarkers();
+
+                    if (overlays.length > 10) {
+                        var level = map.getLevel() - 1;
+                        map.setLevel(level, {
+                            anchor: cluster.getCenter(),
+                            animate: 300,
+                        });
+                    } else {
+                        slide_view.current = !slide_view.current;
+
+                        const slides = overlays.map((overlay) => {
+                            const data = overlay.getContent();
+                            const t_index = data.indexOf('title=');
+                            const close_index = data.indexOf('>');
+                            const str = data.substring(
+                                t_index + 6,
+                                close_index,
+                            );
+                            return JSON.parse(str);
+                        });
+                        setSlideList(slides);
+                        setOnSlide(slide_view.current);
+                    }
+                },
+            );
+        }
+
         window.onClickOverlay = (place_id) => {
             history.push(Paths.main.detail + '?place_id=' + place_id);
         };
         offLoading('parking/GET_LIST');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [area, dispatch, history, parking]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [area, dispatch, history, parking, user_location]);
 
     //지도를 렌더하는 함수
     const mapRender = useCallback(() => {
@@ -391,6 +414,26 @@ const MapContainer = ({ modal }) => {
             window.setGps = (latitude, longitude) => {
                 // Gps 지정 함수
                 createMyLocationMarker(latitude, longitude);
+
+                const storage_position = JSON.parse(
+                    sessionStorage.getItem('user_position'),
+                );
+
+                if (storage_position) {
+                    const { lat, lng } = storage_position;
+                    if (!(latitude === lat) && !(longitude === lng)) {
+                        setCoordinates(lat, lng);
+                        dispatch(set_user_location({ lat, lng }));
+                    }
+                } else {
+                    const p = {
+                        lat: latitude,
+                        lng: longitude,
+                    };
+                    sessionStorage.setItem('user_position', JSON.stringify(p));
+                    setCoordinates(latitude, longitude);
+                    dispatch(set_user_location(p));
+                }
             };
             if (login_os === 'Android') {
                 if (typeof window.myJs !== 'undefined') {
@@ -469,6 +512,12 @@ const MapContainer = ({ modal }) => {
         };
     }, [dispatch]);
 
+    useEffect(() => {
+        if (user_location.lat !== 0 && user_location.lng !== 0) {
+            createParkingMarker();
+        }
+    }, [user_location]);
+
     return (
         <>
             <div className={styles['container']}>
@@ -491,7 +540,12 @@ const MapContainer = ({ modal }) => {
                     </div>
                 </ButtonBase>
                 <div className={styles['search']}>
-                    <ButtonBase className={styles['search-box']} onClick={() => history.push(Paths.main.index + '/address')}>
+                    <ButtonBase
+                        className={styles['search-box']}
+                        onClick={() =>
+                            history.push(Paths.main.index + '/address')
+                        }
+                    >
                         위치를 입력해 주세요.
                     </ButtonBase>
                     <IconButton className={styles['search-btn']}>

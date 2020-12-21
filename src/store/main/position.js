@@ -4,6 +4,7 @@ import { createAction, handleActions } from 'redux-actions';
 import { call, put, delay, takeLatest } from "redux-saga/effects";
 import { requsetGetAreaInfo } from '../../api/place';
 import { areaFormat } from '../../lib/place';
+const SET_USER_LOCATION ='position/SET_USER_LOCATION';
 const SET_POSITION = 'position/SET_POSITION';
 const SET_LEVEL = 'position/SET_LEVEL';
 const SET_ADDRESSS = 'position/SET_ADDRESSS';
@@ -18,8 +19,8 @@ export const set_position = createAction(SET_POSITION);
 export const set_level = createAction(SET_LEVEL);
 export const set_address = createAction(SET_ADDRESSS);
 export const set_arrive = createAction(SET_ARRIVE);
+export const set_user_location = createAction(SET_USER_LOCATION);
 export const get_area = createAction(GET_AREA);
-
 
 const initState = {
     position: {
@@ -29,6 +30,10 @@ const initState = {
     arrive: {
         lat: 0,
         lng: 0
+    },
+    user_location:{
+        lat:0,
+        lng:0,
     },
     address: null,
     area: null,
@@ -86,12 +91,20 @@ const position = handleActions(
                 arrive: action.payload,
             }
         },
+        [SET_USER_LOCATION]: (state, action) => {
+            console.log(action);
+            return {
+                ...state,
+                user_location: action.payload
+            }
+        },
         [GET_AREA_SUCCESS]: (state, action) => {
             return {
                 ...state,
                 area: action.payload
             }
-        }
+        },
+   
     },
     initState,
 );
