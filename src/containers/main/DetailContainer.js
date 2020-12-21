@@ -357,7 +357,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         disable={false}
                         onClick={() =>
                             history.push(
-                                `${Paths.main.parking.enrollment}?place_id=${place.place_id}`,
+                                `${Paths.main.parking.modify}?place_id=${place.place_id}`,
                             )
                         }
                     ></FixedButton>

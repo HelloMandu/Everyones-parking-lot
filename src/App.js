@@ -107,6 +107,10 @@ const App = () => {
         else if (pathname === Paths.main.parking.enrollment) {
             return <Header title={HeaderTitle.main.parking.enrollment} />;
         }
+        // 주차공간 수정
+        else if (pathname === Paths.main.parking.modify) {
+            return <Header title={HeaderTitle.main.parking.modify} />;
+        }
         //알림함
         else if (pathname === Paths.main.notification) {
             return <Header title={HeaderTitle.main.notification} />;

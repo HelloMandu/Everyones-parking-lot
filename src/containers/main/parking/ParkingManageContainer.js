@@ -4,10 +4,8 @@ import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
 import useScrollEnd from '../../../hooks/useScrollEnd';
-import useLoading from '../../../hooks/useLoading';
 import useToken from '../../../hooks/useToken';
 
-import { requestGetMyParkingList } from '../../../api/place';
 import { imageFormat, numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
@@ -16,6 +14,9 @@ import { Paths } from '../../../paths';
 import Notice from '../../../static/asset/svg/Notice';
 
 import styles from './ParkingManageContainer.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMyParkingList, getMyParkingList } from '../../../store/myParking';
+import { isEmpty } from '../../../lib/formatChecker';
 
 const cx = cn.bind(styles);
 
@@ -78,39 +79,29 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
         </>
     );
 });
-
-const LOADING_NAME = 'parking/MANAGE';
-
 const ParkingManageContainer = () => {
     const JWT_TOKEN = useToken();
     const history = useHistory();
-    const allParkingList = useRef([]);
-    const dataLength = useRef(0);
-    const [parkingList, setParkingList] = useState([]);
+    const loading = useSelector((state) => state.loading);
+    const { myAllParkingList, myParkingList } = useSelector(
+        (state) => state.myParking,
+    );
+    const dispatch = useDispatch();
     const fetchParkingList = useCallback(() => {
         const LIMIT = 3;
-        const length = dataLength.current;
-        const fetchData = allParkingList.current.slice(length, length + LIMIT);
+        const length = myParkingList.length;
+        const fetchData = myAllParkingList.slice(length, length + LIMIT);
         if (fetchData.length > 0) {
-            setParkingList((parkingList) => parkingList.concat(fetchData));
-            dataLength.current = dataLength.current + LIMIT;
+            dispatch(fetchMyParkingList(fetchData));
         }
-    }, []);
-    const [onLoading, offLoading, isLoading] = useLoading();
+    }, [dispatch, myAllParkingList, myParkingList.length]);
     useScrollEnd(fetchParkingList);
     useEffect(() => {
-        const getParkingList = async () => {
-            if(JWT_TOKEN){
-                onLoading(LOADING_NAME);
-                const { places } = await requestGetMyParkingList(JWT_TOKEN);
-                allParkingList.current = places;
-                fetchParkingList();
-                offLoading(LOADING_NAME);
-            }
-        };
-        getParkingList();
+        if (!myAllParkingList.length) {
+            dispatch(getMyParkingList(JWT_TOKEN));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JWT_TOKEN]);
+    }, []);
     return (
         <main className={styles['parking-management-container']}>
             <Link to={Paths.main.parking.enrollment}>
@@ -118,10 +109,10 @@ const ParkingManageContainer = () => {
                     <span className={styles['plus']}>+</span>주차공간 등록하기
                 </ButtonBase>
             </Link>
-            {!isLoading[LOADING_NAME] &&
-                (parkingList.length ? (
+            {!isEmpty(loading) &&
+                (myParkingList.length ? (
                     <ul className={styles['parking-list']}>
-                        {parkingList.map(
+                        {myParkingList.map(
                             ({
                                 place_id,
                                 place_images,

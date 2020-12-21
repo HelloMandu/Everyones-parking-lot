@@ -7,6 +7,7 @@ import loading from './loading';
 import position, { areaSaga } from './main/position';
 import filters from './main/filters';
 import parking, { parkingSaga } from './main/parking';
+import myParking, { myParkingSaga } from './myParking';
 
 const rootReducer = combineReducers({
     loading,
@@ -15,10 +16,11 @@ const rootReducer = combineReducers({
     position,
     filters,
     parking,
+    myParking,
 });
 
 export function* rootSaga() {
-    yield all([userSaga(), parkingSaga(), areaSaga()]);
+    yield all([userSaga(), parkingSaga(), areaSaga(), myParkingSaga()]);
 }
 
 export default rootReducer;
