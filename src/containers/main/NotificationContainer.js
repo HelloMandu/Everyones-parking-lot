@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 
 import { useDialog } from '../../hooks/useDialog';
-import useScrollEnd from '../../hooks/useScrollEnd';
+import { useScrollEnd } from '../../hooks/useScroll';
 import {
     requestGetNotifications,
     requestPutNotificationAllRead,
@@ -76,7 +76,7 @@ const NotificationContainer = () => {
     }, []);
 
     const getNotification = useCallback(async () => {
-        if(JWT_TOKEN){
+        if (JWT_TOKEN) {
             onLoading(LOADING_NOTIFICATION);
             const { data } = await requestGetNotifications(JWT_TOKEN);
             if (data.msg === 'success') {

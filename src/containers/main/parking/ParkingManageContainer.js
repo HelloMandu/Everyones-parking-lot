@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState, useRef, memo } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-import useScrollEnd from '../../../hooks/useScrollEnd';
+import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
 import useToken from '../../../hooks/useToken';
 
 import { imageFormat, numberFormat } from '../../../lib/formatter';
@@ -16,7 +16,6 @@ import Notice from '../../../static/asset/svg/Notice';
 import styles from './ParkingManageContainer.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMyParkingList, getMyParkingList } from '../../../store/myParking';
-import { isEmpty } from '../../../lib/formatChecker';
 
 const cx = cn.bind(styles);
 
@@ -82,6 +81,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
 const ParkingManageContainer = () => {
     const JWT_TOKEN = useToken();
     const history = useHistory();
+    const location = useLocation();
     const loading = useSelector((state) => state.loading);
     const { myAllParkingList, myParkingList } = useSelector(
         (state) => state.myParking,
@@ -96,6 +96,7 @@ const ParkingManageContainer = () => {
         }
     }, [dispatch, myAllParkingList, myParkingList.length]);
     useScrollEnd(fetchParkingList);
+    useScrollRemember(location.pathname);
     useEffect(() => {
         if (!myAllParkingList.length) {
             dispatch(getMyParkingList(JWT_TOKEN));
@@ -109,7 +110,7 @@ const ParkingManageContainer = () => {
                     <span className={styles['plus']}>+</span>주차공간 등록하기
                 </ButtonBase>
             </Link>
-            {!isEmpty(loading) &&
+            {!loading['myParking/GET_LIST'] &&
                 (myParkingList.length ? (
                     <ul className={styles['parking-list']}>
                         {myParkingList.map(
