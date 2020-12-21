@@ -79,7 +79,7 @@ const CouponContainer = ({ match }) => {
                         history.goBack();
                     }
                 } else {
-                    openDialog('입력 실패', msg);
+                    openDialog(msg);
                 }
             }
         },

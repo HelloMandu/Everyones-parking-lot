@@ -490,11 +490,8 @@ const MapContainer = ({ modal }) => {
                         <div className={styles['line']} />
                     </div>
                 </ButtonBase>
-                <div
-                    className={styles['search']}
-                    onClick={() => history.push(Paths.main.index + '/address')}
-                >
-                    <ButtonBase className={styles['search-box']}>
+                <div className={styles['search']}>
+                    <ButtonBase className={styles['search-box']} onClick={() => history.push(Paths.main.index + '/address')}>
                         위치를 입력해 주세요.
                     </ButtonBase>
                     <IconButton className={styles['search-btn']}>

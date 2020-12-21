@@ -48,7 +48,7 @@ const EventDetailContainer = ({ location, history }) => {
             {!isEmpty(event) &&
             <>
                 <div className={styles['banner']}>
-                    {event_banner_image && <img className={styles['image']} src={`${imageFormat(event_banner_image)}}`} alt="banner" />}
+                    {event_banner_image && <img className={styles['image']} src={`${imageFormat(event_banner_image)}`} alt="banner" />}
                 </div>
                 <div className={styles['content']}>
                     <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 
