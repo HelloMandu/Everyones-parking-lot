@@ -15,6 +15,7 @@ import DetailReviewList from '../../components/review/DetailReviewItem';
 import DatePickerModal from '../../components/modal/DatePickerModal';
 import RoadviewModal from '../../components/modal/RoadviewModal';
 import FixedButton from '../../components/button/FixedButton';
+import ImageModal from '../../components/modal/ImageModal';
 //asset
 import guid_icon from '../../static/asset/svg/detail/guid.svg';
 import roadview_icon from '../../static/asset/svg/detail/roadview.svg';
@@ -40,7 +41,8 @@ import { imageFormat, numberFormat } from '../../lib/formatter';
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
-import ImageModal from '../../components/modal/ImageModal';
+import { useScrollRemember } from '../../hooks/useScroll';
+
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -179,6 +181,7 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
+    useScrollRemember()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callGetDetailParking, []);

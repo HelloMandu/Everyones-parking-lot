@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DBImageFormat } from '../lib/formatter';
 import makeFormData from '../lib/makeFormData';
 
 import { Paths } from '../paths';
@@ -258,3 +259,10 @@ export const requsetGetAreaInfo = async (lat, lng) => {
     });
     return response;
 };
+
+export const requestGetImageFile = async (imageUrl) => {
+    const URL = DBImageFormat(imageUrl);
+    const response = await axios.get(URL, { responseType: 'blob' });
+    const file = new File([response.data], imageUrl, { lastModified: Date.now() })
+    return file;
+}
