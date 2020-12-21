@@ -54,6 +54,7 @@ const ReviewDetailContainer = ({ location }) => {
         );
         if (data.msg === 'success') {
             setCommentList(commentList.concat(data.comment));
+            onChangeComment('');
             commentRef.current.value = '';
         } else {
             openDialog('댓글 작성을 실패했습니다.');

@@ -30,53 +30,64 @@ const Header = () => {
     return (
         <div className={styles['header-container']}>
             <Link to={Paths.main.support.qna_write}>
-                <ButtonBase className={styles['write-button']}>문의 작성</ButtonBase>
+                <ButtonBase className={styles['write-button']}>
+                    문의 작성
+                </ButtonBase>
             </Link>
         </div>
     );
 };
 
 const QNAItems = ({ QNAList }) => {
-
     return (
         <ul className={styles['container']}>
-            {QNAList.map(({ qna_id, updatedAt, subject, user, hit, status }) => (
-                <Link to={Paths.main.support.qna_detail + `?id=${qna_id}`} key={qna_id}>
-                    <ButtonBase
-                        component={"li"}
-                        className={styles['item-area']}
+            {QNAList.map(
+                ({ qna_id, updatedAt, subject, user, hit, status }) => (
+                    <Link
+                        to={Paths.main.support.qna_detail + `?id=${qna_id}`}
+                        key={qna_id}
                     >
-                        <div className={styles['date']}>{getFormatDateNanTime(updatedAt)}</div>
-                        <div className={styles['title']}>{subject}</div>
-                        <div className={styles['bottom']}>
-                            {/* <div className={styles['name']}>{user.name}</div> */}
-                            <div className={styles['count']}>조회수 {hit}</div>
-                        </div>
-                        <div className={cn('button', { status: status })}>
-                            {status ? "답변완료" : "답변대기"}
-                        </div>
-                    </ButtonBase>
-                </Link>
-            ))}
+                        <ButtonBase
+                            component={'li'}
+                            className={styles['item-area']}
+                        >
+                            <div className={styles['date']}>
+                                {getFormatDateNanTime(updatedAt)}
+                            </div>
+                            <div className={styles['title']}>{subject}</div>
+                            <div className={styles['bottom']}>
+                                {/* <div className={styles['name']}>{user.name}</div> */}
+                                <div className={styles['count']}>
+                                    조회수 {hit}
+                                </div>
+                            </div>
+                            <div className={cn('button', { status: status })}>
+                                {status ? '답변완료' : '답변대기'}
+                            </div>
+                        </ButtonBase>
+                    </Link>
+                ),
+            )}
         </ul>
     );
 };
 
-const QNAContainer = () => {
+const LOADING_QNA = 'qna';
 
+const QNAContainer = () => {
     const history = useHistory();
     const openDialog = useDialog();
     const TOKEN = useToken();
-    const [onLoading, offLoading] = useLoading();
+    const [onLoading, offLoading, isLoading] = useLoading();
 
     const [QNAList, setQNSList] = useState([]);
 
     const getQNAList = useCallback(async () => {
-        onLoading('qna');
+        onLoading(LOADING_QNA);
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestGetQNAList(JWT_TOKEN);
         setQNSList(response.qnas);
-        offLoading('qna');
+        offLoading(LOADING_QNA);
         // eslint-disable-next-line
     }, []);
 
@@ -85,27 +96,27 @@ const QNAContainer = () => {
             try {
                 getQNAList();
             } catch (e) {
-                openDialog("1:1문의 오류", "", () => history.goBack());
+                openDialog('1:1문의 오류', '', () => history.goBack());
             }
         }
     }, [getQNAList, openDialog, history, TOKEN]);
 
     return (
         <>
-            {TOKEN !== null &&
-                <>
-                    <Header />
-                    {QNAList.length !== 0
-                        ? <QNAItems QNAList={QNAList} />
-                        : <div className={styles['non-qna']}>
-                            <div className={styles['non-container']}>
-                                <Notice />
-                                <div className={styles['explain']}>등록된 1:1 문의가 없습니다.</div>
+            <Header />
+            {!isLoading[LOADING_QNA] &&
+                (QNAList.length ? (
+                    <QNAItems QNAList={QNAList} />
+                ) : (
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                등록된 1:1 문의가 없습니다.
                             </div>
                         </div>
-                    }
-                </>
-            }
+                    </div>
+                ))}
         </>
     );
 };

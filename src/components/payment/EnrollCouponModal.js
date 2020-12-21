@@ -52,17 +52,14 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
             );
         }
     }, [couponList, price, setCoupon, history, openDialog]);
-    useEffect(() => {
-        const getCouponList = async () => {
-            const JWT_TOKEN = localStorage.getItem('user_id');
-            if(JWT_TOKEN){
-                const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
-                setCouponList(coupons);
-            }
-        };
-        getCouponList();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const getCouponList = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if(JWT_TOKEN){
+            const { coupons } = await requestGetCoupon(JWT_TOKEN, placeId);
+            setCouponList(coupons);
+        }
+    }, [placeId]);
+    useEffect(getCouponList, [getCouponList]);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
             <Header title={'적용쿠폰선택'}></Header>
