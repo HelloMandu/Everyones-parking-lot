@@ -84,7 +84,6 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                 setImgFile(base64.toString());
             }
         };
-        console.log(parkingInfo.place_images);
         if (parkingInfo.place_images && parkingInfo.place_images.length) {
             reader.readAsDataURL(parkingInfo.place_images[0].file);
         }

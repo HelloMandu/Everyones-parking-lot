@@ -13,6 +13,7 @@ import qs from 'qs';
 import {
     requestGetAddressInfo,
     requestGetDetailParking,
+    requestGetImageFile,
 } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
@@ -151,7 +152,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 type={'text'}
                 value={name}
                 name={'name'}
-                placeholder={'주차 공간 이름을 입력해주세요'}
+                placeholder={'주차 공간 이름을 입력해 주세요.'}
                 onChange={onChangeName}
             ></InputBox>
             <select
@@ -166,7 +167,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 type={'text'}
                 value={address}
                 name={'address'}
-                placeholder={'주차장 주소를 입력해주세요'}
+                placeholder={'주차장 주소를 입력해 주세요.'}
                 readOnly={true}
             ></InputBox>
             <ButtonBase
@@ -180,7 +181,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 type={'text'}
                 value={addressDetail}
                 name={'addressDetail'}
-                placeholder={'상세 주소를 입력해주세요'}
+                placeholder={'상세 주소를 입력해 주세요.'}
                 onChange={onChangeAddressDetail}
             ></InputBox>
             <div className={styles['per-price']}>
@@ -191,7 +192,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                         type={'number'}
                         value={price}
                         name={'price'}
-                        placeholder={'30분당 주차가격을 입력하세요'}
+                        placeholder={'30분당 주차가격을 입력해 주세요.'}
                         onChange={onChangePrice}
                     ></InputBox>
                     <span>원</span>
@@ -383,7 +384,8 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const ParkingPicture = forwardRef(({ url, setCheck }, ref) => {
+const ParkingPicture = forwardRef(({ setCheck }, ref) => {
+    console.log(ref);
     const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
@@ -404,12 +406,8 @@ const ParkingPicture = forwardRef(({ url, setCheck }, ref) => {
         fileList,
     }));
     useEffect(() => {
-        if(Paths.main.parking.enrollment === url){
-            setCheck(fileList.length >= 2);
-        } else{
-            setCheck(true);
-        }
-    }, [setCheck, fileList, url]);
+        setCheck(fileList.length >= 2);
+    }, [setCheck, fileList]);
     return (
         <section className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
@@ -500,7 +498,14 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_name,
                     place_type,
                     post_num,
+                    place_images,
                 } = place;
+                const placeImages = [];
+                for (let i = 0; i < place_images.length; i++) {
+                    const res = await requestGetImageFile(place_images[i]);
+                    placeImages.push({ id: i + 1, file: res });
+                }
+                parkingPicture.current = { fileList: placeImages }
                 setParkingInfoInit({
                     addr,
                     addr_detail,
@@ -517,7 +522,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
             console.error(e);
         }
     }, [place_id]);
-
     useEffect(() => setCheckAll(checkBasicInfo && checkParkingPicture), [
         checkBasicInfo,
         checkParkingPicture,
@@ -540,7 +544,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     parkingInfoInit={parkingInfoInit}
                 ></ExtraInfo>
                 <ParkingPicture
-                    url={url}
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
                 ></ParkingPicture>
