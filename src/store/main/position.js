@@ -1,7 +1,7 @@
 //유저 포지션
 
 import { createAction, handleActions } from 'redux-actions';
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, delay, takeLatest } from "redux-saga/effects";
 import { requsetGetAreaInfo } from '../../api/place';
 import { areaFormat } from '../../lib/place';
 const SET_POSITION = 'position/SET_POSITION';
@@ -38,9 +38,9 @@ const initState = {
 function* getArea(action) {
     try {
         const { lat, lng } = action.payload;
+        yield delay(1000);
         const res = yield call(requsetGetAreaInfo, lat, lng);
-        let area = areaFormat(res.data.documents[0].address.region_1depth_name);
-
+        const area = areaFormat(res.data.documents[0].address.region_1depth_name);
         yield put({
             type: GET_AREA_SUCCESS,
             payload: area

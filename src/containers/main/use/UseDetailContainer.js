@@ -21,7 +21,7 @@ import { imageFormat } from '../../../lib/formatter';
 import { Paths } from '../../../paths';
 
 import classnames from 'classnames/bind';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, IconButton } from '@material-ui/core';
 import styles from './UseDetailContainer.module.scss';
 import Tel from '../../../static/asset/svg/use/Tel';
 import MessageBox from '../../../static/asset/svg/use/MessageBox';
@@ -115,12 +115,12 @@ const UseDetailContainer = ({ location }) => {
                             {rentalStatus(order)}
                         </div>
                     </div>
-                    <div
+                    <IconButton
                         className={cx('x-button')}
                         onClick={() => history.goBack()}
                     >
                         <XButton />
-                    </div>
+                    </IconButton>
                     <div className={cx('card')}>
                         <div
                             className={cx('card-img')}

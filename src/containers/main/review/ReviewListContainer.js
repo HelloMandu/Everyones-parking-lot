@@ -18,7 +18,7 @@ import Notice from '../../../static/asset/svg/Notice';
 
 const cx = className.bind(styles);
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ setList, review }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const [onLoading, offLoading] = useLoading();
@@ -34,11 +34,15 @@ const ReviewItem = ({ review }) => {
                     token,
                     review.review_id,
                 );
-
                 if (data.msg === 'success') {
-                    openDialog('리뷰가 삭제되었습니다.');
-                    history.push(Paths.main.index);
-                } else openDialog(data.msg);
+                    setList((list) =>
+                        list.filter(
+                            (item) => item.review_id !== review.review_id,
+                        ),
+                    );
+                } else {
+                    openDialog(data.msg);
+                }
             },
             true,
         );
@@ -115,7 +119,11 @@ const ReviewListContainer = () => {
                 (list.length ? (
                     <div className={cx('container')}>
                         {list.map((item) => (
-                            <ReviewItem key={item.review_id} review={item} />
+                            <ReviewItem
+                                key={item.review_id}
+                                review={item}
+                                setList={setList}
+                            />
                         ))}
                     </div>
                 ) : (
