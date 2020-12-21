@@ -383,7 +383,7 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const ParkingPicture = forwardRef(({ url, setCheck }, ref) => {
+const ParkingPicture = forwardRef(({ images, url, setCheck }, ref) => {
     const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
@@ -500,6 +500,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_name,
                     place_type,
                     post_num,
+                    place_images
                 } = place;
                 setParkingInfoInit({
                     addr,
@@ -511,6 +512,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_name,
                     place_type,
                     post_num,
+                    place_images
                 });
             }
         } catch (e) {
@@ -522,8 +524,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
         checkBasicInfo,
         checkParkingPicture,
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(getDetailParking, []);
+
+    useEffect(getDetailParking, [getDetailParking]);
     return (
         <>
             <main className={styles['parking-enroll-container']}>
@@ -540,6 +542,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     parkingInfoInit={parkingInfoInit}
                 ></ExtraInfo>
                 <ParkingPicture
+                    images={parkingInfoInit && parkingInfoInit.place_images}
                     url={url}
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
