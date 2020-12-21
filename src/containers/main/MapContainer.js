@@ -105,8 +105,10 @@ const MapContainer = ({ modal }) => {
     const callGetCoordinates = async () => {
         window.setGps = (lat, lng) => {
             // Gps 지정 함수
-            dispatch(set_position({ lat, lng }));
-            setCoordinates(lat, lng);
+            if (lat && lng) {
+                dispatch(set_position({ lat, lng }));
+                setCoordinates(lat, lng);
+            }
         }
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
