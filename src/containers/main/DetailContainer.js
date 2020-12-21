@@ -48,9 +48,9 @@ const getParkingType = (type) => {
         case 0:
             return '주차타운';
         case 1:
-            return '주차타운';
+            return '지상주차장';
         case 2:
-            return '주차타운';
+            return '지하주차장';
         default:
             return '지정주차';
     }
@@ -288,7 +288,7 @@ const DetailContainer = ({ modal, place_id }) => {
                             <div className={styles['value']}>
                                 {start_date && end_date
                                     ? start_date.DAY + ' ~ ' + end_date.DAY
-                                    : '대여시간을 설정해주세요'}
+                                    : '대여시간을 설정해주세요.'}
                                 <ButtonBase
                                     className={styles['date-picker']}
                                     onClick={onClickDatePicker}

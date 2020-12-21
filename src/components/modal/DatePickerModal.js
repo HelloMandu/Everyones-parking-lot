@@ -9,7 +9,7 @@ import cn from 'classnames/bind';
 import Dialog from '@material-ui/core/Dialog';
 import Header from '../header/Header';
 import Select from '../../static/asset/svg/detail/Select';
-import { ButtonBase /*, IconButton */ } from '@material-ui/core';
+import { ButtonBase } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -90,8 +90,8 @@ const DatePickerModal = (props) => {
     const history = useHistory();
     const [date_index, dispatchDateIndex] = useReducer(dateReducer, initState);
     const [date_list, setDateList] = useState([]);
-    const [start_open, setStartOpen] = useState(false);
-    const [end_open, setEndOpen] = useState(false);
+    const [start_open, setStartOpen] = useState(true);
+    const [end_open, setEndOpen] = useState(true);
     const [s_date, setStartDate] = useState(start_date ? start_date : 0);
     const [e_date, setEndDate] = useState(end_date ? end_date : 0);
     const [total_date, setTotalDate] = useState(0);
@@ -201,16 +201,16 @@ const DatePickerModal = (props) => {
                     </p>
                 </div>
                 <div className={cx('date-box', { open: start_open })}>
-                    <div className={styles['txt-value']}>
+                    <ButtonBase
+                        className={styles['txt-value']}
+                        onClick={() => setStartOpen(!start_open)}    
+                    >
                         <div className={styles['txt']}>입차 시각</div>
-                        <ButtonBase
-                            className={styles['value']}
-                            onClick={() => setStartOpen(!start_open)}
-                        >
+                        <div className={styles['value']}>
                             {s_date.DAY}
                             <Select open={start_open} />
-                        </ButtonBase>
-                    </div>
+                        </div>
+                    </ButtonBase>
                     <div className={cx('swiper',{open:start_open})}>
                         <Swiper
                             direction={'vertical'}
@@ -268,16 +268,16 @@ const DatePickerModal = (props) => {
                 </div>
 
                 <div className={cx('date-box', { open: end_open }, 'end-box')}>
-                    <div className={styles['txt-value']}>
+                    <ButtonBase
+                        className={styles['txt-value']}
+                        onClick={() => setEndOpen(!end_open)}
+                    >
                         <div className={styles['txt']}>출차 시각</div>
-                        <ButtonBase
-                            className={styles['value']}
-                            onClick={() => setEndOpen(!end_open)}
-                        >
+                        <div className={styles['value']}>
                             {e_date.DAY}
                             <Select open={end_open} />
-                        </ButtonBase>
-                    </div>
+                        </div>
+                    </ButtonBase>
                     <div className={cx('swiper',{open :end_open})}>
                         <Swiper
                             direction={'vertical'}
