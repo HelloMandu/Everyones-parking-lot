@@ -16,6 +16,8 @@ import {
 } from '../../../api/place';
 import { getDateRange, getFormatDate } from '../../../lib/calculateDate';
 
+import { Paths } from '../../../paths';
+
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
 import useModal from '../../../hooks/useModal';
@@ -91,9 +93,9 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                     setPostNum(data.zonecode);
                     getAddressInfo(data.address);
                 },
-            }).open({ q: address });
+            }).open();
         });
-    }, [address, getAddressInfo]);
+    }, [getAddressInfo]);
 
     const typeSelectList = typeList.map(({ id, type }) => (
         <option className={styles['select-item']} key={id} value={id}>
@@ -165,7 +167,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 value={address}
                 name={'address'}
                 placeholder={'주차장 주소를 입력해주세요'}
-                onChange={onChangeAddress}
+                readOnly={true}
             ></InputBox>
             <ButtonBase
                 className={styles['button']}
@@ -186,7 +188,7 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
                 <div className={styles['price']}>
                     <InputBox
                         className={'input-box-right'}
-                        type={'text'}
+                        type={'number'}
                         value={price}
                         name={'price'}
                         placeholder={'30분당 주차가격을 입력하세요'}
@@ -381,18 +383,19 @@ const FileItem = ({ file, onDelete }) => {
     );
 };
 
-const ParkingPicture = forwardRef(({ setCheck }, ref) => {
+const ParkingPicture = forwardRef(({ url, setCheck }, ref) => {
     const [fileList, setFileList] = useState([]);
     const onChangeFileList = useCallback((e) => {
         const { files } = e.target;
         if (files) {
             const newFileList = [];
+            const idx = fileList.length;
             for (let i = 0; i < files.length; i++) {
-                newFileList.push({ id: i + 1, file: files[i] });
+                newFileList.push({ id: idx + i + 1, file: files[i] });
             }
-            setFileList(newFileList);
+            setFileList(fileList => fileList.concat(newFileList));
         }
-    }, []);
+    }, [fileList.length]);
     const handleDeleteFile = useCallback(
         (id) => setFileList(fileList.filter((file) => file.id !== id)),
         [fileList],
@@ -401,8 +404,12 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
         fileList,
     }));
     useEffect(() => {
-        setCheck(fileList.length >= 2);
-    }, [setCheck, fileList]);
+        if(Paths.main.parking.enrollment === url){
+            setCheck(fileList.length >= 2);
+        } else{
+            setCheck(true);
+        }
+    }, [setCheck, fileList, url]);
     return (
         <section className={styles['parking-enroll-area']}>
             <div className={styles['title-wrapper']}>
@@ -533,13 +540,18 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     parkingInfoInit={parkingInfoInit}
                 ></ExtraInfo>
                 <ParkingPicture
+                    url={url}
                     setCheck={setCheckParkingPicture}
                     ref={parkingPicture}
                 ></ParkingPicture>
             </main>
             {!isOpenPreview && (
                 <FixedButton
-                    button_name={'작성완료'}
+                    button_name={
+                        Paths.main.parking.enrollment === url
+                            ? '작성완료'
+                            : '수정완료'
+                    }
                     disable={!checkAll}
                     onClick={openPreviewModal}
                 ></FixedButton>
