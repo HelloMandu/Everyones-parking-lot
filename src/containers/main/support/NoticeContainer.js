@@ -17,7 +17,7 @@ import { Paths } from '../../../paths';
 /* Paths */
 
 import { requestGetNoticeList } from '../../../api/notice';
-import useScrollEnd from '../../../hooks/useScrollEnd';
+import { useScrollEnd } from '../../../hooks/useScroll';
 /* API */
 
 const NoticeItems = ({ noticeList }) => {
