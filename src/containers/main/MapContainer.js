@@ -107,7 +107,6 @@ const MapContainer = ({ modal }) => {
             // Gps 지정 함수
             dispatch(set_position({ lat, lng }));
             setCoordinates(lat, lng);
-            alert(lat, lng);
         }
         const login_os = getMobileOperatingSystem();
         if (login_os === 'Android') {
