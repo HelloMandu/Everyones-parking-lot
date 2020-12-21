@@ -16,7 +16,6 @@ import Header from './components/header/Header';
 import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
-import { useScrollRemember } from './hooks/useScroll';
 
 const App = () => {
     const location = useLocation();
@@ -34,8 +33,6 @@ const App = () => {
         judgementLogin();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
-    useScrollRemember()
 
     const renderHeader = () => {
         const { pathname } = location;

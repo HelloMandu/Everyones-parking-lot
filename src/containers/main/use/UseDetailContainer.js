@@ -74,14 +74,14 @@ const UseDetailContainer = ({ location }) => {
 
     const getUseDetail = useCallback(async () => {
         onLoading('getUseDetail');
-        try{
+        try {
             const {
                 msg,
                 order,
                 review,
                 prev_order,
             } = await requestGetDetailUseRental(rental_id);
-    
+
             if (msg === 'success') {
                 setOrder(order, prev_order);
                 setReview(review);
@@ -93,7 +93,7 @@ const UseDetailContainer = ({ location }) => {
             } else {
                 openDialog(msg);
             }
-        } catch(e){
+        } catch (e) {
             console.error(e);
         }
         offLoading('getUseDetail');
@@ -182,8 +182,10 @@ const UseDetailContainer = ({ location }) => {
                             </Button>
                             <Link
                                 to={
-                                    Paths.main.review.write +
-                                    `?rental_id=${rental_id}`
+                                    (review
+                                        ? Paths.main.review.modify
+                                        : Paths.main.review.write) +
+                                          `?rental_id=${rental_id}`
                                 }
                             >
                                 <Button

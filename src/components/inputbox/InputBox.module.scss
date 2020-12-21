@@ -16,11 +16,6 @@
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
     &::placeholder {
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular
@@ -36,11 +31,6 @@
     border-radius: 100px;
     padding: 0 18px;
     outline: none;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
 }
 
 .input-bar {
@@ -49,11 +39,6 @@
     margin-bottom: 12px;
     border-bottom: 1px solid #ccc;
     padding: 0 12px;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
     @include focus-animate();
 }
 
@@ -64,11 +49,6 @@
     padding: 0 10px;
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
 }
 
 .input-box-right {
@@ -80,11 +60,6 @@
     font-weight: 400; // Regular
     margin-bottom: 12px;
     text-align: right;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
     &::placeholder {
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular

@@ -4,6 +4,7 @@ import { ButtonBase, IconButton } from '@material-ui/core';
 import { Dialog, Slide } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
+import { useDispatch } from 'react-redux';
 
 import CircleButton from '../../../components/button/CircleButton';
 import CustomTabs from '../../../components/nav/CustomTabs';
@@ -14,6 +15,7 @@ import { Paths } from '../../../paths';
 
 import { useDialog } from '../../../hooks/useDialog';
 
+import { getMyParkingList } from '../../../store/myParking';
 import {
     requestPostEnrollParking,
     requestPutModifyParking,
@@ -57,24 +59,42 @@ const InfoItem = ({ txt, value }) => {
     );
 };
 
-//TODO: 최종등록 이전 페이지로 수정하기와 나눌지 고려
 const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
     const history = useHistory();
     const openDialog = useDialog();
+    const dispatch = useDispatch();
     const onClickEnrollParking = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
-            const response = await (placeId
-                ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
-                : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
-            if (response.data.msg === 'success') {
-                openDialog('등록완료', '주차공간 등록을 완료했습니다.');
-                history.replace(Paths.main.parking.manage);
-            } else {
-                openDialog('등록실패', '주차공간 등록에 실패했습니다.');
+            try {
+                const response = await (placeId
+                    ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
+                    : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
+                if (response.data.msg === 'success') {
+                    openDialog(
+                        `${placeId ? '수정' : '등록'}완료`,
+                        `주차공간 ${placeId ? '수정' : '등록'}을 완료했습니다.`,
+                        () => {
+                            dispatch(getMyParkingList(JWT_TOKEN));
+                            history.replace(Paths.main.parking.manage);
+                        }
+                    );
+                } else {
+                    openDialog(
+                        `${placeId ? '수정' : '등록'}실패`,
+                        `주차공간 ${placeId ? '수정' : '등록'}에 실패했습니다.`,
+                    );
+                }
+            } catch (e) {
+                openDialog(
+                    `${placeId ? '수정' : '등록'}실패`,
+                    `주차공간을 ${
+                        placeId ? '수정' : '등록'
+                    }하는 도중 오류가 발생했습니다.`,
+                );
             }
         }
-    }, [history, openDialog, parkingInfo, placeId]);
+    }, [dispatch, history, openDialog, parkingInfo, placeId]);
     const [imgFile, setImgFile] = useState(null);
     useEffect(() => {
         const reader = new FileReader();
@@ -197,7 +217,7 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                 </div>
             </div>
             <FixedButton
-                button_name={'최종등록'}
+                button_name={`최종${placeId ? '수정' : '등록'}`}
                 disable={false}
                 onClick={onClickEnrollParking}
             ></FixedButton>

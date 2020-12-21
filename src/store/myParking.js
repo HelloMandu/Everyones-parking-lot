@@ -29,11 +29,7 @@ function* getMyAllParkingList(action) {
         const fetchData = places.slice(0, 3);
         yield put({
             type: GET_LIST_SUCCESS,
-            payload: places,
-        });
-        yield put({
-            type: FETCH_LIST,
-            payload: fetchData,
+            payload: { places, fetchData },
         });
     } catch (e) {
         console.error(e);
@@ -56,10 +52,10 @@ const initialState = {
 
 const myParking = handleActions(
     {
-        [GET_LIST_SUCCESS]: (state, action) => {
+        [GET_LIST_SUCCESS]: (state, { payload }) => {
             return {
-                ...state,
-                myAllParkingList: action.payload,
+                myAllParkingList: payload.places,
+                myParkingList: payload.fetchData,
             };
         },
         [FETCH_LIST]: (state, action) => {

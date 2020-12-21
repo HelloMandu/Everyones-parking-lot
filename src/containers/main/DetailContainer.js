@@ -41,7 +41,7 @@ import { imageFormat, numberFormat } from '../../lib/formatter';
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
-import { useScrollRemember } from '../../hooks/useScroll';
+import { useScrollTop } from '../../hooks/useScroll';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -184,7 +184,7 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
-    useScrollRemember();
+    useScrollTop();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callGetDetailParking, []);

@@ -22,6 +22,7 @@ import { Paths } from '../../../paths';
 import useForm from '../../../hooks/useForm';
 import useInput from '../../../hooks/useInput';
 import useModal from '../../../hooks/useModal';
+import { useScrollTop } from '../../../hooks/useScroll';
 
 import ParkingPreviewModal from './ParkingPreviewModal';
 import InputBox from '../../../components/inputbox/InputBox';
@@ -92,14 +93,14 @@ const BasicInfo = forwardRef(({ setCheck, parkingInfoInit }, ref) => {
     );
 
     const onClickAddressSearch = useCallback(() => {
-        daum.postcode.load(() => {
+        daum.postcode.load(() =>
             new daum.Postcode({
                 oncomplete: (data) => {
                     setPostNum(data.zonecode);
                     getAddressInfo(data.address);
                 },
-            }).open();
-        });
+            }).open(),
+        );
     }, [getAddressInfo]);
 
     const typeSelectList = typeList.map(({ id, type }) => (
@@ -480,7 +481,6 @@ const ParkingPicture = forwardRef(({ images, setCheck }, ref) => {
     );
 });
 
-//TODO: place_id를 이용해 수정하기, 등록하기 구분
 const ParkingEnrollContainer = ({ location, match }) => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -545,7 +545,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
         checkBasicInfo,
         checkParkingPicture,
     ]);
-
+    useScrollTop();
     useEffect(getDetailParking, [getDetailParking]);
     return (
         <>

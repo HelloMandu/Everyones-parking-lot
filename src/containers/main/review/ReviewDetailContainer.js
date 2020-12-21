@@ -167,7 +167,7 @@ const ReviewDetailContainer = ({ location }) => {
                             <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
                             <Link
                                 to={
-                                    Paths.main.review.write +
+                                    Paths.main.review.modify +
                                     `?rental_id=${review.rental_id}`
                                 }
                             >

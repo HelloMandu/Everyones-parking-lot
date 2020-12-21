@@ -37,7 +37,6 @@ export const useScrollRemember = (URL, dom) => {
     }, [URL, dom]);
     useEffect(() => {
         if (!URL) {
-            window.scrollTo(0, 0);
             return;
         }
         const scrollTop = sessionStorage.getItem(`${URL}/scrollTop`);
@@ -57,3 +56,5 @@ export const useScrollRemember = (URL, dom) => {
         }
     }, [URL, dom, rememberScrollTop]);
 };
+
+export const useScrollTop = () => useEffect(() => window.scrollTo(0, 0), []);

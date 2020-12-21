@@ -7,6 +7,7 @@ import qs from 'qs';
 import useModal from '../../hooks/useModal';
 import useToken from '../../hooks/useToken';
 import useLoading from '../../hooks/useLoading';
+import { useScrollTop } from '../../hooks/useScroll';
 import { useDialog } from '../../hooks/useDialog';
 
 import { imageFormat, numberFormat } from '../../lib/formatter';
@@ -310,7 +311,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [JWT_TOKEN],
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useScrollTop();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
     return (
         <>
