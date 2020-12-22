@@ -611,8 +611,13 @@ const MapContainer = ({ modal }) => {
                     }}
                 />
                 <ParkingList
-                    onClick={(id) =>
-                        history.push(Paths.main.detail + '?place_id=' + id)
+                    onClick={(id) => {
+                        slide_view.current = false;
+                        setOnSlide(false); 
+                        setTimeout(() => {
+                            history.push(Paths.main.detail + '?place_id=' + id)
+                        }, 600);
+                    }
                     }
                     view={on_slide}
                     slide_list={slide_list}
