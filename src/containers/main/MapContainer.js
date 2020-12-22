@@ -439,7 +439,6 @@ const MapContainer = ({ modal }) => {
                         user_position.current.lat = storage_position.lat;
                         user_position.current.lng = storage_position.lng;
                         createMyLocationMarker(latitude, longitude);
-                        console.log('마커생성');
                     }
                 }
                
