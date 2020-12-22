@@ -53,6 +53,7 @@ const FindEmailContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('findEmail');
         }
         offLoading('findEmail');
         // eslint-disable-next-line react-hooks/exhaustive-deps

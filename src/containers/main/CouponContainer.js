@@ -123,6 +123,7 @@ const CouponContainer = ({ match }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading(LOADING_COUPON);
         }
         offLoading(LOADING_COUPON);
     }, [offLoading, onLoading]);

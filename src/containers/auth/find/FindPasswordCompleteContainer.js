@@ -48,6 +48,7 @@ const FindPasswordCompleteContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('reviewDelete');
         }
         offLoading('reviewDelete');
         // eslint-disable-next-line react-hooks/exhaustive-deps

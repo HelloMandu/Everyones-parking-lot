@@ -38,6 +38,7 @@ const EventListContainer = ({ history }) => {
                 );
             }
         } catch (e) {
+            offLoading(LOADING_EVENT);
             openDialog(
                 '이벤트를 가지고 오는 도중에 오류가 발생했습니다.',
                 '잠시 후에 다시 시도해 주세요.',
@@ -54,7 +55,7 @@ const EventListContainer = ({ history }) => {
 
     return (
         <div className={styles['container']}>
-            {!isLoading[LOADING_EVENT] && 
+            {!isLoading[LOADING_EVENT] &&
                 <div className={styles['list']}>
                     {eventList.length !== 0 ?
                         eventList.map(({ event_banner_image, event_id }) => (
@@ -74,7 +75,7 @@ const EventListContainer = ({ history }) => {
                                     />
                                 </ButtonBase>
                             </Link>
-                        )) : 
+                        )) :
                         <div className={styles['non-qna']}>
                             <div className={styles['non-container']}>
                                 <Notice />

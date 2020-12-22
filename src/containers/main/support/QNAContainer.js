@@ -50,7 +50,7 @@ const QNAItems = ({ QNAList }) => {
                         <div className={styles['date']}>{getFormatDateNanTime(updatedAt)}</div>
                         <div className={styles['title']}>{subject}</div>
                         <div className={styles['bottom']}>
-                            {/* <div className={styles['name']}>{user.name}</div> */}
+                            <div className={styles['name']}>{user.name}</div>
                             <div className={styles['count']}>조회수 {hit}</div>
                         </div>
                         <div className={cn('button', { status: status })}>
@@ -70,20 +70,6 @@ const QNAContainer = () => {
     const TOKEN = useToken();
     const [onLoading, offLoading] = useLoading();
 
-    // const { data } = useSWR(['faq', type], requestGetFAQList);
-    // useEffect(() => {
-    //     if (!data) onLoading('faq');
-    //     if (data !== undefined) {
-    //         offLoading('faq');
-    //         if (data.msg === 'success') {
-    //             setFAQList(data.notices);
-    //         } else {
-    //             openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
-    //         }
-    //     }
-    //     // eslint-disable-next-line
-    // }, [data])
-
     const [QNAList, setQNSList] = useState([]);
 
     const { data } = useSWR(['qna', TOKEN], requestGetQNAList);
@@ -99,24 +85,6 @@ const QNAContainer = () => {
         }
         // eslint-disable-next-line
     }, [data])
-
-    // const getQNAList = useCallback(async () => {
-    //     onLoading('qna');
-    //     const response = await requestGetQNAList(TOKEN);
-    //     setQNSList(response.qnas);
-    //     offLoading('qna');
-    //     // eslint-disable-next-line
-    // }, []);
-
-    // useEffect(() => {
-    //     if (TOKEN !== null) {
-    //         try {
-    //             getQNAList();
-    //         } catch (e) {
-    //             openDialog("1:1문의 오류", "", () => history.goBack());
-    //         }
-    //     }
-    // }, [getQNAList, openDialog, history, TOKEN]);
 
     return (
         <>

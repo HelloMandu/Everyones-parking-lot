@@ -60,10 +60,11 @@ const ReviewDetailContainer = ({ location }) => {
                 } else {
                     openDialog('댓글 작성을 실패했습니다.');
                 }
-                offLoading('writeComment');
             } catch (error) {
                 console.error(error);
+                offLoading('writeComment');
             }
+            offLoading('writeComment');
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,6 +89,7 @@ const ReviewDetailContainer = ({ location }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('getReview');
         }
         offLoading('getReview');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,6 +119,7 @@ const ReviewDetailContainer = ({ location }) => {
                         }
                     } catch (e) {
                         console.error(e);
+                        offLoading('deletComment');
                     }
                 },
                 true,
@@ -190,36 +193,36 @@ const ReviewDetailContainer = ({ location }) => {
                             </div>
                         </div>
                     ) : (
-                        commentList.map((item) => (
-                            <div
-                                key={item.comment_id}
-                                className={cx('comment-item')}
-                            >
-                                <img
-                                    src={DBImageFormat(
-                                        item.user && item.user.profile_image,
-                                        Profile,
-                                    )}
-                                    alt=""
-                                />
-                                <div className={cx('user-area')}>
-                                    <div className={cx('user-id')}>
-                                        {item.user
-                                            ? item.user.name
-                                            : '탈퇴한 회원입니다.'}
+                            commentList.map((item) => (
+                                <div
+                                    key={item.comment_id}
+                                    className={cx('comment-item')}
+                                >
+                                    <img
+                                        src={DBImageFormat(
+                                            item.user && item.user.profile_image,
+                                            Profile,
+                                        )}
+                                        alt=""
+                                    />
+                                    <div className={cx('user-area')}>
+                                        <div className={cx('user-id')}>
+                                            {item.user
+                                                ? item.user.name
+                                                : '탈퇴한 회원입니다.'}
+                                        </div>
+                                        <div className={cx('date')}>
+                                            {item.updatedAt
+                                                ? getFormatDateTime(item.updatedAt)
+                                                : getFormatDateTime(item.createdAt)}
+                                        </div>
                                     </div>
-                                    <div className={cx('date')}>
-                                        {item.updatedAt
-                                            ? getFormatDateTime(item.updatedAt)
-                                            : getFormatDateTime(item.createdAt)}
+                                    <div className={cx('comment-body')}>
+                                        {item.comment_body}
                                     </div>
                                 </div>
-                                <div className={cx('comment-body')}>
-                                    {item.comment_body}
-                                </div>
-                            </div>
-                        ))
-                    )}
+                            ))
+                        )}
                     {!isEmpty(user) ? (
                         <>
                             <input
@@ -241,10 +244,10 @@ const ReviewDetailContainer = ({ location }) => {
                             </ButtonBase>
                         </>
                     ) : (
-                        <p className={styles['not-user']}>
-                            로그인 후 댓글을 남기실 수 있습니다.
-                        </p>
-                    )}
+                            <p className={styles['not-user']}>
+                                로그인 후 댓글을 남기실 수 있습니다.
+                            </p>
+                        )}
                 </div>
             </div>
         )

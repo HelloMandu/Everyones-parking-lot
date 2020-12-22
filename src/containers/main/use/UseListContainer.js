@@ -41,6 +41,7 @@ const UseListContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading(LOADING_USE_LIST);
         }
         offLoading(LOADING_USE_LIST);
     }, [offLoading, onLoading, openDialog, token]);
@@ -78,15 +79,15 @@ const UseListContainer = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className={styles['non-qna']}>
-                        <div className={styles['non-container']}>
-                            <Notice />
-                            <div className={styles['explain']}>
-                                이용내역이 없습니다.
+                        <div className={styles['non-qna']}>
+                            <div className={styles['non-container']}>
+                                <Notice />
+                                <div className={styles['explain']}>
+                                    이용내역이 없습니다.
+                            </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
         </>
     );
 };

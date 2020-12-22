@@ -95,6 +95,7 @@ const UseDetailContainer = ({ location }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('getUseDetail');
         }
         offLoading('getUseDetail');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,13 +186,13 @@ const UseDetailContainer = ({ location }) => {
                                     (review
                                         ? Paths.main.review.modify
                                         : Paths.main.review.write) +
-                                          `?rental_id=${rental_id}`
+                                    `?rental_id=${rental_id}`
                                 }
                             >
                                 <Button
                                     name={`리뷰 ${
                                         review ? '수정' : '작성'
-                                    } 하기`}
+                                        } 하기`}
                                 >
                                     <MessageBox />
                                 </Button>

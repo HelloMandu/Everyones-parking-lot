@@ -36,6 +36,7 @@ const NoticeDetailContainer = () => {
             setDetailNotice(response.notice);
         } catch (e) {
             console.error(e);
+            offLoading('notice_detail');
         }
         offLoading('notice_detail');
         // eslint-disable-next-line
