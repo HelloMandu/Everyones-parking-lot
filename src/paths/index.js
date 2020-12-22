@@ -18,7 +18,6 @@ export const Paths = {
             index: '/review',
             list: '/review/list',
             write: '/review/write',
-            modify: '/review/modify',
             detail: '/review/detail',
         },
         mypage: {
@@ -40,7 +39,6 @@ export const Paths = {
             index: '/parking',
             manage: '/parking/manage',
             enrollment: '/parking/enrollment',
-            modify: '/parking/modify',
         },
         notification: '/notification',
         setting: '/setting',
@@ -97,7 +95,6 @@ export const HeaderTitle = {
             index: '/review',
             list: '내가 작성한 리뷰',
             write: '리뷰 쓰기',
-            modify: '리뷰 수정',
             detail: '리뷰 상세보기',
         },
         mypage: {
@@ -120,7 +117,6 @@ export const HeaderTitle = {
             manage: '내 주차공간 관리',
             enrollment: '주차공간 등록',
             preview: '/parking/preview',
-            modify: '주차공간 수정',
         },
         notification: '알림함',
         setting: '환경설정',
@@ -131,7 +127,7 @@ export const HeaderTitle = {
             detail: '이벤트',
         },
         support: {
-            index: '',
+            index: '고객센터',
             notice: '고객센터',
             notice_detail: '고객센터',
             faq: '고객센터',

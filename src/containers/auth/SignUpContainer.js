@@ -236,6 +236,7 @@ const SignUpContainer = ({ match }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('signUp');
         }
         offLoading('signUp');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -252,10 +253,10 @@ const SignUpContainer = ({ match }) => {
         () =>
             setSignUp(
                 checkEmail &&
-                    checkName &&
-                    checkPassword &&
-                    checkPhone &&
-                    checkAgree,
+                checkName &&
+                checkPassword &&
+                checkPhone &&
+                checkAgree,
             ),
         [checkEmail, checkName, checkPassword, checkPhone, checkAgree],
     );

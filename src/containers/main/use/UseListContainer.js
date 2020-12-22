@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
+import { useScrollEnd } from '../../../hooks/useScroll';
 
 import { requestGetUseRental } from '../../../api/rental';
 
@@ -26,6 +27,7 @@ const UseListContainer = () => {
     const [list, setList] = useState([]);
     const openDialog = useDialog();
     const [onLoading, offLoading, isLoading] = useLoading();
+    const listRef = useRef();
 
     const getUseList = useCallback(async () => {
         if (!token) {
@@ -41,22 +43,26 @@ const UseListContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading(LOADING_USE_LIST);
         }
         offLoading(LOADING_USE_LIST);
     }, [offLoading, onLoading, openDialog, token]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(getUseList, []);
+
+    useScrollEnd(getUseList, listRef.current);
+
     return (
         <>
             {!isLoading[LOADING_USE_LIST] &&
                 (list.length ? (
-                    <div className={cx('container')}>
+                    <div className={cx('container')} ref={listRef}>
                         {list.map((item) => (
                             <Link
                                 to={
                                     Paths.main.use.detail +
-                                    `?rental_id=${item.rental_id}`
+                                    `?rental_id=${item.rental_id}&from_list=true&place_id=${item.place.place_id}`
                                 }
                                 className={cx('list-item')}
                                 key={item.rental_id}
@@ -78,15 +84,15 @@ const UseListContainer = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className={styles['non-qna']}>
-                        <div className={styles['non-container']}>
-                            <Notice />
-                            <div className={styles['explain']}>
-                                이용내역이 없습니다.
+                        <div className={styles['non-qna']}>
+                            <div className={styles['non-container']}>
+                                <Notice />
+                                <div className={styles['explain']}>
+                                    이용내역이 없습니다.
+                            </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
         </>
     );
 };

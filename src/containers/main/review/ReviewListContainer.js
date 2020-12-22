@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
+import { useScrollEnd } from '../../../hooks/useScroll';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
@@ -55,7 +56,7 @@ const ReviewItem = ({ setList, review }) => {
     return (
         <div className={cx('card')}>
             <Link
-                to={Paths.main.review.detail + `?review_id=${review.review_id}`}
+                to={Paths.main.review.detail + `?review_id=${review.review_id}&place_id=${review.place.place_id}`}
             >
                 <div
                     className={cx('card-img')}
@@ -103,6 +104,7 @@ const ReviewListContainer = () => {
     const token = useToken();
     const [list, setList] = useState([]);
     const [onLoading, offLoading, isLoading] = useLoading();
+    const listRef = useRef()
 
     const getReviewList = useCallback(async () => {
         if (!token) {
@@ -116,11 +118,14 @@ const ReviewListContainer = () => {
     }, [token]);
 
     useEffect(getReviewList, [getReviewList, token]);
+
+    useScrollEnd(getReviewList, listRef.current);
+
     return (
         <>
             {!isLoading[LOADING_REVIEW] &&
                 (list.length ? (
-                    <div className={cx('container')}>
+                    <div className={cx('container')} ref={listRef}>
                         {list.map((item) => (
                             <ReviewItem
                                 key={item.review_id}

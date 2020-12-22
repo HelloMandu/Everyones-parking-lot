@@ -35,7 +35,7 @@ import {
 } from '../../api/like';
 
 //lib
-import { getFormatDateTime, calculatePrice,getFormatDay,calculateDate } from '../../lib/calculateDate';
+import { getFormatDateTime, calculatePrice, getFormatDay, calculateDate } from '../../lib/calculateDate';
 import { imageFormat, numberFormat } from '../../lib/formatter';
 
 //hooks
@@ -121,6 +121,7 @@ const DetailContainer = ({ modal, place_id }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading(LOADING_DETAIL);
         }
         offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);
@@ -197,26 +198,26 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [total_date, place]);
 
-    useEffect(()=>{
+    useEffect(() => {
         const query = qs.parse(location.search, {
             ignoreQueryPrefix: true,
         });
-        const {start_time,end_time} = query;
-        if(start_time && end_time){
+        const { start_time, end_time } = query;
+        if (start_time && end_time) {
             const s_obj = getFormatDay(start_time);
             const s_time = start_time.split(' ');
-            const s_newState ={
+            const s_newState = {
                 DAY: s_obj.DAY + ' ' + s_time[1],
                 DATE: s_time[0],
-                TIME : s_time[1]
+                TIME: s_time[1]
             }
             setStartDate(s_newState);
             const e_obj = getFormatDay(end_time);
             const e_time = end_time.split(' ');
-            const e_newState ={
+            const e_newState = {
                 DAY: e_obj.DAY + ' ' + e_time[1],
                 DATE: e_time[0],
-                TIME : e_time[1]
+                TIME: e_time[1]
             }
             setEndDate(e_newState);
             setTotalDate(
@@ -228,7 +229,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 ),
             );
         }
-    },[location])
+    }, [location])
     return (
         <>
             <div className={cx('header', { headerOn })} ref={headerRef}>
@@ -258,7 +259,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         style={{
                             backgroundImage: `url('${
                                 place && imageFormat(place.place_images[0])
-                            }')`,
+                                }')`,
                         }}
                         onClick={handleImageView}
                     />
@@ -277,15 +278,15 @@ const DetailContainer = ({ modal, place_id }) => {
                                     rating={
                                         reviews.length
                                             ? parseFloat(
-                                                  reviews.reduce(
-                                                      (prev, cur) =>
-                                                          prev +
-                                                          parseFloat(
-                                                              cur.review_rating,
-                                                          ),
-                                                      0,
-                                                  ) / reviews.length,
-                                              ).toPrecision(2)
+                                                reviews.reduce(
+                                                    (prev, cur) =>
+                                                        prev +
+                                                        parseFloat(
+                                                            cur.review_rating,
+                                                        ),
+                                                    0,
+                                                ) / reviews.length,
+                                            ).toPrecision(2)
                                             : 0.0
                                     }
                                 />
@@ -403,24 +404,24 @@ const DetailContainer = ({ modal, place_id }) => {
                         }
                     ></FixedButton>
                 ) : (
-                    <LikeButton
-                        likes={likes}
-                        button_name={
-                            start_date && end_date
-                                ? `${numberFormat(price)}원 대여신청`
-                                : '대여시간을 설정해 주세요.'
-                        }
-                        disable={start_date ? false : true}
-                        likeStatus={likeStatus}
-                        handleLike={handleLikeStatus}
-                        onClick={() =>
-                            history.push(
-                                Paths.main.payment +
+                        <LikeButton
+                            likes={likes}
+                            button_name={
+                                start_date && end_date
+                                    ? `${numberFormat(price)}원 대여신청`
+                                    : '대여시간을 설정해 주세요.'
+                            }
+                            disable={start_date ? false : true}
+                            likeStatus={likeStatus}
+                            handleLike={handleLikeStatus}
+                            onClick={() =>
+                                history.push(
+                                    Paths.main.payment +
                                     `?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`,
-                            )
-                        }
-                    />
-                ))}
+                                )
+                            }
+                        />
+                    ))}
             <DatePickerModal
                 open={openDatePicker}
                 handleClose={() => history.goBack()}

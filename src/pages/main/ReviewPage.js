@@ -19,7 +19,7 @@ const ReviewPage = () => {
                 <Route path={Paths.main.review.list} component={ReviewListContainer} />
                 <Route path={Paths.main.review.write} component={ReviewWriteContainer} />
                 <Route path={Paths.main.review.modify} component={ReviewWriteContainer} />
-                <Route path={Paths.main.review.detail} component={ReviewDetailContainer} />
+                <Route path={Paths.main.review.detail + '/:modal?'} component={ReviewDetailContainer} />
                 <Route render={() => history.replace(Paths.main.review.list)} />
             </Switch>
         </div>

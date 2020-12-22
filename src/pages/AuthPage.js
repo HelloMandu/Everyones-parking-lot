@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 /* Library */
 
 import FindPage from './auth/find/FindPage';
@@ -15,9 +15,13 @@ import SignCompleteContainer from '../containers/auth/SignCompleteContainer';
 
 /* Components */
 
-const { Paths } = require('../paths');
+import { Paths } from '../paths'
 
 const AuthPage = () => {
+    const history = useHistory()
+    const token = localStorage.getItem('user_id')
+    if(token !== null) history.replace(Paths.main.index)
+
     return (
         <div>
             <Switch>

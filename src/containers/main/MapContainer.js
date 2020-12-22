@@ -29,7 +29,7 @@ import BOOKMARK from '../../static/asset/svg/main/like.svg';
 
 //marker
 // import PARKING_MARKER from '../../static/asset/svg/main/marker2.svg';
-import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
+// import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
 import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 
 //componenst
@@ -44,11 +44,7 @@ import BookmarkModal from '../../components/modal/BookmarkModal';
 import { getDistanceFromLatLonInKm } from '../../lib/distance';
 import { getMobileOperatingSystem } from '../../lib/os';
 //action
-import {
-    set_position,
-    set_level,
-    get_area,
-} from '../../store/main/position';
+import { set_position, set_level, get_area } from '../../store/main/position';
 import { get_list } from '../../store/main/parking';
 import { set_filters } from '../../store/main/filters';
 
@@ -62,13 +58,9 @@ const cx = cn.bind(styles);
 
 const MapContainer = ({ modal }) => {
     const dispatch = useDispatch();
-    const {
-        position,
-        level,
-        address,
-        arrive,
-        area,
-    } = useSelector((state) => state.position); //마지막 좌표 및 레벨
+    const { position, level, address, arrive, area } = useSelector(
+        (state) => state.position,
+    ); //마지막 좌표 및 레벨
     const { parking } = useSelector((state) => state.parking);
     const {
         parking_town,
@@ -81,7 +73,7 @@ const MapContainer = ({ modal }) => {
 
     const map_position = useRef(null); //지도 첫렌더시 좌표
     const map_level = useRef(5); // 디폴트 레벨 -> //4 : 100m 6: 500m 7:1km
-    const user_position = useRef({lat:0,lng:0});
+    const user_position = useRef({ lat: 0, lng: 0 });
     const slide_view = useRef(false); // 슬라이드 여부
     const arrive_markers = useRef([]); //도착지 마커
     const location_marker = useRef([]); // 유저 위치 마커
@@ -102,7 +94,7 @@ const MapContainer = ({ modal }) => {
         { aside_: false, filter_: false },
     );
 
-    const setArriveLevel =(index) =>{
+    const setArriveLevel = (index) => {
         let level = 1;
         switch (index) {
             case 0:
@@ -123,7 +115,7 @@ const MapContainer = ({ modal }) => {
                 duration: 300,
             },
         });
-    }
+    };
 
     //지도 레벨을 조정하는 함수
     const zoomMap = useCallback(
@@ -433,16 +425,19 @@ const MapContainer = ({ modal }) => {
                     lng: longitude,
                 };
                 sessionStorage.setItem('user_position', JSON.stringify(p));
-                const storage_position = JSON.parse(sessionStorage.getItem('user_position'));
-                if(storage_position){
-                    if( (user_position.current.lat !== storage_position.lat)  && (user_position.current.lng !== storage_position.lng)){
+                const storage_position = JSON.parse(
+                    sessionStorage.getItem('user_position'),
+                );
+                if (storage_position) {
+                    if (
+                        user_position.current.lat !== storage_position.lat &&
+                        user_position.current.lng !== storage_position.lng
+                    ) {
                         user_position.current.lat = storage_position.lat;
                         user_position.current.lng = storage_position.lng;
                         createMyLocationMarker(latitude, longitude);
                     }
-                }
-               
-                else{
+                } else {
                     createMyLocationMarker(latitude, longitude);
                 }
             };
@@ -467,7 +462,6 @@ const MapContainer = ({ modal }) => {
                         window.setGps(lat, lng);
                     })
                     .catch((e) => {
-                        console.log(e.message);
                         if (e.code === 3) {
                             //요청 시간 초과
                         } else {
@@ -486,16 +480,16 @@ const MapContainer = ({ modal }) => {
         const { lat, lng } = map_position.current;
         let filter_arr = [];
         if (parking_town) {
-            filter_arr.push(1);
+            filter_arr.push(0);
         }
         if (underground_parking) {
-            filter_arr.push(2);
+            filter_arr.push(1);
         }
         if (ground_parking) {
-            filter_arr.push(3);
+            filter_arr.push(2);
         }
         if (stated_parking) {
-            filter_arr.push(4);
+            filter_arr.push(3);
         }
         dispatch(get_list({ lat, lng, range: 3000, filter: filter_arr }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -522,7 +516,6 @@ const MapContainer = ({ modal }) => {
             dispatch(set_level(map_level.current));
         };
     }, [dispatch]);
-
 
     return (
         <>

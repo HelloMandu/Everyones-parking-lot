@@ -169,6 +169,10 @@ const App = () => {
         else if (pathname === Paths.main.setting) {
             return <Header title={HeaderTitle.main.setting} />;
         }
+        //고객문의
+        else if (pathname === Paths.main.support.index) {
+            return <Header title={HeaderTitle.main.support.index} />;
+        }
         //공지사항 리스트 뷰
         else if (pathname === Paths.main.support.notice) {
             return <Header title={HeaderTitle.main.support.notice} />;
@@ -210,8 +214,8 @@ const App = () => {
             <SnackBar/>
         </div>
     ) : (
-        <IntroContainer />
-    );
+            <IntroContainer />
+        );
 };
 
 export default App;

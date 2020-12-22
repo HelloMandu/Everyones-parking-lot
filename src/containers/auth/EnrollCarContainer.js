@@ -174,8 +174,8 @@ const UpdateCar = () => {
                         area === 'default'
                             ? undefined
                             : area === ''
-                            ? undefined
-                            : area,
+                                ? undefined
+                                : area,
                     car_num: carNumber,
                     car_image: parkingPicture.current.fileList[0],
                 });
@@ -188,6 +188,7 @@ const UpdateCar = () => {
                 }
             } catch (e) {
                 console.error(e);
+                offLoading('carInfo');
             }
             offLoading('carInfo');
         } else {

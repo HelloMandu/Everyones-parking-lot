@@ -4,10 +4,12 @@ import { Link, useHistory } from 'react-router-dom';
 
 import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
+import ImageModal from '../../../components/modal/ImageModal';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
+import useModal from '../../../hooks/useModal';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
@@ -38,16 +40,18 @@ const Info = ({ attribute, value, black }) => {
     );
 };
 
-const Button = ({ name, children }) => {
+const Button = ({ name, disable, onClick, addition, children }) => {
     return (
-        <ButtonBase>
-            {children}
-            {name}
-        </ButtonBase>
+        !disable && (
+            <ButtonBase onClick={onClick} style={addition ? { width: '100%' } : {}}>
+                {children}
+                {name}
+            </ButtonBase>
+        )
     );
 };
 
-const UseDetailContainer = ({ location }) => {
+const UseDetailContainer = ({ match, location }) => {
     const token = useToken();
     const history = useHistory();
     const openDialog = useDialog();
@@ -60,7 +64,7 @@ const UseDetailContainer = ({ location }) => {
         ignoreQueryPrefix: true,
     });
 
-    const { rental_id } = query;
+    const { rental_id, from_list, place_id } = query;
 
     const [modalState, dispatchHandle] = useReducer(
         (state, action) => {
@@ -70,6 +74,13 @@ const UseDetailContainer = ({ location }) => {
             };
         },
         { refund: false },
+    );
+
+    const { url, params } = match;
+    const [isOpenImageView, handleImageView] = useModal(
+        url,
+        params.modal,
+        `image_view?place_id=${place_id}`,
     );
 
     const getUseDetail = useCallback(async () => {
@@ -95,6 +106,7 @@ const UseDetailContainer = ({ location }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('getUseDetail');
         }
         offLoading('getUseDetail');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,18 +131,23 @@ const UseDetailContainer = ({ location }) => {
                     </div>
                     <IconButton
                         className={cx('x-button')}
-                        onClick={() => history.goBack()}
+                        onClick={() => {
+                            if (from_list) history.goBack();
+                            else history.replace(Paths.main.use.list);
+                        }}
                     >
                         <XButton />
                     </IconButton>
                     <div className={cx('card')}>
-                        <div
+                        <ButtonBase
+                            component="div"
                             className={cx('card-img')}
                             style={{
                                 backgroundImage: `url('${imageFormat(
                                     order.place.place_images[0],
                                 )}')`,
                             }}
+                            onClick={handleImageView}
                         />
                         <div className={cx('card-title')}>주차 대여 정보</div>
 
@@ -177,25 +194,21 @@ const UseDetailContainer = ({ location }) => {
                         </div>
 
                         <div className={cx('button-area')}>
-                            <Button name={'고객센터 연결'}>
+                            <Button name={'고객센터 연결'} addition={rentalStatus(order) === '이용대기'}>
                                 <Tel />
                             </Button>
-                            <Link
-                                to={
-                                    (review
-                                        ? Paths.main.review.modify
-                                        : Paths.main.review.write) +
-                                          `?rental_id=${rental_id}`
+                            <Button
+                                name={`리뷰 ${review ? '수정' : '작성'} 하기`}
+                                disable={rentalStatus(order) === '이용대기'}
+                                onClick={() =>
+                                    history.push(
+                                        Paths.main.review.write +
+                                        `?rental_id=${rental_id}`,
+                                    )
                                 }
                             >
-                                <Button
-                                    name={`리뷰 ${
-                                        review ? '수정' : '작성'
-                                    } 하기`}
-                                >
-                                    <MessageBox />
-                                </Button>
-                            </Link>
+                                <MessageBox />
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -305,6 +318,12 @@ const UseDetailContainer = ({ location }) => {
                     couponPrice={order.coupon ? order.coupon.cp_price : '-'}
                     pointPrice={order.point_price ? order.point_price : '-'}
                 />
+                <ImageModal
+                    title={order && order.place.place_name}
+                    images={order && imageFormat(order.place.place_images)}
+                    open={isOpenImageView}
+                    handleClose={handleImageView}
+                ></ImageModal>
             </>
         )
     );
