@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
+import qs from 'qs';
 
 //components
 import Shared from '../../components/shared/Shared';
@@ -34,7 +35,7 @@ import {
 } from '../../api/like';
 
 //lib
-import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
+import { getFormatDateTime, calculatePrice,getFormatDay,calculateDate } from '../../lib/calculateDate';
 import { imageFormat, numberFormat } from '../../lib/formatter';
 
 //hooks
@@ -130,6 +131,7 @@ const DetailContainer = ({ modal, place_id }) => {
         setTotalDate(total_date);
     }, []);
 
+
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = useCallback(() => {
         if (place) {
@@ -190,10 +192,43 @@ const DetailContainer = ({ modal, place_id }) => {
     useEffect(callGetDetailParking, []);
     useEffect(likeCheck, [likeCheck]);
     useEffect(() => {
-        if (total_date) {
+        if (total_date && place) {
             setPrice(calculatePrice(total_date, place.place_fee));
         }
     }, [total_date, place]);
+
+    useEffect(()=>{
+        const query = qs.parse(location.search, {
+            ignoreQueryPrefix: true,
+        });
+        const {start_time,end_time} = query;
+        if(start_time && end_time){
+            const s_obj = getFormatDay(start_time);
+            const s_time = start_time.split(' ');
+            const s_newState ={
+                DAY: s_obj.DAY + ' ' + s_time[1],
+                DATE: s_time[0],
+                TIME : s_time[1]
+            }
+            setStartDate(s_newState);
+            const e_obj = getFormatDay(end_time);
+            const e_time = end_time.split(' ');
+            const e_newState ={
+                DAY: e_obj.DAY + ' ' + e_time[1],
+                DATE: e_time[0],
+                TIME : e_time[1]
+            }
+            setEndDate(e_newState);
+            setTotalDate(
+                calculateDate(
+                    s_newState.DATE,
+                    e_newState.DATE,
+                    s_newState.TIME,
+                    e_newState.TIME,
+                ),
+            );
+        }
+    },[location])
     return (
         <>
             <div className={cx('header', { headerOn })} ref={headerRef}>
@@ -394,6 +429,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 oper_start={place && place.oper_start_time}
                 oper_end={place && place.oper_end_time}
                 onClick={onClickSetDate}
+                place_id={place_id}
             />
             <RoadviewModal
                 open={openLoadview}
