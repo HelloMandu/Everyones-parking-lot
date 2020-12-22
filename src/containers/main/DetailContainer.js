@@ -43,6 +43,7 @@ import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
 import { useScrollTop } from '../../hooks/useScroll';
+import useSnackBar from '../../hooks/useSnackBar';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -93,6 +94,7 @@ const DetailContainer = ({ modal, place_id }) => {
     const [reviews, setReviews] = useState([]);
     const [shareOpen, setShareOpen] = useState(false);
     const [likeStatus, setLikeStatus] = useState(false);
+    const [handleSnackbarOpen] = useSnackBar();
 
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
@@ -172,6 +174,9 @@ const DetailContainer = ({ modal, place_id }) => {
                 if (msg === 'success') {
                     setLikeStatus(status);
                     setLikes((likes) => (status ? likes + 1 : likes - 1));
+                    likeStatus
+                    ? handleSnackbarOpen('좋아요가 취소되었습니다.', 'warning')
+                    : handleSnackbarOpen('좋아요가 반영되었습니다.', 'success');
                 }
             } catch (e) {
                 console.error(e);
