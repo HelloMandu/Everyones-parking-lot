@@ -48,7 +48,6 @@ import {
     set_position,
     set_level,
     get_area,
-    set_user_location,
 } from '../../store/main/position';
 import { get_list } from '../../store/main/parking';
 import { set_filters } from '../../store/main/filters';
@@ -69,7 +68,6 @@ const MapContainer = ({ modal }) => {
         address,
         arrive,
         area,
-        user_location,
     } = useSelector((state) => state.position); //마지막 좌표 및 레벨
     const { parking } = useSelector((state) => state.parking);
     const {
@@ -81,12 +79,13 @@ const MapContainer = ({ modal }) => {
 
     const [onLoading, offLoading] = useLoading();
 
-    let position_ref = useRef(null); //지도 첫렌더시 좌표
-    let map_lev = useRef(5); // 디폴트 레벨
-    let slide_view = useRef(false); // 슬라이드 여부
-    let arrive_markers = useRef([]); //도착지 마커
-    let location_marker = useRef([]); // 유저 위치 마커
-    let cluster_marker = useRef(null);
+    const map_position = useRef(null); //지도 첫렌더시 좌표
+    const map_level = useRef(5); // 디폴트 레벨 -> //4 : 100m 6: 500m 7:1km
+    const user_position = useRef({lat:0,lng:0});
+    const slide_view = useRef(false); // 슬라이드 여부
+    const arrive_markers = useRef([]); //도착지 마커
+    const location_marker = useRef([]); // 유저 위치 마커
+    const cluster_marker = useRef(null);
     const kakao_map = useRef(null); //카카오 맵
     const history = useHistory();
     const [on_slide, setOnSlide] = useState(false);
@@ -102,6 +101,29 @@ const MapContainer = ({ modal }) => {
         },
         { aside_: false, filter_: false },
     );
+
+    const setArriveLevel =(index) =>{
+        let level = 1;
+        switch (index) {
+            case 0:
+                level = 4;
+                break;
+            case 1:
+                level = 6;
+                break;
+            case 2:
+                level = 7;
+                break;
+            default:
+                level = 5;
+                break;
+        }
+        kakao_map.current.setLevel(level, {
+            animate: {
+                duration: 300,
+            },
+        });
+    }
 
     //지도 레벨을 조정하는 함수
     const zoomMap = useCallback(
@@ -129,7 +151,6 @@ const MapContainer = ({ modal }) => {
         window.setGps = (lat, lng) => {
             // Gps 지정 함수
             if (lat && lng) {
-                dispatch(set_user_location({ lat, lng }));
                 dispatch(set_position({ lat, lng }));
                 setCoordinates(lat, lng);
             }
@@ -196,24 +217,18 @@ const MapContainer = ({ modal }) => {
             arrive_markers.current.map((marker) => marker.setMap(null));
             arrive_markers.current = [];
         }
-        const lat = arrive.lat ? arrive.lat : 0;
-        const lng = arrive.lng ? arrive.lng : 0;
-        const imageSrc = ARRIVED_MARKER;
-        const imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
-        const imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-        const markerImage = new kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption,
-        );
-        const markerPosition = new kakao.maps.LatLng(lat, lng);
-        const marker = new kakao.maps.Marker({
-            position: markerPosition,
-            image: markerImage,
+        const content = `<div class="arrive-overlay"><span>도착지</span></div>`;
+        var customOverlay = new kakao.maps.CustomOverlay({
+            map: kakao_map.current,
+            position: new kakao.maps.LatLng(arrive.lat, arrive.lng),
+            content: content,
+            yAnchor: 1,
+            clickable: true,
+            zIndex: 1600,
         });
-        marker.setMap(kakao_map.current);
-        arrive_markers.current.push(marker);
-        setCoordinates(lat, lng);
+        customOverlay.setMap(kakao_map.current);
+        arrive_markers.current.push(customOverlay);
+        setCoordinates(arrive.lat, arrive.lng);
     }, [arrive.lat, arrive.lng, setCoordinates]);
 
     //주차장 마커를 생성하는 함수
@@ -250,10 +265,10 @@ const MapContainer = ({ modal }) => {
         kakao.maps.event.addListener(map, 'center_changed', () => {
             const level = map.getLevel();
             const latlng = map.getCenter();
-            map_lev.current = level;
-            position_ref.current.lat = latlng.getLat();
-            position_ref.current.lng = latlng.getLng();
-            const { lat, lng } = position_ref.current;
+            map_level.current = level;
+            map_position.current.lat = latlng.getLat();
+            map_position.current.lng = latlng.getLng();
+            const { lat, lng } = map_position.current;
             dispatch(get_area({ lat, lng }));
             const new_position = { lat, lng };
             localStorage.setItem('position', JSON.stringify(new_position));
@@ -337,16 +352,16 @@ const MapContainer = ({ modal }) => {
         };
         offLoading('parking/GET_LIST');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [area, dispatch, history, parking, user_location]);
+    }, [area, dispatch, history, parking]);
 
     //지도를 렌더하는 함수
     const mapRender = useCallback(() => {
         let container = document.getElementById('map');
-        let lat = position_ref.current.lat;
-        let lng = position_ref.current.lng;
+        let lat = map_position.current.lat;
+        let lng = map_position.current.lng;
         let options = {
             center: new kakao.maps.LatLng(lat, lng),
-            level: level !== 0 ? level : map_lev.current,
+            level: level !== 0 ? level : map_level.current,
         };
         const map = new kakao.maps.Map(container, options);
         map.setMaxLevel(8);
@@ -356,15 +371,15 @@ const MapContainer = ({ modal }) => {
     useEffect(() => {
         const storage_position = JSON.parse(localStorage.getItem('position'));
         if (storage_position && storage_position.lat && storage_position.lng) {
-            position_ref.current = storage_position;
-            const { lat, lng } = position_ref.current;
+            map_position.current = storage_position;
+            const { lat, lng } = map_position.current;
             dispatch(get_area({ lat, lng }));
         } else {
             const init_position = {
                 lat: 35.8360328674316,
                 lng: 128.5743408203125,
             };
-            position_ref.current = init_position;
+            map_position.current = init_position;
             const { lat, lng } = init_position;
             localStorage.setItem('position', JSON.stringify(init_position));
             dispatch(get_area({ lat, lng }));
@@ -413,26 +428,23 @@ const MapContainer = ({ modal }) => {
         const interval = setInterval(() => {
             window.setGps = (latitude, longitude) => {
                 // Gps 지정 함수
-                createMyLocationMarker(latitude, longitude);
-
-                const storage_position = JSON.parse(
-                    sessionStorage.getItem('user_position'),
-                );
-
-                if (storage_position) {
-                    const { lat, lng } = storage_position;
-                    if (!(latitude === lat) && !(longitude === lng)) {
-                        setCoordinates(lat, lng);
-                        dispatch(set_user_location({ lat, lng }));
+                const p = {
+                    lat: latitude,
+                    lng: longitude,
+                };
+                sessionStorage.setItem('user_position', JSON.stringify(p));
+                const storage_position = JSON.parse(sessionStorage.getItem('user_position'));
+                if(storage_position){
+                    if( (user_position.current.lat !== storage_position.lat)  && (user_position.current.lng !== storage_position.lng)){
+                        user_position.current.lat = storage_position.lat;
+                        user_position.current.lng = storage_position.lng;
+                        createMyLocationMarker(latitude, longitude);
+                        console.log('마커생성');
                     }
-                } else {
-                    const p = {
-                        lat: latitude,
-                        lng: longitude,
-                    };
-                    sessionStorage.setItem('user_position', JSON.stringify(p));
-                    setCoordinates(latitude, longitude);
-                    dispatch(set_user_location(p));
+                }
+               
+                else{
+                    createMyLocationMarker(latitude, longitude);
                 }
             };
             if (login_os === 'Android') {
@@ -472,7 +484,7 @@ const MapContainer = ({ modal }) => {
     }, []);
 
     useEffect(() => {
-        const { lat, lng } = position_ref.current;
+        const { lat, lng } = map_position.current;
         let filter_arr = [];
         if (parking_town) {
             filter_arr.push(1);
@@ -507,16 +519,11 @@ const MapContainer = ({ modal }) => {
 
     useEffect(() => {
         return () => {
-            dispatch(set_position(position_ref.current));
-            dispatch(set_level(map_lev.current));
+            dispatch(set_position(map_position.current));
+            dispatch(set_level(map_level.current));
         };
     }, [dispatch]);
 
-    useEffect(() => {
-        if (user_location.lat !== 0 && user_location.lng !== 0) {
-            createParkingMarker();
-        }
-    }, [user_location]);
 
     return (
         <>
@@ -608,6 +615,7 @@ const MapContainer = ({ modal }) => {
             <AddressModal
                 open={modal === 'address'}
                 handleClose={() => history.goBack()}
+                setArriveLevel={setArriveLevel}
             />
         </>
     );
