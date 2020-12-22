@@ -43,7 +43,7 @@ const Info = ({ attribute, value, black }) => {
 const Button = ({ name, disable, onClick, addition, children }) => {
     return (
         !disable && (
-            <ButtonBase onClick={onClick} style={addition ? {width: '100%'} : {}}>
+            <ButtonBase onClick={onClick} style={addition ? { width: '100%' } : {}}>
                 {children}
                 {name}
             </ButtonBase>
@@ -106,6 +106,7 @@ const UseDetailContainer = ({ match, location }) => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('getUseDetail');
         }
         offLoading('getUseDetail');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,7 +203,7 @@ const UseDetailContainer = ({ match, location }) => {
                                 onClick={() =>
                                     history.push(
                                         Paths.main.review.write +
-                                            `?rental_id=${rental_id}`,
+                                        `?rental_id=${rental_id}`,
                                     )
                                 }
                             >

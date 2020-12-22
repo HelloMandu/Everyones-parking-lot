@@ -2,20 +2,16 @@ import axios from 'axios';
 
 import { Paths } from '../paths';
 
-export const requestGetNoticeList = async () => {
-
+export const requestGetNoticeList = async (URL) => {
     /*
         공지사항 리스트 요청 API(GET): /api/notice
 
         * 응답: notices = [공지사항 Array...]
     */
-
-    const URL = Paths.api + 'notice';
-    const response = await axios.get(URL);
+    const response = await axios.get(Paths.api + URL);
 
     return response.data;
 }
-
 export const requestGetDetailNotice = async (notice_id) => {
 
     /*

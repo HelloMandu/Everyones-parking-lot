@@ -65,6 +65,7 @@ const ReviewWriteContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('getOrder');
         }
         offLoading('getOrder');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,6 +98,7 @@ const ReviewWriteContainer = () => {
             } else openDialog(data.msg);
         } catch (e) {
             console.error(e);
+            offLoading('writeReview');
         }
         offLoading('writeReview');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +125,7 @@ const ReviewWriteContainer = () => {
             } else openDialog(data.msg);
         } catch (e) {
             console.error(e);
+            offLoading('modifyReview');
         }
         offLoading('modifyReview');
         // eslint-disable-next-line react-hooks/exhaustive-deps

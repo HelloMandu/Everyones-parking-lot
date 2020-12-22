@@ -65,6 +65,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
                     openDialog('전송실패', '인증번호 전송에 실패했습니다.');
                 }
             } catch {
+                offLoading(LOADING_PHONE);
                 openDialog(
                     '전송실패',
                     '인증번호를 전송하는 도중 오류가 발생했습니다.',

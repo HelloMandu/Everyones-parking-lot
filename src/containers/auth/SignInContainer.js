@@ -105,6 +105,7 @@ const SignInContainer = () => {
             }
         } catch (e) {
             console.error(e);
+            offLoading('signIp');
         }
         offLoading('signIp');
         // eslint-disable-next-line react-hooks/exhaustive-deps
