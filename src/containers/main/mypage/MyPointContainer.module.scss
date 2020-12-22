@@ -198,10 +198,16 @@
             .account-text{
                 margin-left: 10px;
                 width: 64%; height: 48px;
-                border: 1px solid #EBEBEB;
                 & > input{
+                    border: 1px solid #EBEBEB;
                     background-color: #FFF;
                     width: 100%; height: 100%;
+                    transition-property: border;
+                    transition-duration: 0.15s;
+                    transition-timing-function: ease-in-out;
+                    &:focus {
+                        border-color: #222;
+                    }
                 }
             }
         }
@@ -221,6 +227,12 @@
                 border: 1px solid #EBEBEB;
                 background-color: #FFF;
                 width: 100%; height: 100%;
+                transition-property: border;
+                transition-duration: 0.15s;
+                transition-timing-function: ease-in-out;
+                &:focus {
+                    border-color: #222;
+                }
             }
             & > span{
                 margin-left: 12px;

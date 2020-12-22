@@ -136,7 +136,7 @@ const WithdrawModal = ({ click, setClick, point }) => {
                         <div className={styles['account-text']}>
                             <InputBox
                                 className={'input-box'}
-                                type={'text'}
+                                type={'number'}
                                 value={account}
                                 placeholder={'계좌번호 입력'}
                                 onChange={onChangeAccount}
@@ -152,7 +152,7 @@ const WithdrawModal = ({ click, setClick, point }) => {
                     <div className={styles['price-text']}>출금 금액</div>
                     <div className={styles['price-area']}>
                         <InputBox
-                            className={'input-box'}
+                            className={'input-box-right'}
                             type={'number'}
                             value={price}
                             onChange={onChangePrice}

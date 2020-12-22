@@ -88,7 +88,7 @@ const Point = ({
             <h3 className={styles['title']}>{'포인트 할인'}</h3>
             <div className={styles['point-wrapper']}>
                 <InputBox
-                    className={'input-box'}
+                    className={'input-box-right'}
                     type={'number'}
                     value={usePoint}
                     placeholder={'사용하실 포인트를 입력해주세요'}
