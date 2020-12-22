@@ -581,9 +581,9 @@ const ParkingEnrollContainer = ({ location, match }) => {
             )}
             <ParkingPreviewModal
                 open={isOpenPreview}
-                placeId={place_id}
                 parkingInfo={
                     checkAll && {
+                        place_id,
                         addr: basicInfo.current.address,
                         addr_detail: basicInfo.current.addressDetail,
                         post_num: basicInfo.current.postNum,

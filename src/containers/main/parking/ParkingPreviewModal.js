@@ -15,7 +15,10 @@ import { Paths } from '../../../paths';
 
 import { useDialog } from '../../../hooks/useDialog';
 
-import { getMyParkingList } from '../../../store/myParking';
+import {
+    getMyParkingList,
+    updateMyParkingItem,
+} from '../../../store/myParking';
 import {
     requestPostEnrollParking,
     requestPutModifyParking,
@@ -59,42 +62,48 @@ const InfoItem = ({ txt, value }) => {
     );
 };
 
-const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
+const ParkingPreviewModal = ({ open, parkingInfo }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const dispatch = useDispatch();
+    const { place_id } = parkingInfo;
+    const enrollState = place_id ? '수정' : '등록';
     const onClickEnrollParking = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             try {
-                const response = await (placeId
-                    ? requestPutModifyParking(JWT_TOKEN, parkingInfo, placeId)
+                const response = await (place_id
+                    ? requestPutModifyParking(JWT_TOKEN, parkingInfo, place_id)
                     : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
                 if (response.data.msg === 'success') {
                     openDialog(
-                        `${placeId ? '수정' : '등록'}완료`,
-                        `주차공간 ${placeId ? '수정' : '등록'}을 완료했습니다.`,
+                        `${place_id ? '수정' : '등록'}완료`,
+                        `주차공간 ${
+                            place_id ? '수정' : '등록'
+                        }을 완료했습니다.`,
                         () => {
-                            dispatch(getMyParkingList(JWT_TOKEN));
+                            if (place_id) {
+                                dispatch(updateMyParkingItem(response.place));
+                            } else {
+                                dispatch(getMyParkingList(JWT_TOKEN));
+                            }
                             history.replace(Paths.main.parking.manage);
-                        }
+                        },
                     );
                 } else {
                     openDialog(
-                        `${placeId ? '수정' : '등록'}실패`,
-                        `주차공간 ${placeId ? '수정' : '등록'}에 실패했습니다.`,
+                        `${enrollState}실패`,
+                        `주차공간 ${enrollState}에 실패했습니다.`,
                     );
                 }
             } catch (e) {
                 openDialog(
-                    `${placeId ? '수정' : '등록'}실패`,
-                    `주차공간을 ${
-                        placeId ? '수정' : '등록'
-                    }하는 도중 오류가 발생했습니다.`,
+                    `${enrollState}실패`,
+                    `주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`,
                 );
             }
         }
-    }, [dispatch, history, openDialog, parkingInfo, placeId]);
+    }, [dispatch, enrollState, history, openDialog, parkingInfo, place_id]);
     const [imgFile, setImgFile] = useState(null);
     useEffect(() => {
         const reader = new FileReader();
@@ -217,7 +226,7 @@ const ParkingPreviewModal = ({ open, parkingInfo, placeId }) => {
                 </div>
             </div>
             <FixedButton
-                button_name={`최종${placeId ? '수정' : '등록'}`}
+                button_name={`최종${enrollState}`}
                 disable={false}
                 onClick={onClickEnrollParking}
             ></FixedButton>
