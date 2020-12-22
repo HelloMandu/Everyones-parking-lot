@@ -2,7 +2,7 @@ import React from 'react';
 import { Snackbar, Slide } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
-import styles from './SnackBar2.module.scss';
+import styles from './SnackBar.module.scss';
 
 const TransitionLeft = (props) => {
     return <Slide {...props} direction="left" />;

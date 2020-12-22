@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { closeSnackBar, openSnackBar } from '../store/snackbar2';
+import { closeSnackBar, openSnackBar } from '../store/snackbar';
 
 const variantReducer = (variant) => {
     switch(variant){

@@ -19,7 +19,7 @@ import { getUser } from './store/user';
 import { getCompany } from './store/company';
 
 import './App.scss';
-import SnackBar from './components/assets/SnackBar2';
+import SnackBar from './components/assets/SnackBar';
 
 const App = () => {
     const location = useLocation();
