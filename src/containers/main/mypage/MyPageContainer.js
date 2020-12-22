@@ -35,25 +35,32 @@ import { Paths } from '../../../paths';
 /* Paths */
 
 const FileItem = ({ file, image }) => {
-
     const openDialog = useDialog();
     const reduxDispatch = useDispatch();
     const [imgFile, setImgfile] = useState(null);
 
     const UpdateProfile = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestPutProfile(JWT_TOKEN, file);
-        if (response.msg === 'success') {
-            reduxDispatch(updateUser('profile_image', response.profile_image));
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result;
-                if (base64) {
-                    setImgfile(base64.toString());
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestPutProfile(JWT_TOKEN, file);
+                if (response.msg === 'success') {
+                    reduxDispatch(
+                        updateUser('profile_image', response.profile_image),
+                    );
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64 = reader.result;
+                        if (base64) {
+                            setImgfile(base64.toString());
+                        }
+                    };
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
                 }
-            };
-            if (file) {
-                reader.readAsDataURL(file);
+            } catch (e) {
+                console.error(e);
             }
         }
     }, [file, setImgfile, reduxDispatch]);
@@ -74,11 +81,16 @@ const FileItem = ({ file, image }) => {
                     style={{ backgroundImage: `url(${imgFile})` }}
                 />
             ) : (
-                    <div
-                        className={styles['img-item']}
-                        style={{ backgroundImage: `url(${DBImageFormat(image, default_image)})` }}
-                    />
-                )}
+                <div
+                    className={styles['img-item']}
+                    style={{
+                        backgroundImage: `url(${DBImageFormat(
+                            image,
+                            default_image,
+                        )})`,
+                    }}
+                />
+            )}
         </>
     );
 };
@@ -299,7 +311,10 @@ const MyPageContainer = ({ match }) => {
                     <ImageModal
                         open={isOpenProfile}
                         title={'프로필 이미지'}
-                        images={DBImageFormat(getUserInfo.profile_image, default_image)}
+                        images={DBImageFormat(
+                            getUserInfo.profile_image,
+                            default_image,
+                        )}
                         handleClose={handleOpenProfile}
                     ></ImageModal>
                 </>

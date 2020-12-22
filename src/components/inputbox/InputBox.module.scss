@@ -1,3 +1,13 @@
+
+@mixin focus-animate {
+    transition-property: border;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-out;
+    &:focus {
+        border-color: #222;
+    }
+}
+
 .input-box {
     width: 100%;
     height: 48px;
@@ -6,11 +16,6 @@
     font-size: 1.167rem; // 14px;
     font-weight: 400; // Regular
     margin-bottom: 12px;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
     &::placeholder {
         font-size: 1.167rem; // 14px;
         font-weight: 400; // Regular
@@ -32,8 +37,9 @@
     width: 100%;
     height: 48px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
     padding: 0 12px;
+    @include focus-animate();
 }
 
 .verify-box {

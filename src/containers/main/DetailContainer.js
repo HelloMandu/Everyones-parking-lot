@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import styles from './DetailContainer.module.scss';
 import cn from 'classnames/bind';
+import qs from 'qs';
 
 //components
 import Shared from '../../components/shared/Shared';
@@ -15,6 +16,7 @@ import DetailReviewList from '../../components/review/DetailReviewItem';
 import DatePickerModal from '../../components/modal/DatePickerModal';
 import RoadviewModal from '../../components/modal/RoadviewModal';
 import FixedButton from '../../components/button/FixedButton';
+import ImageModal from '../../components/modal/ImageModal';
 //asset
 import guid_icon from '../../static/asset/svg/detail/guid.svg';
 import roadview_icon from '../../static/asset/svg/detail/roadview.svg';
@@ -33,14 +35,14 @@ import {
 } from '../../api/like';
 
 //lib
-import { getFormatDateTime, calculatePrice } from '../../lib/calculateDate';
+import { getFormatDateTime, calculatePrice,getFormatDay,calculateDate } from '../../lib/calculateDate';
 import { imageFormat, numberFormat } from '../../lib/formatter';
 
 //hooks
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
-import ImageModal from '../../components/modal/ImageModal';
+import { useScrollTop } from '../../hooks/useScroll';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -48,13 +50,16 @@ const getParkingType = (type) => {
         case 0:
             return '주차타운';
         case 1:
-            return '주차타운';
+            return '지상주차장';
         case 2:
-            return '주차타운';
+            return '지하주차장';
         default:
             return '지정주차';
     }
 };
+
+const LOADING_DETAIL = 'detail';
+
 const DetailContainer = ({ modal, place_id }) => {
     const { user_id } = useSelector((state) => state.user);
     const history = useHistory();
@@ -92,15 +97,19 @@ const DetailContainer = ({ modal, place_id }) => {
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
     useEffect(() => {
-        const headerHeight = headerRef.current.getBoundingClientRect().height;
-        const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
-        window.addEventListener('scroll', headerControll);
-        return () => window.removeEventListener('scroll', headerControll);
+        if (headerRef.current) {
+            const headerHeight = headerRef.current.getBoundingClientRect()
+                .height;
+            const headerControll = () =>
+                setHeaderOn(window.scrollY > headerHeight);
+            window.addEventListener('scroll', headerControll);
+            return () => window.removeEventListener('scroll', headerControll);
+        }
     }, []);
 
     // 상세보기 할 주차공간 api 호출
     const callGetDetailParking = useCallback(async () => {
-        onLoading('detail');
+        onLoading(LOADING_DETAIL);
         try {
             const res = await requestGetDetailParking(place_id);
             if (res.data.msg === 'success') {
@@ -110,8 +119,10 @@ const DetailContainer = ({ modal, place_id }) => {
                 setLikes(likes);
                 setReviews(reviews);
             }
-        } catch (e) {}
-        offLoading('detail');
+        } catch (e) {
+            console.error(e);
+        }
+        offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);
 
     const onClickSetDate = useCallback((start_date, end_date, total_date) => {
@@ -119,6 +130,7 @@ const DetailContainer = ({ modal, place_id }) => {
         setEndDate(end_date);
         setTotalDate(total_date);
     }, []);
+
 
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = useCallback(() => {
@@ -174,15 +186,49 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
+    useScrollTop();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callGetDetailParking, []);
     useEffect(likeCheck, [likeCheck]);
     useEffect(() => {
-        if (total_date) {
+        if (total_date && place) {
             setPrice(calculatePrice(total_date, place.place_fee));
         }
     }, [total_date, place]);
+
+    useEffect(()=>{
+        const query = qs.parse(location.search, {
+            ignoreQueryPrefix: true,
+        });
+        const {start_time,end_time} = query;
+        if(start_time && end_time){
+            const s_obj = getFormatDay(start_time);
+            const s_time = start_time.split(' ');
+            const s_newState ={
+                DAY: s_obj.DAY + ' ' + s_time[1],
+                DATE: s_time[0],
+                TIME : s_time[1]
+            }
+            setStartDate(s_newState);
+            const e_obj = getFormatDay(end_time);
+            const e_time = end_time.split(' ');
+            const e_newState ={
+                DAY: e_obj.DAY + ' ' + e_time[1],
+                DATE: e_time[0],
+                TIME : e_time[1]
+            }
+            setEndDate(e_newState);
+            setTotalDate(
+                calculateDate(
+                    s_newState.DATE,
+                    e_newState.DATE,
+                    s_newState.TIME,
+                    e_newState.TIME,
+                ),
+            );
+        }
+    },[location])
     return (
         <>
             <div className={cx('header', { headerOn })} ref={headerRef}>
@@ -227,10 +273,22 @@ const DetailContainer = ({ modal, place_id }) => {
                                 </div>
                             </div>
                             <div className={styles['item-rating']}>
-                                <ReviewRating rating={reviews.length ? 
-                                    reviews.reduce((prev, cur) => prev + parseFloat(cur.review_rating), 0) / reviews.length
-                                    : 0.0
-                                } />
+                                <ReviewRating
+                                    rating={
+                                        reviews.length
+                                            ? parseFloat(
+                                                  reviews.reduce(
+                                                      (prev, cur) =>
+                                                          prev +
+                                                          parseFloat(
+                                                              cur.review_rating,
+                                                          ),
+                                                      0,
+                                                  ) / reviews.length,
+                                              ).toPrecision(2)
+                                            : 0.0
+                                    }
+                                />
                                 <div className={styles['item-review']}>
                                     리뷰({reviews.length})
                                 </div>
@@ -271,7 +329,7 @@ const DetailContainer = ({ modal, place_id }) => {
                             <div className={styles['value']}>
                                 {start_date && end_date
                                     ? start_date.DAY + ' ~ ' + end_date.DAY
-                                    : '대여시간을 설정해주세요'}
+                                    : '대여시간을 설정해주세요.'}
                                 <ButtonBase
                                     className={styles['date-picker']}
                                     onClick={onClickDatePicker}
@@ -340,7 +398,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         disable={false}
                         onClick={() =>
                             history.push(
-                                `${Paths.main.parking.enrollment}?place_id=${place.place_id}`,
+                                `${Paths.main.parking.modify}?place_id=${place.place_id}`,
                             )
                         }
                     ></FixedButton>
@@ -371,6 +429,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 oper_start={place && place.oper_start_time}
                 oper_end={place && place.oper_end_time}
                 onClick={onClickSetDate}
+                place_id={place_id}
             />
             <RoadviewModal
                 open={openLoadview}

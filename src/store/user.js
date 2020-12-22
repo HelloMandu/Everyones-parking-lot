@@ -26,10 +26,13 @@ function* getUserSaga(action) {
     yield put(startLoading(GET_USER));
     try {
         const { payload: JWT_TOKEN } = action;
-        const user = yield call(requestGetUserInfo, JWT_TOKEN);
+        const {data, status} = yield call(requestGetUserInfo, JWT_TOKEN);
+        if (status === 202){
+            localStorage.removeItem('user_id');
+        }
         yield put({
             type: GET_USER_SUCCESS,
-            payload: user.data
+            payload: data
         });
     } catch (e) {
         yield put({

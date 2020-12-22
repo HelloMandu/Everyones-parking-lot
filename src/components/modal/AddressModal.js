@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { /*useSelector, */ useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 //styles
@@ -76,27 +76,29 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const AddressModal = (props) => {
-
     const history = useHistory();
     const dispatch = useDispatch();
     const [index, setIndex] = useState(0);
-    const { address } = useSelector((state) => state.position);
+    // const { address } = useSelector((state) => state.position);
     const [search, setSearch] = useState('');
     const [isSearch, setIsSearch] = useState(false);
-    const [space_list, setSpaceList] = useState([]);
+    const [space_list /*, setSpaceList*/] = useState([]);
     const [addr_list, setAddrList] = useState([]);
     const classes = useStyles();
     const ref = useRef(null);
 
-    const onChangeSearch = useCallback((e) => {
-        setSearch(e.target.value);
-        let timer = setTimeout(() => {
-            setIsSearch(true);
-        }, 1800);
-        if (isSearch) {
-            clearTimeout(timer);
-        }
-    }, [isSearch])
+    const onChangeSearch = useCallback(
+        (e) => {
+            setSearch(e.target.value);
+            let timer = setTimeout(() => {
+                setIsSearch(true);
+            }, 1800);
+            if (isSearch) {
+                clearTimeout(timer);
+            }
+        },
+        [isSearch],
+    );
 
     const callGetAddressSearch = useCallback(async () => {
         try {
@@ -112,23 +114,43 @@ const AddressModal = (props) => {
     }, [search]);
 
     useEffect(() => {
+        setSearch('');
+        const distance_index = sessionStorage.getItem('distance_index');
+        if (distance_index) {
+            setIndex(parseInt(distance_index));
+        } else {
+            sessionStorage.setItem('distance_index', 0);
+            setIndex(0);
+        }
+    }, [props.open]);
+
+    useEffect(() => {
         if (isSearch) {
             callGetAddressSearch();
         }
-    }, [callGetAddressSearch, isSearch])
+    }, [callGetAddressSearch, isSearch]);
 
-    const onClickAddressItem = async (jibun) => {
-        try {
-            const res = await requestGetAddressInfo(jibun);
-            const { x, y, address_name, building_name } = res.data.documents[0].road_address;
-            dispatch(set_address(address_name + ' ' + building_name));
-            dispatch(set_arrive({ lat: y, lng: x }));
-            history.replace(Paths.main.index);
-        }
-        catch (e) {
-            console.error(e);
-        }
-    }
+    const onClickAddressItem = useCallback(
+        async (jibun) => {
+            try {
+                const res = await requestGetAddressInfo(jibun);
+                const {
+                    x,
+                    y,
+                    address_name,
+                    building_name,
+                } = res.data.documents[0].road_address;
+                dispatch(set_address(address_name + ' ' + building_name));
+                dispatch(set_arrive({ lat: y, lng: x }));
+                history.replace(Paths.main.index);
+                sessionStorage.setItem('distance_index', index);
+                props.setArriveLevel(index);
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        [dispatch, history, index, props],
+    );
 
     return (
         <Dialog
@@ -160,29 +182,64 @@ const AddressModal = (props) => {
                     {search.length === 0 && (
                         <>
                             <div className={styles['distance-list']}>
-                                <DistanceItem on={index === 0} onClick={() => setIndex(0)} distance={'100m'} />
-                                <DistanceItem on={index === 1} onClick={() => setIndex(1)} distance={'300m'} />
-                                <DistanceItem on={index === 2} onClick={() => setIndex(2)} distance={'1km'} />
+                                <DistanceItem
+                                    on={index === 0}
+                                    onClick={() => setIndex(0)}
+                                    distance={'100m'}
+                                />
+                                <DistanceItem
+                                    on={index === 1}
+                                    onClick={() => setIndex(1)}
+                                    distance={'500m'}
+                                />
+                                <DistanceItem
+                                    on={index === 2}
+                                    onClick={() => setIndex(2)}
+                                    distance={'1km'}
+                                />
                             </div>
                             <p>최근 이용 스페이스 존</p>
                             <div className={styles['space-list']}>
-                                <AddressList addr_list={space_list} />
+                                {space_list.length !== 0 ? (
+                                    <AddressList addr_list={space_list} />
+                                ) : (
+                                    <div className={styles['none-list']}>
+                                        최근 이용 스페이스 존이 없습니다.
+                                    </div>
+                                )}
                             </div>
                             <div className={styles['event-zone']}>
-                                <ButtonBase className={styles['event-img']}>
+                                <ButtonBase
+                                    className={styles['event-img']}
+                                    onClick={() =>
+                                        history.push(
+                                            Paths.main.event.detail + '?id=3',
+                                        )
+                                    }
+                                >
                                     <img src={banner_img} alt="event" />
                                 </ButtonBase>
                             </div>
                             <div className={styles['space-zone']}>
                                 <p>스페이스 이벤트존</p>
-                                <ButtonBase className={styles['event-img']}>
+                                <ButtonBase
+                                    className={styles['event-img']}
+                                    onClick={() =>
+                                        history.push(
+                                            Paths.main.event.detail + '?id=2',
+                                        )
+                                    }
+                                >
                                     <img src={space_zone} alt="event" />
                                 </ButtonBase>
                             </div>
                         </>
                     )}
                     {search.length !== 0 && (
-                        <AddressList addr_list={addr_list} onClick={onClickAddressItem} />
+                        <AddressList
+                            addr_list={addr_list}
+                            onClick={onClickAddressItem}
+                        />
                     )}
                 </div>
             </DialogContent>

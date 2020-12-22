@@ -5,6 +5,9 @@ import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
 import useModal from '../../hooks/useModal';
+import useToken from '../../hooks/useToken';
+import useLoading from '../../hooks/useLoading';
+import { useScrollTop } from '../../hooks/useScroll';
 import { useDialog } from '../../hooks/useDialog';
 
 import { imageFormat, numberFormat } from '../../lib/formatter';
@@ -25,7 +28,6 @@ import ConfirmButton from '../../components/button/ConfirmButton';
 import ImageModal from '../../components/modal/ImageModal';
 
 import styles from './PaymentContainer.module.scss';
-import useToken from '../../hooks/useToken';
 
 const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
 
@@ -64,10 +66,10 @@ const Point = ({
     onChange,
 }) => {
     const [isTotal, setIsTotal] = useState(false);
-    const handleTotalPoint = useCallback(() => setUsePoint(maxPrice), [
-        setUsePoint,
-        maxPrice,
-    ]);
+    const handleTotalPoint = useCallback(
+        () => setUsePoint(point >= maxPrice ? maxPrice : point),
+        [setUsePoint, point, maxPrice],
+    );
     useEffect(
         () =>
             setIsTotal(
@@ -240,30 +242,47 @@ const ParkingEnrollContainer = ({ location, match }) => {
         const { price, deposit } = parkingInfo;
         const { type, card_id } = paymentType;
         const { cp_id } = selectedCoupon;
-        const { msg, rental_id } = await requestPostRental(
-            JWT_TOKEN,
-            place_id,
-            cp_id,
-            start_time,
-            end_time,
-            price,
-            usePoint,
-            deposit,
-            type,
-            card_id,
-            phoneRef.current.phoneNumber,
-        );
-        if (msg === 'success') {
-            history.push(
-                `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+        try {
+            const { msg, rental_id } = await requestPostRental(
+                JWT_TOKEN,
+                place_id,
+                cp_id,
+                start_time,
+                end_time,
+                price,
+                usePoint,
+                deposit,
+                type,
+                card_id,
+                phoneRef.current.phoneNumber,
             );
-        } else {
-            openDialog('결제실패', msg);
+            if (msg === 'success') {
+                history.push(
+                    `${Paths.main.payment_complete}?rental_id=${rental_id}`,
+                );
+            } else {
+                openDialog('결제실패', msg);
+            }
+        } catch (e) {
+            console.error(e);
         }
-    }, [JWT_TOKEN, end_time, history, openDialog, parkingInfo, paymentType, place_id, selectedCoupon, start_time, usePoint]);
+    }, [
+        JWT_TOKEN,
+        end_time,
+        history,
+        openDialog,
+        parkingInfo,
+        paymentType,
+        place_id,
+        selectedCoupon,
+        start_time,
+        usePoint,
+    ]);
 
+    const [onLoading, offLoading] = useLoading();
     const getPaymentInfo = useCallback(
         async (place_id, start_time, end_time) => {
+            onLoading('payment');
             const { data } = await requestGetPayInfo(
                 JWT_TOKEN,
                 place_id,
@@ -285,21 +304,24 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 });
                 setTotalPrice(price + deposit);
             } else {
-                openDialog(data.msg, '', () =>
-                    history.goBack(),
-                );
+                openDialog(data.msg, '', () => history.goBack());
             }
+            offLoading('payment');
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [JWT_TOKEN],
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useScrollTop();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
     return (
         <>
             <main className={styles['parking-payment-container']}>
                 <div className={styles['parking-payment-area']}>
-                    <ParkingInfo parkingInfo={parkingInfo} onClick={handleImageModal}></ParkingInfo>
+                    <ParkingInfo
+                        parkingInfo={parkingInfo}
+                        onClick={handleImageModal}
+                    ></ParkingInfo>
                     <section className={styles['parking-payment-wrapper']}>
                         <h3 className={styles['title']}>{'대여자 연락처'}</h3>
                         <VerifyPhone

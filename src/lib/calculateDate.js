@@ -69,6 +69,7 @@ export const getFormatDay = (params) => {
             new Date(`${ss_day.getFullYear()}-${month}-${date}`),
         ),
     };
+
     return obj;
 };
 

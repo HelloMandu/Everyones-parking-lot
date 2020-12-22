@@ -7,6 +7,7 @@ import useLoading from '../../../hooks/useLoading';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
+import { getFormatDateNanTime } from '../../../lib/calculateDate';
 
 import { Paths } from '../../../paths';
 
@@ -18,7 +19,7 @@ import Notice from '../../../static/asset/svg/Notice';
 
 const cx = className.bind(styles);
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ setList, review }) => {
     const history = useHistory();
     const openDialog = useDialog();
     const [onLoading, offLoading] = useLoading();
@@ -34,11 +35,15 @@ const ReviewItem = ({ review }) => {
                     token,
                     review.review_id,
                 );
-
                 if (data.msg === 'success') {
-                    openDialog('리뷰가 삭제되었습니다.');
-                    history.push(Paths.main.index);
-                } else openDialog(data.msg);
+                    setList((list) =>
+                        list.filter(
+                            (item) => item.review_id !== review.review_id,
+                        ),
+                    );
+                } else {
+                    openDialog(data.msg);
+                }
             },
             true,
         );
@@ -69,7 +74,9 @@ const ReviewItem = ({ review }) => {
                     />
                 </div>
                 <div className={cx('date')}>
-                    {review.updated_at ? review.updated_at : review.created_at}
+                    {getFormatDateNanTime(
+                        review.updatedAt ? review.updatedAt : review.createdAt,
+                    )}
                     <hr />
                 </div>
                 <div className={cx('body')}>{review.review_body}</div>
@@ -79,7 +86,7 @@ const ReviewItem = ({ review }) => {
                 <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
                 <Link
                     to={
-                        Paths.main.review.write +
+                        Paths.main.review.modify +
                         `?rental_id=${review.rental_id}`
                     }
                 >
@@ -90,43 +97,49 @@ const ReviewItem = ({ review }) => {
     );
 };
 
+const LOADING_REVIEW = 'review';
+
 const ReviewListContainer = () => {
     const token = useToken();
     const [list, setList] = useState([]);
-    const [onLoading, offLoading] = useLoading();
+    const [onLoading, offLoading, isLoading] = useLoading();
 
     const getReviewList = useCallback(async () => {
-        onLoading('getReviewList');
-
+        if (!token) {
+            return;
+        }
+        onLoading(LOADING_REVIEW);
         const { data } = await requestGetReviewList(token);
-
         setList(data.reviews);
-
-        offLoading('getReviewList');
+        offLoading(LOADING_REVIEW);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
-    useEffect(() => {
-        if (token !== null) getReviewList();
-
-        return;
-    }, [getReviewList, token]);
-
-    return list.length !== 0 ? (
-        <div className={cx('container')}>
-            {list.map((item) => (
-                <ReviewItem key={item.review_id} review={item} />
-            ))}
-        </div>
-    ) : (
-        <div className={styles['non-qna']}>
-            <div className={styles['non-container']}>
-                <Notice />
-                <div className={styles['explain']}>
-                    내가 작성한 리뷰가 없습니다.
-                </div>
-            </div>
-        </div>
+    useEffect(getReviewList, [getReviewList, token]);
+    return (
+        <>
+            {!isLoading[LOADING_REVIEW] &&
+                (list.length ? (
+                    <div className={cx('container')}>
+                        {list.map((item) => (
+                            <ReviewItem
+                                key={item.review_id}
+                                review={item}
+                                setList={setList}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                내가 작성한 리뷰가 없습니다.
+                            </div>
+                        </div>
+                    </div>
+                ))}
+        </>
     );
 };
 

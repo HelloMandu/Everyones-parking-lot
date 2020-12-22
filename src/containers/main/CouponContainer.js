@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 
 import useToken from '../../hooks/useToken';
 import useModal from '../../hooks/useModal';
+import useLoading from '../../hooks/useLoading';
 import { useDialog } from '../../hooks/useDialog';
 import {
     requestGetCouponBook,
@@ -24,8 +25,11 @@ import 'swiper/swiper.scss';
 
 import styles from './CouponContainer.module.scss';
 
+const LOADING_COUPON = 'coupon';
+
 const CouponContainer = ({ match }) => {
     const JWT_TOKEN = useToken();
+    const [onLoading, offLoading, isLoading] = useLoading();
     const [myCoupon, setMyCoupon] = useState([]);
     const [couponBook, setCouponBook] = useState([]);
     const [useCoupon, setuseCoupon] = useState([]);
@@ -59,31 +63,35 @@ const CouponContainer = ({ match }) => {
     const handleCouponEnroll = useCallback(
         async (id, isInput) => {
             if (JWT_TOKEN) {
-                const { msg, coupon } = await requestPostCouponCode(
-                    JWT_TOKEN,
-                    id,
-                );
-                if (msg === 'success') {
-                    const newCouponList = couponBook.map((coupon) =>
-                        coupon.cz_id === id
-                            ? { ...coupon, checked: !coupon.checked }
-                            : coupon,
+                try {
+                    const { msg, coupon } = await requestPostCouponCode(
+                        JWT_TOKEN,
+                        id,
                     );
-                    setCouponBook(newCouponList);
-                    setMyCoupon((myCoupon) => myCoupon.concat(coupon));
-                    if (isInput) {
-                        history.goBack();
+                    if (msg === 'success') {
+                        const newCouponList = couponBook.map((coupon) =>
+                            coupon.cz_id === id
+                                ? { ...coupon, checked: !coupon.checked }
+                                : coupon,
+                        );
+                        setCouponBook(newCouponList);
+                        setMyCoupon((myCoupon) => myCoupon.concat(coupon));
+                        if (isInput) {
+                            history.goBack();
+                        }
+                    } else {
+                        openDialog(msg);
                     }
-                } else {
-                    openDialog('입력 실패', msg);
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },
         [JWT_TOKEN, couponBook, history, openDialog],
     );
-
-    useEffect(() => {
-        const getCouponList = async () => {
+    const getCouponList = useCallback(async () => {
+        onLoading(LOADING_COUPON);
+        try {
             const book = await requestGetCouponBook();
             const my = await requestGetCouponMy();
             const use = await requestGetCouponUse();
@@ -113,9 +121,13 @@ const CouponContainer = ({ match }) => {
                 setMyCoupon(my.coupons);
                 setuseCoupon(use.coupons);
             }
-        };
-        getCouponList();
-    }, []);
+        } catch (e) {
+            console.error(e);
+        }
+        offLoading(LOADING_COUPON);
+    }, [offLoading, onLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(getCouponList, []);
     return (
         <>
             <div className={styles['coupon-container']}>
@@ -149,31 +161,33 @@ const CouponContainer = ({ match }) => {
                         <ArrowSmall rotate={180}></ArrowSmall>
                     </div>
                 </section>
-                <Swiper
-                    spaceBetween={50}
-                    slidesPerView={1}
-                    onSlideChange={(swiper) =>
-                        handleSwiperIndex(swiper.activeIndex)
-                    }
-                    onSwiper={(swiper) => {
-                        swiperRef.current = swiper;
-                    }}
-                >
-                    <SwiperSlide>
-                        <Coupon list={myCoupon}></Coupon>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Coupon
-                            list={couponBook}
-                            onClick={handleCouponEnroll}
-                            clicked={true}
-                            book={true}
-                        ></Coupon>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Coupon list={useCoupon}></Coupon>
-                    </SwiperSlide>
-                </Swiper>
+                {!isLoading[LOADING_COUPON] && (
+                    <Swiper
+                        spaceBetween={50}
+                        slidesPerView={1}
+                        onSlideChange={(swiper) =>
+                            handleSwiperIndex(swiper.activeIndex)
+                        }
+                        onSwiper={(swiper) => {
+                            swiperRef.current = swiper;
+                        }}
+                    >
+                        <SwiperSlide>
+                            <Coupon list={myCoupon}></Coupon>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <Coupon
+                                list={couponBook}
+                                onClick={handleCouponEnroll}
+                                clicked={true}
+                                book={true}
+                            ></Coupon>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <Coupon list={useCoupon}></Coupon>
+                        </SwiperSlide>
+                    </Swiper>
+                )}
             </div>
             <CouponCodeModal
                 open={isOpenCouponCodeModal}

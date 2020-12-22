@@ -18,7 +18,6 @@ import { getFormatDateNanTime } from '../../../lib/calculateDate';
 const cn = classnames.bind(styles);
 
 const QNADetailContainer = () => {
-
     const location = useLocation();
     const history = useHistory();
     const query = qs.parse(location.search, {
@@ -34,19 +33,28 @@ const QNADetailContainer = () => {
     const getQNADetailList = useCallback(async () => {
         onLoading('qna_detail');
         const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestGetDetailQNAList(JWT_TOKEN, qna_id);
-        setQNADetail(response.qna);
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestGetDetailQNAList(
+                    JWT_TOKEN,
+                    qna_id,
+                );
+                setQNADetail(response.qna);
+            } catch (e) {
+                console.error(e);
+            }
+        }
         offLoading('qna_detail');
         // eslint-disable-next-line
-    }, [])
+    }, []);
 
     useEffect(() => {
         try {
             getQNADetailList();
         } catch (e) {
-            openDialog("1:1상세보기 리스트 오류", "", () => history.goBack());
+            openDialog('1:1상세보기 리스트 오류', '', () => history.goBack());
         }
-    }, [getQNADetailList, openDialog, history])
+    }, [getQNADetailList, openDialog, history]);
 
     if (!QNADetail) {
         return null;
@@ -56,24 +64,30 @@ const QNADetailContainer = () => {
             <div className={styles['header-area']}>
                 <div className={styles['header-wrap']}>
                     <div className={styles['top']}>
-                        <div className={styles['date']}>{getFormatDateNanTime(QNADetail.updatedAt)}</div>
-                        <div className={cn('button', { status: QNADetail.status })}>
-                            {QNADetail.status ? "답변완료" : "답변대기"}
+                        <div className={styles['date']}>
+                            {getFormatDateNanTime(QNADetail.updatedAt)}
+                        </div>
+                        <div
+                            className={cn('button', {
+                                status: QNADetail.status,
+                            })}
+                        >
+                            {QNADetail.status ? '답변완료' : '답변대기'}
                         </div>
                     </div>
                     <div className={styles['title']}>{QNADetail.subject}</div>
                     <div className={styles['bottom']}>
-                        <div className={styles['name']}>{QNADetail.user.name}</div>
-                        <div className={styles['count']}>조회수 {QNADetail.hit}</div>
+                        <div className={styles['name']}>
+                            {QNADetail.user.name}
+                        </div>
+                        <div className={styles['count']}>
+                            조회수 {QNADetail.hit}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className={styles['question-area']}>
-                {QNADetail.question}
-            </div>
-            <div className={styles['answer-area']}>
-                {QNADetail.answer}
-            </div>
+            <div className={styles['question-area']}>{QNADetail.question}</div>
+            <div className={styles['answer-area']}>{QNADetail.answer}</div>
         </div>
     );
 };

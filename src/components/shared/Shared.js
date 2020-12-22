@@ -34,28 +34,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Share = ({ open, onToggle, placeInfo }) => {
     const classes = useStyles();
-    const handleKakaoShare = useCallback(() => {
-        // kakao sdk script이 정상적으로 불러와졌으면 window.Kakao로 접근이 가능합니다
-        if (!placeInfo) {
-            return;
-        }
-        const { place_name, place_id, place_images, place_comment } = placeInfo;
-        if (Kakao) {
-            Kakao.Link.createDefaultButton({
-                container: '#kakao-link-btn',
-                objectType: 'feed',
-                content: {
-                    title: `${place_name}`,
-                    description: `${place_comment}`,
-                    imageUrl: `${imageFormat(place_images[0])}`,
-                    link: {
-                        mobileWebUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
-                        webUrl: `https://www.intospace.kr/detail?place_id=${place_id}`,
-                    },
-                },
-            });
-        }
-    }, [placeInfo]);
     const handleTwitterShare = useCallback(() => {
         if (!placeInfo) {
             return;
@@ -92,13 +70,39 @@ const Share = ({ open, onToggle, placeInfo }) => {
             `https://share.naver.com/web/shareView.nhn?url=${API_SERVER}/detail?place_id=${place_id}"&title=${place_name}"`,
         );
     }, [placeInfo]);
-    const handleBandShare = (url, content) => {
+    const handleBandShare = () => {
         const { place_id, place_name } = placeInfo;
         window.open(
             `http://band.us/plugin/share?body=${place_name}&route=${API_SERVER}/detail?place_id=${place_id}`,
             'share',
         );
     };
+    const kakaoShare = useCallback(() => {
+        if (!placeInfo) {
+            return;
+        }
+        if (Kakao) {
+            const {
+                place_name,
+                place_id,
+                place_images,
+                place_comment,
+            } = placeInfo;
+            Kakao.Link.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${place_name}`,
+                    description: `${place_comment}`,
+                    imageUrl: `${imageFormat(place_images[0])}`,
+                    link: {
+                        mobileWebUrl: `https://intospace.kr/detail?place_id=${place_id}`,
+                        webUrl: `https://intospace.kr/detail?place_id=${place_id}`,
+                    },
+                },
+            });
+        }
+    }, [placeInfo]);
+
     return (
         <>
             <Modal
@@ -127,11 +131,12 @@ const Share = ({ open, onToggle, placeInfo }) => {
                             </div>
                             <div className={styles['share-content']}>
                                 <ul className={styles['share-list']}>
-                                    <li className={styles['share-item']}>
+                                    <li
+                                        className={styles['share-item']}
+                                    >
                                         <IconButton
-                                            id="kakao-link-btn"
                                             className={styles['circle-btn']}
-                                            onClick={handleKakaoShare}
+                                            onClick={kakaoShare}
                                         >
                                             <img src={kakao} alt="alt" />
                                         </IconButton>

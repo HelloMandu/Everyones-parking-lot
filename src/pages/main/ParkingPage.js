@@ -16,6 +16,7 @@ const ParkingPage = () => {
             <Switch>
                 <Route path={Paths.main.parking.manage + '/:modal?'} component={ParkingManageContainer} />
                 <Route path={Paths.main.parking.enrollment + '/:modal?'} component={ParkingEnrollContainer} />
+                <Route path={Paths.main.parking.modify + '/:modal?'} component={ParkingEnrollContainer} />
                 <Route render={() =>history.replace(Paths.main.parking.manage)} />
             </Switch>
         </div>

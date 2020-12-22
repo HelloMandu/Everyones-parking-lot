@@ -16,6 +16,7 @@ import Header from './components/header/Header';
 import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
+import { getCompany } from './store/company';
 
 const App = () => {
     const location = useLocation();
@@ -28,15 +29,17 @@ const App = () => {
         }
     }, [dispatch]);
 
-    useEffect(() => {
-        Kakao.init('1c0eaf33be9ad7d4b2c907a0212d6903');
-        judgementLogin();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const callAppInfo = useCallback(async () => {
+        // 회사 정보 가져옴
+        dispatch(getCompany());
+    }, [dispatch]);
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [location.pathname]);
+        Kakao.init('69ea25b2ec2f6bd52476ec619d899dda');
+        judgementLogin();
+        callAppInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const renderHeader = () => {
         const { pathname } = location;
@@ -84,7 +87,8 @@ const App = () => {
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
-        } else if (pathname === Paths.main.use.extend) {
+        } 
+        else if (pathname === Paths.main.use.extend) {
             return <Header title={HeaderTitle.main.use.extend} />;
         }
         // 내가 작성한 리뷰
@@ -94,6 +98,10 @@ const App = () => {
         // 리뷰 쓰기
         else if (pathname === Paths.main.review.write) {
             return <Header title={HeaderTitle.main.review.write} />;
+        }
+        // 리뷰 수정
+        else if (pathname === Paths.main.review.modify) {
+            return <Header title={HeaderTitle.main.review.modify} />;
         }
         // 리뷰 상세 보기
         else if (pathname === Paths.main.review.detail) {
@@ -106,6 +114,10 @@ const App = () => {
         // 주차공간 등록
         else if (pathname === Paths.main.parking.enrollment) {
             return <Header title={HeaderTitle.main.parking.enrollment} />;
+        }
+        // 주차공간 수정
+        else if (pathname === Paths.main.parking.modify) {
+            return <Header title={HeaderTitle.main.parking.modify} />;
         }
         //알림함
         else if (pathname === Paths.main.notification) {

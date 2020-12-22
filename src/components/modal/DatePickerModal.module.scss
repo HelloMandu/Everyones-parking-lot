@@ -1,14 +1,5 @@
 @import '../../static/stylesheets/Root.scss';
 
-html {
-    body {
-        :global(.MuiDialog-root) {
-            min-height: 100vh;
-            // z-index: $level2 !important;
-        }
-    }
-}
-
 .container {
     padding-top: 76px;
     padding-left: 24px;
@@ -58,7 +49,7 @@ html {
         }
 
         .txt-value {
-            height: 64px;
+            width: 100%; height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;

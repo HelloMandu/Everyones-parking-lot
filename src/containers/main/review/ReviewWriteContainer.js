@@ -7,7 +7,7 @@ import FixedButton from '../../../components/button/FixedButton';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
-import useLoading from '../../../hooks/useLoading'
+import useLoading from '../../../hooks/useLoading';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 import {
@@ -32,7 +32,7 @@ const ReviewWriteContainer = () => {
     });
     const { rental_id } = query;
     const history = useHistory();
-    const [onLoading, offLoading] = useLoading()
+    const [onLoading, offLoading] = useLoading();
 
     const [order, setOrder] = useState();
     const [exist, setExist] = useState(false);
@@ -41,22 +41,24 @@ const ReviewWriteContainer = () => {
     const [review, setReview] = useState();
 
     const getOrder = useCallback(async () => {
-        onLoading('getOrder')
-
-        const { msg, order, review } = await requestGetDetailUseRental(rental_id);
-
-        if (msg === 'success') {
-            setOrder(order);
-
-            if (review) {
-                setExist(true);
-                setReviewBody(review.review_body);
-                setReview(review);
-            } else setExist(false);
+        onLoading('getOrder');
+        try {
+            const { msg, order, review } = await requestGetDetailUseRental(
+                rental_id,
+            );
+            if (msg === 'success') {
+                setOrder(order);
+                if (review) {
+                    setExist(true);
+                    setReviewBody(review.review_body);
+                    setReview(review);
+                } else setExist(false);
+            }
+        } catch (e) {
+            console.error(e);
         }
-
-        offLoading('getOrder')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        offLoading('getOrder');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rental_id]);
 
     useEffect(() => {
@@ -65,54 +67,56 @@ const ReviewWriteContainer = () => {
     }, []);
 
     const writeReview = useCallback(async () => {
-        onLoading('writeReview')
-
-        const { data } = await requestPostWriteReview(
-            token,
-            order.rental_id,
-            order.place_id,
-            reviewBody,
-            rating,
-        );
-
-        if (data.msg === 'success') {
-            openDialog(
-                '리뷰가 작성되었습니다.',
-                '',
-                () =>
-                    history.goBack(),
-                false,
-                true,
+        onLoading('writeReview');
+        try {
+            const { data } = await requestPostWriteReview(
+                token,
+                order.rental_id,
+                order.place_id,
+                reviewBody,
+                rating,
             );
-        } else openDialog(data.msg)
 
-        offLoading('writeReview')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+            if (data.msg === 'success') {
+                openDialog(
+                    '리뷰가 작성되었습니다.',
+                    '',
+                    () => history.goBack(),
+                    false,
+                    true,
+                );
+            } else openDialog(data.msg);
+        } catch (e) {
+            console.error(e);
+        }
+        offLoading('writeReview');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, order, rating, reviewBody, token]);
 
     const modifyReview = useCallback(async () => {
-        onLoading('modifyReview')
-
-        const { data } = await requestPutModifyReview(
-            token,
-            review.review_id,
-            reviewBody,
-            rating,
-        );
-
-        if (data.msg === 'success') {
-            openDialog(
-                '리뷰가 수정되었습니다.',
-                '',
-                () =>
-                    history.goBack(),
-                false,
-                true,
+        onLoading('modifyReview');
+        try {
+            const { data } = await requestPutModifyReview(
+                token,
+                review.review_id,
+                reviewBody,
+                rating,
             );
-        } else openDialog(data.msg)
 
-        offLoading('modifyReview')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+            if (data.msg === 'success') {
+                openDialog(
+                    '리뷰가 수정되었습니다.',
+                    '',
+                    () => history.goBack(),
+                    false,
+                    true,
+                );
+            } else openDialog(data.msg);
+        } catch (e) {
+            console.error(e);
+        }
+        offLoading('modifyReview');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, rating, review, reviewBody, token]);
 
     return (

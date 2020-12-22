@@ -47,13 +47,12 @@ const card = [
 const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
-        color: "#fff",
-        height: "100vh",
+        color: '#fff',
+        height: '100vh',
     },
 }));
 
 const WithdrawModal = ({ click, setClick, point }) => {
-
     const classes = useStyles();
     const openDialog = useDialog();
     const reduxDispatch = useDispatch();
@@ -68,21 +67,48 @@ const WithdrawModal = ({ click, setClick, point }) => {
     const onClickButton = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (parseInt(price) <= 0) {
-            openDialog("0포인트 이하 액수를 출금할 수 없습니다.");
+            openDialog('0포인트 이하 액수를 출금할 수 없습니다.');
         }
-        const response = await requestPostWithdraw(JWT_TOKEN, bank, account, price);
-        if (response.msg === 'success') {
-            reduxDispatch(updateUser('point', point - price));
-            openDialog("출금이 완료되었습니다.", "", () => { setClick(false); onChangeBank(); onChangeAccount(); onChangePrice(); });
-        } else {
-            openDialog(response.msg);
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestPostWithdraw(
+                    JWT_TOKEN,
+                    bank,
+                    account,
+                    price,
+                );
+                if (response.msg === 'success') {
+                    reduxDispatch(updateUser('point', point - price));
+                    openDialog('출금이 완료되었습니다.', '', () => {
+                        setClick(false);
+                        onChangeBank();
+                        onChangeAccount();
+                        onChangePrice();
+                    });
+                } else {
+                    openDialog(response.msg);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
-    }, [bank, account, price, openDialog, setClick, onChangeBank, onChangeAccount, onChangePrice, point, reduxDispatch]);
+    }, [
+        bank,
+        account,
+        price,
+        openDialog,
+        setClick,
+        onChangeBank,
+        onChangeAccount,
+        onChangePrice,
+        point,
+        reduxDispatch,
+    ]);
 
     useEffect(() => {
         if (account && price) setCheck(true);
         else setCheck(false);
-    }, [account, price])
+    }, [account, price]);
 
     return (
         <>
@@ -94,8 +120,14 @@ const WithdrawModal = ({ click, setClick, point }) => {
                     <div className={styles['account-text']}>계좌 정보</div>
                     <div className={styles['account-area']}>
                         <div className={styles['account-select']}>
-                            <select className={styles['select']} onChange={onChangeBank} defaultValue={'defalut'}>
-                                <option disabled value='defalut'>은행 선택</option>
+                            <select
+                                className={styles['select']}
+                                onChange={onChangeBank}
+                                defaultValue={'defalut'}
+                            >
+                                <option disabled value="defalut">
+                                    은행 선택
+                                </option>
                                 {card.map((item) => (
                                     <option key={item}>{item}</option>
                                 ))}
@@ -109,7 +141,8 @@ const WithdrawModal = ({ click, setClick, point }) => {
                                 placeholder={'계좌번호 입력'}
                                 onChange={onChangeAccount}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') withdrawPrice.current.focus();
+                                    if (e.key === 'Enter')
+                                        withdrawPrice.current.focus();
                                 }}
                             />
                         </div>
@@ -131,42 +164,67 @@ const WithdrawModal = ({ click, setClick, point }) => {
                         <span>원</span>
                     </div>
                 </div>
-                <BasicButton button_name="출금 신청" disable={!check} onClick={onClickButton} />
+                <BasicButton
+                    button_name="출금 신청"
+                    disable={!check}
+                    onClick={onClickButton}
+                />
             </div>
-            <Backdrop className={classes.backdrop} open={click} onClick={() => { setClick(!click); onChangeBank(); onChangeAccount(); onChangePrice(); }} />
+            <Backdrop
+                className={classes.backdrop}
+                open={click}
+                onClick={() => {
+                    setClick(!click);
+                    onChangeBank();
+                    onChangeAccount();
+                    onChangePrice();
+                }}
+            />
         </>
-    )
-}
+    );
+};
 
 const PointItem = ({ item }) => {
     const { use_type, updatedAt, point_text, use_point } = item;
     return (
         <>
-            {!use_type
-                ? <div className={styles['point-wrap']}>
+            {!use_type ? (
+                <div className={styles['point-wrap']}>
                     <div className={cn('status-text', 'plus')}>적립</div>
-                    <div className={styles['time']}>{getFormatDateDetailTime(updatedAt)}</div>
-                    <div className={styles['text']}>{point_text}<span></span></div>
-                    <div className={cn('point', 'plus')}>+ {numberFormat(use_point)}P</div>
+                    <div className={styles['time']}>
+                        {getFormatDateDetailTime(updatedAt)}
+                    </div>
+                    <div className={styles['text']}>
+                        {point_text}
+                        <span></span>
+                    </div>
+                    <div className={cn('point', 'plus')}>
+                        + {numberFormat(use_point)}P
+                    </div>
                 </div>
-                : <div className={styles['point-wrap']}>
+            ) : (
+                <div className={styles['point-wrap']}>
                     <div className={cn('status-text', 'minus')}>차감</div>
-                    <div className={styles['time']}>{getFormatDateDetailTime(updatedAt)}</div>
-                    <div className={styles['text']}>출금신청 <span>{point_text}</span></div>
-                    <div className={cn('point', 'minus')}>- {numberFormat(use_point)}P</div>
+                    <div className={styles['time']}>
+                        {getFormatDateDetailTime(updatedAt)}
+                    </div>
+                    <div className={styles['text']}>
+                        출금신청 <span>{point_text}</span>
+                    </div>
+                    <div className={cn('point', 'minus')}>
+                        - {numberFormat(use_point)}P
+                    </div>
                 </div>
-            }
+            )}
         </>
     );
 };
 
-
 const MyPointContainer = () => {
-
     const history = useHistory();
     const TOKEN = useToken();
 
-    const getUserInfo = useSelector(state => state.user);
+    const getUserInfo = useSelector((state) => state.user);
 
     const allPointList = useRef([]);
     const dataLength = useRef(0);
@@ -199,52 +257,80 @@ const MyPointContainer = () => {
             window.addEventListener('scroll', handleScroll);
             const getPointList = async () => {
                 const JWT_TOKEN = localStorage.getItem('user_id');
-                const response = await requestGetMyPoint(JWT_TOKEN);
-                allPointList.current = response;
-                fetchPointList();
-            }
+                if (JWT_TOKEN) {
+                    try {
+                        const response = await requestGetMyPoint(JWT_TOKEN);
+                        allPointList.current = response;
+                        fetchPointList();
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            };
             getPointList();
             return () => window.removeEventListener('scroll', handleScroll);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     return (
         <>
-            {TOKEN !== null &&
+            {TOKEN !== null && (
                 <>
                     <div className={styles['container']}>
                         <div className={styles['fixed']}>
                             <div className={styles['show-area']}>
                                 <div className={styles['button']}>
-                                    <ButtonBase component='div' className={styles['btn']} onClick={() => history.replace(Paths.main.index)}>
+                                    <ButtonBase
+                                        component="div"
+                                        className={styles['btn']}
+                                        onClick={() =>
+                                            history.replace(Paths.main.index)
+                                        }
+                                    >
                                         <XIcon />
                                     </ButtonBase>
                                 </div>
                                 <div className={styles['content']}>
-                                    <div className={styles['mypoint']}>나의 수익금</div>
-                                    <div className={styles['total_point']}>{numberFormat(getUserInfo.point)} P</div>
+                                    <div className={styles['mypoint']}>
+                                        나의 수익금
+                                    </div>
+                                    <div className={styles['total_point']}>
+                                        {numberFormat(getUserInfo.point)} P
+                                    </div>
                                 </div>
-                                <ButtonBase className={styles['withdraw']} onClick={() => setClick(true)}>출금 신청</ButtonBase>
+                                <ButtonBase
+                                    className={styles['withdraw']}
+                                    onClick={() => setClick(true)}
+                                >
+                                    출금 신청
+                                </ButtonBase>
                             </div>
                         </div>
                         <div className={styles['point-area']}>
                             <div className={styles['point-text']}>
                                 수익금 내역
-                        <div className={styles['under-line']}></div>
+                                <div className={styles['under-line']}></div>
                             </div>
                             <ul>
                                 {pointList.map((item) => (
-                                    <li className={styles['point-item']} key={item.plog_id}>
+                                    <li
+                                        className={styles['point-item']}
+                                        key={item.plog_id}
+                                    >
                                         <PointItem item={item} />
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     </div>
-                    <WithdrawModal click={click} setClick={setClick} point={getUserInfo.point} />
+                    <WithdrawModal
+                        click={click}
+                        setClick={setClick}
+                        point={getUserInfo.point}
+                    />
                 </>
-            }
+            )}
         </>
     );
 };
