@@ -16,6 +16,7 @@ import {
 } from '../../../api/review';
 
 import { getFormatDateTime } from '../../../lib/calculateDate';
+import { rentalStatus } from '../../../lib/rentalStatus';
 
 import className from 'classnames/bind';
 import styles from './ReviewWriteContainer.module.scss';
@@ -46,7 +47,15 @@ const ReviewWriteContainer = () => {
             const { msg, order, review } = await requestGetDetailUseRental(
                 rental_id,
             );
-            if (msg === 'success') {
+            if (rentalStatus(order) === '이용대기') {
+                openDialog(
+                    '이용 대기중엔 리뷰를 작성할 수 없습니다.',
+                    '',
+                    () => history.goBack(),
+                    false,
+                    true,
+                );
+            } else if (msg === 'success') {
                 setOrder(order);
                 if (review) {
                     setExist(true);

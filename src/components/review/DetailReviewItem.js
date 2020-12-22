@@ -57,7 +57,7 @@ const DetailReviewItem = ({ reviewInfo }) => {
 
 const DetailReviewList = ({ review_list }) => {
     const list = review_list.map((reviewInfo) => (
-        <DetailReviewItem reviewInfo={reviewInfo} />
+        <DetailReviewItem reviewInfo={reviewInfo} key={reviewInfo.review_id} />
     ));
     if (review_list.length === 0 || !review_list) {
         return (

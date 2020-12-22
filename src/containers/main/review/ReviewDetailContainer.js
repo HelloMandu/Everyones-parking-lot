@@ -3,9 +3,13 @@ import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import qs from 'qs';
 
+import ImageModal from '../../../components/modal/ImageModal';
+
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useLoading from '../../../hooks/useLoading';
+import useModal from '../../../hooks/useModal';
+import { useScrollEnd } from '../../../hooks/useScroll';
 
 import {
     requestDeleteReview,
@@ -27,12 +31,18 @@ import { imageFormat, DBImageFormat } from '../../../lib/formatter';
 
 const cx = classNames.bind(styles);
 
-const ReviewDetailContainer = ({ location }) => {
+const ReviewDetailContainer = ({ match, location }) => {
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
     });
 
-    const { review_id } = query;
+    const { review_id, place_id } = query;
+    const { url, params } = match;
+    const [isOpenImageView, handleImageView] = useModal(
+        url,
+        params.modal,
+        `image_view?place_id=${place_id}`,
+    );
 
     const [review, setReview] = useState();
     const [commentList, setCommentList] = useState([]);
@@ -42,6 +52,7 @@ const ReviewDetailContainer = ({ location }) => {
     const openDialog = useDialog();
     const user = useSelector((state) => state.user);
     const [onLoading, offLoading] = useLoading();
+    const listRef = useRef();
 
     const onClickSubmit = useCallback(async () => {
         const token = localStorage.getItem('user_id');
@@ -127,128 +138,142 @@ const ReviewDetailContainer = ({ location }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
+    useScrollEnd(getReview, listRef.current);
+
     return (
         review !== undefined && (
-            <div className={cx('container')}>
-                <div
-                    className={cx('card-img')}
-                    style={{
-                        backgroundImage: `url('${imageFormat(
-                            review.place.place_images[0],
-                        )}')`,
-                    }}
-                />
-                <div className={cx('area')}>
-                    <div className={cx('rental-comment')}>
-                        대여시간
-                        <span className={cx('rental-date')}>
-                            10/05(수) 14:00 ~ 10/07(금) 16:00
-                        </span>
-                    </div>
-                </div>
-                <div className={cx('bar')} />
-                <div className={cx('area')}>
-                    <div className={cx('title')}>
-                        {review.place.place_name}
-                        <Rating
-                            className={'rating'}
-                            value={parseFloat(review.review_rating)}
-                            precision={0.5}
-                            readOnly
-                        />
-                    </div>
-                    <div className={cx('date')}>
-                        {getFormatDateTime(review.createdAt)}
-                        <hr />
-                    </div>
-                    <div className={cx('body')}>{review.review_body}</div>
-                    {user.user_id === review.user_id && (
-                        <div className={cx('button-area')}>
-                            <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
-                            <Link
-                                to={
-                                    Paths.main.review.modify +
-                                    `?rental_id=${review.rental_id}`
-                                }
-                            >
-                                <ButtonBase>수정</ButtonBase>
-                            </Link>
+            <>
+                <div className={cx('container')}>
+                    <div
+                        className={cx('card-img')}
+                        style={{
+                            backgroundImage: `url('${imageFormat(
+                                review.place.place_images[0],
+                            )}')`,
+                        }}
+                        onClick={handleImageView}
+                    />
+                    <div className={cx('area')}>
+                        <div className={cx('rental-comment')}>
+                            대여시간
+                            <span className={cx('rental-date')}>
+                                10/05(수) 14:00 ~ 10/07(금) 16:00
+                            </span>
                         </div>
-                    )}
-                </div>
-
-                <div className={cx('bar')} />
-
-                <div className={cx('area')}>
-                    <div className={cx('title')}>댓글</div>
-
-                    {commentList.length === 0 ? (
-                        <div className={cx('comment-none-wrapper')}>
-                            <div className={cx('comment-none')}>
-                                등록된 댓글이 없습니다.
-                                <br />첫 댓글을 남겨주세요!
-                            </div>
-                        </div>
-                    ) : (
-                        commentList.map((item) => (
-                            <div
-                                key={item.comment_id}
-                                className={cx('comment-item')}
-                            >
-                                <img
-                                    src={DBImageFormat(
-                                        item.user && item.user.profile_image,
-                                        Profile,
-                                    )}
-                                    alt=""
-                                />
-                                <div className={cx('user-area')}>
-                                    <div className={cx('user-id')}>
-                                        {item.user
-                                            ? item.user.name
-                                            : '탈퇴한 회원입니다.'}
-                                    </div>
-                                    <div className={cx('date')}>
-                                        {item.updatedAt
-                                            ? getFormatDateTime(item.updatedAt)
-                                            : getFormatDateTime(item.createdAt)}
-                                    </div>
-                                </div>
-                                <div className={cx('comment-body')}>
-                                    {item.comment_body}
-                                </div>
-                            </div>
-                        ))
-                    )}
-                    {!isEmpty(user) ? (
-                        <>
-                            <input
-                                className={cx('input-box')}
-                                type="text"
-                                name="comment"
-                                value={comment}
-                                placeholder="댓글을 남겨주세요."
-                                onChange={onChangeComment}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        onClickSubmit();
-                                    }
-                                }}
-                                ref={commentRef}
+                    </div>
+                    <div className={cx('bar')} />
+                    <div className={cx('area')}>
+                        <div className={cx('title')}>
+                            {review.place.place_name}
+                            <Rating
+                                className={'rating'}
+                                value={parseFloat(review.review_rating)}
+                                precision={0.5}
+                                readOnly
                             />
-                            <ButtonBase onClick={onClickSubmit}>
-                                등록
-                            </ButtonBase>
-                        </>
-                    ) : (
-                        <p className={styles['not-user']}>
-                            로그인 후 댓글을 남기실 수 있습니다.
-                        </p>
-                    )}
+                        </div>
+                        <div className={cx('date')}>
+                            {getFormatDateTime(review.createdAt)}
+                            <hr />
+                        </div>
+                        <div className={cx('body')}>{review.review_body}</div>
+                        {user.user_id === review.user_id && (
+                            <div className={cx('button-area')}>
+                                <ButtonBase onClick={reviewDelete}>
+                                    삭제
+                                </ButtonBase>
+                                <Link
+                                    to={
+                                        Paths.main.review.write +
+                                        `?rental_id=${review.rental_id}`
+                                    }
+                                >
+                                    <ButtonBase>수정</ButtonBase>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                    <div className={cx('bar')} />
+                    <div className={cx('area')} ref={listRef}>
+                        <div className={cx('title')}>댓글</div>
+                        {commentList.length === 0 ? (
+                            <div className={cx('comment-none-wrapper')}>
+                                <div className={cx('comment-none')}>
+                                    등록된 댓글이 없습니다.
+                                    <br />첫 댓글을 남겨주세요!
+                                </div>
+                            </div>
+                        ) : (
+                            commentList.map((item) => (
+                                <div
+                                    key={item.comment_id}
+                                    className={cx('comment-item')}
+                                >
+                                    <img
+                                        src={DBImageFormat(
+                                            item.user &&
+                                                item.user.profile_image,
+                                            Profile,
+                                        )}
+                                        alt=""
+                                    />
+                                    <div className={cx('user-area')}>
+                                        <div className={cx('user-id')}>
+                                            {item.user
+                                                ? item.user.name
+                                                : '탈퇴한 회원입니다.'}
+                                        </div>
+                                        <div className={cx('date')}>
+                                            {item.updatedAt
+                                                ? getFormatDateTime(
+                                                      item.updatedAt,
+                                                  )
+                                                : getFormatDateTime(
+                                                      item.createdAt,
+                                                  )}
+                                        </div>
+                                    </div>
+                                    <div className={cx('comment-body')}>
+                                        {item.comment_body}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                        {!isEmpty(user) ? (
+                            <>
+                                <input
+                                    className={cx('input-box')}
+                                    type="text"
+                                    name="comment"
+                                    value={comment}
+                                    placeholder="댓글을 남겨주세요."
+                                    onChange={onChangeComment}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            onClickSubmit();
+                                        }
+                                    }}
+                                    ref={commentRef}
+                                />
+                                <ButtonBase onClick={onClickSubmit}>
+                                    등록
+                                </ButtonBase>
+                            </>
+                        ) : (
+                            <p className={styles['not-user']}>
+                                로그인 후 댓글을 남기실 수 있습니다.
+                            </p>
+                        )}
+                    </div>
                 </div>
-            </div>
+                <ImageModal
+                    title={review.place.place_name}
+                    images={imageFormat(review.place.place_images)}
+                    open={isOpenImageView}
+                    handleClose={handleImageView}
+                ></ImageModal>
+            </>
         )
     );
 };
-
 export default ReviewDetailContainer;

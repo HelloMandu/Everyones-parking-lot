@@ -12,7 +12,7 @@ const UsePage = () => {
     return (
             <Switch>
                 <Route path={Paths.main.use.list} component={UseListContainer} />
-                <Route path={Paths.main.use.detail} component={UseDetailContainer} />
+                <Route path={Paths.main.use.detail + '/:modal?'} component={UseDetailContainer} />
                 <Route path={Paths.main.use.cancel} component={UseCancelContainer} />
                 <Route path={Paths.main.use.extend + '/:modal?/:modal2?'} component={UseExtendContainer} />
                 <Route render={() =>history.replace(Paths.main.use.list)} />

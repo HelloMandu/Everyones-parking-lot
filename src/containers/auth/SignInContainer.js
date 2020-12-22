@@ -82,6 +82,7 @@ const SignInContainer = () => {
             } else {
                 if (response.data.msg === '가입하지 않은 이메일입니다.') {
                     onChangeEmail('');
+                    onChangePassword('');
                     openDialog(
                         response.data.msg,
                         '',

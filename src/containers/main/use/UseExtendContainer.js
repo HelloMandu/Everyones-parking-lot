@@ -90,6 +90,7 @@ const UseExtendContainer = ({ match, location }) => {
 
     const [order, setOrder] = useState();
     const [endTime, setEndTime] = useState();
+    const [operEndTime, setOperEndTime] = useState();
     const [checked, setChecked] = useState(false);
     const [paymentType, setPaymentType] = useState({
         title: '결제수단 선택',
@@ -104,8 +105,14 @@ const UseExtendContainer = ({ match, location }) => {
 
     const onClickExtend = useCallback(
         (ext, term) => {
-            setEndTime(endTime + ext);
-            setExtensionPrice(extensionPrice + (term * ext) / (30 * MINUITE));
+            if (endTime + ext > operEndTime) {
+                openDialog('운영시간이 끝난 뒤엔 대여를 하실 수 없습니다.');
+            } else {
+                setEndTime(endTime + ext);
+                setExtensionPrice(
+                    extensionPrice + (term * ext) / (30 * MINUITE),
+                );
+            }
         },
         [endTime, extensionPrice],
     );
@@ -118,6 +125,9 @@ const UseExtendContainer = ({ match, location }) => {
             if (resOrder.msg === 'success') {
                 setOrder(resOrder);
                 setEndTime(new Date(resOrder.order.rental_end_time).getTime());
+                setOperEndTime(
+                    new Date(resOrder.order.place.oper_end_time).getTime(),
+                );
             } else {
                 openDialog(resOrder.msg);
             }
@@ -298,7 +308,7 @@ const UseExtendContainer = ({ match, location }) => {
                 <div className={cx('extend-price')}>
                     <Info
                         attribute={'연장 추가 금액'}
-                        value={`${extensionPrice}원`}
+                        value={`${numberFormat(extensionPrice)}원`}
                     />
                 </div>
 

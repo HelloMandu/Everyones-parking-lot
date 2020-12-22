@@ -112,10 +112,6 @@ const DatePickerModal = (props) => {
         </SwiperSlide>
     ));
 
-    useEffect(()=>{
-        console.log('open');
-    },[props.open])
-
     useEffect(() => {
         if (oper_start && oper_end) {
             const res = getDateRange(new Date(), oper_end);

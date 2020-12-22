@@ -462,7 +462,6 @@ const MapContainer = ({ modal }) => {
                         window.setGps(lat, lng);
                     })
                     .catch((e) => {
-                        console.log(e.message);
                         if (e.code === 3) {
                             //요청 시간 초과
                         } else {
