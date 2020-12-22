@@ -25,8 +25,8 @@ const useSnackBar = () => {
     );
     const handleOpen = useCallback(
         (message, variant) => {
-            dispatch(openSnackBar({message, variant: variantReducer(variant)}))
-            setTimeout(handleClose, 3000);
+            setTimeout(() => dispatch(openSnackBar({message, variant: variantReducer(variant)})), 500);
+            setTimeout(handleClose, 2000);
         },
         [dispatch, handleClose],
     );

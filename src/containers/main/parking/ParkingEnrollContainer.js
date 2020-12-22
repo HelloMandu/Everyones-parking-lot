@@ -238,7 +238,7 @@ const TimeSelector = ({ title, date, hour, minute, onChange }) => {
     );
 };
 
-const OperatingTime = forwardRef((props, ref) => {
+const OperatingTime = forwardRef(({props}, ref) => {
     const [dateList, setDateList] = useState([]);
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);

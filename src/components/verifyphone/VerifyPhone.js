@@ -14,6 +14,7 @@ import useKeyDown from '../../hooks/useKeyDown';
 import useInterval from '../../hooks/useInterval';
 import { useDialog } from '../../hooks/useDialog';
 import useLoading from '../../hooks/useLoading';
+import useSnackBar from '../../hooks/useSnackBar';
 
 import { isCellPhoneForm } from '../../lib/formatChecker';
 
@@ -32,6 +33,8 @@ const getTime = (timer) =>
 const LOADING_PHONE = 'sendVerify';
 
 const VerifyPhone = ({ setCheck }, ref) => {
+    const [handleSnackBar] = useSnackBar();
+
     const [sent, setSent] = useState(false);
     const [isConfirm, setIsConfirm] = useState(false);
     const [
@@ -56,7 +59,8 @@ const VerifyPhone = ({ setCheck }, ref) => {
             try {
                 const response = await requestPostAuth(phoneNumber);
                 if (response.data.msg === 'success') {
-                    openDialog('인증번호를 전송했습니다.');
+                    // openDialog('인증번호를 전송했습니다.');
+                    handleSnackBar('인증번호를 전송했습니다.', 'success');
                     setSent(true);
                     setButtonTitle('인증번호 재발송');
                     setTimer(180000);
@@ -81,7 +85,8 @@ const VerifyPhone = ({ setCheck }, ref) => {
             onLoading('verify');
             const response = await requestPostConfirm(phoneNumber, verify);
             if (response.data.msg === 'success') {
-                openDialog('인증완료하였습니다.');
+                // openDialog('인증완료하였습니다.');
+                handleSnackBar('인증완료하였습니다', 'success');
                 setIsConfirm(true);
                 setSendCheck(!sendCheck);
                 setButtonTitle('인증완료');

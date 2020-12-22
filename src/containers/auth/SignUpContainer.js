@@ -144,7 +144,7 @@ const BirthSelector = ({ onChangeBirth }) => {
     );
 };
 
-const CheckList = ({ setCheck, match }) => {
+const CheckList = ({ setCheck, url, modal }) => {
     const [checkList, setCheckList] = useState([
         {
             id: 1,
@@ -179,7 +179,8 @@ const CheckList = ({ setCheck, match }) => {
                 checkListProps={checkList}
                 box={true}
                 setterFunc={setCheckList}
-                match={match}
+                url={url}
+                modal={modal}
             />
         </div>
     );
@@ -280,7 +281,7 @@ const SignUpContainer = ({ match }) => {
                 <BirthSelector onChangeBirth={onChangeBirth}></BirthSelector>
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
                 <VerifyPhone setCheck={setCheckPhone} ref={phoneRef} />
-                <CheckList setCheck={setCheckAree} match={match}></CheckList>
+                <CheckList setCheck={setCheckAree} url={Paths.auth.signup} modal={match.params.modal}></CheckList>
             </div>
             <FixedButton
                 button_name={'회원가입하기'}

@@ -1,23 +1,43 @@
-.success{
-    :global(.MuiPaper-root){
+.success {
+    margin-bottom: 60px;
+    :global(.MuiPaper-root) {
+        font-size: 1.333rem;
         background-color: #4caf50;
     }
+    @media (max-width:600px){
+        margin-bottom: 74px;
+    }
 }
 
-.error{
-    :global(.MuiPaper-root){
+.error {
+    margin-bottom: 60px;
+    :global(.MuiPaper-root) {
+        font-size: 1.333rem;
         background-color: #f44336;
     }
-}
-
-.warning{
-    :global(.MuiPaper-root){
-        background-color: #ff9800;
+    @media (max-width:600px){
+        margin-bottom: 74px;
     }
 }
 
-.info{
-    :global(.MuiPaper-root){
+.warning {
+    margin-bottom: 60px;
+    :global(.MuiPaper-root) {
+        font-size: 1.333rem;
+        background-color: #ff9800;
+    }
+    @media (max-width:600px){
+        margin-bottom: 74px;
+    }
+}
+
+.info {
+    margin-bottom: 60px;
+    :global(.MuiPaper-root) {
+        font-size: 1.333rem;
         background-color: #2196f3;
+    }
+    @media (max-width:600px){
+        margin-bottom: 74px;
     }
 }

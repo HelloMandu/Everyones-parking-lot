@@ -8,7 +8,6 @@ import { updateUser } from '../../store/user';
 import { requestPutAgreeMail } from '../../api/user';
 import { isEmpty } from '../../lib/formatChecker';
 
-import useSnackbar from '../../hooks/useSnackBar';
 import { useDialog } from '../../hooks/useDialog';
 
 import PolicyModal from '../../components/modal/PolicyModal';
@@ -96,12 +95,11 @@ const SettingContainer = ({ match }) => {
         },
         [dispatch, openDialog],
     );
-    const [handleSnackbar] = useSnackbar();
     return (
         <>
             <article className={styles['setting-container']}>
                 <section className={styles['wrapper']}>
-                    <SettingItem onClick={() => handleSnackbar('성공?', 'warning')}/>
+                    <SettingItem/>
                 </section>
                 <section className={styles['wrapper']}>
                     <SettingItem

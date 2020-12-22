@@ -15,7 +15,13 @@ const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
+const EnrollCouponContainer = ({
+    open,
+    setCoupon,
+    price,
+    placeId,
+    handleSnackBar,
+}) => {
     const history = useHistory();
     const openDialog = useDialog();
     const [useCoupon, setUseCoupon] = useState(false);
@@ -44,6 +50,7 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
         const { cp_price } = selectedCoupon;
         if (price >= cp_price) {
             setCoupon(selectedCoupon);
+            handleSnackBar('쿠폰적용이 되었습니다.', 'success');
             history.goBack();
         } else {
             openDialog(
@@ -51,7 +58,7 @@ const EnrollCouponContainer = ({ open, setCoupon, price, placeId }) => {
                 '결제금액 이상의 쿠폰은 사용하실 수 없습니다',
             );
         }
-    }, [couponList, price, setCoupon, history, openDialog]);
+    }, [couponList, price, setCoupon, handleSnackBar, history, openDialog]);
     const getCouponList = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {

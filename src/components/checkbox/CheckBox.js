@@ -3,8 +3,6 @@ import cn from 'classnames/bind';
 import { useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 
-import { Paths } from '../../paths';
-
 import PolicyModal from '../modal/PolicyModal';
 
 import styles from './CheckBox.module.scss';
@@ -33,23 +31,23 @@ const CheckBox = ({
     box,
     setterFunc,
     setCheck,
-    match,
+    url,
+    modal,
 }) => {
     const history = useHistory();
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
 
-    const { url, params } = match;
     const [isOpenPolicy, setIsOpenPolicy] = useState(-1);
     useEffect(() => {
-        if (params.modal === 'term') {
+        if (modal === 'term') {
             setIsOpenPolicy(0);
-        } else if (params.modal === 'privacy') {
+        } else if (modal === 'privacy') {
             setIsOpenPolicy(1);
         } else {
             setIsOpenPolicy(-1);
         }
-    }, [params.modal]);
+    }, [modal]);
 
     const onToggleAll = useCallback(() => {
         setCheckList(
@@ -162,9 +160,9 @@ const CheckBox = ({
                 </ul>
             </section>
             <PolicyModal
-                url={Paths.main.setting}
+                url={url}
                 open={isOpenPolicy !== -1}
-                type={params.modal}
+                type={modal}
             ></PolicyModal>
         </>
     );

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import styles from './SnackBar.module.scss';
 
 const TransitionLeft = (props) => {
-    return <Slide {...props} direction="left" />;
+    return <Slide {...props} direction="up" />;
 };
 
 const SnackBar = () => {

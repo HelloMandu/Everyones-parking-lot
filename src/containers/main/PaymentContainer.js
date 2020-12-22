@@ -28,6 +28,7 @@ import ConfirmButton from '../../components/button/ConfirmButton';
 import ImageModal from '../../components/modal/ImageModal';
 
 import styles from './PaymentContainer.module.scss';
+import useSnackBar from '../../hooks/useSnackBar';
 
 const enrollTitle = '대여자의 정보 제공 및 모든 약관에 동의합니다.';
 
@@ -187,6 +188,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
         params.modal,
         `image_view${location.search}`,
     );
+    const [handleSnackBar] = useSnackBar();
 
     const [parkingImages, setParkingImages] = useState([]);
 
@@ -236,9 +238,9 @@ const ParkingEnrollContainer = ({ location, match }) => {
         if (!parkingInfo) {
             return;
         }
-        const { cp_price } = selectedCoupon;
+        const { cp_price: couponPrice } = selectedCoupon;
         const rentalPrice = getRentalPrice(parkingInfo);
-        const salePrice = getSalePoint(cp_price, usePoint);
+        const salePrice = getSalePoint(couponPrice, usePoint);
         setTotalPrice(rentalPrice - salePrice);
     }, [parkingInfo, selectedCoupon, usePoint]);
 
@@ -370,7 +372,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                         setCheck={setAgreeCheck}
-                        match={match}
+                        url={Paths.main.payment}
+                        modal={params.modal}
                     ></CheckBox>
                 </div>
             </main>
@@ -383,7 +386,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 open={isOpenCouponModal}
                 setCoupon={setSelectedCoupon}
                 placeId={place_id}
-                price={parkingInfo.price}
+                price={totalPrice - (usePoint + 10000)}
+                handleSnackBar={handleSnackBar}
             ></EnrollCouponModal>
             <PaymentTypeModal
                 open={isOpenTypeModal}
