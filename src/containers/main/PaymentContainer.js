@@ -289,28 +289,32 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const getPaymentInfo = useCallback(
         async (place_id, start_time, end_time) => {
             onLoading('payment');
-            const { data } = await requestGetPayInfo(
-                JWT_TOKEN,
-                place_id,
-                start_time,
-                end_time,
-            );
-            if (data.msg === 'success') {
-                const { deposit, place, total_price: price } = data;
-                const { place_name: title, place_images } = place;
-                const image = place_images[0];
-                setParkingImages(imageFormat(place_images));
-                setParkingInfo({
-                    title,
-                    image,
-                    price,
-                    deposit,
+            try {
+                const { data } = await requestGetPayInfo(
+                    JWT_TOKEN,
+                    place_id,
                     start_time,
                     end_time,
-                });
-                setTotalPrice(price + deposit);
-            } else {
-                openDialog(data.msg, '', () => history.goBack());
+                );
+                if (data.msg === 'success') {
+                    const { deposit, place, total_price: price } = data;
+                    const { place_name: title, place_images } = place;
+                    const image = place_images[0];
+                    setParkingImages(imageFormat(place_images));
+                    setParkingInfo({
+                        title,
+                        image,
+                        price,
+                        deposit,
+                        start_time,
+                        end_time,
+                    });
+                    setTotalPrice(price + deposit);
+                } else {
+                    openDialog(data.msg, '', () => history.goBack());
+                }
+            } catch (e) {
+                console.log(e);
             }
             offLoading('payment');
         },

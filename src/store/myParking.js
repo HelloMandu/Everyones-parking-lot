@@ -14,6 +14,8 @@ const FETCH_LIST = 'myParking/FETCH_LIST';
 
 const UPDATE_ITEM = 'myParking/UPDATE_ITEM';
 
+const DELETE_PARKING_LIST = 'myParking/DELETE_LIST'
+
 export const getMyParkingList = createAction(
     GET_PARKING_LIST,
     (JWT_TOKEN) => JWT_TOKEN,
@@ -27,6 +29,8 @@ export const updateMyParkingItem = createAction(
     UPDATE_ITEM,
     (parkingInfo) => parkingInfo,
 );
+
+export const deleteMyParkingList = createAction(DELETE_PARKING_LIST)
 
 function* getMyAllParkingList(action) {
     yield put(startLoading(GET_PARKING_LIST));
@@ -86,6 +90,7 @@ const myParking = handleActions(
                 ),
             };
         },
+        [DELETE_PARKING_LIST]: () => initialState
     },
     initialState,
 );

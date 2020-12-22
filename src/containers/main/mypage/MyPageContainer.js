@@ -32,6 +32,7 @@ import { requestPutProfile } from '../../../api/user';
 /* API */
 
 import { Paths } from '../../../paths';
+import { deleteMyParkingList } from '../../../store/myParking';
 /* Paths */
 
 const FileItem = ({ file, image }) => {
@@ -163,6 +164,7 @@ const MyPageContainer = ({ match }) => {
             '',
             () => {
                 dispatch(deleteUser(JWT_TOKEN));
+                dispatch(deleteMyParkingList());
                 history.replace(Paths.main.index);
             },
             true,

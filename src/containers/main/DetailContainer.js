@@ -179,7 +179,7 @@ const DetailContainer = ({ modal, place_id }) => {
         } else {
             openDialog(
                 '로그인 후 이용가능합니다.',
-                '',
+                '로그인 하시겠습니까?',
                 () => history.push(Paths.auth.login),
                 true,
             );
