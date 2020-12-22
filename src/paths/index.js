@@ -127,7 +127,7 @@ export const HeaderTitle = {
             detail: '이벤트',
         },
         support: {
-            index: '',
+            index: '고객센터',
             notice: '고객센터',
             notice_detail: '고객센터',
             faq: '고객센터',

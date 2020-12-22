@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
+import useSWR from 'swr';
 /* Library */
 
 import styles from './NoticeContainer.module.scss';
@@ -10,6 +11,7 @@ import Notice from '../../../static/asset/svg/Notice';
 import { getFormatDateNanTime } from '../../../lib/calculateDate';
 /* Lib */
 
+import { useDialog } from '../../../hooks/useDialog';
 import useLoading from '../../../hooks/useLoading';
 /* Hooks */
 
@@ -39,48 +41,28 @@ const NoticeItems = ({ noticeList }) => {
         </>
     )
 }
+
 const NoticeContainer = () => {
 
+    const openDialog = useDialog();
+    const history = useHistory();
     const [onLoading, offLoading] = useLoading();
-
-    const allNoticeList = useRef([]);
-    const dataLength = useRef(0);
 
     const [noticeList, setNoticeList] = useState([]);
 
-    const fetchNoticeList = useCallback(() => {
-        const allLength = allNoticeList.current.notices.length;
-        const length = dataLength.current;
-        if (length >= allLength) return;
-
-        const fetchData = allNoticeList.current.notices.slice(length, length + 10);
-        setNoticeList((noticeList) => noticeList.concat(fetchData));
-        dataLength.current += 10;
-    }, []);
-
+    const { data } = useSWR(['notice'], requestGetNoticeList);
     useEffect(() => {
-        const handleScroll = () => {
-            const endPoint =
-                Math.ceil(
-                    window.innerHeight + document.documentElement.scrollTop,
-                ) === document.documentElement.offsetHeight;
-            if (endPoint) {
-                fetchNoticeList();
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        const getNoticeList = async () => {
-            onLoading('notice');
-            const response = await requestGetNoticeList();
-            allNoticeList.current = response;
-            fetchNoticeList();
+        if (!data) onLoading('notice');
+        if (data !== undefined) {
             offLoading('notice');
+            if (data.msg === 'success') {
+                setNoticeList(data.notices);
+            } else {
+                openDialog("공지사항 요청 오류", "", () => history.goBack());
+            }
         }
-        getNoticeList();
-        return () => window.removeEventListener('scroll', handleScroll);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        // eslint-disable-next-line
+    }, [data])
 
     return (
         <>

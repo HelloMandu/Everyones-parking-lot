@@ -140,7 +140,7 @@ const QNAWriteContainer = () => {
     }, [email, subject, question]);
 
     useEffect(() => {
-        if(emailRef.current){
+        if (emailRef.current) {
             emailRef.current.focus();
         }
     }, [])

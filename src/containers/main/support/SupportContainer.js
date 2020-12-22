@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styles from './SupportContainer.module.scss';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { Swiper, SwiperSlide } from 'swiper/react';
 /* Library */
 
 import NoticeContainer from './NoticeContainer';
@@ -13,50 +14,56 @@ import QNAContainer from './QNAContainer';
 import { Paths } from '../../../paths';
 /* Paths */
 
-const SupportContainer = () => {
+import 'swiper/swiper.scss';
 
-    const location = useLocation();
+const SupportContainer = ({ location }) => {
+
     const history = useHistory();
 
-    const [mode, setMode] = useState(null);
+    const swiperRef = useRef();
+
     const [tabIndex, setTabIndex] = useState(0);
+    const handleTabIndex = useCallback((event, newValue) => {
+        setTabIndex(newValue);
+        swiperRef.current.slideTo(newValue, 300);
+    }, []);
+    const handleSwiperIndex = useCallback((newValue) => {
+        setTabIndex(newValue);
+        swiperRef.current.slideTo(newValue, 300);
+        if (newValue === 0) {
+            history.replace(Paths.main.support.notice);
+        } else if (newValue === 1) {
+            history.replace(Paths.main.support.faq);
+        } else if (newValue === 2) {
+            history.replace(Paths.main.support.qna);
+        }
+    }, [history]);
 
     useEffect(() => {
         const { pathname } = location;
         if (pathname.indexOf(Paths.main.support.notice) !== -1) {
-            setMode('notice');
             setTabIndex(0);
+            swiperRef.current.slideTo(0, 300);
         }
         else if (pathname.indexOf(Paths.main.support.faq) !== -1) {
-            setMode('faq');
             setTabIndex(1);
-
+            swiperRef.current.slideTo(1, 300);
         }
         else if (pathname.indexOf(Paths.main.support.qna) !== -1) {
-            setMode('qna');
             setTabIndex(2);
+            swiperRef.current.slideTo(2, 300);
         }
         else {
             history.replace(Paths.main.support.notice);
         }
-    }, [location, history])
+    }, [location, history]);
 
     return (
         <div className={styles['container']}>
             <Tabs
                 className={styles['tabs']}
                 value={tabIndex}
-                onChange={(e, index) => {
-                    if (index === 0) {
-                        history.push(Paths.main.support.notice);
-                    }
-                    else if (index === 1) {
-                        history.push(Paths.main.support.faq + '?type=0');
-                    }
-                    else if (index === 2) {
-                        history.push(Paths.main.support.qna);
-                    }
-                }}
+                onChange={handleTabIndex}
                 TabIndicatorProps={{
                     style: {
                         backgroundColor: 'black',
@@ -67,9 +74,26 @@ const SupportContainer = () => {
                 <Tab className={styles['tab']} label="자주 묻는 질문" />
                 <Tab className={styles['tab']} label="1:1 문의" />
             </Tabs>
-            {mode === 'notice' && <NoticeContainer />}
-            {mode === 'faq' && <FAQContainer />}
-            {mode === 'qna' && <QNAContainer />}
+            <Swiper
+                spaceBetween={50}
+                slidesPerView={1}
+                onSlideChange={(swiper) => {
+                    handleSwiperIndex(swiper.activeIndex);
+                }}
+                onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                }}
+            >
+                <SwiperSlide>
+                    {({ isActive }) => isActive && <NoticeContainer />}
+                </SwiperSlide>
+                <SwiperSlide>
+                    {({ isActive }) => isActive && <FAQContainer />}
+                </SwiperSlide>
+                <SwiperSlide>
+                    {({ isActive, isDuplicate }) => isActive && <QNAContainer isDuplicate={isDuplicate} />}
+                </SwiperSlide>
+            </Swiper>
         </div>
     );
 };

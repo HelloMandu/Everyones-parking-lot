@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classnames from 'classnames/bind';
+import useSWR from 'swr';
 /* Library */
 
 import { useDialog } from '../../../hooks/useDialog';
@@ -69,26 +70,53 @@ const QNAContainer = () => {
     const TOKEN = useToken();
     const [onLoading, offLoading] = useLoading();
 
+    // const { data } = useSWR(['faq', type], requestGetFAQList);
+    // useEffect(() => {
+    //     if (!data) onLoading('faq');
+    //     if (data !== undefined) {
+    //         offLoading('faq');
+    //         if (data.msg === 'success') {
+    //             setFAQList(data.notices);
+    //         } else {
+    //             openDialog("자주묻는 질문리스트 요청 오류", "", () => history.goBack());
+    //         }
+    //     }
+    //     // eslint-disable-next-line
+    // }, [data])
+
     const [QNAList, setQNSList] = useState([]);
 
-    const getQNAList = useCallback(async () => {
-        onLoading('qna');
-        const JWT_TOKEN = localStorage.getItem('user_id');
-        const response = await requestGetQNAList(JWT_TOKEN);
-        setQNSList(response.qnas);
-        offLoading('qna');
-        // eslint-disable-next-line
-    }, []);
-
+    const { data } = useSWR(['qna', TOKEN], requestGetQNAList);
     useEffect(() => {
-        if (TOKEN !== null) {
-            try {
-                getQNAList();
-            } catch (e) {
+        if (!data) onLoading('qna');
+        if (data !== undefined) {
+            offLoading('qna');
+            if (data.msg === 'success') {
+                setQNSList(data.qnas);
+            } else {
                 openDialog("1:1문의 오류", "", () => history.goBack());
             }
         }
-    }, [getQNAList, openDialog, history, TOKEN]);
+        // eslint-disable-next-line
+    }, [data])
+
+    // const getQNAList = useCallback(async () => {
+    //     onLoading('qna');
+    //     const response = await requestGetQNAList(TOKEN);
+    //     setQNSList(response.qnas);
+    //     offLoading('qna');
+    //     // eslint-disable-next-line
+    // }, []);
+
+    // useEffect(() => {
+    //     if (TOKEN !== null) {
+    //         try {
+    //             getQNAList();
+    //         } catch (e) {
+    //             openDialog("1:1문의 오류", "", () => history.goBack());
+    //         }
+    //     }
+    // }, [getQNAList, openDialog, history, TOKEN]);
 
     return (
         <>

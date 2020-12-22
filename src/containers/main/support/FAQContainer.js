@@ -31,6 +31,7 @@ const Category = ({ type }) => {
     const onClickCategory = useCallback((type) => {
         onLoading('category');
         history.replace(Paths.main.support.faq + `?type=${type}`);
+        // history.replace(Paths.main.support.index + `?type=${type}`);
         offLoading('category');
         // eslint-disable-next-line 
     }, [history]);

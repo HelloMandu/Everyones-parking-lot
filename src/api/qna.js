@@ -29,20 +29,19 @@ export const requestPostWriteQNA = async (JWT_TOKEN, email, subject, question, q
     return response.data;
 }
 
-export const requestGetQNAList = async (JWT_TOKEN) => {
+export const requestGetQNAList = async (URL, JWT_TOKEN) => {
     /*
-        1:1 문의 리스트 요청 API(GET): /api/qna
-        { headers }: JWT_TOKEN(유저 로그인 토큰)
+       1:1 문의 리스트 요청 API(GET): /api/qna
+       { headers }: JWT_TOKEN(유저 로그인 토큰)
 
-        * 응답: qnas = [1:1 문의 Array...]
-    */
-    const URL = Paths.api + 'qna';
+       * 응답: qnas = [1:1 문의 Array...]
+   */
     const config = {
         headers: {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
     };
-    const response = await axios.get(URL, config);
+    const response = await axios.get(Paths.api + URL, config);
 
     return response.data;
 }
