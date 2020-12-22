@@ -1,8 +1,7 @@
 /*global Kakao*/
 
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
-import { SnackbarProvider } from 'notistack';
 
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
@@ -20,6 +19,7 @@ import { getUser } from './store/user';
 import { getCompany } from './store/company';
 
 import './App.scss';
+import SnackBar from './components/assets/SnackBar2';
 
 const App = () => {
     const location = useLocation();
@@ -207,6 +207,7 @@ const App = () => {
             </Switch>
             <DialogContainer />
             <LoadingContainer />
+            <SnackBar/>
         </div>
     ) : (
         <IntroContainer />

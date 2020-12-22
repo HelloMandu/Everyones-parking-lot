@@ -1,0 +1,23 @@
+.success{
+    :global(.MuiPaper-root){
+        background-color: #4caf50;
+    }
+}
+
+.error{
+    :global(.MuiPaper-root){
+        background-color: #f44336;
+    }
+}
+
+.warning{
+    :global(.MuiPaper-root){
+        background-color: #ff9800;
+    }
+}
+
+.info{
+    :global(.MuiPaper-root){
+        background-color: #2196f3;
+    }
+}

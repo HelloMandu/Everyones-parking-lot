@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import cn from 'classnames/bind';
 import { Dialog, Slide, Tabs, Tab, IconButton } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';

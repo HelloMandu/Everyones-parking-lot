@@ -96,12 +96,12 @@ const SettingContainer = ({ match }) => {
         },
         [dispatch, openDialog],
     );
-    const [openSnackbar, closeSnackBar] = useSnackbar();
+    const [handleSnackbar] = useSnackbar();
     return (
         <>
             <article className={styles['setting-container']}>
                 <section className={styles['wrapper']}>
-                    <SettingItem onClick={() => openSnackbar('성공?')}/>
+                    <SettingItem onClick={() => handleSnackbar('성공?', 'warning')}/>
                 </section>
                 <section className={styles['wrapper']}>
                     <SettingItem
