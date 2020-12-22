@@ -4,6 +4,8 @@ import { Dialog, Slide, Tabs, Tab, IconButton } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import styles from './PolicyModal.module.scss';
 import Arrow from '../../static/asset/svg/Arrow';
+import { useSelector } from 'react-redux';
+import { isEmpty } from '../../lib/formatChecker';
 const cx = cn.bind(styles);
 
 const Transition = React.forwardRef((props, ref) => {
@@ -44,6 +46,9 @@ const PolicyModal = ({ url, open, type }) => {
     const index = getPaths.findIndex((path) => path === type); // 현재 보여줘야 할 내용 결정.
     const headerRef = useRef(null);
     const [headerOff, setHeaderOff] = useState(false);
+
+    const company = useSelector(state => state.company);
+
     useEffect(() => {
         if(headerRef.current){
             const headerHeight = headerRef.current.getBoundingClientRect().height;
@@ -79,11 +84,11 @@ const PolicyModal = ({ url, open, type }) => {
                             history.replace(`${url}/${getPaths[path]}`)
                         }
                     ></CustomTabs>
-                    <p className={styles['description']}>
-                        {index === 0
-                            ? '이용약관 내용'
-                            : '개인정보 처리방침 내용'}
-                    </p>
+                    {!isEmpty(company) &&
+                    <p className={styles['description']}
+                        dangerouslySetInnerHTML={{ __html: index === 0 ? company.use_terms : company.private_policy }}
+                    />
+                    }
                 </>
             )}
         </Dialog>
