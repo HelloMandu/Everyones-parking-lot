@@ -86,7 +86,7 @@ const DetailContainer = ({ modal, place_id }) => {
     const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(null);
     const [end_date, setEndDate] = useState(null);
-    const [total_date, setTotalDate] = useState(0);
+    const [total_date, setTotalDate] = useState(null);
     const [price, setPrice] = useState(0);
     const [place, setPlace] = useState(null);
     const [likes, setLikes] = useState(0);
@@ -125,12 +125,30 @@ const DetailContainer = ({ modal, place_id }) => {
         offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);
 
+
+    // datapicker 모달에서 시간설정을 했을시 시작시간 끝시간 전체시간 갱신
     const onClickSetDate = useCallback((start_date, end_date, total_date) => {
         setStartDate(start_date);
         setEndDate(end_date);
         setTotalDate(total_date);
     }, []);
 
+
+    // 결제 페이지로 이동 (로그인 필요)
+    const onClickPayment =()=>{
+        const JWT_TOKEN = localStorage.getItem('user_id');
+
+        if(JWT_TOKEN){
+            history.push(
+                Paths.main.payment +
+                    `?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`,
+            )
+        }
+        else{
+            openDialog('로그인이 필요한 서비스입니다.', "로그인을 원하시면 '예'를 눌러주세요", () => history.goBack(),true,true);
+
+        }
+    }
 
     // 카카오 내비게이션 실행
     const onClickKakaoNavi = useCallback(() => {
@@ -144,6 +162,7 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [place]);
 
+    // 좋아요 체커
     const likeCheck = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
@@ -161,6 +180,8 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [place_id]);
 
+
+    // 좋아요 클릭
     const handleLikeStatus = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
@@ -197,6 +218,19 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [total_date, place]);
 
+    useEffect(()=>{
+        if(price <0){
+            openDialog('잘못된 접근입니다.','' , history.replace(Paths.main.detail +'?place_id='+place_id));
+            setStartDate(null);
+            setEndDate(null);
+            setPrice(0);
+            setTotalDate(null)
+           
+        }
+    },[price,history])
+
+
+    //데이터피커에서 설정한 시간을 쿼리로 넘겨 시작시간과 끝시간 설정
     useEffect(()=>{
         const query = qs.parse(location.search, {
             ignoreQueryPrefix: true,
@@ -413,12 +447,7 @@ const DetailContainer = ({ modal, place_id }) => {
                         disable={start_date ? false : true}
                         likeStatus={likeStatus}
                         handleLike={handleLikeStatus}
-                        onClick={() =>
-                            history.push(
-                                Paths.main.payment +
-                                    `?place_id=${place_id}&start_time=${start_date.DATE} ${start_date.TIME}&end_time=${end_date.DATE} ${end_date.TIME}`,
-                            )
-                        }
+                        onClick={onClickPayment}
                     />
                 ))}
             <DatePickerModal

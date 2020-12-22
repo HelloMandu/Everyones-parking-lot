@@ -261,7 +261,8 @@ const MapContainer = ({ modal }) => {
                 },
             ],
         });
-        //마커의 중심좌표가 변경되었을 시 이벤트
+
+        //맵의 중심좌표가 변경되었을 시 이벤트
         kakao.maps.event.addListener(map, 'center_changed', () => {
             const level = map.getLevel();
             const latlng = map.getCenter();
@@ -285,13 +286,12 @@ const MapContainer = ({ modal }) => {
             (item) => item.addr.indexOf(area) !== -1,
         );
         // 주차장 마커 생성
+        // 스토리지에서 마지막 user_position을 기준으로 마커데이터 생성 ex) 대구좌표 -> 대구 주변 렌더
         const storage_position = JSON.parse(
             sessionStorage.getItem('user_position'),
         );
         if (storage_position) {
             const data = markdata.map((el) => {
-                // const distance ='300';
-
                 const distance = getDistanceFromLatLonInKm(
                     el.lat,
                     el.lng,
@@ -315,6 +315,12 @@ const MapContainer = ({ modal }) => {
                 return customOverlay;
             });
             cluster_marker.current.addMarkers(data);
+
+            /*
+                클러스터 클릭이벤트
+                클러스트를 클릭하면 슬라이드 메뉴 생성
+                10개 이상이면 지도 줌 인
+            */
             kakao.maps.event.addListener(
                 cluster_marker.current,
                 'clusterclick',
@@ -346,7 +352,7 @@ const MapContainer = ({ modal }) => {
                 },
             );
         }
-
+        // 윈도우 클릭이벤트 넘겨야 하는 주차장 마커 클릭함수 
         window.onClickOverlay = (place_id) => {
             history.push(Paths.main.detail + '?place_id=' + place_id);
         };
@@ -356,6 +362,7 @@ const MapContainer = ({ modal }) => {
 
     //지도를 렌더하는 함수
     const mapRender = useCallback(() => {
+
         let container = document.getElementById('map');
         let lat = map_position.current.lat;
         let lng = map_position.current.lng;
@@ -366,8 +373,10 @@ const MapContainer = ({ modal }) => {
         const map = new kakao.maps.Map(container, options);
         map.setMaxLevel(8);
         kakao_map.current = map;
+
     }, [level]);
 
+    // 마지막 위치 기준으로 get_area 함수 호출하여 해당지역 주차장 받아오기
     useEffect(() => {
         const storage_position = JSON.parse(localStorage.getItem('position'));
         if (storage_position && storage_position.lat && storage_position.lng) {
@@ -386,6 +395,7 @@ const MapContainer = ({ modal }) => {
         }
     }, [dispatch]);
 
+    // 필터 정보가 저장된 스토리지에 접근하여 상태 설정
     useEffect(() => {
         const storage_filter = JSON.parse(localStorage.getItem('filter_data'));
         if (storage_filter) {
@@ -482,6 +492,8 @@ const MapContainer = ({ modal }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+
+    //필터 정보가 바뀌었을시 주자창 리스트 필터링 하기
     useEffect(() => {
         const { lat, lng } = map_position.current;
         let filter_arr = [];
@@ -503,6 +515,8 @@ const MapContainer = ({ modal }) => {
 
     useEffect(createParkingMarker, [createParkingMarker]);
 
+
+    //도착지가 변경되었을 시 도착지 마커 생성
     useEffect(() => {
         if (address) {
             createArriveMarker();
@@ -510,12 +524,15 @@ const MapContainer = ({ modal }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address, arrive]);
 
+
     useEffect(() => {
         if (position.lat !== 0 && position.lng !== 0) {
             setCoordinates(position.lat, position.lng);
         }
     }, [position, setCoordinates]);
 
+
+    //맵 페이지를 unmount 했을시 마지막 위치 기억 -> 이전페이지로 돌아왔을시 레벨과 포지션 유지
     useEffect(() => {
         return () => {
             dispatch(set_position(map_position.current));

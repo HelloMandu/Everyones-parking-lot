@@ -12,7 +12,7 @@ const useToken = () => {
 
     useEffect(() => {
         if (token === null) {
-            openDialog('로그인이 필요합니다.', '', () => history.replace(Paths.auth.login), false, true);
+            openDialog('로그인이 필요한 서비스입니다.', "로그인을 원하시면 '예'를 눌러주세요.", () => history.replace(Paths.auth.login), true, true);
         }
     }, [history, openDialog, token])
     
