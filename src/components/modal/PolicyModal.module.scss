@@ -46,7 +46,7 @@ html {
     }
 }
 .tabs {
-    padding-top: $header;
+    margin-top: $header;
     width: 100%;
    .tab-item{
        font-size: 16px;
@@ -59,4 +59,5 @@ html {
 .description {
     padding: 8px 12px;
     line-height: 1.7;
+    overflow-y: scroll;
 }

@@ -72,10 +72,10 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
             try {
-                const response = await (place_id
+                const { data } = await (place_id
                     ? requestPutModifyParking(JWT_TOKEN, parkingInfo, place_id)
                     : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
-                if (response.data.msg === 'success') {
+                if (data.msg === 'success') {
                     openDialog(
                         `${place_id ? '수정' : '등록'}완료`,
                         `주차공간 ${
@@ -83,7 +83,7 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                         }을 완료했습니다.`,
                         () => {
                             if (place_id) {
-                                dispatch(updateMyParkingItem(response.place));
+                                dispatch(updateMyParkingItem(data.place));
                             } else {
                                 dispatch(getMyParkingList(JWT_TOKEN));
                             }

@@ -9,6 +9,7 @@ import position, { areaSaga } from './main/position';
 import filters from './main/filters';
 import parking, { parkingSaga } from './main/parking';
 import myParking, { myParkingSaga } from './myParking';
+import snackbar from './snackbar';
 
 const rootReducer = combineReducers({
     loading,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     filters,
     parking,
     myParking,
+    snackbar
 });
 
 export function* rootSaga() {

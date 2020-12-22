@@ -144,17 +144,19 @@ const BirthSelector = ({ onChangeBirth }) => {
     );
 };
 
-const CheckList = ({ setCheck }) => {
+const CheckList = ({ setCheck, match }) => {
     const [checkList, setCheckList] = useState([
         {
             id: 1,
             checked: false,
             description: '이용약관 필수 동의',
+            policy: 0,
         },
         {
             id: 2,
             checked: false,
             description: '개인정보 처리방침 필수 동의',
+            policy: 1,
         },
         {
             id: 3,
@@ -162,6 +164,7 @@ const CheckList = ({ setCheck }) => {
             description: '쿠폰 / 이벤트 알림 선택 동의',
             subDescription:
                 'SMS, 이메일을 통해 파격할인/이벤트/쿠폰 정보를 받아보실 수 있습니다.',
+            policy: -1,
         },
     ]);
     useEffect(() => setCheck(checkList[0].checked && checkList[1].checked), [
@@ -176,12 +179,13 @@ const CheckList = ({ setCheck }) => {
                 checkListProps={checkList}
                 box={true}
                 setterFunc={setCheckList}
+                match={match}
             />
         </div>
     );
 };
 
-const SignUpContainer = () => {
+const SignUpContainer = ({ match }) => {
     const history = useHistory();
     const [signUp, setSignUp] = useState(false);
     const [checkEmail, setCheckEmail] = useState(false);
@@ -276,7 +280,7 @@ const SignUpContainer = () => {
                 <BirthSelector onChangeBirth={onChangeBirth}></BirthSelector>
                 <div className={cx('input-title')}>휴대폰 번호 인증</div>
                 <VerifyPhone setCheck={setCheckPhone} ref={phoneRef} />
-                <CheckList setCheck={setCheckAree}></CheckList>
+                <CheckList setCheck={setCheckAree} match={match}></CheckList>
             </div>
             <FixedButton
                 button_name={'회원가입하기'}

@@ -44,22 +44,10 @@ const getPaths = ['term', 'privacy'];
 const PolicyModal = ({ url, open, type }) => {
     const history = useHistory();
     const index = getPaths.findIndex((path) => path === type); // 현재 보여줘야 할 내용 결정.
-    const headerRef = useRef(null);
-    const [headerOff, setHeaderOff] = useState(false);
-
     const company = useSelector(state => state.company);
-
-    useEffect(() => {
-        if(headerRef.current){
-            const headerHeight = headerRef.current.getBoundingClientRect().height;
-            const headerControll = () => setHeaderOff(window.scrollY > headerHeight);
-            window.addEventListener('scroll', headerControll);
-            return () => window.removeEventListener('scroll', headerControll);
-        }
-    }, []);
     return (
         <Dialog fullScreen open={open} TransitionComponent={Transition}>
-            <div className={cx('header', { headerOff })} ref={headerRef}>
+            <div className={cx('header')} >
                 <div className={styles['content']}>
                     <IconButton
                         className={styles['back-btn']}

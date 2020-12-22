@@ -4,12 +4,14 @@ import { useHistory } from 'react-router-dom';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-import PolicyModal from '../../components/modal/PolicyModal';
-
 import { updateUser } from '../../store/user';
 import { requestPutAgreeMail } from '../../api/user';
-import { useDialog } from '../../hooks/useDialog';
 import { isEmpty } from '../../lib/formatChecker';
+
+import useSnackbar from '../../hooks/useSnackBar';
+import { useDialog } from '../../hooks/useDialog';
+
+import PolicyModal from '../../components/modal/PolicyModal';
 
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
 
@@ -37,6 +39,8 @@ const SettingItem = ({
     bottom = false,
     onClick,
 }) => {
+    const { version } = useSelector((state) => state.company);
+
     return (
         <ButtonBase
             className={cx('setting-item', { bottom })}
@@ -45,7 +49,7 @@ const SettingItem = ({
         >
             <div className={styles['title']}>{title}</div>
             {type === 'version' ? (
-                <div className={styles['version']}>1.0.0 ver</div>
+                <div className={styles['version']}>{version} ver</div>
             ) : (
                 <ArrowSmall rotate={90}></ArrowSmall>
             )}
@@ -92,11 +96,12 @@ const SettingContainer = ({ match }) => {
         },
         [dispatch, openDialog],
     );
+    const [openSnackbar, closeSnackBar] = useSnackbar();
     return (
         <>
             <article className={styles['setting-container']}>
                 <section className={styles['wrapper']}>
-                    <SettingItem />
+                    <SettingItem onClick={() => openSnackbar('성공?')}/>
                 </section>
                 <section className={styles['wrapper']}>
                     <SettingItem

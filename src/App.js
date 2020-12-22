@@ -1,8 +1,9 @@
 /*global Kakao*/
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
-import './App.scss';
+import { SnackbarProvider } from 'notistack';
+
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
 import ErrorPage from './pages/ErrorPage';
@@ -17,6 +18,8 @@ import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
 import { getCompany } from './store/company';
+
+import './App.scss';
 
 const App = () => {
     const location = useLocation();
@@ -87,8 +90,7 @@ const App = () => {
         // 이용 내역
         else if (pathname === Paths.main.use.list) {
             return <Header title={HeaderTitle.main.use.list} />;
-        } 
-        else if (pathname === Paths.main.use.extend) {
+        } else if (pathname === Paths.main.use.extend) {
             return <Header title={HeaderTitle.main.use.extend} />;
         }
         // 내가 작성한 리뷰

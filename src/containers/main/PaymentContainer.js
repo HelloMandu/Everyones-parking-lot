@@ -35,12 +35,16 @@ const enroll = [
     {
         id: 1,
         checked: false,
-        description: '개인정보취급방침',
+        description: '이용약관',
+        necessary: true,
+        policy: 0
     },
     {
         id: 2,
         checked: false,
-        description: '이용약관',
+        description: '개인정보취급방침',
+        necessary: true,
+        policy: 1
     },
 ];
 
@@ -366,6 +370,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                         allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                         setCheck={setAgreeCheck}
+                        match={match}
                     ></CheckBox>
                 </div>
             </main>

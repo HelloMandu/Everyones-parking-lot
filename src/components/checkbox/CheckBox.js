@@ -1,17 +1,28 @@
 import React, { memo, useEffect, useCallback, useState } from 'react';
 import cn from 'classnames/bind';
+import { useHistory } from 'react-router-dom';
+import { ButtonBase } from '@material-ui/core';
+
+import { Paths } from '../../paths';
+
+import PolicyModal from '../modal/PolicyModal';
 
 import styles from './CheckBox.module.scss';
 
 const cx = cn.bind(styles);
 
-const CheckBoxItem = memo(({ checked, description }) => {
+const CheckBoxItem = memo(({ checked, description, necessary, onToggle }) => {
     return (
         <>
-            <div className={styles['checkbox']}>
-                <div className={cx({ checked })}></div>
+            <div className={styles['checkbox']} onClick={onToggle}>
+                <div className={cx('check', { checked })}></div>
             </div>
-            <div className={styles['description']}>{description}</div>
+            <div className={styles['description']} onClick={onToggle}>
+                {description}
+                {necessary && (
+                    <span className={styles['necessary']}>(필수)</span>
+                )}
+            </div>
         </>
     );
 });
@@ -22,9 +33,24 @@ const CheckBox = ({
     box,
     setterFunc,
     setCheck,
+    match,
 }) => {
+    const history = useHistory();
     const [allCheck, setAllCheck] = useState(false);
     const [checkList, setCheckList] = useState(checkListProps);
+
+    const { url, params } = match;
+    const [isOpenPolicy, setIsOpenPolicy] = useState(-1);
+    useEffect(() => {
+        if (params.modal === 'term') {
+            setIsOpenPolicy(0);
+        } else if (params.modal === 'privacy') {
+            setIsOpenPolicy(1);
+        } else {
+            setIsOpenPolicy(-1);
+        }
+    }, [params.modal]);
+
     const onToggleAll = useCallback(() => {
         setCheckList(
             checkList.map((checkBox) => ({
@@ -78,39 +104,69 @@ const CheckBox = ({
         }
     }, [checkList, checkListProps, setCheck]);
     return (
-        <section>
-            <div className={cx('checkitem', 'allcheck', { box })} onClick={onToggleAll}>
-                <CheckBoxItem
-                    checked={allCheck}
-                    description={allCheckTitle}
-                ></CheckBoxItem>
-            </div>
-            <ul className={styles['checklist']}>
-                {checkList.map(
-                    ({ id, checked, description, subDescription }) => (
-                        <li
-                            className={styles['checkitem']}
-                            key={id}
-                            onClick={() => {
-                                onToggle(id);
-                            }}
-                        >
-                            <CheckBoxItem
-                                checked={checked}
-                                description={description}
-                            ></CheckBoxItem>
-                            {subDescription ? (
-                                <div className={styles['sub-description']}>
-                                    {subDescription}
-                                </div>
-                            ) : (
+        <>
+            <section>
+                <div
+                    className={cx('checkitem', 'allcheck', { box })}
+                    onClick={onToggleAll}
+                >
+                    <CheckBoxItem
+                        checked={allCheck}
+                        description={allCheckTitle}
+                    ></CheckBoxItem>
+                </div>
+                <ul className={styles['checklist']}>
+                    {checkList.map(
+                        ({
+                            id,
+                            checked,
+                            description,
+                            subDescription,
+                            necessary,
+                            policy,
+                        }) => (
+                            <li className={styles['checkitem']} key={id}>
+                                <CheckBoxItem
+                                    checked={checked}
+                                    description={description}
+                                    necessary={necessary}
+                                    onToggle={() => {
+                                        onToggle(id);
+                                    }}
+                                ></CheckBoxItem>
+                                {policy !== -1 && (
+                                    <ButtonBase
+                                        className={styles['policy']}
+                                        component="span"
+                                        onClick={() =>
+                                            history.push(
+                                                `${url}/${
+                                                    !policy ? 'term' : 'privacy'
+                                                }`,
+                                            )
+                                        }
+                                    >
+                                        보기
+                                    </ButtonBase>
+                                )}
+                                {subDescription ? (
+                                    <div className={styles['sub-description']}>
+                                        {subDescription}
+                                    </div>
+                                ) : (
                                     ''
                                 )}
-                        </li>
-                    ),
-                )}
-            </ul>
-        </section>
+                            </li>
+                        ),
+                    )}
+                </ul>
+            </section>
+            <PolicyModal
+                url={Paths.main.setting}
+                open={isOpenPolicy !== -1}
+                type={params.modal}
+            ></PolicyModal>
+        </>
     );
 };
 

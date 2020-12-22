@@ -23,7 +23,7 @@ const AuthPage = () => {
             <Switch>
                 <Route path={Paths.auth.login} component={LoginContainer} />
                 <Route path={Paths.auth.signin} component={SignInContainer} />
-                <Route path={Paths.auth.signup} component={SignUpContainer} />
+                <Route path={Paths.auth.signup + '/:modal?'} component={SignUpContainer} />
                 <Route path={Paths.auth.enrollment} component={EnrollCarContainer} />
                 <Route path={Paths.auth.sign_complete} component={SignCompleteContainer} />
                 <Route path={Paths.auth.find.index + '/:type?'} component={FindPage} />
