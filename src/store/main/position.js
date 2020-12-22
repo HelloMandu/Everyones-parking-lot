@@ -20,7 +20,6 @@ export const set_address = createAction(SET_ADDRESSS);
 export const set_arrive = createAction(SET_ARRIVE);
 export const get_area = createAction(GET_AREA);
 
-
 const initState = {
     position: {
         lat: 0,
@@ -30,6 +29,7 @@ const initState = {
         lat: 0,
         lng: 0
     },
+
     address: null,
     area: null,
     level: 0,
@@ -86,12 +86,14 @@ const position = handleActions(
                 arrive: action.payload,
             }
         },
+    
         [GET_AREA_SUCCESS]: (state, action) => {
             return {
                 ...state,
                 area: action.payload
             }
-        }
+        },
+   
     },
     initState,
 );

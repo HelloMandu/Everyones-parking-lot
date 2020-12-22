@@ -16,6 +16,7 @@ import Header from './components/header/Header';
 import { Paths, HeaderTitle } from './paths';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
+import { getCompany } from './store/company';
 
 const App = () => {
     const location = useLocation();
@@ -28,9 +29,15 @@ const App = () => {
         }
     }, [dispatch]);
 
+    const callAppInfo = useCallback(async () => {
+        // 회사 정보 가져옴
+        dispatch(getCompany());
+    }, [dispatch]);
+
     useEffect(() => {
         Kakao.init('69ea25b2ec2f6bd52476ec619d899dda');
         judgementLogin();
+        callAppInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

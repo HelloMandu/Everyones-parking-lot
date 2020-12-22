@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { all } from 'redux-saga/effects';
 
+import company, { companySaga } from './company';
 import user, { userSaga } from './user';
 import dialog from './dialog';
 import loading from './loading';
@@ -12,6 +13,7 @@ import myParking, { myParkingSaga } from './myParking';
 const rootReducer = combineReducers({
     loading,
     dialog,
+    company,
     user,
     position,
     filters,
@@ -20,7 +22,7 @@ const rootReducer = combineReducers({
 });
 
 export function* rootSaga() {
-    yield all([userSaga(), parkingSaga(), areaSaga(), myParkingSaga()]);
+    yield all([companySaga(), userSaga(), parkingSaga(), areaSaga(), myParkingSaga()]);
 }
 
 export default rootReducer;

@@ -111,24 +111,38 @@ const AddressModal = (props) => {
         }
     }, [search]);
 
+    useEffect(()=>{
+        setSearch("");
+        const distance_index = sessionStorage.getItem('distance_index');
+        if(distance_index){
+            setIndex(parseInt(distance_index));
+        }
+        else{
+            sessionStorage.setItem('distance_index',0);
+            setIndex(0);
+        }
+    },[props.open])
+
     useEffect(() => {
         if (isSearch) {
             callGetAddressSearch();
         }
     }, [callGetAddressSearch, isSearch])
 
-    const onClickAddressItem = async (jibun) => {
+    const onClickAddressItem = useCallback(async (jibun) => {
         try {
             const res = await requestGetAddressInfo(jibun);
             const { x, y, address_name, building_name } = res.data.documents[0].road_address;
             dispatch(set_address(address_name + ' ' + building_name));
             dispatch(set_arrive({ lat: y, lng: x }));
             history.replace(Paths.main.index);
+            sessionStorage.setItem('distance_index',index);
+            props.setArriveLevel(index);
         }
         catch (e) {
             console.error(e);
         }
-    }
+    },[history,index,dispatch]);
 
     return (
         <Dialog
@@ -161,7 +175,7 @@ const AddressModal = (props) => {
                         <>
                             <div className={styles['distance-list']}>
                                 <DistanceItem on={index === 0} onClick={() => setIndex(0)} distance={'100m'} />
-                                <DistanceItem on={index === 1} onClick={() => setIndex(1)} distance={'300m'} />
+                                <DistanceItem on={index === 1} onClick={() => setIndex(1)} distance={'500m'} />
                                 <DistanceItem on={index === 2} onClick={() => setIndex(2)} distance={'1km'} />
                             </div>
                             <p>최근 이용 스페이스 존</p>
