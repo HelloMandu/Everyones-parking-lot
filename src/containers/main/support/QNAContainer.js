@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classnames from 'classnames/bind';
+import useSWR from 'swr';
 /* Library */
 
 import { useDialog } from '../../../hooks/useDialog';
@@ -77,29 +78,27 @@ const QNAItems = ({ QNAList }) => {
 const QNAContainer = () => {
     const history = useHistory();
     const openDialog = useDialog();
-    const TOKEN = useToken();
+    const TOKEN = localStorage.getItem('user_id');
     const [onLoading, offLoading] = useLoading();
 
     const [QNAList, setQNSList] = useState([]);
 
-    useEffect(()=>{
-        const requesetQnaList = async () => {
-            if(TOKEN){
-                onLoading('qna')
-                const {data} = requestGetQNAList('qna', TOKEN);
+    const { data } = useSWR(['qna', TOKEN], requestGetQNAList);
+    useEffect(() => {
+        if (TOKEN) {
+            if (!data) onLoading('qna');
+            if (data !== undefined) {
+                offLoading('qna');
                 if (data.msg === 'success') {
                     setQNSList(data.qnas);
                 } else {
-                    openDialog('1:1문의 오류', '', () => {
-                        history.goBack();
-                    });
+                    openDialog("1:1문의 오류", "", () => history.goBack());
                 }
-                offLoading('qna');
             }
         }
-        requesetQnaList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        // eslint-disable-next-line
+    }, [data])
+
     return (
         <>
             {TOKEN !== null && (
@@ -108,15 +107,15 @@ const QNAContainer = () => {
                     {QNAList.length !== 0 ? (
                         <QNAItems QNAList={QNAList} />
                     ) : (
-                        <div className={styles['non-qna']}>
-                            <div className={styles['non-container']}>
-                                <Notice />
-                                <div className={styles['explain']}>
-                                    등록된 1:1 문의가 없습니다.
+                            <div className={styles['non-qna']}>
+                                <div className={styles['non-container']}>
+                                    <Notice />
+                                    <div className={styles['explain']}>
+                                        등록된 1:1 문의가 없습니다.
+                                </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
                 </>
             )}
         </>
