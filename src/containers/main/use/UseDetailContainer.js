@@ -14,7 +14,7 @@ import useModal from '../../../hooks/useModal';
 import { requestGetDetailUseRental } from '../../../api/rental';
 
 import { getFormatDateTime } from '../../../lib/calculateDate';
-import { numberFormat } from '../../../lib/formatter';
+import { numberFormat, stringToTel } from '../../../lib/formatter';
 import { rentalStatus } from '../../../lib/rentalStatus';
 import { paymentType } from '../../../lib/paymentType';
 import { isEmpty } from '../../../lib/formatChecker';
@@ -181,24 +181,22 @@ const UseDetailContainer = ({ match, location }) => {
                             />
                             <Info
                                 attribute={'제공자 연락처'}
-                                value={order.user.phone_number}
+                                value={stringToTel(order.user.phone_number)}
                                 black={true}
                             />
                             <Info
                                 attribute={'이전 대여자 연락처'}
-                                value={
-                                    order.user ? order.user.phone_number : '-'
-                                }
+                                value={order.user ? stringToTel(order.user.phone_number) : '-'}
                             />
                         </div>
 
                         <div className={cx('button-area')}>
-                            <Button name={'고객센터 연결'} addition={rentalStatus(order) === '이용대기'}>
+                            <Button name={'고객센터 연결'} addition={rentalStatus(order) === '이용대기' || rentalStatus(order) === '이용취소'}>
                                 <Tel />
                             </Button>
                             <Button
                                 name={`리뷰 ${review ? '수정' : '작성'} 하기`}
-                                disable={rentalStatus(order) === '이용대기'}
+                                disable={rentalStatus(order) === '이용대기' || rentalStatus(order) === '이용취소'}
                                 onClick={() =>
                                     review ?
                                     history.push(

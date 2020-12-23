@@ -75,17 +75,17 @@ const DetailContainer = ({ modal, place_id }) => {
     const [openDatePicker, onClickDatePicker] = useModal(
         location.pathname,
         modal,
-        `datapicker?place_id=${place_id}`,
+        `datapicker${location.search}`,
     );
     const [openLoadview, onClickRoadview] = useModal(
         location.pathname,
         modal,
-        `roadview?place_id=${place_id}`,
+        `roadview${location.search}`,
     );
     const [isOpenImageView, handleImageView] = useModal(
         location.pathname,
         modal,
-        `image_view?place_id=${place_id}`,
+        `image_view${location.search}`,
     );
 
     const [onLoading, offLoading] = useLoading();
