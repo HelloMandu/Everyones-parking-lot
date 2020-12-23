@@ -57,7 +57,6 @@ const FindPasswordContainer = () => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('findPassword');
         }
         offLoading('findPassword');
         // eslint-disable-next-line react-hooks/exhaustive-deps

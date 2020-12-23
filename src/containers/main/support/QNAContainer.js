@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classnames from 'classnames/bind';
-import useSWR from 'swr';
 /* Library */
 
 import { useDialog } from '../../../hooks/useDialog';
@@ -31,40 +30,51 @@ const Header = () => {
     return (
         <div className={styles['header-container']}>
             <Link to={Paths.main.support.qna_write}>
-                <ButtonBase className={styles['write-button']}>문의 작성</ButtonBase>
+                <ButtonBase className={styles['write-button']}>
+                    문의 작성
+                </ButtonBase>
             </Link>
         </div>
     );
 };
 
 const QNAItems = ({ QNAList }) => {
-
     return (
         <ul className={styles['container']}>
-            {QNAList.map(({ qna_id, updatedAt, subject, user, hit, status }) => (
-                <Link to={Paths.main.support.qna_detail + `?id=${qna_id}`} key={qna_id}>
-                    <ButtonBase
-                        component={"li"}
-                        className={styles['item-area']}
+            {QNAList.map(
+                ({ qna_id, updatedAt, subject, user, hit, status }) => (
+                    <Link
+                        to={Paths.main.support.qna_detail + `?id=${qna_id}`}
+                        key={qna_id}
                     >
-                        <div className={styles['date']}>{getFormatDateNanTime(updatedAt)}</div>
-                        <div className={styles['title']}>{subject}</div>
-                        <div className={styles['bottom']}>
-                            <div className={styles['name']}>{user.name}</div>
-                            <div className={styles['count']}>조회수 {hit}</div>
-                        </div>
-                        <div className={cn('button', { status: status })}>
-                            {status ? "답변완료" : "답변대기"}
-                        </div>
-                    </ButtonBase>
-                </Link>
-            ))}
+                        <ButtonBase
+                            component={'li'}
+                            className={styles['item-area']}
+                        >
+                            <div className={styles['date']}>
+                                {getFormatDateNanTime(updatedAt)}
+                            </div>
+                            <div className={styles['title']}>{subject}</div>
+                            <div className={styles['bottom']}>
+                                <div className={styles['name']}>
+                                    {user.name}
+                                </div>
+                                <div className={styles['count']}>
+                                    조회수 {hit}
+                                </div>
+                            </div>
+                            <div className={cn('button', { status: status })}>
+                                {status ? '답변완료' : '답변대기'}
+                            </div>
+                        </ButtonBase>
+                    </Link>
+                ),
+            )}
         </ul>
     );
 };
 
 const QNAContainer = () => {
-
     const history = useHistory();
     const openDialog = useDialog();
     const TOKEN = useToken();
@@ -72,36 +82,43 @@ const QNAContainer = () => {
 
     const [QNAList, setQNSList] = useState([]);
 
-    const { data } = useSWR(['qna', TOKEN], requestGetQNAList);
-    useEffect(() => {
-        if (!data) onLoading('qna');
-        if (data !== undefined) {
-            offLoading('qna');
-            if (data.msg === 'success') {
-                setQNSList(data.qnas);
-            } else {
-                openDialog("1:1문의 오류", "", () => history.goBack());
+    useEffect(()=>{
+        const requesetQnaList = async () => {
+            if(TOKEN){
+                onLoading('qna')
+                const {data} = requestGetQNAList('qna', TOKEN);
+                if (data.msg === 'success') {
+                    setQNSList(data.qnas);
+                } else {
+                    openDialog('1:1문의 오류', '', () => {
+                        history.goBack();
+                    });
+                }
+                offLoading('qna');
             }
         }
-        // eslint-disable-next-line
-    }, [data])
-
+        requesetQnaList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <>
-            {TOKEN !== null &&
+            {TOKEN !== null && (
                 <>
                     <Header />
-                    {QNAList.length !== 0
-                        ? <QNAItems QNAList={QNAList} />
-                        : <div className={styles['non-qna']}>
+                    {QNAList.length !== 0 ? (
+                        <QNAItems QNAList={QNAList} />
+                    ) : (
+                        <div className={styles['non-qna']}>
                             <div className={styles['non-container']}>
                                 <Notice />
-                                <div className={styles['explain']}>등록된 1:1 문의가 없습니다.</div>
+                                <div className={styles['explain']}>
+                                    등록된 1:1 문의가 없습니다.
+                                </div>
                             </div>
                         </div>
-                    }
+                    )}
                 </>
-            }
+            )}
         </>
     );
 };

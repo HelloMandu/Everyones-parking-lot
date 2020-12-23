@@ -54,7 +54,6 @@ const UseListContainer = () => {
             }
         } catch (e) {
             console.error(e);
-            offLoading(LOADING_USE_LIST);
         }
 
         offLoading(LOADING_USE_LIST);

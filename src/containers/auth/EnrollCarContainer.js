@@ -188,7 +188,6 @@ const UpdateCar = () => {
                 }
             } catch (e) {
                 console.error(e);
-                offLoading('carInfo');
             }
             offLoading('carInfo');
         } else {
