@@ -328,7 +328,6 @@ const DatePickerModal = (props) => {
                             {minute_list}
                         </Swiper>
                     </div>
-
                     <div className={styles['select-line']}>
                         <div className={styles['line']}></div>
                     </div>

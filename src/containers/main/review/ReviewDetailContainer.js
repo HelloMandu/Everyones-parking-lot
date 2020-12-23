@@ -71,7 +71,7 @@ const ReviewDetailContainer = ({ match, location }) => {
                         setCommentList(commentList.concat(data.comment));
                         onChangeComment('');
                         commentRef.current.value = '';
-                        handleSnackbarOpen('성공적으로 작성하였습니다.', 'success');
+                        handleSnackbarOpen('성공적으로 작성하였습니다.', 'success', false);
                     } else {
                         openDialog('댓글 작성을 실패했습니다.');
                     }
@@ -138,7 +138,8 @@ const ReviewDetailContainer = ({ match, location }) => {
                         );
 
                         if (data.msg === 'success') {
-                            history.push(Paths.main.index);
+                            history.replace(Paths.main.review.list);
+                            handleSnackbarOpen('리뷰가 삭제되었습니다', 'info', false);
                         } else {
                             openDialog(data.msg);
                         }

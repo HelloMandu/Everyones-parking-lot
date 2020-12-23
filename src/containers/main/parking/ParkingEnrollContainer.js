@@ -548,7 +548,6 @@ const ParkingEnrollContainer = ({ location, match }) => {
         try {
             const { data } = await requestGetDetailParking(place_id);
             const { msg, place } = data;
-            console.log(place);
             if (msg === 'success') {
                 const {
                     addr,

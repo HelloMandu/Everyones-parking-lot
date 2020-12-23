@@ -131,7 +131,6 @@ const ReviewWriteContainer = () => {
     return (
         order !== undefined && (
             <>
-            {console.log(review)}
                 <div className={cx('container')}>
                     <div className={cx('comment')}>
                         <div className={cx('date')}>

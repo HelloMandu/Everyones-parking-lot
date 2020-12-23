@@ -111,7 +111,7 @@ const App = () => {
         }
         // 내 주차공간 관리
         else if (pathname === Paths.main.parking.manage) {
-            return <Header title={HeaderTitle.main.parking.manage} />;
+            return <Header title={HeaderTitle.main.parking.manage} backHome={true}/>;
         }
         // 주차공간 등록
         else if (pathname === Paths.main.parking.enrollment) {
