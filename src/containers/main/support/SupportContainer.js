@@ -91,7 +91,7 @@ const SupportContainer = ({ location }) => {
                     {({ isActive }) => isActive && <FAQContainer />}
                 </SwiperSlide>
                 <SwiperSlide>
-                    {({ isActive, isDuplicate }) => isActive && <QNAContainer isDuplicate={isDuplicate} />}
+                    {({ isActive }) => isActive && <QNAContainer />}
                 </SwiperSlide>
             </Swiper>
         </div>

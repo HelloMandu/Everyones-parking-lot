@@ -75,17 +75,17 @@ const DetailContainer = ({ modal, place_id }) => {
     const [openDatePicker, onClickDatePicker] = useModal(
         location.pathname,
         modal,
-        `datapicker?place_id=${place_id}`,
+        `datapicker${location.search}`,
     );
     const [openLoadview, onClickRoadview] = useModal(
         location.pathname,
         modal,
-        `roadview?place_id=${place_id}`,
+        `roadview${location.search}`,
     );
     const [isOpenImageView, handleImageView] = useModal(
         location.pathname,
         modal,
-        `image_view?place_id=${place_id}`,
+        `image_view${location.search}`,
     );
 
     const [onLoading, offLoading] = useLoading();
@@ -234,16 +234,15 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [total_date, place]);
 
-    useEffect(()=>{
-        if(price <0){
-            openDialog('잘못된 접근입니다.','' , history.replace(Paths.main.detail +'?place_id='+place_id));
+    useEffect(() => {
+        if (price < 0) {
+            openDialog('잘못된 접근입니다.', '', history.replace(Paths.main.detail + '?place_id=' + place_id));
             setStartDate(null);
             setEndDate(null);
             setPrice(0);
-            setTotalDate(null)
-           
+            setTotalDate(null);
         }
-    },[price,history])
+    }, [price, history, openDialog, place_id]);
 
     //데이터피커에서 설정한 시간을 쿼리로 넘겨 시작시간과 끝시간 설정
     useEffect(()=>{
