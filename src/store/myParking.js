@@ -38,8 +38,6 @@ function* getMyAllParkingList(action) {
         const JWT_TOKEN = action.payload;
         const { places } = yield call(requestGetMyParkingList, JWT_TOKEN);
         const fetchData = places.slice(0, 3);
-        console.log(places);
-        console.log(fetchData);
         yield put({
             type: GET_PARKING_LIST_SUCCESS,
             payload: { places, fetchData },
