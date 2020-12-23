@@ -59,7 +59,10 @@ const PaymentType = ({ paymentType, openTypeModal }) => {
     return (
         <div className={styles['parking-payment-area']}>
             <div className={styles['parking-payment-wrapper']}>
-                <div className={styles['title']}>결제수단</div>
+                <div className={cx('title-wrapper')}>
+                    <div className={styles['title']}>결제수단</div>
+                    <div className={cx('precautions')}>결제전 주의사항</div>
+                </div>
                 <ButtonBase
                     className={styles['payment']}
                     name="payment"

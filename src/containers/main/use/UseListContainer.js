@@ -12,7 +12,7 @@ import { Paths } from '../../../paths';
 
 import { numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
-import { rentalStatus } from '../../../lib/rentalStatus';
+import { rentalStatus, rentalStatusColor } from '../../../lib/rentalStatus';
 
 import classNames from 'classnames/bind';
 import styles from './UseListContainer.module.scss';
@@ -92,7 +92,7 @@ const UseListContainer = () => {
                                     {getFormatDateTime(item.rental_start_time)}{' '}
                                     ~ {getFormatDateTime(item.rental_end_time)}
                                 </div>
-                                <div className={cx('status')}>
+                                <div className={cx('status', `${rentalStatusColor(item)}`)}>
                                     {rentalStatus(item)}
                                 </div>
                             </Link>

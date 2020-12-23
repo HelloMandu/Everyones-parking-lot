@@ -31,7 +31,7 @@ const QNAItems = ({ QNAList }) => {
     return (
         <ul className={styles['container']}>
             {QNAList.map(
-                ({ qna_id, updatedAt, subject, user, hit, status }) => (
+                ({ qna_id, createdAt, subject, user, hit, status }) => (
                     <Link
                         to={Paths.main.support.qna_detail + `?id=${qna_id}`}
                         key={qna_id}
@@ -41,7 +41,7 @@ const QNAItems = ({ QNAList }) => {
                             className={styles['item-area']}
                         >
                             <div className={styles['date']}>
-                                {getFormatDateNanTime(updatedAt)}
+                                {getFormatDateNanTime(createdAt)}
                             </div>
                             <div className={styles['title']}>{subject}</div>
                             <div className={styles['bottom']}>
@@ -70,15 +70,15 @@ const QNAContainer = ({ QNAList }) => {
             {QNAList.length !== 0 ? (
                 <QNAItems QNAList={QNAList} />
             ) : (
-                <div className={styles['non-qna']}>
-                    <div className={styles['non-container']}>
-                        <Notice />
-                        <div className={styles['explain']}>
-                            등록된 1:1 문의가 없습니다.
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                등록된 1:1 문의가 없습니다.
+                        </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
         </>
     );
 };

@@ -20,3 +20,21 @@ export const rentalStatus = ({
         ? USE_FINISH
         : USE_USING;
 };
+
+export const rentalStatusColor = ({
+    rental_start_time,
+    rental_end_time,
+    cancel_time,
+}) => {
+    const current = Date.now();
+    const rentalStartTime = new Date(rental_start_time).getTime();
+    const rentalEndTime = new Date(rental_end_time).getTime();
+    
+    return cancel_time
+        ? 'cancel'
+        : current < rentalStartTime
+        ? 'wait'
+        : current > rentalEndTime
+        ? 'finish'
+        : 'using';
+};

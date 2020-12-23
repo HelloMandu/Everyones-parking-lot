@@ -131,6 +131,7 @@ const ReviewWriteContainer = () => {
     return (
         order !== undefined && (
             <>
+            {console.log(review)}
                 <div className={cx('container')}>
                     <div className={cx('comment')}>
                         <div className={cx('date')}>
@@ -147,6 +148,7 @@ const ReviewWriteContainer = () => {
                                 name="half-rating"
                                 defaultValue={5}
                                 precision={0.5}
+                                value={review ? parseFloat(review.review_rating) : rating}
                                 onChange={(event, newValue) => {
                                     setRating(newValue);
                                 }}
