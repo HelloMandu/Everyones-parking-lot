@@ -173,7 +173,7 @@ const NotificationContainer = () => {
                         <div className={styles['non-container']}>
                             <Notice />
                             <div className={styles['explain']}>
-                                이용내역이 없습니다.
+                                알림이 없습니다.
                             </div>
                         </div>
                     </div>
