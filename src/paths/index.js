@@ -18,6 +18,7 @@ export const Paths = {
             index: '/review',
             list: '/review/list',
             write: '/review/write',
+            modify: '/review/modify',
             detail: '/review/detail',
         },
         mypage: {
@@ -95,6 +96,7 @@ export const HeaderTitle = {
             index: '/review',
             list: '내가 작성한 리뷰',
             write: '리뷰 쓰기',
+            modify: '리뷰 수정',
             detail: '리뷰 상세보기',
         },
         mypage: {

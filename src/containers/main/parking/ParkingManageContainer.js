@@ -97,6 +97,7 @@ const ParkingManageContainer = () => {
     }, [dispatch, myAllParkingList, myParkingList.length]);
     useScrollEnd(fetchParkingList);
     useScrollRemember(location.pathname);
+    console.log(location)
     useEffect(() => {
         if (!myAllParkingList.length) {
             dispatch(getMyParkingList(JWT_TOKEN));
