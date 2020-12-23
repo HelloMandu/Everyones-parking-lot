@@ -28,6 +28,7 @@ import Profile from '../../../static/asset/png/profile.png';
 import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
 import { imageFormat, DBImageFormat } from '../../../lib/formatter';
+import useSnackBar from '../../../hooks/useSnackBar';
 
 const cx = classNames.bind(styles);
 
@@ -50,6 +51,7 @@ const ReviewDetailContainer = ({ match, location }) => {
     const commentRef = useRef();
     const history = useHistory();
     const openDialog = useDialog();
+    const [handleSnackbarOpen] = useSnackBar();
     const user = useSelector((state) => state.user);
     const [onLoading, offLoading] = useLoading();
     const [list, setList] = useState([])
@@ -57,27 +59,30 @@ const ReviewDetailContainer = ({ match, location }) => {
     const onClickSubmit = useCallback(async () => {
         const token = localStorage.getItem('user_id');
         if (token) {
-            onLoading('writeComment');
-            try {
-                const { data } = await requestPostWriteComment(
-                    token,
-                    review_id,
-                    comment,
-                );
-                if (data.msg === 'success') {
-                    setCommentList(commentList.concat(data.comment));
-                    onChangeComment('');
-                    commentRef.current.value = '';
-                } else {
-                    openDialog('댓글 작성을 실패했습니다.');
+            if (comment.length !== 0) {
+                onLoading('writeComment');
+                try {
+                    const { data } = await requestPostWriteComment(
+                        token,
+                        review_id,
+                        comment,
+                    );
+                    if (data.msg === 'success') {
+                        setCommentList(commentList.concat(data.comment));
+                        onChangeComment('');
+                        commentRef.current.value = '';
+                        handleSnackbarOpen('성공적으로 작성하였습니다.', 'success');
+                    } else {
+                        openDialog('댓글 작성을 실패했습니다.');
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-            } catch (error) {
-                console.error(error);
                 offLoading('writeComment');
+            } else {
+                handleSnackbarOpen('내용을 입력해 주세요.', 'error');
             }
-            offLoading('writeComment');
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comment, commentList, review_id, openDialog]);
 
@@ -110,7 +115,6 @@ const ReviewDetailContainer = ({ match, location }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('getReview');
         }
         offLoading('getReview');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,11 +126,11 @@ const ReviewDetailContainer = ({ match, location }) => {
     const reviewDelete = useCallback(() => {
         const token = localStorage.getItem('user_id');
         if (token) {
-            onLoading('deletComment');
             openDialog(
                 '리뷰를 삭제하시겠습니까 ?',
                 '',
                 async () => {
+                    onLoading('deletComment');
                     try {
                         const { data } = await requestDeleteReview(
                             token,
@@ -140,12 +144,11 @@ const ReviewDetailContainer = ({ match, location }) => {
                         }
                     } catch (e) {
                         console.error(e);
-                        offLoading('deletComment');
                     }
+                    offLoading('deletComment');
                 },
                 true,
             );
-            offLoading('deletComment');
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

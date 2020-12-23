@@ -133,7 +133,6 @@ const UseExtendContainer = ({ match, location }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('getUseDetail');
         }
         offLoading('getUseDetail');
     }, [rental_id, openDialog]);
@@ -172,7 +171,6 @@ const UseExtendContainer = ({ match, location }) => {
                     } else openDialog(data.msg);
                 } catch (e) {
                     console.error(e);
-                    offLoading('extension');
                 }
                 offLoading('extension');
             }
