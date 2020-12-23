@@ -236,7 +236,6 @@ const SignUpContainer = ({ match }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('signUp');
         }
         offLoading('signUp');
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -74,7 +74,6 @@ const Refund = ({
                     );
             } catch (e) {
                 console.error(e);
-                offLoading(LOADING_CANCLE);
             }
             offLoading(LOADING_CANCLE);
         }
