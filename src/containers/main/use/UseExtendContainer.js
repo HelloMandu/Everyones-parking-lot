@@ -320,6 +320,8 @@ const UseExtendContainer = ({ match, location }) => {
                         allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                         setCheck={setChecked}
+                        url={Paths.main.use.extend}
+                        modal={params.modal}
                     ></CheckBox>
                 </div>
 
