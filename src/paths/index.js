@@ -39,6 +39,7 @@ export const Paths = {
             index: '/parking',
             manage: '/parking/manage',
             enrollment: '/parking/enrollment',
+            modify: '/parking/modify'
         },
         notification: '/notification',
         setting: '/setting',
@@ -116,7 +117,7 @@ export const HeaderTitle = {
             index: '',
             manage: '내 주차공간 관리',
             enrollment: '주차공간 등록',
-            preview: '/parking/preview',
+            modify: '주차공간 수정'
         },
         notification: '알림함',
         setting: '환경설정',
