@@ -202,7 +202,7 @@ const UseDetailContainer = ({ match, location }) => {
                                 disable={rentalStatus(order) === '이용대기'}
                                 onClick={() =>
                                     history.push(
-                                        Paths.main.review.write +
+                                        Paths.main.review.modify +
                                         `?rental_id=${rental_id}`,
                                     )
                                 }
