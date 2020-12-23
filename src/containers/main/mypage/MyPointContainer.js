@@ -93,7 +93,7 @@ const WithdrawModal = ({
                     reduxDispatch(updateUser('point', point - price));
                     const pointLog = [];
                     pointLog.push(response.point_log);
-                    handleSnackBar('출금이 완료되었습니다.', 'success', false);
+                    handleSnackBar('출금신청되었습니다.', 'success', false);
                     setClick(false);
                     onChangeBank();
                     onChangeAccount();
