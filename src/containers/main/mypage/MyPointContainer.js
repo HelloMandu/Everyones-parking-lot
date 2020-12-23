@@ -16,6 +16,7 @@ import XIcon from '../../../static/asset/svg/X_button';
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
+import { useScrollEnd } from '../../../hooks/useScroll';
 /* Hooks */
 
 import { getFormatDateDetailTime } from '../../../lib/calculateDate';
@@ -52,7 +53,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const WithdrawModal = ({ click, setClick, point }) => {
+const WithdrawModal = ({
+    allPointList,
+    setPointList,
+    dataLength,
+    click,
+    setClick,
+    point,
+}) => {
     const classes = useStyles();
     const openDialog = useDialog();
     const reduxDispatch = useDispatch();
@@ -79,11 +87,18 @@ const WithdrawModal = ({ click, setClick, point }) => {
                 );
                 if (response.msg === 'success') {
                     reduxDispatch(updateUser('point', point - price));
+                    const pointLog = [];
+                    pointLog.push(response.point_log);
                     openDialog('출금이 완료되었습니다.', '', () => {
                         setClick(false);
                         onChangeBank();
                         onChangeAccount();
                         onChangePrice();
+                        allPointList.current = pointLog.concat(
+                            allPointList.current,
+                        );
+                        setPointList((pointList) => pointLog.concat(pointList));
+                        dataLength.current += 1;
                     });
                 } else {
                     openDialog(response.msg);
@@ -93,16 +108,19 @@ const WithdrawModal = ({ click, setClick, point }) => {
             }
         }
     }, [
-        bank,
-        account,
         price,
         openDialog,
+        bank,
+        account,
+        reduxDispatch,
+        point,
         setClick,
         onChangeBank,
         onChangeAccount,
         onChangePrice,
-        point,
-        reduxDispatch,
+        allPointList,
+        setPointList,
+        dataLength,
     ]);
 
     useEffect(() => {
@@ -242,19 +260,10 @@ const MyPointContainer = () => {
         dataLength.current += 10;
     }, []);
 
+    useScrollEnd(fetchPointList);
+
     useEffect(() => {
         if (TOKEN !== null) {
-            const handleScroll = () => {
-                const endPoint =
-                    Math.ceil(
-                        window.innerHeight + document.documentElement.scrollTop,
-                    ) === document.documentElement.offsetHeight;
-                if (endPoint) {
-                    fetchPointList();
-                }
-            };
-
-            window.addEventListener('scroll', handleScroll);
             const getPointList = async () => {
                 const JWT_TOKEN = localStorage.getItem('user_id');
                 if (JWT_TOKEN) {
@@ -268,7 +277,6 @@ const MyPointContainer = () => {
                 }
             };
             getPointList();
-            return () => window.removeEventListener('scroll', handleScroll);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -325,6 +333,9 @@ const MyPointContainer = () => {
                         </div>
                     </div>
                     <WithdrawModal
+                        allPointList={allPointList}
+                        setPointList={setPointList}
+                        dataLength={dataLength}
                         click={click}
                         setClick={setClick}
                         point={getUserInfo.point}

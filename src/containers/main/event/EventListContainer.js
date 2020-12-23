@@ -38,7 +38,6 @@ const EventListContainer = ({ history }) => {
                 );
             }
         } catch (e) {
-            offLoading(LOADING_EVENT);
             openDialog(
                 '이벤트를 가지고 오는 도중에 오류가 발생했습니다.',
                 '잠시 후에 다시 시도해 주세요.',
