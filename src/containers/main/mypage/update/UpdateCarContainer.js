@@ -104,7 +104,7 @@ const ParkingPicture = forwardRef(({ setCheck }, ref) => {
             <div className={cx('imformation')}>
                 <Information />
                 <div className={cx('sub-title')}>
-                    앞 번호판이 보이는 차량사진을 등록해주세요
+                    앞 번호판이 보이는 차량 사진을 등록해 주세요.
                 </div>
             </div>
             <div className="file-wrapper">
