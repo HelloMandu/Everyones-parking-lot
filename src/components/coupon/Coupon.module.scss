@@ -44,6 +44,10 @@
         }
         .state-box {
             position: relative;
+            height: 100%;
+            svg {
+                height: 100%;
+            }
             .check {
                 position: absolute;
                 top: 50%;

@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import useToken from '../../hooks/useToken';
 import useModal from '../../hooks/useModal';
 import useLoading from '../../hooks/useLoading';
-import { useDialog } from '../../hooks/useDialog';
+// import { useDialog } from '../../hooks/useDialog';
 import {
     requestGetCouponBook,
     requestGetCouponMy,
@@ -19,11 +19,11 @@ import {
 import Coupon from '../../components/coupon/Coupon';
 import CouponCodeModal from '../../components/coupon/CouponCodeModal';
 import ArrowSmall from '../../static/asset/svg/ArrowSmall';
-import XButton from '../../static/asset/svg/X_button';
 
 import 'swiper/swiper.scss';
 
 import styles from './CouponContainer.module.scss';
+import useSnackBar from '../../hooks/useSnackBar';
 
 const LOADING_COUPON = 'coupon';
 
@@ -33,7 +33,8 @@ const CouponContainer = ({ match }) => {
     const [myCoupon, setMyCoupon] = useState([]);
     const [couponBook, setCouponBook] = useState([]);
     const [useCoupon, setuseCoupon] = useState([]);
-    const openDialog = useDialog();
+    // const openDialog = useDialog();
+    const [handleSnackbarOpen] = useSnackBar();
     const history = useHistory();
     const { url, params } = match;
     const [isOpenCouponCodeModal, OpenCouponModal] = useModal(
@@ -52,13 +53,6 @@ const CouponContainer = ({ match }) => {
         setTabValue(newValue);
         swiperRef.current.slideTo(newValue, 300);
     }, []);
-    const onToggleConponCode = useCallback(() => {
-        if (isOpenCouponCodeModal) {
-            history.goBack();
-        } else {
-            OpenCouponModal();
-        }
-    }, [isOpenCouponCodeModal, OpenCouponModal, history]);
 
     const handleCouponEnroll = useCallback(
         async (id, isInput) => {
@@ -76,18 +70,20 @@ const CouponContainer = ({ match }) => {
                         );
                         setCouponBook(newCouponList);
                         setMyCoupon((myCoupon) => myCoupon.concat(coupon));
+                        handleSnackbarOpen('쿠폰이 성공적으로 발급되었습니다.', 'success');
                         if (isInput) {
                             history.goBack();
                         }
                     } else {
-                        openDialog(msg);
+                        // openDialog(msg);
+                        handleSnackbarOpen(msg, 'error');
                     }
                 } catch (e) {
                     console.error(e);
                 }
             }
         },
-        [JWT_TOKEN, couponBook, history, openDialog],
+        [JWT_TOKEN, couponBook, handleSnackbarOpen, history],
     );
     const getCouponList = useCallback(async () => {
         onLoading(LOADING_COUPON);
@@ -123,7 +119,6 @@ const CouponContainer = ({ match }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading(LOADING_COUPON);
         }
         offLoading(LOADING_COUPON);
     }, [offLoading, onLoading]);
@@ -134,9 +129,9 @@ const CouponContainer = ({ match }) => {
             <div className={styles['coupon-container']}>
                 <ButtonBase
                     className={styles['coupon-input']}
-                    onClick={onToggleConponCode}
+                    onClick={OpenCouponModal}
                 >
-                    {!isOpenCouponCodeModal ? '쿠폰입력' : <XButton />}
+                    쿠폰입력
                 </ButtonBase>
                 <Tabs
                     className={styles['tabs']}
@@ -193,6 +188,7 @@ const CouponContainer = ({ match }) => {
             <CouponCodeModal
                 open={isOpenCouponCodeModal}
                 onClick={handleCouponEnroll}
+                onClose={history.goBack}
             ></CouponCodeModal>
         </>
     );

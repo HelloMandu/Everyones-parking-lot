@@ -189,7 +189,7 @@ const DetailContainer = ({ modal, place_id }) => {
                 true,
             );
         }
-    }, [history, likeStatus, openDialog, place_id]);
+    }, [handleSnackbarOpen, history, likeStatus, openDialog, place_id]);
 
     const handleShare = useCallback(() => setShareOpen((state) => !state), []);
     useScrollTop();
