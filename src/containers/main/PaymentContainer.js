@@ -37,16 +37,16 @@ const enroll = [
     {
         id: 1,
         checked: false,
-        description: '이용약관',
+        description: '개인정보취급방침',
         necessary: true,
-        policy: 0
+        policy: 1
     },
     {
         id: 2,
         checked: false,
-        description: '개인정보취급방침',
+        description: '이용약관',
         necessary: true,
-        policy: 1
+        policy: 0
     },
 ];
 
