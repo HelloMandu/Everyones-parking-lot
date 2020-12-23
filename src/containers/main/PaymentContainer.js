@@ -91,7 +91,7 @@ const Point = ({
                     className={'input-box-right'}
                     type={'number'}
                     value={usePoint}
-                    placeholder={'사용하실 포인트를 입력해주세요'}
+                    placeholder={'사용하실 포인트를 입력해 주세요.'}
                     onChange={onChange}
                 ></InputBox>
                 <div className={styles['use-point']}>
@@ -211,10 +211,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
             if (value < 0) {
                 return;
             } else if (value > point || value > price - cp_price) {
-                openDialog(
-                    '사용 불가',
-                    '보유 포인트 이상의 금액은 사용하실 수 없습니다',
-                );
+                openDialog('보유 포인트 이상의 금액은 사용하실 수 없습니다', '');
             } else {
                 setUsePoint(parseInt(value) || '');
             }
