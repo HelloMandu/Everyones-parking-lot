@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
-import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
+import { useScrollEnd } from '../../../hooks/useScroll';
+import useSnackBar from '../../../hooks/useSnackBar';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
@@ -20,43 +21,14 @@ import Notice from '../../../static/asset/svg/Notice';
 
 const cx = className.bind(styles);
 
-const ReviewItem = ({ setList, review }) => {
-    const history = useHistory();
-    const openDialog = useDialog();
-    const [onLoading, offLoading] = useLoading();
-    const reviewDelete = useCallback(() => {
-        onLoading('reviewDelete');
-
-        const token = localStorage.getItem('user_id');
-        openDialog(
-            '리뷰를 삭제하시겠습니까 ?',
-            '',
-            async () => {
-                const { data } = await requestDeleteReview(
-                    token,
-                    review.review_id,
-                );
-                if (data.msg === 'success') {
-                    setList((list) =>
-                        list.filter(
-                            (item) => item.review_id !== review.review_id,
-                        ),
-                    );
-                } else {
-                    openDialog(data.msg);
-                }
-            },
-            true,
-        );
-
-        offLoading('reviewDelete');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [history, openDialog, review]);
-
+const ReviewItem = ({ review, onDelete }) => {
     return (
-        <div className={cx('card')}>
+        <li className={cx('card')}>
             <Link
-                to={Paths.main.review.detail + `?review_id=${review.review_id}&place_id=${review.place.place_id}`}
+                to={
+                    Paths.main.review.detail +
+                    `?review_id=${review.review_id}&place_id=${review.place.place_id}`
+                }
             >
                 <div
                     className={cx('card-img')}
@@ -84,7 +56,7 @@ const ReviewItem = ({ setList, review }) => {
             </Link>
 
             <div className={cx('button-area')}>
-                <ButtonBase onClick={reviewDelete}>삭제</ButtonBase>
+                <ButtonBase onClick={onDelete}>삭제</ButtonBase>
                 <Link
                     to={
                         Paths.main.review.modify +
@@ -94,7 +66,7 @@ const ReviewItem = ({ setList, review }) => {
                     <ButtonBase>수정</ButtonBase>
                 </Link>
             </div>
-        </div>
+        </li>
     );
 };
 
@@ -102,52 +74,97 @@ const LOADING_REVIEW = 'review';
 
 const ReviewListContainer = () => {
     const token = useToken();
-    const location = useLocation()
-    const [reviewlist, setReviewList] = useState([]);
+    const reviewlist = useRef([]);
+    const [list, setList] = useState([]);
+    const reviewLength = useRef(0);
     const [onLoading, offLoading, isLoading] = useLoading();
-    const [list, setList] = useState([])
+    const openDialog = useDialog();
+    const [handleSnackBar] = useSnackBar();
 
     const fetchReviewList = useCallback(() => {
-        const LIMIT = 3
-        const length = list.length
-        const fetchData = reviewlist.slice(length, length + LIMIT)
-
-        if(fetchData.length > 0){
-            setList(list.concat(fetchData))
+        const LIMIT = 3;
+        const length = reviewLength.current;
+        const fetchData = reviewlist.current.slice(length, length + LIMIT);
+        if (fetchData.length > 0) {
+            setList((list) => list.concat(fetchData));
+            reviewLength.current += LIMIT;
         }
-    }, [list, reviewlist])
+    }, [reviewlist]);
 
     const getReviewList = useCallback(async () => {
         if (!token) {
             return;
         }
-        onLoading(LOADING_REVIEW);
-        const { data } = await requestGetReviewList(token);
-        setReviewList(data.reviews);
-        offLoading(LOADING_REVIEW);
+        try {
+            onLoading(LOADING_REVIEW);
+            const { data } = await requestGetReviewList(token);
+            reviewlist.current = data.reviews;
+            fetchReviewList();
+            offLoading(LOADING_REVIEW);
+        } catch (e) {
+            console.error(e);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
-    useEffect(getReviewList, [getReviewList, token]);
+    const deleteReview = useCallback(
+        async (id) => {
+            try {
+                if (!token) {
+                    return;
+                }
+                const { data } = await requestDeleteReview(token, id);
+                if (data.msg === 'success') {
+                    setList((list) =>
+                        list.filter((item) => item.review_id !== id),
+                    );
+                    reviewlist.current = reviewlist.current.filter(
+                        (item) => item.review_id !== id,
+                    );
+                    reviewLength.current -= 1;
+                    handleSnackBar('리뷰가 삭제되었습니다', 'info', false);
+                } else {
+                    handleSnackBar(
+                        '삭제도중 오류가 발생했습니다.',
+                        'error',
+                        false,
+                    );
+                }
+            } catch (e) {
+                openDialog('Error', '삭제도중 오류가 발생했습니다.');
+            }
+        },
+        [handleSnackBar, openDialog, token],
+    );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(fetchReviewList, [reviewlist])
+    const reviewDelete = useCallback(
+        (id) => {
+            openDialog(
+                '리뷰를 삭제하시겠습니까 ?',
+                '',
+                () => deleteReview(id),
+                true,
+            );
+        },
+        [deleteReview, openDialog],
+    );
+
+    useEffect(getReviewList, [getReviewList]);
     useScrollEnd(fetchReviewList);
-    useScrollRemember(location.pathname);
 
     return (
         <>
             {!isLoading[LOADING_REVIEW] &&
-                (reviewlist.length ? (
-                    <div className={cx('container')}>
-                        {list.map((item) => (
+                (list.length ? (
+                    <ul className={cx('container')}>
+                        {list.map((review) => (
                             <ReviewItem
-                                key={item.review_id}
-                                review={item}
-                                setList={setReviewList}
+                                key={review.review_id}
+                                review={review}
+                                onDelete={() => reviewDelete(review.review_id)}
                             />
                         ))}
-                    </div>
+                    </ul>
                 ) : (
                     <div className={styles['non-qna']}>
                         <div className={styles['non-container']}>

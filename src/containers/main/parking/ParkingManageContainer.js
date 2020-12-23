@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState, useRef, memo } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
 import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
 import useToken from '../../../hooks/useToken';
 
+import { fetchMyParkingList, getMyParkingList } from '../../../store/myParking';
 import { imageFormat, numberFormat } from '../../../lib/formatter';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 
@@ -14,8 +16,6 @@ import { Paths } from '../../../paths';
 import Notice from '../../../static/asset/svg/Notice';
 
 import styles from './ParkingManageContainer.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchMyParkingList, getMyParkingList } from '../../../store/myParking';
 
 const cx = cn.bind(styles);
 
@@ -48,14 +48,26 @@ const Image = ({ src, threshold = 0.5 }) => {
     );
 };
 
+const getStatus = (rentalOrders, operEndDate) => {
+    const today = new Date();
+    const endDate = new Date(operEndDate);
+    if (today < endDate) {
+        if (rentalOrders.length) {
+            return 2; // 대여중
+        }
+        return 1; // 대여가능
+    }
+    return 0; //대여종료
+};
+
 const ParkingItem = memo(({ status, image, title, start, end, price }) => {
     return (
         <>
             <Image src={`${imageFormat(image)}`} threshold={0.3}></Image>
             <div className={styles['parking-info']}>
                 <div className={styles['subject']}>
-                    <span className={cx('status', { status })}>
-                        {status !== 0 ? '대여중' : '대여종료'}
+                    <span className={cx('status', { finished: !status })}>
+                        {status ? (1 ? '대여가능' : '대여중') : '대여종료'}
                     </span>
                     <h2 className={styles['title']}>{title}</h2>
                 </div>
@@ -78,6 +90,7 @@ const ParkingItem = memo(({ status, image, title, start, end, price }) => {
         </>
     );
 });
+
 const ParkingManageContainer = () => {
     const JWT_TOKEN = useToken();
     const history = useHistory();
@@ -135,7 +148,10 @@ const ParkingManageContainer = () => {
                                     }
                                 >
                                     <ParkingItem
-                                        status={rental_orders.length}
+                                        status={getStatus(
+                                            rental_orders,
+                                            oper_end_time,
+                                        )}
                                         image={
                                             Array.isArray(place_images)
                                                 ? place_images[0].replace(

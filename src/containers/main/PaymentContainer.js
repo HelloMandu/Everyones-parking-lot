@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
@@ -13,6 +13,7 @@ import { useDialog } from '../../hooks/useDialog';
 import { imageFormat, numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
 import { requestPostRental } from '../../api/rental';
+import { updateUser } from '../../store/user';
 
 import { Paths } from '../../paths/index';
 
@@ -172,6 +173,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const { url, params } = match;
     const history = useHistory();
     const openDialog = useDialog();
+    const dispatch = useDispatch();
     const [isOpenCouponModal, handleCouponModal] = useModal(
         url,
         params.modal,
@@ -263,24 +265,14 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 history.push(
                     `${Paths.main.payment_complete}?rental_id=${rental_id}`,
                 );
+                dispatch(updateUser('point', point - price));
             } else {
                 openDialog('결제실패', msg);
             }
         } catch (e) {
             console.error(e);
         }
-    }, [
-        JWT_TOKEN,
-        end_time,
-        history,
-        openDialog,
-        parkingInfo,
-        paymentType,
-        place_id,
-        selectedCoupon,
-        start_time,
-        usePoint,
-    ]);
+    }, [JWT_TOKEN, dispatch, end_time, history, openDialog, parkingInfo, paymentType, place_id, point, selectedCoupon, start_time, usePoint]);
 
     const [onLoading, offLoading] = useLoading();
     const getPaymentInfo = useCallback(

@@ -25,8 +25,8 @@ const useSnackBar = () => {
         clearTimeout(lastCloseAnimate.current);
     }, [dispatch]);
     
-    const handleOpen = useCallback((message, variant) => {
-        setTimeout(() => dispatch(openSnackBar({ message, variant: variantReducer(variant) })), 200);
+    const handleOpen = useCallback((message, variant, up = true) => {
+        setTimeout(() => dispatch(openSnackBar({ message, variant: variantReducer(variant), up })), 200);
         if (lastCloseAnimate.current) {
             clearTimeout(lastCloseAnimate.current);
         }

@@ -171,12 +171,8 @@ const FAQItems = memo(({ type }) => {
 const FAQContainer = ({ type }) => {
     return (
         <>
-            {type !== "0" && (
-                <>
-                    <Category type={type} />
-                    <FAQItems type={type} />
-                </>
-            )}
+            <Category type={type} />
+            <FAQItems type={type} />
         </>
     );
 };
