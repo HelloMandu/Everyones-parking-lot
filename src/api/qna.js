@@ -43,7 +43,7 @@ export const requestGetQNAList = async (URL, JWT_TOKEN) => {
     };
     const response = await axios.get(Paths.api + URL, config);
 
-    return response.data;
+    return response;
 }
 
 export const requestGetDetailQNAList = async (JWT_TOKEN, qna_id) => {
