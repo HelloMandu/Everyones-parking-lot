@@ -43,7 +43,10 @@ const Info = ({ attribute, value, black }) => {
 const Button = ({ name, disable, onClick, addition, children }) => {
     return (
         !disable && (
-            <ButtonBase onClick={onClick} style={addition ? { width: '100%' } : {}}>
+            <ButtonBase
+                onClick={onClick}
+                style={addition ? { width: '100%' } : {}}
+            >
                 {children}
                 {name}
             </ButtonBase>
@@ -186,27 +189,40 @@ const UseDetailContainer = ({ match, location }) => {
                             />
                             <Info
                                 attribute={'이전 대여자 연락처'}
-                                value={order.user ? stringToTel(order.user.phone_number) : '-'}
+                                value={
+                                    order.user
+                                        ? stringToTel(order.user.phone_number)
+                                        : '-'
+                                }
                             />
                         </div>
 
                         <div className={cx('button-area')}>
-                            <Button name={'고객센터 연결'} addition={rentalStatus(order) === '이용대기' || rentalStatus(order) === '이용취소'}>
+                            <Button
+                                name={'고객센터 연결'}
+                                addition={
+                                    rentalStatus(order) === '이용대기' ||
+                                    rentalStatus(order) === '이용취소'
+                                }
+                            >
                                 <Tel />
                             </Button>
                             <Button
                                 name={`리뷰 ${review ? '수정' : '작성'} 하기`}
-                                disable={rentalStatus(order) === '이용대기' || rentalStatus(order) === '이용취소'}
+                                disable={
+                                    rentalStatus(order) === '이용대기' ||
+                                    rentalStatus(order) === '이용취소'
+                                }
                                 onClick={() =>
-                                    review ?
-                                    history.push(
-                                        Paths.main.review.modify +
-                                        `?rental_id=${rental_id}`,
-                                    ) :
-                                    history.push(
-                                        Paths.main.review.write +
-                                        `?rental_id=${rental_id}`,
-                                    )
+                                    review
+                                        ? history.push(
+                                              Paths.main.review.modify +
+                                                  `?rental_id=${rental_id}`,
+                                          )
+                                        : history.push(
+                                              Paths.main.review.write +
+                                                  `?rental_id=${rental_id}`,
+                                          )
                                 }
                             >
                                 <MessageBox />
