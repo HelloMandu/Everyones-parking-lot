@@ -104,19 +104,19 @@
         padding-top: 24px;
 
         & > button {
-            width: 33%;
+            width: 32%;
             height: 48px;
-            margin-right: 0.5%;
-            margin-bottom: 0.5%;
+            margin-right: 2%;
+            margin-bottom: 2%;
             border: 1px solid #ebebeb;
         }
 
         & > button:nth-child(3n) {
-            margin: 0;
+            margin-right: 0;
         }
     }
 
-    .input-title{
+    .input-title {
         font-size: 1.16rem;
         font-weight: bold;
         color: #999999;
@@ -175,10 +175,28 @@
         position: relative;
         width: 100%;
         margin-bottom: 20px;
-        .title {
-            font-size: 1.33rem;
-            font-weight: bold;
+
+        .title-wrapper {
+            width: 100%;
             margin-bottom: 13px;
+
+            .title {
+                font-size: 1.33rem;
+                font-weight: bold;
+                width: 50%;
+                display: inline-block;
+            }
+
+            .precautions {
+                font-size: 1rem;
+                color: #999999;
+                width: 50%;
+                position: relative;
+                text-align: right;
+                text-decoration: underline;
+                display: inline-block;
+                cursor: pointer;
+            }
         }
 
         .payment {

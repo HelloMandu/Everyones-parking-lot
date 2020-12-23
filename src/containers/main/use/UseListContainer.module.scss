@@ -35,7 +35,6 @@
         .status{
             width: 64px;
             height: 32px;
-            border: 1px solid #EBEBEB;
             text-align: center;
             line-height: 32px;
             position: absolute;
@@ -67,4 +66,22 @@
         }
 
     }
+}
+
+.using{
+    border: 1px solid #FFE100;
+}
+
+.wait{
+    border: 1px solid #222;
+}
+
+.finish{
+    border: 1px solid #999;
+    color: #999;
+}
+
+.cancel{
+    border: 1px solid #953120;
+    color: #953120;
 }
