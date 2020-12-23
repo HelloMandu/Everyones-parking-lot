@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
-import { useScrollEnd } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
 
 import { requestGetUseRental } from '../../../api/rental';
 
@@ -24,10 +24,21 @@ const LOADING_USE_LIST = 'use/list';
 
 const UseListContainer = () => {
     const token = useToken();
-    const [list, setList] = useState([]);
+    const location = useLocation()
     const openDialog = useDialog();
     const [onLoading, offLoading, isLoading] = useLoading();
-    const listRef = useRef();
+    const [useList, setUseList] = useState([]);
+    const [list, setList] = useState([])
+
+    const fetchUseList = useCallback(() => {
+        const LIMIT = 6
+        const length = list.length
+        const fetchData = useList.slice(length, length + LIMIT)
+
+        if(fetchData.length > 0){
+            setList(list.concat(fetchData))
+        }
+    }, [list, useList])
 
     const getUseList = useCallback(async () => {
         if (!token) {
@@ -37,26 +48,31 @@ const UseListContainer = () => {
         try {
             const { data } = await requestGetUseRental(token);
             if (data.msg === 'success') {
-                setList(data.orders);
+                setUseList(data.orders)
             } else {
                 openDialog(data.msg);
             }
         } catch (e) {
             console.error(e);
         }
+
         offLoading(LOADING_USE_LIST);
+    // eslint-disable-next-line no-sparse-arrays
     }, [offLoading, onLoading, openDialog, token]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(getUseList, []);
-
-    useScrollEnd(getUseList, listRef.current);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(fetchUseList, [useList])
+    useScrollEnd(fetchUseList);
+    useScrollRemember(location.pathname);
 
     return (
         <>
             {!isLoading[LOADING_USE_LIST] &&
-                (list.length ? (
-                    <div className={cx('container')} ref={listRef}>
+                (useList.length ? (
+                    <div className={cx('container')}>
                         {list.map((item) => (
                             <Link
                                 to={

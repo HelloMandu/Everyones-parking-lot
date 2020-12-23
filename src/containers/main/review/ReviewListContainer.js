@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
-import { useScrollEnd } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
 import { imageFormat } from '../../../lib/formatter';
@@ -102,9 +102,20 @@ const LOADING_REVIEW = 'review';
 
 const ReviewListContainer = () => {
     const token = useToken();
-    const [list, setList] = useState([]);
+    const location = useLocation()
+    const [reviewlist, setReviewList] = useState([]);
     const [onLoading, offLoading, isLoading] = useLoading();
-    const listRef = useRef()
+    const [list, setList] = useState([])
+
+    const fetchReviewList = useCallback(() => {
+        const LIMIT = 3
+        const length = list.length
+        const fetchData = reviewlist.slice(length, length + LIMIT)
+
+        if(fetchData.length > 0){
+            setList(list.concat(fetchData))
+        }
+    }, [list, reviewlist])
 
     const getReviewList = useCallback(async () => {
         if (!token) {
@@ -112,25 +123,28 @@ const ReviewListContainer = () => {
         }
         onLoading(LOADING_REVIEW);
         const { data } = await requestGetReviewList(token);
-        setList(data.reviews);
+        setReviewList(data.reviews);
         offLoading(LOADING_REVIEW);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     useEffect(getReviewList, [getReviewList, token]);
 
-    useScrollEnd(getReviewList, listRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(fetchReviewList, [reviewlist])
+    useScrollEnd(fetchReviewList);
+    useScrollRemember(location.pathname);
 
     return (
         <>
             {!isLoading[LOADING_REVIEW] &&
-                (list.length ? (
-                    <div className={cx('container')} ref={listRef}>
+                (reviewlist.length ? (
+                    <div className={cx('container')}>
                         {list.map((item) => (
                             <ReviewItem
                                 key={item.review_id}
                                 review={item}
-                                setList={setList}
+                                setList={setReviewList}
                             />
                         ))}
                     </div>

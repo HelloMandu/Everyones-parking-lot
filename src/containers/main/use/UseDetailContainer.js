@@ -200,6 +200,11 @@ const UseDetailContainer = ({ match, location }) => {
                                 name={`리뷰 ${review ? '수정' : '작성'} 하기`}
                                 disable={rentalStatus(order) === '이용대기'}
                                 onClick={() =>
+                                    review ?
+                                    history.push(
+                                        Paths.main.review.modify +
+                                        `?rental_id=${rental_id}`,
+                                    ) :
                                     history.push(
                                         Paths.main.review.write +
                                         `?rental_id=${rental_id}`,

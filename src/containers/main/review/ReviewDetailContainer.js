@@ -9,7 +9,7 @@ import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useLoading from '../../../hooks/useLoading';
 import useModal from '../../../hooks/useModal';
-import { useScrollEnd } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
 
 import {
     requestDeleteReview,
@@ -52,7 +52,7 @@ const ReviewDetailContainer = ({ match, location }) => {
     const openDialog = useDialog();
     const user = useSelector((state) => state.user);
     const [onLoading, offLoading] = useLoading();
-    const listRef = useRef();
+    const [list, setList] = useState([])
 
     const onClickSubmit = useCallback(async () => {
         const token = localStorage.getItem('user_id');
@@ -79,6 +79,16 @@ const ReviewDetailContainer = ({ match, location }) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [comment, commentList, review_id, openDialog]);
+
+    const fetchCommentList = useCallback(() => {
+        const LIMIT = 3
+        const length = list.length
+        const fetchData = commentList.slice(length, length + LIMIT)
+
+        if(fetchData.length > 0){
+            setList(list.concat(fetchData))
+        }
+    }, [list, commentList])
 
     const getReview = useCallback(async () => {
         onLoading('getReview');
@@ -138,7 +148,10 @@ const ReviewDetailContainer = ({ match, location }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [history, openDialog, review]);
 
-    useScrollEnd(getReview, listRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(fetchCommentList, [commentList])
+    useScrollEnd(fetchCommentList);
+    useScrollRemember(location.pathname);
 
     return (
         review !== undefined && (
@@ -184,7 +197,7 @@ const ReviewDetailContainer = ({ match, location }) => {
                                 </ButtonBase>
                                 <Link
                                     to={
-                                        Paths.main.review.write +
+                                        Paths.main.review.modify +
                                         `?rental_id=${review.rental_id}`
                                     }
                                 >
@@ -194,7 +207,7 @@ const ReviewDetailContainer = ({ match, location }) => {
                         )}
                     </div>
                     <div className={cx('bar')} />
-                    <div className={cx('area')} ref={listRef}>
+                    <div className={cx('area')}>
                         <div className={cx('title')}>댓글</div>
                         {commentList.length === 0 ? (
                             <div className={cx('comment-none-wrapper')}>
@@ -204,7 +217,7 @@ const ReviewDetailContainer = ({ match, location }) => {
                                 </div>
                             </div>
                         ) : (
-                                commentList.map((item) => (
+                            list.map((item) => (
                                     <div
                                         key={item.comment_id}
                                         className={cx('comment-item')}
