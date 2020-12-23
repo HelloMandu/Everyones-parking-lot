@@ -3,12 +3,12 @@ import { useCallback, useEffect } from 'react';
 export const useScrollEnd = (callback, dom) => {
     const handleScroll = useCallback(() => {
         const endPoint = dom
-            ? Math.abs(dom.clientHeight + dom.scrollTop - dom.scrollHeight) < 2
+            ? Math.abs(dom.clientHeight + dom.scrollTop - dom.scrollHeight) < 5
             : Math.abs(
                   window.innerHeight +
                       document.documentElement.scrollTop -
                       document.documentElement.scrollHeight,
-              ) < 2;
+              ) < 5;
         if (endPoint) {
             callback();
         }

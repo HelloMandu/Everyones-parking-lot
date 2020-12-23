@@ -18,6 +18,7 @@ import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import { useScrollEnd } from '../../../hooks/useScroll';
+import useSnackBar from '../../../hooks/useSnackBar';
 /* Hooks */
 
 import { getFormatDateDetailTime } from '../../../lib/calculateDate';
@@ -73,6 +74,8 @@ const WithdrawModal = ({
     const withdrawPrice = useRef();
     const [check, setCheck] = useState(false);
 
+    const [handleSnackBar] = useSnackBar();
+
     const onClickButton = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (parseInt(price) <= 0) {
@@ -90,44 +93,26 @@ const WithdrawModal = ({
                     reduxDispatch(updateUser('point', point - price));
                     const pointLog = [];
                     pointLog.push(response.point_log);
-                    openDialog('출금이 완료되었습니다.', '', () => {
-                        setClick(false);
-                        onChangeBank();
-                        onChangeAccount();
-                        onChangePrice();
-                        allPointList.current = pointLog.concat(
-                            allPointList.current,
-                        );
-                        setPointList((pointList) => pointLog.concat(pointList));
-                        dataLength.current += 1;
-                    });
+                    handleSnackBar('출금이 완료되었습니다.', 'success', false);
+                    setClick(false);
+                    onChangeBank();
+                    onChangeAccount();
+                    onChangePrice();
+                    allPointList.current = pointLog.concat(
+                        allPointList.current,
+                    );
+                    setPointList((pointList) => pointLog.concat(pointList));
+                    dataLength.current += 1;
                 } else {
-                    openDialog(response.msg);
+                    handleSnackBar('출금신청 도중에 오류가 발생했습니다', 'error');
                 }
             } catch (error) {
                 console.error(error);
             }
         }
-    }, [
-        price,
-        openDialog,
-        bank,
-        account,
-        reduxDispatch,
-        point,
-        setClick,
-        onChangeBank,
-        onChangeAccount,
-        onChangePrice,
-        allPointList,
-        setPointList,
-        dataLength,
-    ]);
+    }, [price, openDialog, bank, account, reduxDispatch, point, handleSnackBar, setClick, onChangeBank, onChangeAccount, onChangePrice, allPointList, setPointList, dataLength]);
 
-    useEffect(() => {
-        if (account && price) setCheck(true);
-        else setCheck(false);
-    }, [account, price]);
+    useEffect(() => setCheck(account && price), [account, price]);
 
     return (
         <>
@@ -322,20 +307,24 @@ const MyPointContainer = () => {
                                 <div className={styles['under-line']}></div>
                             </div>
                             <ul>
-                                {pointList.length !== 0 ? pointList.map((item) => (
-                                    <li
-                                        className={styles['point-item']}
-                                        key={item.plog_id}
-                                    >
-                                        <PointItem item={item} />
-                                    </li>
-                                )) : (
+                                {pointList.length !== 0 ? (
+                                    pointList.map((item) => (
+                                        <li
+                                            className={styles['point-item']}
+                                            key={item.plog_id}
+                                        >
+                                            <PointItem item={item} />
+                                        </li>
+                                    ))
+                                ) : (
                                     <div className={styles['non-qna']}>
-                                        <div className={styles['non-container']}>
+                                        <div
+                                            className={styles['non-container']}
+                                        >
                                             <Notice />
                                             <div className={styles['explain']}>
                                                 수익금 내역이 없습니다.
-                                        </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )}

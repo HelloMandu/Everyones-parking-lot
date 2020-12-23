@@ -60,7 +60,7 @@ const VerifyPhone = ({ setCheck }, ref) => {
                 const response = await requestPostAuth(phoneNumber);
                 if (response.data.msg === 'success') {
                     // openDialog('인증번호를 전송했습니다.');
-                    handleSnackBar('인증번호를 전송했습니다.', 'success');
+                    handleSnackBar('인증번호를 전송했습니다.', 'info');
                     setSent(true);
                     setButtonTitle('인증번호 재발송');
                     setTimer(180000);

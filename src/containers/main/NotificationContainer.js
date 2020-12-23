@@ -19,6 +19,7 @@ import Notice from '../../static/asset/svg/Notice';
 import styles from './NotificationContainer.module.scss';
 import useToken from '../../hooks/useToken';
 import useLoading from '../../hooks/useLoading';
+import useSnackBar from '../../hooks/useSnackBar';
 
 const cx = cn.bind(styles);
 
@@ -46,6 +47,7 @@ const NotificationContainer = () => {
     const openDialog = useDialog();
     const history = useHistory();
     const [onLoading, offLoading, isLoading] = useLoading();
+    const [handleSnackbar] = useSnackBar();
 
     const handleReadNotification = useCallback(
         async (id) => {
@@ -106,20 +108,28 @@ const NotificationContainer = () => {
     ]);
 
     const handleAllRead = useCallback(async () => {
-        const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
-        if (data.msg !== 'success') {
-            openDialog('통신 불량', '네트워크 상태를 확인하세요.', () =>
-                history.goBack(),
+        try{
+            const { data } = await requestPutNotificationAllRead(JWT_TOKEN);
+            if (data.msg !== 'success') {
+                openDialog('통신 불량', '네트워크 상태를 확인하세요.', () =>
+                    history.goBack(),
+                );
+            }
+            allnotifications.current = allnotifications.current.map((noti) => ({
+                ...noti,
+                read_at: new Date(),
+            }));
+            setNotifications((notification) =>
+                notification.map((noti) => ({ ...noti, read_at: new Date() })),
             );
+            handleSnackbar('전체읽음 처리되었습니다.', 'success', false);
+        } catch(e){
+            openDialog('Error', '네트워크 상태를 확인하세요.', () =>
+                    history.goBack(),
+                );
         }
-        allnotifications.current = allnotifications.current.map((noti) => ({
-            ...noti,
-            read_at: new Date(),
-        }));
-        setNotifications((notification) =>
-            notification.map((noti) => ({ ...noti, read_at: new Date() })),
-        );
-    }, [JWT_TOKEN, history, openDialog]);
+
+    }, [JWT_TOKEN, handleSnackbar, history, openDialog]);
 
     const notiRef = useRef(null);
     useScrollEnd(fetchNotificationList, notiRef.current);
