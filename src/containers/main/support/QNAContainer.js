@@ -83,21 +83,25 @@ const QNAContainer = () => {
 
     const [QNAList, setQNSList] = useState([]);
 
-    const { data } = useSWR(['qna', TOKEN], requestGetQNAList);
+
     useEffect(() => {
-        if (TOKEN) {
-            if (!data) onLoading('qna');
-            if (data !== undefined) {
-                offLoading('qna');
+        const requesetQnaList = async () => {
+            if (TOKEN) {
+                onLoading('qna');
+                const { data } = await requestGetQNAList('qna', TOKEN);
                 if (data.msg === 'success') {
                     setQNSList(data.qnas);
                 } else {
-                    openDialog("1:1문의 오류", "", () => history.goBack());
+                    openDialog('1:1문의 오류', '', () => {
+                        history.goBack();
+                    });
                 }
+                offLoading('qna');
             }
         }
-        // eslint-disable-next-line
-    }, [data])
+        requesetQnaList();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
