@@ -148,7 +148,7 @@ const ReviewWriteContainer = () => {
                                 name="half-rating"
                                 defaultValue={5}
                                 precision={0.5}
-                                value={review ? parseFloat(review.review_rating) : 5}
+                                value={review ? parseFloat(review.review_rating) : rating}
                                 onChange={(event, newValue) => {
                                     setRating(newValue);
                                 }}
