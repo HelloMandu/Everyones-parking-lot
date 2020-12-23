@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import qs from 'qs';
 /* Library */
 
 import NoticeContainer from './NoticeContainer';
@@ -15,48 +16,122 @@ import { Paths } from '../../../paths';
 /* Paths */
 
 import 'swiper/swiper.scss';
+import useLoading from '../../../hooks/useLoading';
+import { useDialog } from '../../../hooks/useDialog';
+import { requestGetQNAList } from '../../../api/qna';
+import { requestGetNoticeList } from '../../../api/notice';
+
+const initialTab = (location) => {
+    switch (location.pathname) {
+        case Paths.main.support.notice:
+            return 0;
+        case Paths.main.support.faq:
+            return 1;
+        default:
+            return 2;
+    }
+};
 
 const SupportContainer = ({ location }) => {
-
     const history = useHistory();
+    const [onLoading, offLoading, isLoading] = useLoading();
+    const openDialog = useDialog();
+
+    const query = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+    });
+    const t = query.type ? query.type : '0';
+    const type = parseInt(t);
 
     const swiperRef = useRef();
-
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState(initialTab(location));
     const handleTabIndex = useCallback((event, newValue) => {
         setTabIndex(newValue);
         swiperRef.current.slideTo(newValue, 300);
     }, []);
-    const handleSwiperIndex = useCallback((newValue) => {
-        setTabIndex(newValue);
-        swiperRef.current.slideTo(newValue, 300);
-        if (newValue === 0) {
+    const handleSwiperIndex = useCallback(
+        (newValue) => {
+            setTabIndex(newValue);
+            swiperRef.current.slideTo(newValue, 300);
+            if (newValue === 0) {
+                history.replace(Paths.main.support.notice);
+            } else if (newValue === 1) {
+                history.replace(Paths.main.support.faq);
+            } else if (newValue === 2) {
+                history.replace(Paths.main.support.qna);
+            }
+        },
+        [history],
+    );
+    useEffect(() => {
+        if (tabIndex === 0) {
+            swiperRef.current.slideTo(0, 0);
+        } else if (tabIndex === 1) {
+            swiperRef.current.slideTo(1, 0);
+        } else if (tabIndex === 2) {
+            swiperRef.current.slideTo(2, 0);
+        } else {
             history.replace(Paths.main.support.notice);
-        } else if (newValue === 1) {
-            history.replace(Paths.main.support.faq);
-        } else if (newValue === 2) {
-            history.replace(Paths.main.support.qna);
         }
-    }, [history]);
+    }, [history, tabIndex]);
+    const [noticeList, setNoticeList] = useState([]);
+    const requesetNoticeList = useCallback(async () => {
+        if (!noticeList.length) {
+            onLoading('notice');
+            try {
+                const data = await requestGetNoticeList('notice');
+                if (data.msg === 'success') {
+                    setNoticeList(data.notices);
+                } else {
+                    openDialog('공지사항 요청 오류', '', () => {
+                        history.goBack();
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            offLoading('notice');
+        }
+    }, [history, noticeList.length, offLoading, onLoading, openDialog]);
+
+    const [QNAList, setQNSList] = useState([]);
+    const requesetQnaList = useCallback(async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            if (!QNAList.length) {
+                onLoading('qna');
+                try {
+                    const { data } = await requestGetQNAList('qna', JWT_TOKEN);
+                    if (data.msg === 'success') {
+                        setQNSList(data.qnas);
+                    } else {
+                        openDialog('1:1문의 오류', '', () => {
+                            history.goBack();
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+                offLoading('qna');
+            }
+        } else {
+            openDialog('로그인 후 이용가능 합니다', '', () => history.goBack());
+        }
+    }, [QNAList.length, history, offLoading, onLoading, openDialog]);
 
     useEffect(() => {
-        const { pathname } = location;
-        if (pathname.indexOf(Paths.main.support.notice) !== -1) {
-            setTabIndex(0);
-            swiperRef.current.slideTo(0, 300);
+        switch (tabIndex) {
+            case 0:
+                requesetNoticeList();
+                return;
+            case 2:
+                requesetQnaList();
+                return;
+            default:
+                return;
         }
-        else if (pathname.indexOf(Paths.main.support.faq) !== -1) {
-            setTabIndex(1);
-            swiperRef.current.slideTo(1, 300);
-        }
-        else if (pathname.indexOf(Paths.main.support.qna) !== -1) {
-            setTabIndex(2);
-            swiperRef.current.slideTo(2, 300);
-        }
-        else {
-            history.replace(Paths.main.support.notice);
-        }
-    }, [location, history]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tabIndex]);
 
     return (
         <div className={styles['container']}>
@@ -85,13 +160,15 @@ const SupportContainer = ({ location }) => {
                 }}
             >
                 <SwiperSlide>
-                    {({ isActive }) => isActive && <NoticeContainer />}
+                    {!isLoading['notice'] && (
+                        <NoticeContainer noticeList={noticeList} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    {({ isActive }) => isActive && <FAQContainer />}
+                    <FAQContainer type={type} />
                 </SwiperSlide>
                 <SwiperSlide>
-                    {({ isActive }) => isActive && <QNAContainer />}
+                    {!isLoading['qna'] && <QNAContainer QNAList={QNAList} />}
                 </SwiperSlide>
             </Swiper>
         </div>
