@@ -11,6 +11,7 @@ import BasicButton from '../../../components/button/BasicButton';
 
 import styles from './MyPointContainer.module.scss';
 import XIcon from '../../../static/asset/svg/X_button';
+import Notice from '../../../static/asset/svg/Notice';
 /* stylesheets */
 
 import useInput from '../../../hooks/useInput';
@@ -321,14 +322,23 @@ const MyPointContainer = () => {
                                 <div className={styles['under-line']}></div>
                             </div>
                             <ul>
-                                {pointList.map((item) => (
+                                {pointList.length !== 0 ? pointList.map((item) => (
                                     <li
                                         className={styles['point-item']}
                                         key={item.plog_id}
                                     >
                                         <PointItem item={item} />
                                     </li>
-                                ))}
+                                )) : (
+                                    <div className={styles['non-qna']}>
+                                        <div className={styles['non-container']}>
+                                            <Notice />
+                                            <div className={styles['explain']}>
+                                                수익금 내역이 없습니다.
+                                        </div>
+                                        </div>
+                                    </div>
+                                )}
                             </ul>
                         </div>
                     </div>

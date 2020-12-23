@@ -15,7 +15,7 @@
             border: 1px solid #ebebeb;
             transition: opacity, .15s ease-in-out;
             .icon {
-                width: 56px;
+                min-width: 56px;
                 height: 56px;
                 border: 1px solid #ebebeb;
                 border-radius: 50%;
@@ -34,6 +34,7 @@
                     font-weight: 500;
                     color: #333333;
                     margin-bottom: 3px;
+                    word-break: keep-all;
                 }
                 .date {
                     font-size: 12px;

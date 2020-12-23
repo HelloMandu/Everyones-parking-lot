@@ -77,10 +77,7 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
                 if (data.msg === 'success') {
                     openDialog(
-                        `${place_id ? '수정' : '등록'}완료`,
-                        `주차공간 ${
-                            place_id ? '수정' : '등록'
-                        }을 완료했습니다.`,
+                        `성공적으로 주차공간 ${place_id ? '수정' : '등록'}을 완료했습니다.`,
                         () => {
                             if (place_id) {
                                 dispatch(updateMyParkingItem(data.place));
@@ -92,14 +89,14 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     );
                 } else {
                     openDialog(
-                        `${enrollState}실패`,
                         `주차공간 ${enrollState}에 실패했습니다.`,
+                        ''
                     );
                 }
             } catch (e) {
                 openDialog(
-                    `${enrollState}실패`,
                     `주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`,
+                    ''
                 );
             }
         }

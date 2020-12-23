@@ -125,7 +125,7 @@ const QNAWriteContainer = () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         const response = await requestPostWriteQNA(JWT_TOKEN, email, subject, question, parkingPicture.current !== undefined ? parkingPicture.current.fileList : null);
         if (response.msg === 'success') {
-            openDialog("1:1문의 작성 완료", "", () => history.replace(Paths.main.support.qna));
+            openDialog('성공적으로 문의를 작성하였습니다.', "", () => history.replace(Paths.main.support.qna));
         } else {
             openDialog(response.msg, response.sub);
         }
