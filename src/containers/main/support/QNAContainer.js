@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
 import classnames from 'classnames/bind';
-/* Library */
-
-import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading';
-/* Hooks */
 
 import styles from './QNAContainer.module.scss';
 import Notice from '../../../static/asset/svg/Notice';
 /* StyleSheets */
 
-import useToken from '../../../hooks/useToken';
-/* hooks */
-
 import { Paths } from '../../../paths';
 /* Paths */
-
-import { requestGetQNAList } from '../../../api/qna';
-/* API */
 
 import { getFormatDateNanTime } from '../../../lib/calculateDate';
 /* Lib */
@@ -42,7 +31,7 @@ const QNAItems = ({ QNAList }) => {
     return (
         <ul className={styles['container']}>
             {QNAList.map(
-                ({ qna_id, updatedAt, subject, user, hit, status }) => (
+                ({ qna_id, createdAt, subject, user, hit, status }) => (
                     <Link
                         to={Paths.main.support.qna_detail + `?id=${qna_id}`}
                         key={qna_id}
@@ -52,7 +41,7 @@ const QNAItems = ({ QNAList }) => {
                             className={styles['item-area']}
                         >
                             <div className={styles['date']}>
-                                {getFormatDateNanTime(updatedAt)}
+                                {getFormatDateNanTime(createdAt)}
                             </div>
                             <div className={styles['title']}>{subject}</div>
                             <div className={styles['bottom']}>
@@ -74,51 +63,22 @@ const QNAItems = ({ QNAList }) => {
     );
 };
 
-const QNAContainer = () => {
-    const history = useHistory();
-    const openDialog = useDialog();
-    const TOKEN = useToken();
-    const [onLoading, offLoading] = useLoading();
-
-    const [QNAList, setQNSList] = useState([]);
-
-    useEffect(()=>{
-        const requesetQnaList = async () => {
-            if(TOKEN){
-                onLoading('qna')
-                const {data} = requestGetQNAList('qna', TOKEN);
-                if (data.msg === 'success') {
-                    setQNSList(data.qnas);
-                } else {
-                    openDialog('1:1문의 오류', '', () => {
-                        history.goBack();
-                    });
-                }
-                offLoading('qna');
-            }
-        }
-        requesetQnaList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+const QNAContainer = ({ QNAList }) => {
     return (
         <>
-            {TOKEN !== null && (
-                <>
-                    <Header />
-                    {QNAList.length !== 0 ? (
-                        <QNAItems QNAList={QNAList} />
-                    ) : (
-                        <div className={styles['non-qna']}>
-                            <div className={styles['non-container']}>
-                                <Notice />
-                                <div className={styles['explain']}>
-                                    등록된 1:1 문의가 없습니다.
-                                </div>
-                            </div>
+            <Header />
+            {QNAList.length !== 0 ? (
+                <QNAItems QNAList={QNAList} />
+            ) : (
+                    <div className={styles['non-qna']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                등록된 1:1 문의가 없습니다.
                         </div>
-                    )}
-                </>
-            )}
+                        </div>
+                    </div>
+                )}
         </>
     );
 };

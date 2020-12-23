@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { ButtonBase } from '@material-ui/core';
-import useSWR from 'swr';
 /* Library */
 
 import styles from './NoticeContainer.module.scss';
@@ -11,15 +10,8 @@ import Notice from '../../../static/asset/svg/Notice';
 import { getFormatDateNanTime } from '../../../lib/calculateDate';
 /* Lib */
 
-import { useDialog } from '../../../hooks/useDialog';
-import useLoading from '../../../hooks/useLoading';
-/* Hooks */
-
 import { Paths } from '../../../paths';
 /* Paths */
-
-import { requestGetNoticeList } from '../../../api/notice';
-/* API */
 
 const NoticeItems = ({ noticeList }) => {
 
@@ -42,27 +34,7 @@ const NoticeItems = ({ noticeList }) => {
     )
 }
 
-const NoticeContainer = () => {
-
-    const openDialog = useDialog();
-    const history = useHistory();
-    const [onLoading, offLoading] = useLoading();
-
-    const [noticeList, setNoticeList] = useState([]);
-
-    const { data } = useSWR(['notice'], requestGetNoticeList);
-    useEffect(() => {
-        if (!data) onLoading('notice');
-        if (data !== undefined) {
-            offLoading('notice');
-            if (data.msg === 'success') {
-                setNoticeList(data.notices);
-            } else {
-                openDialog("공지사항 요청 오류", "", () => history.goBack());
-            }
-        }
-        // eslint-disable-next-line
-    }, [data])
+const NoticeContainer = ({noticeList}) => {
 
     return (
         <>

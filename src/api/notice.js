@@ -9,7 +9,6 @@ export const requestGetNoticeList = async (URL) => {
         * 응답: notices = [공지사항 Array...]
     */
     const response = await axios.get(Paths.api + URL);
-
     return response.data;
 }
 export const requestGetDetailNotice = async (notice_id) => {
