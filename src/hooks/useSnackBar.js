@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { closeSnackBar, openSnackBar } from '../store/snackbar';
 
@@ -18,18 +18,21 @@ const variantReducer = (variant) => {
 }
 
 const useSnackBar = () => {
+    const lastCloseAnimate = useRef(null);
     const dispatch = useDispatch();
-    const handleClose = useCallback(
-        () => dispatch(closeSnackBar()),
-        [dispatch],
-    );
-    const handleOpen = useCallback(
-        (message, variant) => {
-            setTimeout(() => dispatch(openSnackBar({message, variant: variantReducer(variant)})), 500);
-            setTimeout(handleClose, 2000);
-        },
-        [dispatch, handleClose],
-    );
+    const handleClose = useCallback(() => {
+        dispatch(closeSnackBar());
+        clearTimeout(lastCloseAnimate.current);
+    }, [dispatch]);
+    
+    const handleOpen = useCallback((message, variant) => {
+        setTimeout(() => dispatch(openSnackBar({ message, variant: variantReducer(variant) })), 200);
+        if (lastCloseAnimate.current) {
+            clearTimeout(lastCloseAnimate.current);
+        }
+        lastCloseAnimate.current = setTimeout(handleClose, 2000);
+    }, [dispatch, handleClose]);
+
     return [handleOpen, handleClose];
 };
 
