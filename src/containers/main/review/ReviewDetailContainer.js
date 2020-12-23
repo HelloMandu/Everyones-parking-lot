@@ -73,7 +73,6 @@ const ReviewDetailContainer = ({ match, location }) => {
                 }
             } catch (error) {
                 console.error(error);
-                offLoading('writeComment');
             }
             offLoading('writeComment');
         }
@@ -100,7 +99,6 @@ const ReviewDetailContainer = ({ match, location }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('getReview');
         }
         offLoading('getReview');
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +128,6 @@ const ReviewDetailContainer = ({ match, location }) => {
                         }
                     } catch (e) {
                         console.error(e);
-                        offLoading('deletComment');
                     }
                 },
                 true,

@@ -42,7 +42,6 @@ const QNADetailContainer = () => {
                 setQNADetail(response.qna);
             } catch (e) {
                 console.error(e);
-                offLoading('qna_detail');
             }
         }
         offLoading('qna_detail');

@@ -123,7 +123,6 @@ const DetailContainer = ({ modal, place_id }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading(LOADING_DETAIL);
         }
         offLoading(LOADING_DETAIL);
     }, [offLoading, onLoading, place_id]);

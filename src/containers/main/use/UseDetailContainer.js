@@ -106,7 +106,6 @@ const UseDetailContainer = ({ match, location }) => {
             }
         } catch (e) {
             console.error(e);
-            offLoading('getUseDetail');
         }
         offLoading('getUseDetail');
         // eslint-disable-next-line react-hooks/exhaustive-deps
