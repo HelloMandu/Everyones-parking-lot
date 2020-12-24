@@ -103,6 +103,7 @@ const WithdrawModal = ({
                     );
                     setPointList((pointList) => pointLog.concat(pointList));
                     dataLength.current += 1;
+                    window.scrollTo(0, 0)
                 } else {
                     handleSnackBar('출금신청 도중에 오류가 발생했습니다', 'error');
                 }

@@ -14,7 +14,6 @@ import Slide from '@material-ui/core/Slide';
 import styles from './DatePickerModal.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import FixedButton from '../button/FixedButton';
-import {Paths} from '../../paths';
 //lib
 import { getDateRange, calculateDate } from '../../lib/calculateDate';
 
@@ -338,7 +337,9 @@ const DatePickerModal = (props) => {
                 button_name={'시간 설정 완료'}
                 onClick={() => {
                     props.onClick(s_date, e_date, total_date);
-                    history.replace(`${Paths.main.detail}?place_id=${props.place_id}&start_time=${s_date.DATE} ${s_date.TIME}&end_time=${e_date.DATE} ${e_date.TIME}`)
+                    props.setStartQueryDate(`${s_date.DATE} ${s_date.TIME}`)
+                    props.setEndQueryDate(`${e_date.DATE} ${e_date.TIME}`)
+                    history.goBack();
                 }}
             />
         </Dialog>

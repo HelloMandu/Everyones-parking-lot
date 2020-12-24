@@ -92,6 +92,8 @@ const DetailContainer = ({ modal, place_id }) => {
     const [index, setIndex] = useState(0);
     const [start_date, setStartDate] = useState(null);
     const [end_date, setEndDate] = useState(null);
+    const [startQueryDate, setStartQueryDate] = useState(null);
+    const [endQueryDate, setEndQueryDate] = useState(null);
     const [total_date, setTotalDate] = useState(null);
     const [price, setPrice] = useState(0);
     const [place, setPlace] = useState(null);
@@ -236,6 +238,11 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [total_date, place]);
 
     useEffect(() => {
+        if (!openDatePicker) {
+        }
+    }, [openDatePicker]);
+
+    useEffect(() => {
         if (price < 0) {
             openDialog(
                 '잘못된 접근입니다.',
@@ -282,229 +289,265 @@ const DetailContainer = ({ modal, place_id }) => {
             );
         }
     }, [location]);
+    useEffect(() => {
+        if (openDatePicker) {
+            return;
+        }
+        else if (startQueryDate && endQueryDate) {
+            history.replace(
+                `${Paths.main.detail}?place_id=${place_id}&start_time=${startQueryDate}&end_time=${endQueryDate}`,
+            );
+        }
+    }, [endQueryDate, history, openDatePicker, place_id, startQueryDate]);
     return (
         <>
-            <div className={cx('header', { headerOn })} ref={headerRef}>
-                <div className={styles['content']}>
-                    <IconButton
-                        className={styles['back-btn']}
-                        onClick={() => history.goBack()}
-                    >
-                        <Arrow />
-                    </IconButton>
-                    <div className={styles['title']}>
-                        {place && place.place_name}
-                    </div>
-                </div>
-            </div>
-            <div className={styles['wrapper']}>
-                <IconButton
-                    className={styles['back']}
-                    onClick={() => history.goBack()}
-                >
-                    <Arrow white={true}></Arrow>
-                </IconButton>
-                {place && (
-                    <ButtonBase
-                        component="div"
-                        className={styles['parking-img']}
-                        style={{
-                            backgroundImage: `url('${
-                                place && imageFormat(place.place_images[0])
-                            }')`,
-                        }}
-                        onClick={handleImageView}
-                    />
-                )}
-                <div className={styles['container']}>
-                    <div className={styles['pd-box']}>
-                        <div className={styles['item-table']}>
-                            <div className={styles['item-name']}>
-                                <h1>{place && place.place_name}</h1>
-                                <div className={styles['item-state']}>
-                                    대여가능
-                                </div>
-                            </div>
-                            <div className={styles['item-rating']}>
-                                <ReviewRating
-                                    rating={
-                                        reviews.length
-                                            ? parseFloat(
-                                                  reviews.reduce(
-                                                      (prev, cur) =>
-                                                          prev +
-                                                          parseFloat(
-                                                              cur.review_rating,
-                                                          ),
-                                                      0,
-                                                  ) / reviews.length,
-                                              ).toPrecision(2)
-                                            : 0.0
-                                    }
-                                />
-                                <div className={styles['item-review']}>
-                                    리뷰({reviews.length})
-                                </div>
-                            </div>
-                            <div className={styles['function-box']}>
-                                <CircleButton
-                                    src={shared_icon}
-                                    txt={'공유'}
-                                    onClick={handleShare}
-                                />
-                                <CircleButton
-                                    src={guid_icon}
-                                    txt={'안내'}
-                                    onClick={onClickKakaoNavi}
-                                />
-                                <CircleButton
-                                    src={roadview_icon}
-                                    txt={'로드뷰'}
-                                    onClick={onClickRoadview}
-                                />
+            {place && (
+                <>
+                    <div className={cx('header', { headerOn })} ref={headerRef}>
+                        <div className={styles['content']}>
+                            <IconButton
+                                className={styles['back-btn']}
+                                onClick={() => history.goBack()}
+                            >
+                                <Arrow />
+                            </IconButton>
+                            <div className={styles['title']}>
+                                {place.place_name}
                             </div>
                         </div>
                     </div>
-                    <div className={styles['parking-detail-info']}>
-                        <div className={cx('price', 'space-between')}>
-                            <div className={styles['txt']}>주차요금</div>
-                            <div className={styles['value']}>
-                                <div className={styles['item-price']}>
-                                    {numberFormat(place && place.place_fee)}원
-                                </div>
-                                <div className={styles['item-base-time']}>
-                                    /30분 기준
-                                </div>
-                            </div>
-                        </div>
-                        <div className={cx('shared-time', 'space-between')}>
-                            <div className={styles['txt']}>대여시간</div>
-                            <div className={styles['value']}>
-                                {start_date && end_date
-                                    ? start_date.DAY + ' ~ ' + end_date.DAY
-                                    : '대여시간을 설정해주세요.'}
-                                <ButtonBase
-                                    className={styles['date-picker']}
-                                    onClick={() => {
-                                        if (
-                                            place &&
-                                            place.user_id === user_id
-                                        ) {
-                                            return;
-                                        }
-                                        onClickDatePicker();
-                                    }}
-                                >
-                                    <img src={datepicker_icon} alt="date" />
-                                </ButtonBase>
-                            </div>
-                        </div>
-                        <div className={cx('operation-time', 'space-between')}>
-                            <div className={styles['txt']}>운영시간</div>
-                            <div className={styles['value']}>
-                                {place &&
-                                    `${getFormatDateTime(
-                                        place.oper_start_time,
-                                    )} ~  ${getFormatDateTime(
-                                        place.oper_end_time,
-                                    )}`}
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles['tab-wrapper']}>
-                        <CustomTabs
-                            idx={index}
-                            categories={[
-                                { ca_name: '정보' },
-                                { ca_name: '리뷰' },
-                            ]}
-                            onChange={(e, index) => setIndex(index)}
+                    <div className={styles['wrapper']}>
+                        <IconButton
+                            className={styles['back']}
+                            onClick={() => history.goBack()}
+                        >
+                            <Arrow white={true}></Arrow>
+                        </IconButton>
+
+                        <ButtonBase
+                            component="div"
+                            className={styles['parking-img']}
+                            style={{
+                                backgroundImage: `url('${imageFormat(
+                                    place.place_images[0],
+                                )}')`,
+                            }}
+                            onClick={handleImageView}
                         />
-                        {index === 0 && (
-                            <div className={styles['detail-info']}>
-                                <InfoItem
-                                    txt={'주소'}
-                                    value={place && place.addr}
-                                />
-                                <InfoItem
-                                    txt={'주차장 종류'}
-                                    value={getParkingType(
-                                        place && place.place_type,
+
+                        <div className={styles['container']}>
+                            <div className={styles['pd-box']}>
+                                <div className={styles['item-table']}>
+                                    <div className={styles['item-name']}>
+                                        <h1>{place && place.place_name}</h1>
+                                        <div className={styles['item-state']}>
+                                            대여가능
+                                        </div>
+                                    </div>
+                                    <div className={styles['item-rating']}>
+                                        <ReviewRating
+                                            rating={
+                                                reviews.length
+                                                    ? parseFloat(
+                                                          reviews.reduce(
+                                                              (prev, cur) =>
+                                                                  prev +
+                                                                  parseFloat(
+                                                                      cur.review_rating,
+                                                                  ),
+                                                              0,
+                                                          ) / reviews.length,
+                                                      ).toPrecision(2)
+                                                    : 0.0
+                                            }
+                                        />
+                                        <div className={styles['item-review']}>
+                                            리뷰({reviews.length})
+                                        </div>
+                                    </div>
+                                    <div className={styles['function-box']}>
+                                        <CircleButton
+                                            src={shared_icon}
+                                            txt={'공유'}
+                                            onClick={handleShare}
+                                        />
+                                        <CircleButton
+                                            src={guid_icon}
+                                            txt={'안내'}
+                                            onClick={onClickKakaoNavi}
+                                        />
+                                        <CircleButton
+                                            src={roadview_icon}
+                                            txt={'로드뷰'}
+                                            onClick={onClickRoadview}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles['parking-detail-info']}>
+                                <div className={cx('price', 'space-between')}>
+                                    <div className={styles['txt']}>
+                                        주차요금
+                                    </div>
+                                    <div className={styles['value']}>
+                                        <div className={styles['item-price']}>
+                                            {numberFormat(place.place_fee)}원
+                                        </div>
+                                        <div
+                                            className={styles['item-base-time']}
+                                        >
+                                            /30분 기준
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    className={cx(
+                                        'shared-time',
+                                        'space-between',
                                     )}
-                                />
-                                <InfoItem
-                                    txt={'추가 요금'}
-                                    value={`30분당 ${numberFormat(
-                                        place && place.place_fee,
-                                    )}원`}
-                                />
-                                <InfoItem
-                                    txt={'추가 전달 사항'}
-                                    value={place && place.place_comment}
-                                />
+                                >
+                                    <div className={styles['txt']}>
+                                        대여시간
+                                    </div>
+                                    <div className={styles['value']}>
+                                        {start_date && end_date
+                                            ? start_date.DAY +
+                                              ' ~ ' +
+                                              end_date.DAY
+                                            : '대여시간을 설정해주세요.'}
+                                        <ButtonBase
+                                            className={styles['date-picker']}
+                                            onClick={() => {
+                                                if (place.user_id === user_id) {
+                                                    return;
+                                                }
+                                                onClickDatePicker();
+                                            }}
+                                        >
+                                            <img
+                                                src={datepicker_icon}
+                                                alt="date"
+                                            />
+                                        </ButtonBase>
+                                    </div>
+                                </div>
+                                <div
+                                    className={cx(
+                                        'operation-time',
+                                        'space-between',
+                                    )}
+                                >
+                                    <div className={styles['txt']}>
+                                        운영시간
+                                    </div>
+                                    <div className={styles['value']}>
+                                        {`${getFormatDateTime(
+                                            place.oper_start_time,
+                                        )} ~  ${getFormatDateTime(
+                                            place.oper_end_time,
+                                        )}`}
+                                    </div>
+                                </div>
                             </div>
-                        )}
-                        {index === 1 && (
-                            <div className={styles['review-list']}>
-                                <DetailReviewList review_list={reviews} />
+                            <div className={styles['tab-wrapper']}>
+                                <CustomTabs
+                                    idx={index}
+                                    categories={[
+                                        { ca_name: '정보' },
+                                        { ca_name: '리뷰' },
+                                    ]}
+                                    onChange={(e, index) => setIndex(index)}
+                                />
+                                {index === 0 && (
+                                    <div className={styles['detail-info']}>
+                                        <InfoItem
+                                            txt={'주소'}
+                                            value={place.addr}
+                                        />
+                                        <InfoItem
+                                            txt={'주차장 종류'}
+                                            value={getParkingType(
+                                                place.place_type,
+                                            )}
+                                        />
+                                        <InfoItem
+                                            txt={'추가 요금'}
+                                            value={`30분당 ${numberFormat(
+                                                place.place_fee,
+                                            )}원`}
+                                        />
+                                        <InfoItem
+                                            txt={'추가 전달 사항'}
+                                            value={place.place_comment}
+                                        />
+                                    </div>
+                                )}
+                                {index === 1 && (
+                                    <div className={styles['review-list']}>
+                                        <DetailReviewList
+                                            review_list={reviews}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
-                </div>
-            </div>
-            {place &&
-                (place.user_id === user_id ? (
-                    <FixedButton
-                        button_name={'수정하기'}
-                        disable={false}
-                        onClick={() =>
-                            history.push(
-                                `${Paths.main.parking.modify}?place_id=${place.place_id}`,
-                            )
-                        }
-                    ></FixedButton>
-                ) : (
-                    <LikeButton
-                        likes={likes}
-                        button_name={
-                            start_date && end_date
-                                ? `${numberFormat(price)}원 대여신청`
-                                : '대여시간을 설정해 주세요.'
-                        }
-                        disable={start_date ? false : true}
-                        likeStatus={likeStatus}
-                        handleLike={handleLikeStatus}
-                        onClick={onClickPayment}
+                    {place.user_id === user_id ? (
+                        <FixedButton
+                            button_name={'수정하기'}
+                            disable={false}
+                            onClick={() =>
+                                history.push(
+                                    `${Paths.main.parking.modify}?place_id=${place.place_id}`,
+                                )
+                            }
+                        ></FixedButton>
+                    ) : (
+                        <LikeButton
+                            likes={likes}
+                            button_name={
+                                start_date && end_date
+                                    ? `${numberFormat(price)}원 대여신청`
+                                    : '대여시간을 설정해 주세요.'
+                            }
+                            disable={start_date ? false : true}
+                            likeStatus={likeStatus}
+                            handleLike={handleLikeStatus}
+                            onClick={onClickPayment}
+                        />
+                    )}
+                    <DatePickerModal
+                        open={openDatePicker}
+                        handleClose={() => history.goBack()}
+                        start_date={start_date}
+                        end_date={end_date}
+                        oper_start={place.oper_start_time}
+                        oper_end={place.oper_end_time}
+                        onClick={onClickSetDate}
+                        place_id={place_id}
+                        setStartQueryDate={setStartQueryDate}
+                        setEndQueryDate={setEndQueryDate}
                     />
-                ))}
-            <DatePickerModal
-                open={openDatePicker}
-                handleClose={() => history.goBack()}
-                start_date={start_date}
-                end_date={end_date}
-                oper_start={place && place.oper_start_time}
-                oper_end={place && place.oper_end_time}
-                onClick={onClickSetDate}
-                place_id={place_id}
-            />
-            <RoadviewModal
-                open={openLoadview}
-                handleClose={() => history.goBack()}
-                title={place && place.place_name}
-                lat={place && place.lat}
-                lng={place && place.lng}
-            />
-            <Shared
-                open={shareOpen}
-                onToggle={handleShare}
-                placeInfo={place}
-            ></Shared>
-            <ImageModal
-                title={place && place.place_name}
-                images={place && imageFormat(place.place_images)}
-                open={isOpenImageView}
-                handleClose={handleImageView}
-            ></ImageModal>
+                    <RoadviewModal
+                        open={openLoadview}
+                        handleClose={() => history.goBack()}
+                        title={place.place_name}
+                        lat={place.lat}
+                        lng={place.lng}
+                    />
+                    <Shared
+                        open={shareOpen}
+                        onToggle={handleShare}
+                        placeInfo={place}
+                    ></Shared>
+                    <ImageModal
+                        title={place.place_name}
+                        images={imageFormat(place.place_images)}
+                        open={isOpenImageView}
+                        handleClose={handleImageView}
+                    ></ImageModal>
+                </>
+            )}
         </>
     );
 };

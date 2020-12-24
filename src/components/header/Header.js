@@ -6,11 +6,10 @@ import Arrow from '../../static/asset/svg/Arrow';
 import { IconButton } from '@material-ui/core';
 
 import styles from './Header.module.scss';
-import { Paths } from '../../paths';
 
 const cx = cn.bind(styles);
 
-const Header = ({ title, backHome = false }) => {
+const Header = ({ title }) => {
     const history = useHistory();
     const headerRef = useRef(null);
     const [shadow, setShadow] = useState(false);
@@ -25,11 +24,7 @@ const Header = ({ title, backHome = false }) => {
             <div className={cx('content', { shadow })}>
                 <IconButton
                     className={styles['back-btn']}
-                    onClick={() =>
-                        backHome
-                            ? history.replace(Paths.main.index)
-                            : history.goBack()
-                    }
+                    onClick={() =>history.goBack()}
                 >
                     <Arrow />
                 </IconButton>
