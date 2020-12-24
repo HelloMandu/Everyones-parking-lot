@@ -127,7 +127,7 @@ const UseDetailContainer = ({ match, location }) => {
                         <div className={cx('title')}>
                             {order.place.place_name}
                         </div>
-                        <div className={cx('rendal-status')}>
+                        <div className={cx('rental-status')}>
                             {rentalStatus(order)}
                         </div>
                     </div>

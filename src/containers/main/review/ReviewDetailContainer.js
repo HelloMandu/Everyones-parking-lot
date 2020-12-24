@@ -54,7 +54,7 @@ const ReviewDetailContainer = ({ match, location }) => {
     const [handleSnackbarOpen] = useSnackBar();
     const user = useSelector((state) => state.user);
     const [onLoading, offLoading] = useLoading();
-    const [list, setList] = useState([])
+    const [list, setList] = useState([]);
 
     const onClickSubmit = useCallback(async () => {
         const token = localStorage.getItem('user_id');
@@ -71,7 +71,11 @@ const ReviewDetailContainer = ({ match, location }) => {
                         setCommentList(commentList.concat(data.comment));
                         onChangeComment('');
                         commentRef.current.value = '';
-                        handleSnackbarOpen('성공적으로 작성하였습니다.', 'success', false);
+                        handleSnackbarOpen(
+                            '성공적으로 작성하였습니다.',
+                            'success',
+                            false,
+                        );
                     } else {
                         openDialog('댓글 작성을 실패했습니다.');
                     }
@@ -87,14 +91,14 @@ const ReviewDetailContainer = ({ match, location }) => {
     }, [comment, commentList, review_id, openDialog]);
 
     const fetchCommentList = useCallback(() => {
-        const LIMIT = 3
-        const length = list.length
-        const fetchData = commentList.slice(length, length + LIMIT)
+        const LIMIT = 3;
+        const length = list.length;
+        const fetchData = commentList.slice(length, length + LIMIT);
 
-        if(fetchData.length > 0){
-            setList(list.concat(fetchData))
+        if (fetchData.length > 0) {
+            setList(list.concat(fetchData));
         }
-    }, [list, commentList])
+    }, [list, commentList]);
 
     const getReview = useCallback(async () => {
         onLoading('getReview');
@@ -139,7 +143,11 @@ const ReviewDetailContainer = ({ match, location }) => {
 
                         if (data.msg === 'success') {
                             history.replace(Paths.main.review.list);
-                            handleSnackbarOpen('리뷰가 삭제되었습니다', 'info', false);
+                            handleSnackbarOpen(
+                                '리뷰가 삭제되었습니다',
+                                'info',
+                                false,
+                            );
                         } else {
                             openDialog(data.msg);
                         }
@@ -156,7 +164,7 @@ const ReviewDetailContainer = ({ match, location }) => {
     }, [history, openDialog, review]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(fetchCommentList, [commentList])
+    useEffect(fetchCommentList, [commentList]);
     useScrollEnd(fetchCommentList);
     useScrollRemember(location.pathname);
 
@@ -183,8 +191,10 @@ const ReviewDetailContainer = ({ match, location }) => {
                     </div>
                     <div className={cx('bar')} />
                     <div className={cx('area')}>
-                        <div className={cx('title')}>
-                            {review.place.place_name}
+                        <div className={cx('title-wrapper')}>
+                            <div className={cx('title')}>
+                                {review.place.place_name}
+                            </div>
                             <Rating
                                 className={'rating'}
                                 value={parseFloat(review.review_rating)}
@@ -225,40 +235,40 @@ const ReviewDetailContainer = ({ match, location }) => {
                             </div>
                         ) : (
                             list.map((item) => (
-                                    <div
-                                        key={item.comment_id}
-                                        className={cx('comment-item')}
-                                    >
-                                        <img
-                                            src={DBImageFormat(
-                                                item.user &&
+                                <div
+                                    key={item.comment_id}
+                                    className={cx('comment-item')}
+                                >
+                                    <img
+                                        src={DBImageFormat(
+                                            item.user &&
                                                 item.user.profile_image,
-                                                Profile,
-                                            )}
-                                            alt=""
-                                        />
-                                        <div className={cx('user-area')}>
-                                            <div className={cx('user-id')}>
-                                                {item.user
-                                                    ? item.user.name
-                                                    : '탈퇴한 회원입니다.'}
-                                            </div>
-                                            <div className={cx('date')}>
-                                                {item.updatedAt
-                                                    ? getFormatDateTime(
-                                                        item.updatedAt,
-                                                    )
-                                                    : getFormatDateTime(
-                                                        item.createdAt,
-                                                    )}
-                                            </div>
+                                            Profile,
+                                        )}
+                                        alt=""
+                                    />
+                                    <div className={cx('user-area')}>
+                                        <div className={cx('user-id')}>
+                                            {item.user
+                                                ? item.user.name
+                                                : '탈퇴한 회원입니다.'}
                                         </div>
-                                        <div className={cx('comment-body')}>
-                                            {item.comment_body}
+                                        <div className={cx('date')}>
+                                            {item.updatedAt
+                                                ? getFormatDateTime(
+                                                      item.updatedAt,
+                                                  )
+                                                : getFormatDateTime(
+                                                      item.createdAt,
+                                                  )}
                                         </div>
                                     </div>
-                                ))
-                            )}
+                                    <div className={cx('comment-body')}>
+                                        {item.comment_body}
+                                    </div>
+                                </div>
+                            ))
+                        )}
                         {!isEmpty(user) ? (
                             <>
                                 <input
@@ -280,10 +290,10 @@ const ReviewDetailContainer = ({ match, location }) => {
                                 </ButtonBase>
                             </>
                         ) : (
-                                <p className={styles['not-user']}>
-                                    로그인 후 댓글을 남기실 수 있습니다.
-                                </p>
-                            )}
+                            <p className={styles['not-user']}>
+                                로그인 후 댓글을 남기실 수 있습니다.
+                            </p>
+                        )}
                     </div>
                 </div>
                 <ImageModal

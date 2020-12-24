@@ -28,14 +28,21 @@
             }
         }
 
-        .title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 8px;
+        .title-wrapper{
+            width: 100%;
+            position: relative;
+
+            .title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 8px;
+                width: 60%;
+            }
 
             :global(.rating) {
-                float: right;
-                line-height: 18px;
+                position: absolute;
+                top: 4px;
+                right: 0;
             }
         }
 

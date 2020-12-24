@@ -25,10 +25,12 @@
             font-weight: bold;
             margin-left: 16px;
             display: inline-block;
+            width: 60%;
         }
 
         .rating {
             float: right;
+            transform: translateY(10%);
             margin-right: 20px;
         }
 
