@@ -1,27 +1,23 @@
 .success {
     :global(.MuiPaper-root) {
-        font-size: 1.333rem;
         background-color: #4caf50;
     }
 }
 
 .error {
     :global(.MuiPaper-root) {
-        font-size: 1.333rem;
         background-color: #f44336;
     }
 }
 
 .warning {
     :global(.MuiPaper-root) {
-        font-size: 1.333rem;
         background-color: #ff9800;
     }
 }
 
 .info {
     :global(.MuiPaper-root) {
-        font-size: 1.333rem;
         background-color: #2196f3;
     }
 }
@@ -29,5 +25,12 @@
     margin-bottom: 60px;
     @media (max-width: 600px) {
         margin-bottom: 74px;
+    }
+}
+
+.snackbar {
+    :global(.MuiPaper-root) {
+        // transition: all .225s ease-in-out !important;
+        font-size: 1.333rem;
     }
 }

@@ -17,7 +17,7 @@ const SnackBar = () => {
     );
     return (
         <Snackbar
-            className={cx(variant, { up })}
+            className={cx('snackbar', variant, { up })}
             open={open}
             autoHideDuration={6000}
             TransitionComponent={TransitionLeft}
