@@ -61,6 +61,7 @@ const ReviewWriteContainer = () => {
                     setExist(true);
                     setReviewBody(review.review_body);
                     setReview(review);
+                    setRating(parseFloat(review.review_rating))
                 } else setExist(false);
             }
         } catch (e) {
@@ -145,9 +146,8 @@ const ReviewWriteContainer = () => {
                         <div className={cx('rating')}>
                             <Rating
                                 name="half-rating"
-                                defaultValue={5}
                                 precision={0.5}
-                                value={review ? parseFloat(review.review_rating) : rating}
+                                value={rating}
                                 onChange={(event, newValue) => {
                                     setRating(newValue);
                                 }}

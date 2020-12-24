@@ -295,20 +295,24 @@ const UseDetailContainer = ({ match, location }) => {
                     </div>
 
                     <div className={cx('button-area')}>
-                        <BasicButton
-                            button_name={
-                                status ? rentalStatus(order) : '대여 취소하기'
-                            }
-                            disable={status}
-                            color={status ? 'black' : 'white'}
-                            onClick={() =>
-                                !status &&
-                                dispatchHandle({
-                                    type: 'refund',
-                                    payload: true,
-                                })
-                            }
-                        />
+                        {rentalStatus(order) !== '이용중' && (
+                            <BasicButton
+                                button_name={
+                                    status
+                                        ? rentalStatus(order)
+                                        : '대여 취소하기'
+                                }
+                                disable={status}
+                                color={status ? 'black' : 'white'}
+                                onClick={() =>
+                                    !status &&
+                                    dispatchHandle({
+                                        type: 'refund',
+                                        payload: true,
+                                    })
+                                }
+                            />
+                        )}
                         {!status && (
                             <Link
                                 to={
