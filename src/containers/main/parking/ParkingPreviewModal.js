@@ -11,8 +11,6 @@ import CustomTabs from '../../../components/nav/CustomTabs';
 import FixedButton from '../../../components/button/FixedButton';
 import { numberFormat } from '../../../lib/formatter';
 
-import { Paths } from '../../../paths';
-
 import {
     getMyParkingList,
     updateMyParkingItem,
@@ -80,7 +78,7 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     } else {
                         dispatch(getMyParkingList(JWT_TOKEN));
                     }
-                    history.replace(Paths.main.parking.manage);
+                    history.go(place_id ? -3 : -2);
                     handleSnackbar(`성공적으로 주차공간 ${enrollState}을 완료했습니다.`, 'success', false);
                 } else {
                     handleSnackbar(`주차공간 ${enrollState}에 실패했습니다.`, 'error', false);
