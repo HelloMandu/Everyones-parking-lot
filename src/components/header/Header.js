@@ -24,7 +24,7 @@ const Header = ({ title }) => {
             <div className={cx('content', { shadow })}>
                 <IconButton
                     className={styles['back-btn']}
-                    onClick={() => history.goBack()}
+                    onClick={() =>history.goBack()}
                 >
                     <Arrow />
                 </IconButton>

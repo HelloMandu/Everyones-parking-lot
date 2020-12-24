@@ -4,6 +4,7 @@
     @include container($pd-top);
     .parking-payment-area {
         padding: $padding-side;
+        word-break: keep-all;
     }
     padding-bottom: 140px;
     .parking-payment-wrapper {

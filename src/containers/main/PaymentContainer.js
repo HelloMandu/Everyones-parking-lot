@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ButtonBase } from '@material-ui/core';
 import qs from 'qs';
 
@@ -13,6 +13,7 @@ import { useDialog } from '../../hooks/useDialog';
 import { imageFormat, numberFormat } from '../../lib/formatter';
 import { requestGetPayInfo } from '../../api/payment';
 import { requestPostRental } from '../../api/rental';
+import { updateUser } from '../../store/user';
 
 import { Paths } from '../../paths/index';
 
@@ -36,16 +37,16 @@ const enroll = [
     {
         id: 1,
         checked: false,
-        description: '이용약관',
+        description: '개인정보취급방침',
         necessary: true,
-        policy: 0
+        policy: 1,
     },
     {
         id: 2,
         checked: false,
-        description: '개인정보취급방침',
+        description: '이용약관',
         necessary: true,
-        policy: 1
+        policy: 0,
     },
 ];
 
@@ -172,6 +173,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
     const { url, params } = match;
     const history = useHistory();
     const openDialog = useDialog();
+    const { point: userPoint } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
     const [isOpenCouponModal, handleCouponModal] = useModal(
         url,
         params.modal,
@@ -211,7 +214,10 @@ const ParkingEnrollContainer = ({ location, match }) => {
             if (value < 0) {
                 return;
             } else if (value > point || value > price - cp_price) {
-                openDialog('보유 포인트 이상의 금액은 사용하실 수 없습니다', '');
+                openDialog(
+                    '보유 포인트 이상의 금액은 사용하실 수 없습니다',
+                    '',
+                );
             } else {
                 setUsePoint(parseInt(value) || '');
             }
@@ -263,24 +269,14 @@ const ParkingEnrollContainer = ({ location, match }) => {
                 history.push(
                     `${Paths.main.payment_complete}?rental_id=${rental_id}`,
                 );
+                dispatch(updateUser('point', userPoint - usePoint));
             } else {
                 openDialog('결제실패', msg);
             }
         } catch (e) {
             console.error(e);
         }
-    }, [
-        JWT_TOKEN,
-        end_time,
-        history,
-        openDialog,
-        parkingInfo,
-        paymentType,
-        place_id,
-        selectedCoupon,
-        start_time,
-        usePoint,
-    ]);
+    }, [JWT_TOKEN, dispatch, end_time, history, openDialog, parkingInfo, paymentType, place_id, selectedCoupon, start_time, usePoint, userPoint]);
 
     const [onLoading, offLoading] = useLoading();
     const getPaymentInfo = useCallback(
@@ -319,7 +315,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
         [JWT_TOKEN],
     );
     useScrollTop();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => getPaymentInfo(place_id, start_time, end_time), []);
     return (
         <>

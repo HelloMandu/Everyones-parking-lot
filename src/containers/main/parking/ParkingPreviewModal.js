@@ -11,10 +11,6 @@ import CustomTabs from '../../../components/nav/CustomTabs';
 import FixedButton from '../../../components/button/FixedButton';
 import { numberFormat } from '../../../lib/formatter';
 
-import { Paths } from '../../../paths';
-
-import { useDialog } from '../../../hooks/useDialog';
-
 import {
     getMyParkingList,
     updateMyParkingItem,
@@ -25,6 +21,7 @@ import {
 } from '../../../api/place';
 import { getFormatDateTime } from '../../../lib/calculateDate';
 import { isEmpty } from '../../../lib/formatChecker';
+import useSnackBar from '../../../hooks/useSnackBar';
 
 import Arrow from '../../../static/asset/svg/Arrow';
 import guid_icon from '../../../static/asset/svg/detail/guid.svg';
@@ -64,10 +61,10 @@ const InfoItem = ({ txt, value }) => {
 
 const ParkingPreviewModal = ({ open, parkingInfo }) => {
     const history = useHistory();
-    const openDialog = useDialog();
     const dispatch = useDispatch();
     const { place_id } = parkingInfo;
     const enrollState = place_id ? '수정' : '등록';
+    const [handleSnackbar] = useSnackBar()
     const onClickEnrollParking = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
@@ -76,31 +73,21 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                     ? requestPutModifyParking(JWT_TOKEN, parkingInfo, place_id)
                     : requestPostEnrollParking(JWT_TOKEN, parkingInfo));
                 if (data.msg === 'success') {
-                    openDialog(
-                        `성공적으로 주차공간 ${place_id ? '수정' : '등록'}을 완료했습니다.`,
-                        () => {
-                            if (place_id) {
-                                dispatch(updateMyParkingItem(data.place));
-                            } else {
-                                dispatch(getMyParkingList(JWT_TOKEN));
-                            }
-                            history.replace(Paths.main.parking.manage);
-                        },
-                    );
+                    if (place_id) {
+                        dispatch(updateMyParkingItem(data.place));
+                    } else {
+                        dispatch(getMyParkingList(JWT_TOKEN));
+                    }
+                    history.go(place_id ? -3 : -2);
+                    handleSnackbar(`성공적으로 주차공간 ${enrollState}을 완료했습니다.`, 'success', false);
                 } else {
-                    openDialog(
-                        `주차공간 ${enrollState}에 실패했습니다.`,
-                        ''
-                    );
+                    handleSnackbar(`주차공간 ${enrollState}에 실패했습니다.`, 'error', false);
                 }
             } catch (e) {
-                openDialog(
-                    `주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`,
-                    ''
-                );
+                handleSnackbar(`주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`, 'error', false);
             }
         }
-    }, [dispatch, enrollState, history, openDialog, parkingInfo, place_id]);
+    }, [dispatch, enrollState, handleSnackbar, history, parkingInfo, place_id]);
     const [imgFile, setImgFile] = useState(null);
     useEffect(() => {
         const reader = new FileReader();

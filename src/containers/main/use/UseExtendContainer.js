@@ -61,7 +61,7 @@ const PaymentType = ({ paymentType, openTypeModal }) => {
             <div className={styles['parking-payment-wrapper']}>
                 <div className={cx('title-wrapper')}>
                     <div className={styles['title']}>결제수단</div>
-                    <div className={cx('precautions')}>결제전 주의사항</div>
+                    {/* <div className={cx('precautions')}>결제 전 주의사항</div> */}
                 </div>
                 <ButtonBase
                     className={styles['payment']}
@@ -320,6 +320,8 @@ const UseExtendContainer = ({ match, location }) => {
                         allCheckTitle={enrollTitle}
                         checkListProps={enroll}
                         setCheck={setChecked}
+                        url={Paths.main.use.extend}
+                        modal={params.modal}
                     ></CheckBox>
                 </div>
 

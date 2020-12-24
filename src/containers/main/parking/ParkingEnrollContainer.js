@@ -238,17 +238,23 @@ const TimeSelector = ({ title, date, hour, minute, onChange }) => {
     );
 };
 
-const OperatingTime = forwardRef(({props}, ref) => {
-    const [dateList, setDateList] = useState([]);
+const OperatingTime = forwardRef(({ parkingInfoInit }, ref) => {
+    const { oper_start_time, oper_end_time } = parkingInfoInit;
+    const [startDateList, setStartDateList] = useState([]);
+    const [endDateList, setEndDateList] = useState([]);
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
     const [startTime, onChangeStartTime] = useForm({
-        day: getFormatDate(new Date()),
+        day: getFormatDate(
+            oper_start_time ? new Date(oper_start_time) : new Date(),
+        ),
         hour: 0,
         minute: 0,
     });
     const [endTime, onChangeEndTime] = useForm({
-        day: getFormatDate(new Date()),
+        day: getFormatDate(
+            oper_end_time ? new Date(oper_end_time) : new Date(),
+        ),
         hour: 0,
         minute: 0,
     });
@@ -256,7 +262,16 @@ const OperatingTime = forwardRef(({props}, ref) => {
     const [startTimeFormat, setStartTimeFormat] = useState();
     const [endTimeFormat, setEndTimeFormat] = useState();
 
-    const perSelectList = dateList.map((value, index) => (
+    const perStartSelectList = startDateList.map((value, index) => (
+        <option
+            className={styles['select-item']}
+            key={index}
+            value={value.DATE}
+        >
+            {value.DAY}
+        </option>
+    ));
+    const perEndSelectList = endDateList.map((value, index) => (
         <option
             className={styles['select-item']}
             key={index}
@@ -281,13 +296,36 @@ const OperatingTime = forwardRef(({props}, ref) => {
     }));
 
     useEffect(() => {
-        const startDate = new Date();
-        const endDate = new Date(
-            startDate.getFullYear(),
-            startDate.getMonth() + 1,
-            startDate.getDate(),
+        const startDate = oper_start_time
+            ? new Date(oper_start_time)
+            : new Date();
+        const endDate = oper_end_time
+            ? new Date(oper_end_time)
+            : new Date(
+                  startDate.getFullYear(),
+                  startDate.getMonth() + 1,
+                  startDate.getDate(),
+              );
+        setStartDateList(
+            getDateRange(
+                startDate,
+                new Date(
+                    startDate.getFullYear(),
+                    startDate.getMonth() + 1,
+                    startDate.getDate(),
+                ),
+            ),
         );
-        setDateList(getDateRange(startDate, endDate));
+        setEndDateList(
+            getDateRange(
+                endDate,
+                new Date(
+                    endDate.getFullYear(),
+                    endDate.getMonth() + 1,
+                    endDate.getDate(),
+                ),
+            ),
+        );
         const newHourList = [];
         for (let i = 0; i < 24; i++) {
             newHourList.push(i);
@@ -298,7 +336,7 @@ const OperatingTime = forwardRef(({props}, ref) => {
             newMinuteList.push(i);
         }
         setMinuteList(newMinuteList);
-    }, []);
+    }, [oper_end_time, oper_start_time]);
     useEffect(() => {
         setStartTimeFormat(
             `${startTime.day} ${startTime.hour}:${startTime.minute}`,
@@ -312,14 +350,14 @@ const OperatingTime = forwardRef(({props}, ref) => {
             <h3 className={styles['title']}>운영시간</h3>
             <TimeSelector
                 title={'운영 시작 시간'}
-                date={perSelectList}
+                date={perStartSelectList}
                 hour={hourSelectList}
                 minute={minuteSelectList}
                 onChange={onChangeStartTime}
             />
             <TimeSelector
                 title={'운영 종료 시간'}
-                date={perSelectList}
+                date={perEndSelectList}
                 hour={hourSelectList}
                 minute={minuteSelectList}
                 onChange={onChangeEndTime}
@@ -522,6 +560,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_type,
                     post_num,
                     place_images,
+                    oper_start_time,
+                    oper_end_time,
                 } = place;
 
                 setParkingInfoInit({
@@ -535,6 +575,8 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     place_type,
                     post_num,
                     place_images,
+                    oper_start_time,
+                    oper_end_time,
                 });
             }
         } catch (e) {
@@ -556,7 +598,10 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     ref={basicInfo}
                 ></BasicInfo>
                 <div className={styles['bar']} />
-                <OperatingTime ref={operatingTime}></OperatingTime>
+                <OperatingTime
+                    ref={operatingTime}
+                    parkingInfoInit={parkingInfoInit}
+                ></OperatingTime>
                 <div className={styles['bar']} />
                 <ExtraInfo
                     ref={extraInfo}

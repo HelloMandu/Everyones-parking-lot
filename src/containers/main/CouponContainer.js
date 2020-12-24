@@ -70,13 +70,12 @@ const CouponContainer = ({ match }) => {
                         );
                         setCouponBook(newCouponList);
                         setMyCoupon((myCoupon) => myCoupon.concat(coupon));
-                        handleSnackbarOpen('쿠폰이 성공적으로 발급되었습니다.', 'success');
+                        handleSnackbarOpen('쿠폰이 성공적으로 발급되었습니다.', 'success', false);
                         if (isInput) {
                             history.goBack();
                         }
                     } else {
-                        // openDialog(msg);
-                        handleSnackbarOpen(msg, 'error');
+                        handleSnackbarOpen(msg, 'warning', false);
                     }
                 } catch (e) {
                     console.error(e);
