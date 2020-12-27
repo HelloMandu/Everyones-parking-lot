@@ -106,14 +106,11 @@ const DetailContainer = ({ modal, place_id }) => {
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
     useEffect(() => {
-        if (headerRef.current) {
-            const headerHeight = headerRef.current.getBoundingClientRect()
-                .height;
-            const headerControll = () =>
-                setHeaderOn(window.scrollY > headerHeight);
-            window.addEventListener('scroll', headerControll);
-            return () => window.removeEventListener('scroll', headerControll);
-        }
+        const headerHeight = headerRef.current?.getBoundingClientRect().height;
+        console.log(headerHeight);
+        const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
+        window.addEventListener('scroll', headerControll);
+        return () => window.removeEventListener('scroll', headerControll);
     }, []);
 
     // 상세보기 할 주차공간 api 호출
@@ -292,8 +289,7 @@ const DetailContainer = ({ modal, place_id }) => {
     useEffect(() => {
         if (openDatePicker) {
             return;
-        }
-        else if (startQueryDate && endQueryDate) {
+        } else if (startQueryDate && endQueryDate) {
             history.replace(
                 `${Paths.main.detail}?place_id=${place_id}&start_time=${startQueryDate}&end_time=${endQueryDate}`,
             );
@@ -301,21 +297,19 @@ const DetailContainer = ({ modal, place_id }) => {
     }, [endQueryDate, history, openDatePicker, place_id, startQueryDate]);
     return (
         <>
+            <div className={cx('header', { headerOn })} ref={headerRef}>
+                <div className={styles['content']}>
+                    <IconButton
+                        className={styles['back-btn']}
+                        onClick={() => history.goBack()}
+                    >
+                        <Arrow />
+                    </IconButton>
+                    <div className={styles['title']}>{place && place.place_name}</div>
+                </div>
+            </div>
             {place && (
                 <>
-                    <div className={cx('header', { headerOn })} ref={headerRef}>
-                        <div className={styles['content']}>
-                            <IconButton
-                                className={styles['back-btn']}
-                                onClick={() => history.goBack()}
-                            >
-                                <Arrow />
-                            </IconButton>
-                            <div className={styles['title']}>
-                                {place.place_name}
-                            </div>
-                        </div>
-                    </div>
                     <div className={styles['wrapper']}>
                         <IconButton
                             className={styles['back']}
