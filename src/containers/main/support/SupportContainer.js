@@ -115,7 +115,7 @@ const SupportContainer = ({ location }) => {
                 offLoading('qna');
             }
         } else {
-            openDialog('로그인 후 이용가능 합니다', '', () => history.goBack());
+            openDialog('로그인이 필요한 서비스입니다.', "로그인을 원하시면 '예'를 눌러주세요.", () => history.replace(Paths.auth.login), true, true);
         }
     }, [QNAList.length, history, offLoading, onLoading, openDialog]);
 

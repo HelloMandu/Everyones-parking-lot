@@ -30,7 +30,6 @@ const Category = ({ type }) => {
         (type) => {
             onLoading('category');
             history.replace(Paths.main.support.faq + `?type=${type}`);
-            // history.replace(Paths.main.support.index + `?type=${type}`);
             offLoading('category');
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,15 +154,15 @@ const FAQItems = memo(({ type }) => {
                     ))}
                 </ul>
             ) : (
-                <div className={styles['non-faq']}>
-                    <div className={styles['non-container']}>
-                        <Notice />
-                        <div className={styles['explain']}>
-                            등록된 자주 묻는 질문이 없습니다.
+                    <div className={styles['non-faq']}>
+                        <div className={styles['non-container']}>
+                            <Notice />
+                            <div className={styles['explain']}>
+                                등록된 자주 묻는 질문이 없습니다.
+                        </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
         </>
     );
 });
