@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 /* Library */
 
 import UpdatePage from './UpdatePage';
@@ -15,6 +15,8 @@ import { Paths } from '../../../paths';
 
 const MypagePage = () => {
 
+    const history = useHistory();
+
     return (
         <div>
             <Switch>
@@ -22,7 +24,7 @@ const MypagePage = () => {
                 <Route path={Paths.main.mypage.point} component={MyPointContainer} />
                 <Route path={Paths.main.mypage.update.index + '/:type'} component={UpdatePage} />
                 <Route path={Paths.main.mypage.withdraw} component={WithdrawContainer} />
-                <Route render={() => <h1>마이페이지 에러</h1>} />
+                <Route render={() => history.replace(Paths.main.mypage.myinfo)} />
             </Switch>
         </div>
     );

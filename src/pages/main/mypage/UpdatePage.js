@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 /* Library */
 
 import UpdateNameContainer from '../../../containers/main/mypage/update/UpdateNameContainer';
@@ -14,6 +14,8 @@ import { Paths } from '../../../paths';
 
 const UpdatePage = () => {
 
+    const history = useHistory();
+
     return (
         <div>
             <Switch>
@@ -22,7 +24,7 @@ const UpdatePage = () => {
                 <Route path={Paths.main.mypage.update.hp} component={UpdateHpContainer} />
                 <Route path={Paths.main.mypage.update.enrollment} component={UpdateCarContainer} />
                 <Route path={Paths.main.mypage.update.birthday} component={UpdateBirthdayContainer} />
-                <Route render={() => <h1>업데이트 페이지 에러</h1>} />
+                <Route render={() => history.replace(Paths.main.mypage.myinfo)} />
             </Switch>
         </div>
     );
