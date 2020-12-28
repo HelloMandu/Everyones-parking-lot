@@ -158,7 +158,9 @@ const MapContainer = ({ modal }) => {
             // 애플 앱 스토어 기기
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
-                    window.webkit.messageHandlers.getGps.postMessage('');
+                    if (typeof window.webkit.messageHandlers.getGps !== 'undefined') {
+                        window.webkit.messageHandlers.getGps.postMessage('');
+                    }
                     return;
                 }
             }
@@ -458,9 +460,11 @@ const MapContainer = ({ modal }) => {
                 }
             } else if (login_os === 'iOS') {
                 if (typeof window.webkit !== 'undefined') {
-                    if (typeof window.webkit.messageHandlers !== 'undefined') {
-                        window.webkit.messageHandlers.getGps.postMessage('');
-                        return;
+                    if (typeof window.webkit.messageHandlers !== 'undefined') {        
+                        if (typeof window.webkit.messageHandlers.getGps !== 'undefined') {
+                            window.webkit.messageHandlers.getGps.postMessage('');
+                            return;
+                        }
                     }
                 }
             }

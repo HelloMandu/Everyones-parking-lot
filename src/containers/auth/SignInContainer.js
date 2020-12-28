@@ -64,7 +64,9 @@ const SignInContainer = () => {
         } else if (login_os === 'iOS') {
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
-                    window.webkit.messageHandlers.requestToken.postMessage('');
+                    if (typeof window.webkit.messageHandlers.requestToken !== 'undefined') {
+                        window.webkit.messageHandlers.requestToken.postMessage('');
+                    }
                 }
             }
         }
