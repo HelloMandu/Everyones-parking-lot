@@ -105,7 +105,7 @@ const WithdrawModal = ({
                     dataLength.current += 1;
                     window.scrollTo(0, 0)
                 } else {
-                    handleSnackBar('출금신청 도중에 오류가 발생했습니다', 'error');
+                    handleSnackBar(response.msg, 'error');
                 }
             } catch (error) {
                 console.error(error);
