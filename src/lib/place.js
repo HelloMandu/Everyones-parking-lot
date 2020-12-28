@@ -32,7 +32,7 @@ export const areaFormat = (data) => {
             area = '강원도';
             break;
         case '서울':
-            area = '서울특별시';
+            area = '서울';
             break;
         case '인천':
             area = '인천광역시';
