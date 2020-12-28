@@ -107,7 +107,6 @@ const DetailContainer = ({ modal, place_id }) => {
     const [headerOn, setHeaderOn] = useState(false);
     useEffect(() => {
         const headerHeight = headerRef.current?.getBoundingClientRect().height;
-        console.log(headerHeight);
         const headerControll = () => setHeaderOn(window.scrollY > headerHeight);
         window.addEventListener('scroll', headerControll);
         return () => window.removeEventListener('scroll', headerControll);
