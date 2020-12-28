@@ -31,7 +31,7 @@ const initState = {
     },
 
     address: null,
-    area: null,
+    area: {type1:'',type2:''},
     level: 0,
 };
 
