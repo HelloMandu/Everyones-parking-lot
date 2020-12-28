@@ -307,7 +307,7 @@ const ParkingEnrollContainer = ({ location, match }) => {
                     openDialog(data.msg, '', () => history.goBack());
                 }
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
             offLoading('payment');
         },
