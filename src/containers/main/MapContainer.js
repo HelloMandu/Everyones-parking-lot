@@ -158,7 +158,10 @@ const MapContainer = ({ modal }) => {
             // 애플 앱 스토어 기기
             if (typeof window.webkit !== 'undefined') {
                 if (typeof window.webkit.messageHandlers !== 'undefined') {
-                    if (typeof window.webkit.messageHandlers.getGps !== 'undefined') {
+                    if (
+                        typeof window.webkit.messageHandlers.getGps !==
+                        'undefined'
+                    ) {
                         window.webkit.messageHandlers.getGps.postMessage('');
                     }
                     return;
@@ -276,9 +279,12 @@ const MapContainer = ({ modal }) => {
                 setOnSlide(slide_view.current);
             }
         });
-        const markdata = parking.filter(
-            (item) => item.addr.indexOf(area) !== -1,
-        );
+        const markdata = parking.filter((item) => {
+            return (
+                item.addr.indexOf(area['type1']) !== -1 ||
+                item.addr.indexOf(area['type2']) !== -1
+            );
+        });
         // 주차장 마커 생성
         // 스토리지에서 마지막 user_position을 기준으로 마커데이터 생성 ex) 대구좌표 -> 대구 주변 렌더
         const storage_position = JSON.parse(
@@ -346,7 +352,7 @@ const MapContainer = ({ modal }) => {
                 },
             );
         }
-        // 윈도우 클릭이벤트 넘겨야 하는 주차장 마커 클릭함수 
+        // 윈도우 클릭이벤트 넘겨야 하는 주차장 마커 클릭함수
         window.onClickOverlay = (place_id) => {
             history.push(Paths.main.detail + '?place_id=' + place_id);
         };
@@ -356,7 +362,6 @@ const MapContainer = ({ modal }) => {
 
     //지도를 렌더하는 함수
     const mapRender = useCallback(() => {
-
         let container = document.getElementById('map');
         let lat = map_position.current.lat;
         let lng = map_position.current.lng;
@@ -367,7 +372,6 @@ const MapContainer = ({ modal }) => {
         const map = new kakao.maps.Map(container, options);
         map.setMaxLevel(8);
         kakao_map.current = map;
-
     }, [level]);
 
     // 마지막 위치 기준으로 get_area 함수 호출하여 해당지역 주차장 받아오기
@@ -460,9 +464,14 @@ const MapContainer = ({ modal }) => {
                 }
             } else if (login_os === 'iOS') {
                 if (typeof window.webkit !== 'undefined') {
-                    if (typeof window.webkit.messageHandlers !== 'undefined') {        
-                        if (typeof window.webkit.messageHandlers.getGps !== 'undefined') {
-                            window.webkit.messageHandlers.getGps.postMessage('');
+                    if (typeof window.webkit.messageHandlers !== 'undefined') {
+                        if (
+                            typeof window.webkit.messageHandlers.getGps !==
+                            'undefined'
+                        ) {
+                            window.webkit.messageHandlers.getGps.postMessage(
+                                '',
+                            );
                             return;
                         }
                     }
@@ -490,7 +499,6 @@ const MapContainer = ({ modal }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-
     //필터 정보가 바뀌었을시 주자창 리스트 필터링 하기
     useEffect(() => {
         const { lat, lng } = map_position.current;
@@ -513,7 +521,6 @@ const MapContainer = ({ modal }) => {
 
     useEffect(createParkingMarker, [createParkingMarker]);
 
-
     //도착지가 변경되었을 시 도착지 마커 생성
     useEffect(() => {
         if (address) {
@@ -522,13 +529,11 @@ const MapContainer = ({ modal }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address, arrive]);
 
-
     useEffect(() => {
         if (position.lat !== 0 && position.lng !== 0) {
             setCoordinates(position.lat, position.lng);
         }
     }, [position, setCoordinates]);
-
 
     //맵 페이지를 unmount 했을시 마지막 위치 기억 -> 이전페이지로 돌아왔을시 레벨과 포지션 유지
     useEffect(() => {
@@ -610,12 +615,11 @@ const MapContainer = ({ modal }) => {
                 <ParkingList
                     onClick={(id) => {
                         slide_view.current = false;
-                        setOnSlide(false); 
+                        setOnSlide(false);
                         setTimeout(() => {
-                            history.push(Paths.main.detail + '?place_id=' + id)
+                            history.push(Paths.main.detail + '?place_id=' + id);
                         }, 600);
-                    }
-                    }
+                    }}
                     view={on_slide}
                     slide_list={slide_list}
                 />
