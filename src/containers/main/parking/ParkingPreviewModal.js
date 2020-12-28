@@ -22,6 +22,7 @@ import {
 import { getFormatDateTime } from '../../../lib/calculateDate';
 import { isEmpty } from '../../../lib/formatChecker';
 import useSnackBar from '../../../hooks/useSnackBar';
+import useLoading from '../../../hooks/useLoading';
 
 import Arrow from '../../../static/asset/svg/Arrow';
 import guid_icon from '../../../static/asset/svg/detail/guid.svg';
@@ -64,10 +65,14 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
     const dispatch = useDispatch();
     const { place_id } = parkingInfo;
     const enrollState = place_id ? '수정' : '등록';
-    const [handleSnackbar] = useSnackBar()
+    const [handleSnackbar] = useSnackBar();
+
+    const [onLoading, offLoading] = useLoading();
+
     const onClickEnrollParking = useCallback(async () => {
         const JWT_TOKEN = localStorage.getItem('user_id');
         if (JWT_TOKEN) {
+            onLoading('enrollParking');
             try {
                 const { data } = await (place_id
                     ? requestPutModifyParking(JWT_TOKEN, parkingInfo, place_id)
@@ -79,15 +84,37 @@ const ParkingPreviewModal = ({ open, parkingInfo }) => {
                         dispatch(getMyParkingList(JWT_TOKEN));
                     }
                     history.go(place_id ? -3 : -2);
-                    handleSnackbar(`성공적으로 주차공간 ${enrollState}을 완료했습니다.`, 'success', false);
+                    handleSnackbar(
+                        `성공적으로 주차공간 ${enrollState}을 완료했습니다.`,
+                        'success',
+                        false,
+                    );
                 } else {
-                    handleSnackbar(`주차공간 ${enrollState}에 실패했습니다.`, 'error', false);
+                    handleSnackbar(
+                        `주차공간 ${enrollState}에 실패했습니다.`,
+                        'error',
+                        false,
+                    );
                 }
             } catch (e) {
-                handleSnackbar(`주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`, 'error', false);
+                handleSnackbar(
+                    `주차공간을 ${enrollState}하는 도중 오류가 발생했습니다.`,
+                    'error',
+                    false,
+                );
             }
+            offLoading('enrollParking');
         }
-    }, [dispatch, enrollState, handleSnackbar, history, parkingInfo, place_id]);
+    }, [
+        dispatch,
+        enrollState,
+        handleSnackbar,
+        history,
+        offLoading,
+        onLoading,
+        parkingInfo,
+        place_id,
+    ]);
     const [imgFile, setImgFile] = useState(null);
     useEffect(() => {
         const reader = new FileReader();
