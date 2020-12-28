@@ -2,10 +2,11 @@
 
 .container {
     @include container($pd-top);
-    background-position: center bottom;
+    background-position: 50% 100%;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100%;
     background-image: url('../../static/asset/png/auth_background.png');
+    overflow: hidden;
 
     .logo {
         height: 275px;
