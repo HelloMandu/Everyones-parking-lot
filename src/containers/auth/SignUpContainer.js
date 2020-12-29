@@ -47,7 +47,7 @@ const Email = forwardRef(({ setCheck, onKeyDown }, ref) => {
             <div className={cx('input-title')}>이메일</div>
             <InputBox
                 className={'input-bar'}
-                type={'text'}
+                type={'email'}
                 value={email}
                 placeholder={'이메일을 입력해주세요.'}
                 onChange={onChangeEmail}
