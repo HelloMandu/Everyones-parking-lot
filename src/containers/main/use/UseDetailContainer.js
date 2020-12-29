@@ -201,8 +201,7 @@ const UseDetailContainer = ({ match, location }) => {
                             <Button
                                 name={'고객센터 연결'}
                                 addition={
-                                    rentalStatus(order) === '이용대기' ||
-                                    rentalStatus(order) === '이용취소'
+                                    rentalStatus(order) !== '이용완료'
                                 }
                             >
                                 <Tel />
@@ -210,8 +209,7 @@ const UseDetailContainer = ({ match, location }) => {
                             <Button
                                 name={`리뷰 ${review ? '수정' : '작성'} 하기`}
                                 disable={
-                                    rentalStatus(order) === '이용대기' ||
-                                    rentalStatus(order) === '이용취소'
+                                    rentalStatus(order) !== '이용완료'
                                 }
                                 onClick={() =>
                                     review
