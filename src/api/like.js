@@ -58,8 +58,8 @@ export const requestDeleteLike = async (JWT_TOKEN, place_id) => {
             Authorization: `Bearer ${JWT_TOKEN}`,
         },
         data: {
-            place_id
-        }
+            place_id,
+        },
     };
     const response = await axios.delete(URL, options);
 

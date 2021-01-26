@@ -18,17 +18,13 @@ const useForm = (initialForm, limit) => {
                 }
             }
             dispatch(e.target);
-
         },
         [limit],
     );
-    useEffect(()=>{
-            const formatCheck = Object.values(state).reduce(
-                (prev, cur) => prev && cur.length === limit,
-                true,
-            );
-            setCheck(formatCheck);
-    }, [limit, state])
+    useEffect(() => {
+        const formatCheck = Object.values(state).reduce((prev, cur) => prev && cur.length === limit, true);
+        setCheck(formatCheck);
+    }, [limit, state]);
     return [state, onChange, check];
 };
 

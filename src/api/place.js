@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { DBImageFormat } from '../lib/formatter';
 import makeFormData from '../lib/makeFormData';
-
 import { Paths } from '../paths';
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const requestGetParkingList = async (
     lat,
@@ -237,7 +237,7 @@ export const requestGetAddressInfo = async (address) => {
     const URL = 'https://dapi.kakao.com/v2/local/search/address.json';
     const response = await axios.get(URL, {
         headers: {
-            Authorization: `KakaoAK d747c230bfd2f62cfcf8accd952285b8`,
+            Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_REST}`,
         },
         params: {
             query: address,
@@ -250,7 +250,7 @@ export const requsetGetAreaInfo = async (lat, lng) => {
     const URL = 'https://dapi.kakao.com/v2/local/geo/coord2address.json';
     const response = await axios.get(URL, {
         headers: {
-            Authorization: `KakaoAK 1c0eaf33be9ad7d4b2c907a0212d6903`,
+            Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_REST}`,
         },
         params: {
             y: lat,

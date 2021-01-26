@@ -15,8 +15,8 @@ const useBirth = (initialForm) => {
     };
 
     const getBirth = () => {
-        return `${state.year}/${state.month}/${state.day}`
-    }
+        return `${state.year}/${state.month}/${state.day}`;
+    };
 
     return [onChange, getBirth];
 };

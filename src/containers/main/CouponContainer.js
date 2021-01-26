@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import useToken from '../../hooks/useToken';
 import useModal from '../../hooks/useModal';
 import useLoading from '../../hooks/useLoading';
-// import { useDialog } from '../../hooks/useDialog';
+
 import {
     requestGetCouponBook,
     requestGetCouponMy,
@@ -33,7 +33,6 @@ const CouponContainer = ({ match }) => {
     const [myCoupon, setMyCoupon] = useState([]);
     const [couponBook, setCouponBook] = useState([]);
     const [useCoupon, setuseCoupon] = useState([]);
-    // const openDialog = useDialog();
     const [handleSnackbarOpen] = useSnackBar();
     const history = useHistory();
     const { url, params } = match;

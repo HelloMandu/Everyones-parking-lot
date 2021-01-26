@@ -1,7 +1,9 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const URL = 'https://www.juso.go.kr/addrlink/addrLinkApi.do';
-const KEY = 'devU01TX0FVVEgyMDIwMTExMTAwMDI0ODExMDQwMDc=';
+const KEY = process.env.REACT_APP_JUSO;
 
 
 export const requestAddress = async (search) => {

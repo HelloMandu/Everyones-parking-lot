@@ -1,6 +1,7 @@
 /*global Kakao*/
 import React, { useEffect, useCallback } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
+import dotenv from 'dotenv';
 
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
@@ -17,8 +18,9 @@ import { useDispatch } from 'react-redux';
 import { getUser } from './store/user';
 import { getCompany } from './store/company';
 
-import './App.scss';
 import SnackBar from './components/assets/SnackBar';
+import './App.scss';
+dotenv.config();
 
 const App = () => {
     const location = useLocation();
@@ -32,12 +34,11 @@ const App = () => {
     }, [dispatch]);
 
     const callAppInfo = useCallback(async () => {
-        // 회사 정보 가져옴
         dispatch(getCompany());
     }, [dispatch]);
 
     useEffect(() => {
-        Kakao.init('69ea25b2ec2f6bd52476ec619d899dda');
+        Kakao.init(process.env.REACT_APP_KAKAO_REST);
         judgementLogin();
         callAppInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps

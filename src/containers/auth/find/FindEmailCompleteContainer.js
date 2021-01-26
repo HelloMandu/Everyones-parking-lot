@@ -30,7 +30,6 @@ const FindEmailCompleteContainer = () => {
         if(userID.length > 2) userID = userID.subString(0, userID.length - 2)
         else userID = ''
         userID += '**@' + emailSplite[1].toString()
-
         sessionStorage.removeItem('session_email')
     }
 

@@ -14,7 +14,6 @@ import { Paths } from '../../../paths';
 
 const FindPage = () => {
 
-    // XD => 아이디/비밀번호 찾기 어디서 부르나요..?
     return (
         <div>
             <Switch>
