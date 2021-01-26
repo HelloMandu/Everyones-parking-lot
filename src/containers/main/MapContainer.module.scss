@@ -9,6 +9,18 @@ $side: 15px;
     top: 40px + 24px + 48px;
     z-index: $level3;
 }
+
+.aside {
+    position: fixed !important;
+    z-index: $level1 !important;
+    overflow-x: hidden;
+}
+
+.dim {
+    position: fixed !important;
+    z-index: 2800 !important;
+}
+
 .container {
     @include container(0px);
     overflow: hidden;

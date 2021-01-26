@@ -145,7 +145,7 @@ const Aside = ({ open, handleClose }) => {
                     </div>
                 </div>
             </div>
-            <Backdrop open={open} className={cx('dim')} onClick={handleClose} />
+            {/* <Backdrop open={open} className={cx('dim')} onClick={handleClose} /> */}
         </>
     );
 };

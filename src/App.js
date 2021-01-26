@@ -1,5 +1,4 @@
 /*global Kakao*/
-
 import React, { useEffect, useCallback } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 

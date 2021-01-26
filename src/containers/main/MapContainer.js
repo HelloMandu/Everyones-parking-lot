@@ -32,7 +32,8 @@ import BOOKMARK from '../../static/asset/svg/main/like.svg';
 // import ARRIVED_MARKER from '../../static/asset/svg/main/arrive_marker.svg';
 import USER_LOCATION_MARKER from '../../static/asset/svg/main/mylocation.svg';
 
-//componenst
+//components
+import Sidebar from 'react-sidebar'
 import Aside from '../../components/aside/Aside';
 import BottomModal from '../../components/nav/BottomModal';
 import ParkingList from '../../components/items/ParkingList';
@@ -544,7 +545,22 @@ const MapContainer = ({ modal }) => {
     }, [dispatch]);
 
     return (
-        <>
+        <Sidebar
+            sidebarClassName={styles['aside']}
+            overlayClassName={styles['dim']}
+            open={modalState.aside_}
+            touch={true}
+            transitions={true}
+            touchHandleWidth={20}
+            dragToggleDistance={30}
+            onSetOpen={() => dispatchHandle({ type: 'aside_', payload: false })}
+            sidebar={
+                <Aside
+                    open={modalState.aside_}
+                    handleClose={() => dispatchHandle({ type: 'aside_', payload: false })}
+                />
+            }
+        >
             <div className={styles['container']}>
                 <div className={styles['content']}>
                     <div
@@ -606,12 +622,6 @@ const MapContainer = ({ modal }) => {
                         }
                     />
                 </div>
-                <Aside
-                    open={modalState.aside_}
-                    handleClose={() => {
-                        dispatchHandle({ type: 'aside_', payload: false });
-                    }}
-                />
                 <ParkingList
                     onClick={(id) => {
                         slide_view.current = false;
@@ -639,7 +649,7 @@ const MapContainer = ({ modal }) => {
                 handleClose={() => history.goBack()}
                 setArriveLevel={setArriveLevel}
             />
-        </>
+        </Sidebar>
     );
 };
 

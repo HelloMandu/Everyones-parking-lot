@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames/bind';
 import { ButtonBase } from '@material-ui/core';
 
-import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember, useScrollStart } from '../../../hooks/useScroll';
 import useToken from '../../../hooks/useToken';
 
 import { fetchMyParkingList, getMyParkingList } from '../../../store/myParking';
@@ -16,6 +16,7 @@ import { Paths } from '../../../paths';
 import Notice from '../../../static/asset/svg/Notice';
 
 import styles from './ParkingManageContainer.module.scss';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 
 const cx = cn.bind(styles);
 
@@ -99,6 +100,8 @@ const ParkingManageContainer = () => {
     const { myAllParkingList, myParkingList } = useSelector(
         (state) => state.myParking,
     );
+    const isTop = useScrollStart();
+
     const dispatch = useDispatch();
     const fetchParkingList = useCallback(() => {
         const LIMIT = 3;
@@ -116,70 +119,83 @@ const ParkingManageContainer = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // 임시
+    const onRefresh = async () => {
+        if (!myAllParkingList.length) {
+            dispatch(getMyParkingList(JWT_TOKEN));
+        }
+    };
+
     return (
-        <main className={styles['parking-management-container']}>
-            <Link to={Paths.main.parking.enrollment}>
-                <ButtonBase className={styles['enroll-button']}>
-                    <span className={styles['plus']}>+</span>주차공간 등록하기
-                </ButtonBase>
-            </Link>
-            {!loading['myParking/GET_LIST'] &&
-                (myParkingList.length ? (
-                    <ul className={styles['parking-list']}>
-                        {myParkingList.map(
-                            ({
-                                place_id,
-                                place_images,
-                                place_name,
-                                oper_start_time,
-                                oper_end_time,
-                                place_fee,
-                                rental_orders,
-                            }) => (
-                                <ButtonBase
-                                    className={styles['parking-item']}
-                                    component="li"
-                                    key={place_id}
-                                    onClick={() =>
-                                        history.push(
-                                            Paths.main.detail +
-                                                `?place_id=${place_id}`,
-                                        )
-                                    }
-                                >
-                                    <ParkingItem
-                                        status={getStatus(
-                                            rental_orders,
-                                            oper_end_time,
-                                        )}
-                                        image={
-                                            Array.isArray(place_images)
-                                                ? place_images[0].replace(
-                                                      'uploads/',
-                                                      '',
-                                                  )
-                                                : ''
+        <PullToRefreshContainer
+            onRefresh={onRefresh}
+            isTop={isTop}
+        >
+            <main className={styles['parking-management-container']}>
+                <Link to={Paths.main.parking.enrollment}>
+                    <ButtonBase className={styles['enroll-button']}>
+                        <span className={styles['plus']}>+</span>주차공간 등록하기
+                    </ButtonBase>
+                </Link>
+                {!loading['myParking/GET_LIST'] &&
+                    (myParkingList.length ? (
+                        <ul className={styles['parking-list']}>
+                            {myParkingList.map(
+                                ({
+                                    place_id,
+                                    place_images,
+                                    place_name,
+                                    oper_start_time,
+                                    oper_end_time,
+                                    place_fee,
+                                    rental_orders,
+                                }) => (
+                                    <ButtonBase
+                                        className={styles['parking-item']}
+                                        component="li"
+                                        key={place_id}
+                                        onClick={() =>
+                                            history.push(
+                                                Paths.main.detail +
+                                                    `?place_id=${place_id}`,
+                                            )
                                         }
-                                        title={place_name}
-                                        start={oper_start_time}
-                                        end={oper_end_time}
-                                        price={place_fee}
-                                    ></ParkingItem>
-                                </ButtonBase>
-                            ),
-                        )}
-                    </ul>
-                ) : (
-                    <div className={styles['non-qna']}>
-                        <div className={styles['non-container']}>
-                            <Notice />
-                            <div className={styles['explain']}>
-                                등록된 주차공간이 없습니다.
+                                    >
+                                        <ParkingItem
+                                            status={getStatus(
+                                                rental_orders,
+                                                oper_end_time,
+                                            )}
+                                            image={
+                                                Array.isArray(place_images)
+                                                    ? place_images[0].replace(
+                                                        'uploads/',
+                                                        '',
+                                                    )
+                                                    : ''
+                                            }
+                                            title={place_name}
+                                            start={oper_start_time}
+                                            end={oper_end_time}
+                                            price={place_fee}
+                                        ></ParkingItem>
+                                    </ButtonBase>
+                                ),
+                            )}
+                        </ul>
+                    ) : (
+                        <div className={styles['non-qna']}>
+                            <div className={styles['non-container']}>
+                                <Notice />
+                                <div className={styles['explain']}>
+                                    등록된 주차공간이 없습니다.
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-        </main>
+                    ))}
+            </main>
+        </PullToRefreshContainer>
     );
 };
 

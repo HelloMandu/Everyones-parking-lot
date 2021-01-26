@@ -1,22 +1,15 @@
 @import '../../static/stylesheets/Root.scss';
 $aside-pd: 20px;
 .aside-menu {
-    transition: all 0.3s ease-in-out;
     width: 320px;
     height: 100%;
     color: #222;
-    position: fixed;
     background-color: #fff;
     box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.16);
-    z-index: $level1;
-    transform: translateX(-100%);
-    top: 0;
-    left: 0;
     @media (max-width: 340px) {
         width: 260px;
     }
     &.open {
-        transform: none;
         .user-point {
             left: 0;
         }

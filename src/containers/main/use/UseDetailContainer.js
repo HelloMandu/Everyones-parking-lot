@@ -5,11 +5,13 @@ import { Link, useHistory } from 'react-router-dom';
 import BasicButton from '../../../components/button/BasicButton';
 import Refund from '../../../components/use/Refund';
 import ImageModal from '../../../components/modal/ImageModal';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
 import useModal from '../../../hooks/useModal';
+import { useScrollStart } from '../../../hooks/useScroll';
 
 import { requestGetDetailUseRental } from '../../../api/rental';
 
@@ -62,6 +64,7 @@ const UseDetailContainer = ({ match, location }) => {
     const [review, setReview] = useState();
     const [status, setStatus] = useState(false);
     const [onLoading, offLoading] = useLoading();
+    const isTop = useScrollStart();
 
     const query = qs.parse(location.search, {
         ignoreQueryPrefix: true,
@@ -121,7 +124,10 @@ const UseDetailContainer = ({ match, location }) => {
 
     return (
         !isEmpty(order) && (
-            <>
+            <PullToRefreshContainer
+                onRefresh={getUseDetail}
+                isTop={isTop}
+            >
                 <div className={cx('container', 'top')}>
                     <div className={cx('title-area')}>
                         <div className={cx('title')}>
@@ -344,7 +350,7 @@ const UseDetailContainer = ({ match, location }) => {
                     open={isOpenImageView}
                     handleClose={handleImageView}
                 ></ImageModal>
-            </>
+            </PullToRefreshContainer>
         )
     );
 };

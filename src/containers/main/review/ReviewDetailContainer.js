@@ -9,7 +9,7 @@ import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useLoading from '../../../hooks/useLoading';
 import useModal from '../../../hooks/useModal';
-import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember, useScrollStart } from '../../../hooks/useScroll';
 
 import {
     requestDeleteReview,
@@ -29,6 +29,7 @@ import Rating from '@material-ui/lab/Rating';
 import { ButtonBase } from '@material-ui/core';
 import { imageFormat, DBImageFormat } from '../../../lib/formatter';
 import useSnackBar from '../../../hooks/useSnackBar';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 
 const cx = classNames.bind(styles);
 
@@ -55,6 +56,7 @@ const ReviewDetailContainer = ({ match, location }) => {
     const user = useSelector((state) => state.user);
     const [onLoading, offLoading] = useLoading();
     const [list, setList] = useState([]);
+    const isTop = useScrollStart();
 
     const onClickSubmit = useCallback(async () => {
         const token = localStorage.getItem('user_id');
@@ -170,7 +172,10 @@ const ReviewDetailContainer = ({ match, location }) => {
 
     return (
         review !== undefined && (
-            <>
+            <PullToRefreshContainer
+                onRefresh={getReview}
+                isTop={isTop}
+            >
                 <div className={cx('container')}>
                     <div
                         className={cx('card-img')}
@@ -302,7 +307,7 @@ const ReviewDetailContainer = ({ match, location }) => {
                     open={isOpenImageView}
                     handleClose={handleImageView}
                 ></ImageModal>
-            </>
+            </PullToRefreshContainer>
         )
     );
 };

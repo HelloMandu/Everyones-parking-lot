@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
-import { useScrollEnd } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollStart } from '../../../hooks/useScroll';
 import useSnackBar from '../../../hooks/useSnackBar';
 
 import { requestGetReviewList, requestDeleteReview } from '../../../api/review';
@@ -18,6 +18,7 @@ import styles from './ReviewListContainer.module.scss';
 import { ButtonBase } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import Notice from '../../../static/asset/svg/Notice';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 
 const cx = className.bind(styles);
 
@@ -80,6 +81,7 @@ const ReviewListContainer = () => {
     const [onLoading, offLoading, isLoading] = useLoading();
     const openDialog = useDialog();
     const [handleSnackBar] = useSnackBar();
+    const isTop = useScrollStart();
 
     const fetchReviewList = useCallback(() => {
         const LIMIT = 3;
@@ -153,7 +155,10 @@ const ReviewListContainer = () => {
     useScrollEnd(fetchReviewList);
 
     return (
-        <>
+        <PullToRefreshContainer
+            onRefresh={getReviewList}
+            isTop={isTop}
+        >
             {!isLoading[LOADING_REVIEW] &&
                 (list.length ? (
                     <ul className={cx('container')}>
@@ -175,7 +180,7 @@ const ReviewListContainer = () => {
                         </div>
                     </div>
                 ))}
-        </>
+        </PullToRefreshContainer>
     );
 };
 

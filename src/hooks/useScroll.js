@@ -1,4 +1,26 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+export const useScrollStart = (dom) => {
+    const [isTop, setIsTop] = useState(true);
+    const handleScroll = useCallback(() => {
+        const startPoint = dom ? dom.scrollTop === 0 : window.scrollY === 0;
+        if (startPoint) {
+            setIsTop(true);
+        } else {
+            setIsTop(false);
+        }
+    }, [dom]);
+    useEffect(() => {
+        if (dom) {
+            dom.addEventListener('scroll', handleScroll);
+            return () => dom.removeEventListener('scroll', handleScroll);
+        } else {
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+        }
+    }, [handleScroll, dom]);
+    return isTop;
+};
 
 export const useScrollEnd = (callback, dom) => {
     const handleScroll = useCallback(() => {

@@ -14,6 +14,8 @@ import styles from './EventListContainer.module.scss';
 import { Paths } from '../../../paths';
 import { ButtonBase } from '@material-ui/core';
 import { imageFormat } from '../../../lib/formatter';
+import { useScrollStart } from '../../../hooks/useScroll';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 /* StyleSheets */
 
 const LOADING_EVENT = 'loading/EVENT';
@@ -22,6 +24,7 @@ const EventListContainer = ({ history }) => {
     const [eventList, setEventList] = useState([]);
     const openDialog = useDialog();
     const [onLoading, offLoading, isLoading] = useLoading();
+    const isTop = useScrollStart();
 
     const getNoticeList = useCallback(async () => {
         onLoading(LOADING_EVENT);
@@ -53,38 +56,43 @@ const EventListContainer = ({ history }) => {
     }, [getNoticeList]);
 
     return (
-        <div className={styles['container']}>
-            {!isLoading[LOADING_EVENT] &&
-                <div className={styles['list']}>
-                    {eventList.length !== 0 ?
-                        eventList.map(({ event_banner_image, event_id }) => (
-                            <Link
-                                className={styles['item']}
-                                to={Paths.main.event.detail + '?id=' + event_id}
-                                key={event_id}
-                            >
-                                <ButtonBase
-                                    compoennt="div"
-                                    className={styles['content']}
+        <PullToRefreshContainer
+            onRefresh={getNoticeList}
+            isTop={isTop}
+        >
+            <div className={styles['container']}>
+                {!isLoading[LOADING_EVENT] &&
+                    <div className={styles['list']}>
+                        {eventList.length !== 0 ?
+                            eventList.map(({ event_banner_image, event_id }) => (
+                                <Link
+                                    className={styles['item']}
+                                    to={Paths.main.event.detail + '?id=' + event_id}
+                                    key={event_id}
                                 >
-                                    <img
-                                        className={styles['banner-image']}
-                                        src={`${imageFormat(event_banner_image)}`}
-                                        alt="banner"
-                                    />
-                                </ButtonBase>
-                            </Link>
-                        )) :
-                        <div className={styles['non-qna']}>
-                            <div className={styles['non-container']}>
-                                <Notice />
-                                <div className={styles['explain']}>
-                                    이벤트가 없습니다.
+                                    <ButtonBase
+                                        compoennt="div"
+                                        className={styles['content']}
+                                    >
+                                        <img
+                                            className={styles['banner-image']}
+                                            src={`${imageFormat(event_banner_image)}`}
+                                            alt="banner"
+                                        />
+                                    </ButtonBase>
+                                </Link>
+                            )) :
+                            <div className={styles['non-qna']}>
+                                <div className={styles['non-container']}>
+                                    <Notice />
+                                    <div className={styles['explain']}>
+                                        이벤트가 없습니다.
+                                    </div>
                                 </div>
-                            </div>
-                        </div>}
-                </div>}
-        </div>
+                            </div>}
+                    </div>}
+            </div>
+        </PullToRefreshContainer>
     );
 };
 

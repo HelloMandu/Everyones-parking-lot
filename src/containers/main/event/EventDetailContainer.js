@@ -11,6 +11,8 @@ import { requestGetDetailEvent } from '../../../api/event';
 import styles from './EventDetailContainer.module.scss';
 import { isEmpty } from '../../../lib/formatChecker';
 import { dateToYYYYMMDD, imageFormat } from '../../../lib/formatter';
+import { useScrollStart } from '../../../hooks/useScroll';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 /* StyleSheets */
 
 const EventDetailContainer = ({ location, history }) => {
@@ -21,6 +23,7 @@ const EventDetailContainer = ({ location, history }) => {
     const openDialog = useDialog();
 
     const [event, setEvent] = useState({});
+    const isTop = useScrollStart();
 
     const { event_banner_image, event_title, event_body, warn, createdAt } = event;
 
@@ -44,20 +47,25 @@ const EventDetailContainer = ({ location, history }) => {
     }, [getNoticeDetail]);
 
     return (
-        <div className={styles['container']}>
-            {!isEmpty(event) &&
-            <>
-                <div className={styles['banner']}>
-                    {event_banner_image && <img className={styles['image']} src={`${imageFormat(event_banner_image)}`} alt="banner" />}
-                </div>
-                <div className={styles['content']}>
-                    <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 
-                    <h3 className={styles['title']}>{event_title}</h3>
-                    <div className={styles['body']}>{event_body}</div>
-                    {warn && <div className={styles['warn']}>{warn}</div>}
-                </div>
-            </>}
-        </div>
+        <PullToRefreshContainer
+            onRefresh={getNoticeDetail}
+            isTop={isTop}
+        >
+            <div className={styles['container']}>
+                {!isEmpty(event) &&
+                <>
+                    <div className={styles['banner']}>
+                        {event_banner_image && <img className={styles['image']} src={`${imageFormat(event_banner_image)}`} alt="banner" />}
+                    </div>
+                    <div className={styles['content']}>
+                        <div className={styles['created']}>{dateToYYYYMMDD(createdAt, '/')}</div> 
+                        <h3 className={styles['title']}>{event_title}</h3>
+                        <div className={styles['body']}>{event_body}</div>
+                        {warn && <div className={styles['warn']}>{warn}</div>}
+                    </div>
+                </>}
+            </div>
+        </PullToRefreshContainer>
     );
 };
 

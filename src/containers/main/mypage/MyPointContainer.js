@@ -7,6 +7,7 @@ import { ButtonBase, Backdrop, makeStyles } from '@material-ui/core';
 
 import InputBox from '../../../components/inputbox/InputBox';
 import BasicButton from '../../../components/button/BasicButton';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 /* Components */
 
 import styles from './MyPointContainer.module.scss';
@@ -17,7 +18,7 @@ import Notice from '../../../static/asset/svg/Notice';
 import useInput from '../../../hooks/useInput';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
-import { useScrollEnd } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollStart } from '../../../hooks/useScroll';
 import useSnackBar from '../../../hooks/useSnackBar';
 /* Hooks */
 
@@ -236,7 +237,20 @@ const MyPointContainer = () => {
 
     const [click, setClick] = useState(false);
     const [pointList, setPointList] = useState([]);
+    const isTop = useScrollStart();
 
+    const getPointList = async () => {
+        const JWT_TOKEN = localStorage.getItem('user_id');
+        if (JWT_TOKEN) {
+            try {
+                const response = await requestGetMyPoint(JWT_TOKEN);
+                allPointList.current = response;
+                fetchPointList();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    };
     const fetchPointList = useCallback(() => {
         const allLength = allPointList.current.length;
         const length = dataLength.current;
@@ -251,25 +265,16 @@ const MyPointContainer = () => {
 
     useEffect(() => {
         if (TOKEN !== null) {
-            const getPointList = async () => {
-                const JWT_TOKEN = localStorage.getItem('user_id');
-                if (JWT_TOKEN) {
-                    try {
-                        const response = await requestGetMyPoint(JWT_TOKEN);
-                        allPointList.current = response;
-                        fetchPointList();
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
-            };
             getPointList();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <>
+        <PullToRefreshContainer
+            onRefresh={getPointList}
+            isTop={isTop}
+        >
             {TOKEN !== null && (
                 <>
                     <div className={styles['container']}>
@@ -342,7 +347,7 @@ const MyPointContainer = () => {
                     />
                 </>
             )}
-        </>
+        </PullToRefreshContainer>
     );
 };
 

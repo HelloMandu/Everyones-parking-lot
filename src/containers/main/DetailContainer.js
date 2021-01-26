@@ -47,8 +47,9 @@ import { imageFormat, numberFormat } from '../../lib/formatter';
 import useLoading from '../../hooks/useLoading';
 import useModal from '../../hooks/useModal';
 import { useDialog } from '../../hooks/useDialog';
-import { useScrollTop } from '../../hooks/useScroll';
+import { useScrollStart, useScrollTop } from '../../hooks/useScroll';
 import useSnackBar from '../../hooks/useSnackBar';
+import PullToRefreshContainer from '../../components/assets/PullToRefreshContainer';
 
 const cx = cn.bind(styles);
 const getParkingType = (type) => {
@@ -102,6 +103,7 @@ const DetailContainer = ({ modal, place_id }) => {
     const [shareOpen, setShareOpen] = useState(false);
     const [likeStatus, setLikeStatus] = useState(false);
     const [handleSnackbarOpen] = useSnackBar();
+    const isTop = useScrollStart();
 
     const headerRef = useRef(null);
     const [headerOn, setHeaderOn] = useState(false);
@@ -295,7 +297,10 @@ const DetailContainer = ({ modal, place_id }) => {
         }
     }, [endQueryDate, history, openDatePicker, place_id, startQueryDate]);
     return (
-        <>
+        <PullToRefreshContainer
+            onRefresh={callGetDetailParking}
+            isTop={isTop}
+        >
             <div className={cx('header', { headerOn })} ref={headerRef}>
                 <div className={styles['content']}>
                     <IconButton
@@ -541,7 +546,7 @@ const DetailContainer = ({ modal, place_id }) => {
                     ></ImageModal>
                 </>
             )}
-        </>
+        </PullToRefreshContainer>
     );
 };
 

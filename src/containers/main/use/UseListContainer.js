@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDialog } from '../../../hooks/useDialog';
 import useToken from '../../../hooks/useToken';
 import useLoading from '../../../hooks/useLoading';
-import { useScrollEnd, useScrollRemember } from '../../../hooks/useScroll';
+import { useScrollEnd, useScrollRemember, useScrollStart } from '../../../hooks/useScroll';
 
 import { requestGetUseRental } from '../../../api/rental';
 
@@ -17,6 +17,7 @@ import { rentalStatus, rentalStatusColor } from '../../../lib/rentalStatus';
 import classNames from 'classnames/bind';
 import styles from './UseListContainer.module.scss';
 import Notice from '../../../static/asset/svg/Notice';
+import PullToRefreshContainer from '../../../components/assets/PullToRefreshContainer';
 
 const cx = classNames.bind(styles);
 
@@ -24,18 +25,19 @@ const LOADING_USE_LIST = 'use/list';
 
 const UseListContainer = () => {
     const token = useToken();
-    const location = useLocation()
+    const location = useLocation();
     const openDialog = useDialog();
     const [onLoading, offLoading, isLoading] = useLoading();
     const [useList, setUseList] = useState([]);
-    const [list, setList] = useState([])
+    const [list, setList] = useState([]);
+    const isTop = useScrollStart();
 
     const fetchUseList = useCallback(() => {
         const LIMIT = 6
         const length = list.length
         const fetchData = useList.slice(length, length + LIMIT)
 
-        if(fetchData.length > 0){
+        if (fetchData.length > 0) {
             setList(list.concat(fetchData))
         }
     }, [list, useList])
@@ -69,7 +71,10 @@ const UseListContainer = () => {
     useScrollRemember(location.pathname);
 
     return (
-        <>
+        <PullToRefreshContainer
+            onRefresh={getUseList}
+            isTop={isTop}
+        >
             {!isLoading[LOADING_USE_LIST] &&
                 (useList.length ? (
                     <div className={cx('container')}>
@@ -108,7 +113,7 @@ const UseListContainer = () => {
                             </div>
                         </div>
                     ))}
-        </>
+        </PullToRefreshContainer>
     );
 };
 
